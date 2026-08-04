@@ -16,6 +16,7 @@ Placas de identificação veicular são chapas dianteiras e traseiras afixadas a
 
 - **Validação**: Verificar se a placa de identificação veicular é válida conforme regras oficiais.
 - **Formatação**: Apresentar a placa no formato padrão `LLLNLNN` ou `LLLNNNN`, `L` refere-se à letra, e `N` ao numeral.
+- **Geração**: Gera uma placa de carro válida no formato especificado. Caso nenhum formato seja fornecido, ele retornará uma placa de carro no formato Mercosul.
 
 ## Regras de validação
 

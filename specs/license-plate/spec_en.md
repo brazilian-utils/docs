@@ -16,6 +16,7 @@ Vehicle license plates are front and rear plates affixed to a vehicle, containin
 
 - **Validation**: Verify that the vehicle license plate is valid according to official rules.
 - **Formatting**: Display the license plate in the standard format `LLLNLNN` or `LLLNNNN`, where `L` refers to a letter and `N` refers to a digit.
+- **Generation**: Generate a valid license plate in the given format. In case no format is provided, it will return a license plate in the Mercosul format.
 
 ## Validation Rules
 

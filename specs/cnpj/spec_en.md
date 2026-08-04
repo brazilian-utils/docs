@@ -11,8 +11,6 @@ references:
 
 ## Summary
 
-
-
 ## Operations
 
 - **Validation**: 
