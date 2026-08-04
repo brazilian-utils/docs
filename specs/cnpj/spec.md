@@ -20,14 +20,14 @@ O CNPJ é um número de identificação único emitido pela Receita Federal para
     - `A` – Caractere alfanumérico (algarismos de 0 a 9 e letras maiúsculas de A a Z).
     - `DV` – Dígitos verificadores calculados pelo algoritmo do módulo 11.
 - **Remoção de símbolos**: Remover os caracteres `.`, `/` e `-`, mantendo apenas os caracteres alfanuméricos.
-- **Geração**: Cria uma string de CNPJ válida aleatória.
+- **Geração**: Criar uma string de CNPJ válida aleatória.
 
 ## Regras de validação
 
 1. Deve conter exatamente 14 caracteres após remoção dos símbolos.
 2. Os 12 primeiros caracteres podem conter algarismos de 0 a 9 e letras maiúsculas de A a Z.
 3. Os 2 últimos caracteres correspondem aos dígitos verificadores e devem ser numéricos.
-4. Os dígitos verificadores devem ser calculados pelo algoritmo padrão (módulo 11).
+4. Os dígitos verificadores devem ser calculados pelo algoritmo do módulo 11.
 5. Para o cálculo dos dígitos verificadores, os caracteres alfanuméricos devem ser convertidos em valores numéricos utilizando a tabela ASCII, subtraindo 48 do valor decimal correspondente.
 
 ## Algoritmo detalhado
@@ -37,7 +37,7 @@ O CNPJ é um número de identificação único emitido pela Receita Federal para
 3. Verificar se os 12 primeiros caracteres são alfanuméricos e os 2 últimos são numéricos.
 4. Converter os caracteres alfanuméricos em valores numéricos:
    - Caracteres numéricos mantêm seu valor.
-   - Letras são convertidas utilizando o valor ASCII decimal subtraído de 48.
+   - Letras são convertidas utilizando o valor ASCII decimal subtraído de `48`.
 5. Calcular o primeiro dígito verificador (DV1):
    - Para os 12 primeiros caracteres, distribuir os pesos de `2` a `9` da direita para a esquerda, reiniciando em `2` após o peso `9`. 
    - Multiplicar cada valor pelo peso correspondente e somar os resultados.

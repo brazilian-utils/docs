@@ -6,5 +6,4 @@
 
 - [Perguntas e respostas - CNPJ Alfanumérico](https://www.in.gov.br/web/dou/-/resolucao-n-780-de-26-de-junho-de-2019-179414765)
 
-- [Cálculo dos dígitos verificadores de
-CNPJ alfanumérico](https://www.serpro.gov.br/menu/noticias/videos/calculodvcnpjalfanaumerico.pdf)
+- [Cálculo dos dígitos verificadores de CNPJ alfanumérico](https://www.serpro.gov.br/menu/noticias/videos/calculodvcnpjalfanaumerico.pdf)
