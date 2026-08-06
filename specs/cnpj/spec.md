@@ -25,10 +25,11 @@ O CNPJ é um número de identificação único emitido pela Receita Federal para
 ## Regras de validação
 
 1. A entrada deve conter exatamente 14 caracteres.
-2. Os 12 primeiros caracteres podem conter algarismos de 0 a 9 e letras maiúsculas de A a Z.
+2. Os 12 primeiros caracteres podem conter dígitos de `0` a `9` e letras maiúsculas de `A` a `Z`.
 3. Os 2 últimos caracteres correspondem aos dígitos verificadores e devem ser numéricos.
 4. Os dígitos verificadores devem ser calculados pelo algoritmo do módulo 11.
 5. Para o cálculo dos dígitos verificadores, os 12 primeiros caracteres devem ser convertidos em valores numéricos utilizando seu código ASCII decimal, subtraindo `48` do valor correspondente.
+   
    Exemplos:
    - `0` → `48 - 48 = 0`
    - `9` → `57 - 48 = 9`
@@ -64,7 +65,6 @@ O CNPJ é um número de identificação único emitido pela Receita Federal para
 
 - Válido: `03560714000142` (CNPJ numérico válido)
 - Válido: `9359QAG9000184` (CNPJ alfanumérico válido)
-
 - Inválido: `03.560.714/0001-42` (a validação aceita apenas CNPJs sem formatação)
 - Inválido: `00111222000133` (dígitos verificadores inválidos)
 - Inválido: `12ABC34501DE3X` (os dígitos verificadores devem ser numéricos)
