@@ -1,6 +1,6 @@
 ---
-id: 
-title: ""
+id: cep
+title: "CEP"
 language: pt-BR
 references:
   - lei 6.538/1978
@@ -14,7 +14,7 @@ O CEP é um conjunto numérico constituído de oito algarismos, que orienta e ac
 
 ## Operações
 
-- **Validação**: Verificar se um CEP sem formatação contém exatamente `8` dígitos.
+- **Validação**: Verificar se um CEP sem formatação contém exatamente `8` dígitos numéricos.
 - **Formatação**: Apresentar o CEP no formato padrão `XXXXX-XXX`.
 - **Remoção de símbolos**: Remover os caracteres `.` e `-` da entrada.
 - **Geração**: Gerar um CEP aleatório de `8` dígitos.
@@ -39,4 +39,5 @@ O CEP é um conjunto numérico constituído de oito algarismos, que orienta e ac
 - Válido: `01310200` 
 - Inválido: `01310-200` (a validação aceita apenas CEPs sem formatação)
 - Inválido: `12345` (deve conter exatamente 8 caracteres)
+- Inválido: `123456789` (deve conter exatamente 8 caracteres)
 - Inválido: `abcdefgh` (deve conter apenas dígitos numéricos)
