@@ -83,6 +83,10 @@ export function bindLib(contract: Contract, adapter: LanguageAdapter, lib: LibCo
     report.symbol = best.symbol.name;
     report.matchedBy = "matchedBy" in res ? res.matchedBy : undefined;
     report.location = index.definition(best.symbol).location ?? best.symbol.location;
+    report.signature = {
+      params: best.symbol.params.map(({ name, type, optional, rest, keyword, fields }) => ({ name, type, optional, rest, keyword, fields })),
+      returns: best.symbol.returns
+    };
     report.issues.push(...best.issues);
     if (best.symbol.deprecated && !report.issues.some((i) => i.code === "deprecated-only")) {
       report.issues.push({ severity: "warning", code: "deprecated", message: `${best.symbol.name} is deprecated` });

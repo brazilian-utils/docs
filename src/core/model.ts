@@ -139,6 +139,8 @@ export interface NativeParam {
   rest?: boolean;
   /** Keyword-only / named parameter. */
   keyword?: boolean;
+  /** The fields of an options object, when the adapter can read them (for the docs site). */
+  fields?: NativeParam[];
 }
 
 export interface NativeSymbol {
@@ -231,6 +233,8 @@ export interface FunctionReport {
   /** How the symbol was found. */
   matchedBy?: "binding" | "convention";
   location?: { file: string; line: number };
+  /** The bound symbol's native signature, as the language writes it (for the docs site). */
+  signature?: { params: Array<Pick<NativeParam, "name" | "type" | "optional" | "rest" | "keyword" | "fields">>; returns?: string };
   issues: Issue[];
   tests: TestOutcome[];
   /** Candidate symbols for a missing function (fuzzy search). */

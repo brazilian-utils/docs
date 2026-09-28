@@ -19,7 +19,19 @@
         {
           "name": "options",
           "type": "BusinessDayOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "stateCode",
+              "type": "StateCode",
+              "optional": true
+            },
+            {
+              "name": "includeOptional",
+              "type": "boolean",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "Date | null",
@@ -40,7 +52,19 @@
         {
           "name": "options",
           "type": "CapitalizeOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "lowerCaseWords",
+              "type": "string[]",
+              "optional": true
+            },
+            {
+              "name": "upperCaseWords",
+              "type": "string[]",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "string",
@@ -77,7 +101,19 @@
         {
           "name": "options",
           "type": "ConvertDateToWordsOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "style",
+              "type": "\"full\" | \"month\"",
+              "optional": true
+            },
+            {
+              "name": "weekday",
+              "type": "boolean",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "string",
@@ -114,7 +150,14 @@
         {
           "name": "options",
           "type": "ConvertNumberToWordsOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "gender",
+              "type": "NumberToWordsGender",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "string",
@@ -140,7 +183,19 @@
         {
           "name": "options",
           "type": "BusinessDayOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "stateCode",
+              "type": "StateCode",
+              "optional": true
+            },
+            {
+              "name": "includeOptional",
+              "type": "boolean",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "number | null",
@@ -161,7 +216,14 @@
         {
           "name": "options",
           "type": "FormatBoletoOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "pad",
+              "type": "boolean",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "string",
@@ -182,7 +244,14 @@
         {
           "name": "options",
           "type": "FormatCaepfOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "pad",
+              "type": "boolean",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "string",
@@ -203,7 +272,14 @@
         {
           "name": "options",
           "type": "FormatCeiOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "pad",
+              "type": "boolean",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "string",
@@ -224,7 +300,14 @@
         {
           "name": "options",
           "type": "FormatCepOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "pad",
+              "type": "boolean",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "string",
@@ -245,7 +328,14 @@
         {
           "name": "options",
           "type": "FormatCepOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "pad",
+              "type": "boolean",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "string",
@@ -268,7 +358,14 @@
         {
           "name": "options",
           "type": "FormatCertidaoOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "pad",
+              "type": "boolean",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "string",
@@ -289,7 +386,14 @@
         {
           "name": "options",
           "type": "FormatCnaeOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "pad",
+              "type": "boolean",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "string",
@@ -310,7 +414,14 @@
         {
           "name": "options",
           "type": "FormatCnhOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "pad",
+              "type": "boolean",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "string",
@@ -331,7 +442,14 @@
         {
           "name": "options",
           "type": "FormatCnoOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "pad",
+              "type": "boolean",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "string",
@@ -352,7 +470,24 @@
         {
           "name": "options",
           "type": "FormatCnpjOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "pad",
+              "type": "boolean",
+              "optional": true
+            },
+            {
+              "name": "version",
+              "type": "1 | 2",
+              "optional": true
+            },
+            {
+              "name": "obfuscate",
+              "type": "boolean",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "string",
@@ -373,7 +508,24 @@
         {
           "name": "options",
           "type": "FormatCnpjOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "pad",
+              "type": "boolean",
+              "optional": true
+            },
+            {
+              "name": "version",
+              "type": "1 | 2",
+              "optional": true
+            },
+            {
+              "name": "obfuscate",
+              "type": "boolean",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "string",
@@ -396,7 +548,14 @@
         {
           "name": "options",
           "type": "FormatCnsOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "pad",
+              "type": "boolean",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "string",
@@ -417,7 +576,19 @@
         {
           "name": "options",
           "type": "FormatCpfOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "pad",
+              "type": "boolean",
+              "optional": true
+            },
+            {
+              "name": "obfuscate",
+              "type": "boolean",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "string",
@@ -438,7 +609,19 @@
         {
           "name": "options",
           "type": "FormatCpfOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "pad",
+              "type": "boolean",
+              "optional": true
+            },
+            {
+              "name": "obfuscate",
+              "type": "boolean",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "string",
@@ -461,7 +644,19 @@
         {
           "name": "options",
           "type": "FormatCurrencyOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "symbol",
+              "type": "boolean",
+              "optional": true
+            },
+            {
+              "name": "precision",
+              "type": "number",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "string",
@@ -498,7 +693,14 @@
         {
           "name": "options",
           "type": "FormatLegalNatureOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "pad",
+              "type": "boolean",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "string",
@@ -535,7 +737,14 @@
         {
           "name": "options",
           "type": "FormatNcmOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "pad",
+              "type": "boolean",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "string",
@@ -556,7 +765,14 @@
         {
           "name": "options",
           "type": "FormatNfeKeyOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "pad",
+              "type": "boolean",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "string",
@@ -593,7 +809,14 @@
         {
           "name": "options",
           "type": "FormatPhoneOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "mask",
+              "type": "PhoneMask",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "string",
@@ -614,7 +837,14 @@
         {
           "name": "options",
           "type": "FormatPisOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "pad",
+              "type": "boolean",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "string",
@@ -635,7 +865,14 @@
         {
           "name": "options",
           "type": "FormatProcessoJuridicoOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "pad",
+              "type": "boolean",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "string",
@@ -667,7 +904,14 @@
         {
           "name": "params",
           "type": "GenerateBoletoParams",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "type",
+              "type": "\"bancario\" | \"arrecadacao\"",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "string",
@@ -833,7 +1077,42 @@
         {
           "name": "params",
           "type": "GeneratePixPayloadParams",
-          "optional": false
+          "optional": false,
+          "fields": [
+            {
+              "name": "key",
+              "type": "string",
+              "optional": true
+            },
+            {
+              "name": "url",
+              "type": "string",
+              "optional": true
+            },
+            {
+              "name": "merchantName",
+              "type": "string"
+            },
+            {
+              "name": "merchantCity",
+              "type": "string"
+            },
+            {
+              "name": "amount",
+              "type": "number",
+              "optional": true
+            },
+            {
+              "name": "txid",
+              "type": "string",
+              "optional": true
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "string | null",
@@ -849,7 +1128,19 @@
         {
           "name": "options",
           "type": "GenerateProcessoJuridicoParams",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "year",
+              "type": "number",
+              "optional": true
+            },
+            {
+              "name": "court",
+              "type": "number",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "string | null",
@@ -896,7 +1187,14 @@
         {
           "name": "options",
           "type": "GetAddressInfoByCepOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "providers",
+              "type": "CepProvider[]",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "Promise<AddressInfo>",
@@ -991,7 +1289,14 @@
         {
           "name": "options",
           "type": "GetBoletoInfoOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "referenceDate",
+              "type": "Date",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "BoletoInfo | null",
@@ -1023,7 +1328,21 @@
         {
           "name": "params",
           "type": "GetCepInfoByAddressParams",
-          "optional": false
+          "optional": false,
+          "fields": [
+            {
+              "name": "federalUnit",
+              "type": "string"
+            },
+            {
+              "name": "city",
+              "type": "string"
+            },
+            {
+              "name": "street",
+              "type": "string"
+            }
+          ]
         }
       ],
       "returns": "Promise<CepAddressInfo[]>",
@@ -1136,7 +1455,18 @@
         {
           "name": "options",
           "type": "GetHolidaysParams",
-          "optional": false
+          "optional": false,
+          "fields": [
+            {
+              "name": "year",
+              "type": "number"
+            },
+            {
+              "name": "stateCode",
+              "type": "StateCode",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "Holiday[]",
@@ -1184,7 +1514,14 @@
         {
           "name": "params",
           "type": "GetLegalNaturesParams",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "includeLegacy",
+              "type": "boolean",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "Record<string, string>",
@@ -1205,7 +1542,14 @@
         {
           "name": "options",
           "type": "GetLegalNaturesByCategoryOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "includeLegacy",
+              "type": "boolean",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "LegalNature[]",
@@ -1237,7 +1581,13 @@
         {
           "name": "options",
           "type": "GetMunicipalityByCodeParams",
-          "optional": false
+          "optional": false,
+          "fields": [
+            {
+              "name": "code",
+              "type": "string | number"
+            }
+          ]
         }
       ],
       "returns": "Promise<[string, string] | null>",
@@ -1254,7 +1604,17 @@
         {
           "name": "options",
           "type": "GetMunicipalityByNameParams",
-          "optional": false
+          "optional": false,
+          "fields": [
+            {
+              "name": "municipalityName",
+              "type": "string"
+            },
+            {
+              "name": "uf",
+              "type": "string"
+            }
+          ]
         }
       ],
       "returns": "Promise<string | null>",
@@ -1431,7 +1791,19 @@
         {
           "name": "options",
           "type": "BusinessDayOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "stateCode",
+              "type": "StateCode",
+              "optional": true
+            },
+            {
+              "name": "includeOptional",
+              "type": "boolean",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "boolean",
@@ -1447,7 +1819,18 @@
         {
           "name": "options",
           "type": "IsHolidayParams",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "targetDate",
+              "type": "Date"
+            },
+            {
+              "name": "stateCode",
+              "type": "StateCode",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "boolean",
@@ -1463,7 +1846,25 @@
         {
           "name": "params",
           "type": "IsValidBankAccountParams",
-          "optional": false
+          "optional": false,
+          "fields": [
+            {
+              "name": "bankCode",
+              "type": "string"
+            },
+            {
+              "name": "agency",
+              "type": "string"
+            },
+            {
+              "name": "account",
+              "type": "string"
+            },
+            {
+              "name": "digit",
+              "type": "string"
+            }
+          ]
         }
       ],
       "returns": "boolean",
@@ -1582,7 +1983,14 @@
         {
           "name": "options",
           "type": "IsValidCertidaoOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "accept",
+              "type": "CertidaoType[]",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "boolean",
@@ -1667,7 +2075,14 @@
         {
           "name": "options",
           "type": "IsValidCnpjOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "version",
+              "type": "1 | 2",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "boolean",
@@ -1688,7 +2103,14 @@
         {
           "name": "options",
           "type": "IsValidCnpjOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "version",
+              "type": "1 | 2",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "boolean",
@@ -1793,7 +2215,14 @@
         {
           "name": "options",
           "type": "IsValidCstOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "tax",
+              "type": "\"icms\" | \"ipi\" | \"pis\" | \"cofins\"",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "boolean",
@@ -1841,7 +2270,17 @@
         {
           "name": "params",
           "type": "IsValidIeParams",
-          "optional": false
+          "optional": false,
+          "fields": [
+            {
+              "name": "value",
+              "type": "string"
+            },
+            {
+              "name": "stateCode",
+              "type": "StateCode"
+            }
+          ]
         }
       ],
       "returns": "boolean",
@@ -1878,7 +2317,17 @@
         {
           "name": "params",
           "type": "IsValidIeParams",
-          "optional": false
+          "optional": false,
+          "fields": [
+            {
+              "name": "value",
+              "type": "string"
+            },
+            {
+              "name": "stateCode",
+              "type": "StateCode"
+            }
+          ]
         }
       ],
       "returns": "boolean",
@@ -1972,7 +2421,14 @@
         {
           "name": "options",
           "type": "IsValidMobilePhoneOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "version",
+              "type": "PhoneVersion",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "boolean",
@@ -2041,7 +2497,19 @@
         {
           "name": "options",
           "type": "IsValidPhoneOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "version",
+              "type": "PhoneVersion",
+              "optional": true
+            },
+            {
+              "name": "accept",
+              "type": "PhoneType[]",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "boolean",
@@ -2096,7 +2564,14 @@
         {
           "name": "options",
           "type": "IsValidPixKeyOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "accept",
+              "type": "PixKeyType[]",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "boolean",
@@ -2144,7 +2619,22 @@
         {
           "name": "params",
           "type": "IsValidRegistroProfissionalParams",
-          "optional": false
+          "optional": false,
+          "fields": [
+            {
+              "name": "value",
+              "type": "string"
+            },
+            {
+              "name": "council",
+              "type": "RegistroProfissionalCouncil"
+            },
+            {
+              "name": "stateCode",
+              "type": "StateCode",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "boolean",
@@ -2389,7 +2879,14 @@
         {
           "name": "options",
           "type": "ParseCnpjOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "version",
+              "type": "1 | 2",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "string",
@@ -2442,7 +2939,14 @@
         {
           "name": "options",
           "type": "ParseCurrencyOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "precision",
+              "type": "number",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "number",
@@ -2644,7 +3148,19 @@
         {
           "name": "options",
           "type": "BusinessDayOptions",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "stateCode",
+              "type": "StateCode",
+              "optional": true
+            },
+            {
+              "name": "includeOptional",
+              "type": "boolean",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "Date | null",
@@ -2665,7 +3181,19 @@
         {
           "name": "config",
           "type": "ToStandardSchemaOptions<Options>",
-          "optional": true
+          "optional": true,
+          "fields": [
+            {
+              "name": "options",
+              "type": "Options",
+              "optional": true
+            },
+            {
+              "name": "message",
+              "type": "string",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "StandardSchemaV1<Value>",

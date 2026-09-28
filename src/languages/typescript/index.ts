@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { Node, Project, type ParameterDeclaration, type Signature, type Type } from "ts-morph";
+import { Node, Project, ts, type ParameterDeclaration, type Signature, type Type } from "ts-morph";
 import { T } from "../../core/ctype.js";
 import type { NativeParam, NativeSymbol, TypeNode } from "../../core/model.js";
 import { LANGUAGES_DIR, PACKAGE_ROOT } from "../../core/paths.js";
@@ -57,6 +57,26 @@ function withoutUndefined(type: Type): Type[] {
   return type.isUnion() ? type.getUnionTypes().filter((t) => !t.isUndefined()) : [type];
 }
 
+/**
+ * The fields of an options object (`options: FormatCpfOptions` → `pad`, `obfuscate`), when the
+ * parameter's type is one object type declared in the library itself.
+ */
+function objectFields(types: Type[], at: Node): NativeParam[] | undefined {
+  const objects = types.filter((t) => t.isObject() && !t.isArray() && !t.isTuple() && t.getCallSignatures().length === 0);
+  if (objects.length !== 1 || objects.length !== types.length) return undefined;
+  const type = objects[0];
+  const decl = (type.getAliasSymbol() ?? type.getSymbol())?.getDeclarations()[0];
+  const file = decl?.getSourceFile();
+  if (!file || file.isInNodeModules() || file.isDeclarationFile()) return undefined;
+  const fields = type.getProperties().flatMap((prop): NativeParam[] => {
+    const d = prop.getValueDeclaration() ?? prop.getDeclarations()[0];
+    if (!d || Node.isMethodSignature(d) || Node.isMethodDeclaration(d)) return [];
+    const typeNode = Node.isPropertySignature(d) ? d.getTypeNode() : undefined;
+    return [{ name: prop.getName(), type: typeNode?.getText() ?? prop.getTypeAtLocation(at).getText(at, 1 /* NoTruncation */), optional: prop.hasFlags(ts.SymbolFlags.Optional) || undefined }];
+  });
+  return fields.length ? fields : undefined;
+}
+
 function paramFrom(p: ParameterDeclaration, i: number): NativeParam {
   const nameNode = p.getNameNode();
   const name = Node.isIdentifier(nameNode) ? nameNode.getText() : `arg${i}`;
@@ -71,7 +91,8 @@ function paramFrom(p: ParameterDeclaration, i: number): NativeParam {
     type: p.getTypeNode()?.getText() ?? p.getType().getText(p, 1 /* NoTruncation */),
     typeNode,
     optional,
-    rest: p.isRestParameter() || undefined
+    rest: p.isRestParameter() || undefined,
+    fields: p.isRestParameter() ? undefined : objectFields(members, p)
   };
 }
 

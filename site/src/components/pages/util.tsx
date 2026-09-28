@@ -235,33 +235,6 @@ async function Operation({ op, label, anchor, spec, locale, libs, status }: any)
       {op.network && <Note type="info">{t('ops.network')}</Note>}
       {op.deprecated && <Note type="warn">{t('ops.deprecated')}</Note>}
 
-      {/* The signature already says it all unless there is more than one parameter or an optional one. */}
-      {showParams(op) && (
-        <table>
-          <thead>
-            <tr>
-              <th scope="col">{L(locale, 'Parameter', 'Parâmetro')}</th>
-              <th scope="col">{L(locale, 'Type', 'Tipo')}</th>
-              <th scope="col">{L(locale, 'Required', 'Obrigatório')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {op.params.map((x: any) => (
-              <tr key={x.name}>
-                <td><code>{x.name}</code></td>
-                <td><code>{x.type}</code></td>
-                <td>{x.optional ? L(locale, 'no', 'não') : L(locale, 'yes', 'sim')}</td>
-              </tr>
-            ))}
-            <tr>
-              <td className="text-fd-muted-foreground">{L(locale, 'returns', 'retorna')}</td>
-              <td><code>{op.returns}</code></td>
-              <td />
-            </tr>
-          </tbody>
-        </table>
-      )}
-
       <FlatTabs
         groupId="lang"
         persist
@@ -274,22 +247,27 @@ async function Operation({ op, label, anchor, spec, locale, libs, status }: any)
               {lib.label}
             </>
           ),
-          content: entry ? (
+          content: (
             <>
-              <Markdown source={entry.body} />
-              {entry.source && (
-                <a href={entry.source} target="_blank" rel="noopener noreferrer" className="not-prose mt-2 inline-flex items-center gap-1 text-xs text-fd-muted-foreground no-underline hover:text-fd-foreground">
-                  {t('usage.code')}: {lib.repo} <ExternalLink className="size-3" />
-                </a>
+              {isImplemented(fn) && <Signature signature={fn?.signature} locale={locale} />}
+              {entry ? (
+                <>
+                  <Markdown source={entry.body} />
+                  {entry.source && (
+                    <a href={entry.source} target="_blank" rel="noopener noreferrer" className="not-prose mt-2 inline-flex items-center gap-1 text-xs text-fd-muted-foreground no-underline hover:text-fd-foreground">
+                      {t('usage.code')}: {lib.repo} <ExternalLink className="size-3" />
+                    </a>
+                  )}
+                </>
+              ) : (
+                <p className="text-fd-muted-foreground">
+                  {isImplemented(fn) ? t('usage.undocumented', { lib: lib.label }) : t('usage.notAvailable', { lib: lib.label })}{' '}
+                  <Link href={isImplemented(fn) ? `${p}/contributing/usage-files/` : `${p}/contributing/new-language/`}>
+                    {isImplemented(fn) ? t('usage.document') : t('usage.contribute')}
+                  </Link>
+                </p>
               )}
             </>
-          ) : (
-            <p className="text-fd-muted-foreground">
-              {isImplemented(fn) ? t('usage.undocumented', { lib: lib.label }) : t('usage.notAvailable', { lib: lib.label })}{' '}
-              <Link href={isImplemented(fn) ? `${p}/contributing/usage-files/` : `${p}/contributing/new-language/`}>
-                {isImplemented(fn) ? t('usage.document') : t('usage.contribute')}
-              </Link>
-            </p>
           ),
         }))}
       />
@@ -318,7 +296,47 @@ async function Operation({ op, label, anchor, spec, locale, libs, status }: any)
   );
 }
 
-function showParams(op: any) {
-  const params: any[] = op.params ?? [];
-  return params.length > 1 || params.some((x) => x.optional || x.description || x.default !== undefined || x.enum || x.allowed);
+function ParamRow({ name, param, locale }: { name: string; param: any; locale: Locale }) {
+  return (
+    <tr>
+      <td><code>{name}</code></td>
+      <td>{param.type ? <code>{param.type}</code> : <span className="text-fd-muted-foreground">{L(locale, 'untyped', 'sem tipo')}</span>}</td>
+      <td>{param.optional || param.rest ? L(locale, 'no', 'não') : L(locale, 'yes', 'sim')}</td>
+    </tr>
+  );
+}
+
+/**
+ * The parameters as this library takes them. Names, types and optionality differ between languages
+ * (an options object in one, positional arguments or none in another), so each tab shows its own.
+ */
+function Signature({ signature, locale }: { signature?: { params: any[]; returns?: string }; locale: Locale }) {
+  if (!signature || (signature.params.length === 0 && !signature.returns)) return null;
+  return (
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">{L(locale, 'Parameter', 'Parâmetro')}</th>
+          <th scope="col">{L(locale, 'Type', 'Tipo')}</th>
+          <th scope="col">{L(locale, 'Required', 'Obrigatório')}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {signature.params.flatMap((x: any) => [
+          <ParamRow key={x.name} name={x.rest ? `...${x.name}` : x.name} param={x} locale={locale} />,
+          // An options object lists its fields; a field is required only when the object is.
+          ...(x.fields ?? []).map((f: any) => (
+            <ParamRow key={`${x.name}.${f.name}`} name={`${x.name}.${f.name}`} param={{ ...f, optional: f.optional || x.optional }} locale={locale} />
+          )),
+        ])}
+        {signature.returns && (
+          <tr>
+            <td className="text-fd-muted-foreground">{L(locale, 'returns', 'retorna')}</td>
+            <td><code>{signature.returns}</code></td>
+            <td />
+          </tr>
+        )}
+      </tbody>
+    </table>
+  );
 }

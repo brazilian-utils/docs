@@ -59,6 +59,7 @@ function statusJson(input: SiteDataInput) {
                 level: f.level,
                 symbol: f.symbol,
                 source: sourceUrl(lib, report, f.location),
+                signature: f.signature,
                 passed: f.tests.filter((t) => t.status === "pass").length,
                 failed: failures.length,
                 issues: f.issues.filter((i) => i.severity === "error").map((i) => i.message),
