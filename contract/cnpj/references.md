@@ -11,3 +11,7 @@
 - [Manual de cálculo do dígito verificador do CNPJ, Receita Federal](https://www.gov.br/receitafederal/pt-br/centrais-de-conteudo/publicacoes/documentos-tecnicos/cnpj/manual-dv-cnpj.pdf)
 
 - [CNPJ Alfanumérico, Receita Federal](https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/cnpj-alfanumerico)
+
+- [Perguntas e respostas: CNPJ alfanumérico, Receita Federal](https://www.gov.br/receitafederal/pt-br/centrais-de-conteudo/publicacoes/perguntas-e-respostas/cnpj/cnpj-alfanumerico.pdf)
+
+- [Instrução Normativa RFB nº 2.229/2024, no Sijut2](http://normas.receita.fazenda.gov.br/sijut2consulta/link.action?idAto=141102)

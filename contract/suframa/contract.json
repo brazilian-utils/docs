@@ -1,0 +1,207 @@
+{
+  "$schema": "../../schema/contract.schema.json",
+  "domain": "suframa",
+  "title": { "en": "SUFRAMA registration", "pt-BR": "Inscrição SUFRAMA" },
+  "summary": {
+    "en": "Inscrição SUFRAMA, the number the Superintendência da Zona Franca de Manaus gives to companies with tax incentives. The NF-e carries it in the ISUF field.",
+    "pt-BR": "Inscrição SUFRAMA, o número que a Superintendência da Zona Franca de Manaus dá às empresas com incentivos fiscais. A NF-e o leva no campo ISUF."
+  },
+  "category": "companies",
+  "order": 9,
+  "related": ["nfeKey", "ie", "cnpj"],
+  "functions": {
+    "format": {
+      "summary": {
+        "en": "Formats an Inscrição SUFRAMA as `SS.NNNN.LLD`.",
+        "pt-BR": "Formata uma Inscrição SUFRAMA como `SS.NNNN.LLD`."
+      },
+      "description": {
+        "en": [
+          "Formats an Inscrição SUFRAMA with the mask `00.0000.000`. Only the structure changes (use `suframa.isValid` to check the number).",
+          "",
+          "- The mask is progressive: a partial value is masked as far as it goes. Characters that are not digits are dropped, and digits after the 9th are ignored.",
+          "- `options.pad` first left-pads the value with zeros to 9 digits.",
+          "- An 8-digit value is a number whose sector lost its leading zero. Without `pad`, the mask groups it one position early (`10001018` gives `10.0010.18`). Use `{ pad: true }` to get the correct mask (`01.0001.018`).",
+          "- A number is read only when it is a non-negative safe integer. A negative, fractional, not finite or unsafe number returns an empty string."
+        ],
+        "pt-BR": [
+          "Formata uma Inscrição SUFRAMA com a máscara `00.0000.000`. Só a estrutura muda (use `suframa.isValid` para verificar o número).",
+          "",
+          "- A máscara é progressiva: um valor parcial é formatado até onde vai. Caracteres que não são dígitos são descartados, e dígitos depois do 9º são ignorados.",
+          "- `options.pad` primeiro completa o valor com zeros à esquerda até 9 dígitos.",
+          "- Um valor de 8 dígitos é um número cujo setor perdeu o zero à esquerda. Sem `pad`, a máscara agrupa uma posição antes (`10001018` dá `10.0010.18`). Use `{ pad: true }` para obter a máscara correta (`01.0001.018`).",
+          "- Um número só é lido quando é um inteiro seguro não negativo. Um número negativo, fracionário, não finito ou inseguro retorna uma string vazia."
+        ]
+      },
+      "references": ["https://www.confaz.fazenda.gov.br/legislacao/arquivo-manuais/moc7-visao-geral.pdf"],
+      "params": [
+        { "name": "value", "type": "string | number" },
+        { "name": "options", "type": "FormatSuframaOptions", "optional": true }
+      ],
+      "returns": "string",
+      "tests": [
+        { "args": ["123456789"], "returns": "12.3456.789", "note": "from the maintainer briefing, #559" },
+        { "args": ["10001018"], "returns": "10.0010.18", "note": "from the maintainer briefing, #559" },
+        { "args": ["10001018", { "pad": true }], "returns": "01.0001.018", "note": "from the maintainer briefing, #559" },
+        { "args": [-101234567], "returns": "", "note": "from the maintainer briefing, #559" },
+        { "args": [""], "returns": "", "note": "JavaScript's own test: when it is a no formatted string" },
+        { "args": ["2"], "returns": "2", "note": "JavaScript's own test: when it is a no formatted string" },
+        { "args": ["205"], "returns": "20.5", "note": "JavaScript's own test: when it is a no formatted string" },
+        { "args": ["205678"], "returns": "20.5678", "note": "JavaScript's own test: when it is a no formatted string" },
+        { "args": ["2056781"], "returns": "20.5678.1", "note": "JavaScript's own test: when it is a no formatted string" },
+        { "args": ["205678106"], "returns": "20.5678.106", "note": "JavaScript's own test: when it is a no formatted string" },
+        { "args": ["20.5678.10-6"], "returns": "20.5678.106", "note": "JavaScript's own test: when it is a formatted string" },
+        { "args": ["20#Error*&@#5678#Char!106"], "returns": "20.5678.106", "note": "JavaScript's own test: when it is a malformed string" },
+        { "args": [205], "returns": "20.5", "note": "JavaScript's own test: when it is a number" },
+        { "args": [205678106], "returns": "20.5678.106", "note": "JavaScript's own test: when it is a number" },
+        { "args": [10001018], "returns": "10.0010.18", "note": "JavaScript's own test: when it is a number" },
+        { "args": [10001018, { "pad": true }], "returns": "01.0001.018", "note": "JavaScript's own test: should left pad with zeros when the pad option is set" },
+        { "args": ["1", { "pad": true }], "returns": "00.0000.001", "note": "JavaScript's own test: should left pad with zeros when the pad option is set" },
+        { "args": ["205678106", { "pad": true }], "returns": "20.5678.106", "note": "JavaScript's own test: should left pad with zeros when the pad option is set" },
+        { "args": ["10001018", { "pad": false }], "returns": "10.0010.18", "note": "JavaScript's own test: should not pad when the pad option is false" },
+        { "args": ["205678106999"], "returns": "20.5678.106", "note": "JavaScript's own test: should NOT add digits after the Inscrição SUFRAMA length (9)" },
+        { "args": [-1], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": [1.5], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": [-101234567, { "pad": true }], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" }
+      ]
+    },
+    "generate": {
+      "summary": {
+        "en": "Generates a random Inscrição SUFRAMA with a valid check digit.",
+        "pt-BR": "Gera uma Inscrição SUFRAMA aleatória com dígito verificador válido."
+      },
+      "description": {
+        "en": [
+          "Generates a random Inscrição SUFRAMA with a valid check digit: always 9 digits, unformatted.",
+          "",
+          "- The sector is never `00`, the only structural rule the NF-e manual states.",
+          "- Sector and locality are random. They need not match codes SUFRAMA uses."
+        ],
+        "pt-BR": [
+          "Gera uma Inscrição SUFRAMA aleatória com dígito verificador válido: sempre 9 dígitos, sem máscara.",
+          "",
+          "- O setor nunca é `00`, a única regra de estrutura que o manual da NF-e traz.",
+          "- Setor e localidade são aleatórios. Não precisam corresponder a códigos que a SUFRAMA usa."
+        ]
+      },
+      "references": ["https://www.confaz.fazenda.gov.br/legislacao/arquivo-manuais/moc7-visao-geral.pdf"],
+      "params": [],
+      "returns": "string",
+      "tests": [
+        { "name": "generated-is-valid", "args": [], "satisfies": "suframa.isValid", "repeat": 5, "note": "every generated value must pass the lib's own validator" },
+        { "name": "nine-digits-never-sector-00", "args": [], "matches": "^(0[1-9]|[1-9][0-9])[0-9]{7}$", "repeat": 10, "note": "JavaScript's own test: should generate 9 digit numbers its own validator accepts, never with sector code 00" }
+      ]
+    },
+    "isValid": {
+      "summary": {
+        "en": "Checks whether an Inscrição SUFRAMA is valid.",
+        "pt-BR": "Verifica se uma Inscrição SUFRAMA é válida."
+      },
+      "description": {
+        "en": [
+          "Validates an Inscrição SUFRAMA: the layout `SS.NNNN.LLD` (sector, sequential number, locality of the SUFRAMA unit and check digit) and its modulus 11 check digit.",
+          "",
+          "- The NF-e field is numeric, with 8 or 9 positions. The sector `SS` can start with 0, and the number then loses that zero and has 8 digits. The sector can never be `00`.",
+          "- An 8-digit value is validated with the zero put back on the left. So an 8-digit value that starts with 0 is rejected, because it becomes sector `00`. The NF-e manual only says that `SS` can start with 0: this reading of 8 digits is an inference of the library.",
+          "- Check digit: modulus 11 over the first 8 digits, weights 2 to 9 from right to left. The digit is 0 when the remainder is 0 or 1.",
+          "- Accepts the mask characters `.`, `-`, `/`, `(`, `)`, `,` and `*`, and whitespace. Any other character makes the value invalid.",
+          "- Sector and locality are not checked against a table: there is no complete official list. For that reason there is no `getSuframaInfo`.",
+          "- Rule E18-30 of the NF-e (recipient in AC, AM, RO, RR or Macapá/Santana-AP) is out of scope.",
+          "- The rule comes from the NF-e Manual de Orientação do Contribuinte (MOC 7.0, section 8.4, and field E18 `ISUF`, rule E18-20, rejection 235). SUFRAMA itself publishes no layout and no check digit.",
+          "- Only a string is read. Any other type returns false."
+        ],
+        "pt-BR": [
+          "Valida uma Inscrição SUFRAMA: o leiaute `SS.NNNN.LLD` (setor, sequencial, localidade da unidade SUFRAMA e dígito verificador) e o dígito verificador por módulo 11.",
+          "",
+          "- O campo da NF-e é numérico, com 8 ou 9 posições. O setor `SS` pode começar com 0, e aí o número perde esse zero e fica com 8 dígitos. O setor nunca pode ser `00`.",
+          "- Um valor de 8 dígitos é validado com o zero recolocado à esquerda. Por isso um valor de 8 dígitos que começa com 0 é rejeitado: vira setor `00`. O manual da NF-e só diz que `SS` pode começar com 0: essa leitura dos 8 dígitos é inferência da biblioteca.",
+          "- Dígito verificador: módulo 11 sobre os 8 primeiros dígitos, pesos 2 a 9 da direita para a esquerda. O dígito é 0 quando o resto é 0 ou 1.",
+          "- Aceita os caracteres de máscara `.`, `-`, `/`, `(`, `)`, `,` e `*`, e espaços. Qualquer outro caractere torna o valor inválido.",
+          "- Setor e localidade não são validados contra tabela: não existe lista oficial exaustiva. Por isso não há `getSuframaInfo`.",
+          "- A regra E18-30 da NF-e (destinatário em AC, AM, RO, RR ou Macapá/Santana-AP) fica fora do escopo.",
+          "- A regra vem do Manual de Orientação do Contribuinte da NF-e (MOC 7.0, seção 8.4, e campo E18 `ISUF`, regra E18-20, rejeição 235). A própria SUFRAMA não publica leiaute nem dígito verificador.",
+          "- Só uma string é lida. Qualquer outro tipo retorna false."
+        ]
+      },
+      "references": [
+        "https://www.confaz.fazenda.gov.br/legislacao/arquivo-manuais/moc7-visao-geral.pdf",
+        "https://www.confaz.fazenda.gov.br/legislacao/arquivo-manuais/moc7-anexo-i-leiaute-e-rv.pdf"
+      ],
+      "params": [{ "name": "suframa", "type": "string" }],
+      "returns": "boolean",
+      "tests": [
+        { "args": ["123456789"], "returns": true, "note": "from the maintainer briefing, #559 (the example of the NF-e manual)" },
+        { "args": ["12.3456.789"], "returns": true, "note": "from the maintainer briefing, #559" },
+        { "args": ["10001018"], "returns": true, "note": "from the maintainer briefing, #559 (8 digits, same as 010001018)" },
+        { "args": ["001234560"], "returns": false, "note": "from the maintainer briefing, #559 (sector 00)" },
+        { "args": [""], "returns": false, "note": "JavaScript's own test: when it is an empty string" },
+        { "name": "whitespace-only", "args": ["   "], "returns": false },
+        { "args": ["1234567"], "returns": false, "note": "JavaScript's own test: when it has fewer than 8 digits" },
+        { "args": ["0001018"], "returns": false, "note": "JavaScript's own test: when it has fewer than 8 digits" },
+        { "args": ["1234567899"], "returns": false, "note": "JavaScript's own test: when it has more than 9 digits, even if the first 9 are valid" },
+        { "args": ["1234567090"], "returns": false, "note": "JavaScript's own test: when it has more than 9 digits, even if the last 9 are valid" },
+        { "args": ["12345678A9"], "returns": false, "note": "JavaScript's own test: when it contains letters or special characters" },
+        { "args": ["12#3456#789"], "returns": false, "note": "JavaScript's own test: when it contains letters or special characters" },
+        { "args": ["abcdefghi"], "returns": false, "note": "JavaScript's own test: when it contains letters or special characters" },
+        { "args": ["123456780"], "returns": false, "note": "JavaScript's own test: when the check digit is wrong" },
+        { "args": ["205678105"], "returns": false, "note": "JavaScript's own test: when the check digit is wrong" },
+        { "args": ["10001019"], "returns": false, "note": "JavaScript's own test: when the check digit is wrong" },
+        { "args": ["100000011"], "returns": false, "note": "JavaScript's own test: when the remainder is 0 or 1 and the check digit is not 0" },
+        { "args": ["600001301"], "returns": false, "note": "JavaScript's own test: when the remainder is 0 or 1 and the check digit is not 0" },
+        { "args": ["000000000"], "returns": false, "note": "JavaScript's own test: when the sector code is 00" },
+        { "args": ["000000019"], "returns": false, "note": "JavaScript's own test: when the sector code is 00" },
+        { "args": ["01234560"], "returns": false, "note": "JavaScript's own test: when an 8 digit value starts with 0, which reads as sector code 00" },
+        { "args": ["010001018"], "returns": true, "note": "JavaScript's own test: when it is a valid Inscrição SUFRAMA without mask" },
+        { "args": ["101234015"], "returns": true, "note": "JavaScript's own test: when it is a valid Inscrição SUFRAMA without mask" },
+        { "args": ["205678106"], "returns": true, "note": "JavaScript's own test: when it is a valid Inscrição SUFRAMA without mask" },
+        { "args": ["601234308"], "returns": true, "note": "JavaScript's own test: when it is a valid Inscrição SUFRAMA without mask" },
+        { "args": ["20.5678.10-6"], "returns": true, "note": "JavaScript's own test: when it is a valid Inscrição SUFRAMA with mask" },
+        { "args": ["20 5678 10 6"], "returns": true, "note": "JavaScript's own test: when it is a valid Inscrição SUFRAMA with mask" },
+        { "args": ["1.0001.018"], "returns": true, "note": "JavaScript's own test: when it has 8 digits because the sector code lost its leading zero" },
+        { "args": ["100000010"], "returns": true, "note": "JavaScript's own test: when the remainder is 0 and the check digit is 0" },
+        { "args": ["600001300"], "returns": true, "note": "JavaScript's own test: when the remainder is 1 and the check digit is 0" },
+        { "args": ["100000061"], "returns": true, "note": "JavaScript's own test: when the remainder is 10 and the check digit is 1" }
+      ]
+    },
+    "parse": {
+      "summary": {
+        "en": "Removes the formatting characters of an Inscrição SUFRAMA and returns only the digits.",
+        "pt-BR": "Remove os caracteres de formatação de uma Inscrição SUFRAMA e retorna só os dígitos."
+      },
+      "description": {
+        "en": [
+          "Removes Inscrição SUFRAMA formatting and keeps only digits, capped at 9, the way the `ISUF` field of the NF-e expects them.",
+          "",
+          "- The function does not left-pad the value. An 8-digit value stays with 8 digits.",
+          "- A number is read only when it is a non-negative safe integer. A negative, fractional, not finite or unsafe number returns an empty string."
+        ],
+        "pt-BR": [
+          "Remove a formatação da Inscrição SUFRAMA e mantém apenas os dígitos, no máximo 9, como o campo `ISUF` da NF-e espera.",
+          "",
+          "- A função não completa o valor com zeros à esquerda. Um valor de 8 dígitos continua com 8.",
+          "- Um número só é lido quando é um inteiro seguro não negativo. Um número negativo, fracionário, não finito ou inseguro retorna uma string vazia."
+        ]
+      },
+      "references": [
+        "https://www.confaz.fazenda.gov.br/legislacao/arquivo-manuais/moc7-visao-geral.pdf",
+        "https://www.confaz.fazenda.gov.br/legislacao/arquivo-manuais/moc7-anexo-i-leiaute-e-rv.pdf"
+      ],
+      "params": [{ "name": "value", "type": "string | number" }],
+      "returns": "string",
+      "tests": [
+        { "args": ["12.3456.789"], "returns": "123456789", "note": "JavaScript's own test: should remove Inscrição SUFRAMA mask characters" },
+        { "args": ["20.5678.10-6"], "returns": "205678106", "note": "JavaScript's own test: should remove Inscrição SUFRAMA mask characters" },
+        { "args": ["123456789"], "returns": "123456789", "note": "JavaScript's own test: should keep an unmasked value as it is" },
+        { "args": ["10001018"], "returns": "10001018", "note": "JavaScript's own test: should keep an unmasked value as it is" },
+        { "args": [123456789], "returns": "123456789", "note": "JavaScript's own test: should accept a number" },
+        { "args": ["12#Error*&@#3456#Char!789"], "returns": "123456789", "note": "JavaScript's own test: should remove non numeric characters" },
+        { "args": ["123456789123"], "returns": "123456789", "note": "JavaScript's own test: should ignore digits after the Inscrição SUFRAMA length" },
+        { "name": "empty", "args": [""], "returns": "" },
+        { "args": [10123456.7], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": [-1], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" }
+      ]
+    }
+  }
+}

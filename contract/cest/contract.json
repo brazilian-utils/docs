@@ -1,0 +1,225 @@
+{
+  "$schema": "../../schema/contract.schema.json",
+  "domain": "cest",
+  "title": { "en": "CEST", "pt-BR": "CEST" },
+  "summary": {
+    "en": "Código Especificador da Substituição Tributária: the 7-digit codes of Convênio ICMS 142/18 for goods under ICMS tax substitution.",
+    "pt-BR": "Código Especificador da Substituição Tributária: os códigos de 7 dígitos do Convênio ICMS 142/18 para mercadorias sujeitas à substituição tributária do ICMS."
+  },
+  "category": "tax",
+  "order": 6,
+  "related": ["ncm"],
+  "functions": {
+    "format": {
+      "summary": { "en": "Formats a CEST as `NN.NNN.NN`.", "pt-BR": "Formata um CEST como `NN.NNN.NN`." },
+      "description": {
+        "en": [
+          "Formats a CEST with the mask `NN.NNN.NN` (segment, item, specification), the form the annexes print. Only the structure changes (use `cest.isValid` to check the code).",
+          "",
+          "- The mask is progressive: a partial value is masked as far as it goes (`01001` gives `01.001`). Characters that are not digits are dropped, and digits after the 7th are ignored.",
+          "- `options.pad` first left-pads the value with zeros to 7 digits. Without it, a number that lost its leading zero shifts the mask: `100100` gives `10.010.0`, and `01.001.00` with `pad`.",
+          "- A number is read only when it is a non-negative safe integer. A negative, fractional, not finite or unsafe number returns an empty string."
+        ],
+        "pt-BR": [
+          "Formata um CEST com a máscara `NN.NNN.NN` (segmento, item, especificação), a forma que os anexos imprimem. Só a estrutura muda (use `cest.isValid` para verificar o código).",
+          "",
+          "- A máscara é progressiva: um valor parcial é formatado até onde vai (`01001` dá `01.001`). Caracteres que não são dígitos são descartados, e dígitos depois do 7º são ignorados.",
+          "- `options.pad` primeiro completa o valor com zeros à esquerda até 7 dígitos. Sem ele, um número que perdeu o zero à esquerda desloca a máscara: `100100` dá `10.010.0`, e `01.001.00` com `pad`.",
+          "- Um número só é lido quando é um inteiro seguro não negativo. Um número negativo, fracionário, não finito ou inseguro retorna uma string vazia."
+        ]
+      },
+      "references": ["https://www.confaz.fazenda.gov.br/legislacao/convenios/2018/CV142_18"],
+      "params": [
+        { "name": "value", "type": "string | number" },
+        { "name": "options", "type": "FormatCestOptions", "optional": true }
+      ],
+      "returns": "string",
+      "tests": [
+        { "args": ["01001"], "returns": "01.001", "note": "from the maintainer briefing, #564 (progressive mask)" },
+        { "args": [-2899900], "returns": "", "note": "from the maintainer briefing, #564" },
+        { "args": ["0100100"], "returns": "01.001.00", "note": "JavaScript's own test: should format a CEST given as digits" },
+        { "args": [2899900], "returns": "28.999.00", "note": "JavaScript's own test: should format a CEST given as a number" },
+        { "args": ["17.024.05"], "returns": "17.024.05", "note": "JavaScript's own test: should leave a CEST that already has the mask as it is" },
+        { "args": ["0"], "returns": "0", "note": "JavaScript's own test: should mask a partial value progressively by default" },
+        { "args": ["01"], "returns": "01", "note": "JavaScript's own test: should mask a partial value progressively by default" },
+        { "args": ["010"], "returns": "01.0", "note": "JavaScript's own test: should mask a partial value progressively by default" },
+        { "args": ["010010"], "returns": "01.001.0", "note": "JavaScript's own test: should mask a partial value progressively by default" },
+        { "args": [100100], "returns": "10.010.0", "note": "JavaScript's own test: should not pad a number by default, so a lost leading zero shifts the mask" },
+        { "args": ["0000000"], "returns": "00.000.00", "note": "JavaScript's own test: should not check the code against the annexes" },
+        { "args": ["01001009999"], "returns": "01.001.00", "note": "JavaScript's own test: should not add digits after the CEST length" },
+        { "args": ["", { "pad": true }], "returns": "00.000.00", "note": "JavaScript's own test: should left pad a short value with zeros up to the 7 digits" },
+        { "args": ["1", { "pad": true }], "returns": "00.000.01", "note": "JavaScript's own test: should left pad a short value with zeros up to the 7 digits" },
+        { "args": ["100100", { "pad": true }], "returns": "01.001.00", "note": "JavaScript's own test: should left pad a short value with zeros up to the 7 digits" },
+        { "args": ["2899900", { "pad": true }], "returns": "28.999.00", "note": "JavaScript's own test: should left pad a short value with zeros up to the 7 digits" },
+        { "args": [100100, { "pad": true }], "returns": "01.001.00", "note": "JavaScript's own test: should left pad a number the same way as its digits" },
+        { "args": ["01001", { "pad": false }], "returns": "01.001", "note": "JavaScript's own test: should mask progressively for an explicit false" },
+        { "args": [""], "returns": "", "note": "JavaScript's own test: should return an empty string for an empty value, and for null and undefined even under pad" },
+        { "args": ["abc0100100"], "returns": "01.001.00", "note": "JavaScript's own test: should read only the digits of a value with other characters, like formatCpf" },
+        { "args": ["01-001/00"], "returns": "01.001.00", "note": "JavaScript's own test: should read only the digits of a value with other characters, like formatCpf" },
+        { "args": [289990.1], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": [-2899900, { "pad": true }], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" }
+      ]
+    },
+    "get": {
+      "summary": {
+        "en": "Looks up a CEST in Convênio ICMS 142/18.",
+        "pt-BR": "Consulta um CEST no Convênio ICMS 142/18."
+      },
+      "description": {
+        "en": [
+          "Looks up a CEST in the annexes of Convênio ICMS 142/18 and returns its code, description and segment. Returns null exactly when `cest.isValid` is false.",
+          "",
+          "- Same input rules as `cest.isValid`: a revoked item, an unknown code and a value not in an accepted form return null.",
+          "- `code` is the 7 digits, without mask. `description` is the wording in force of the annex. `segment` is the name of the segment in Anexo I.",
+          "- Returns a new object on every call."
+        ],
+        "pt-BR": [
+          "Consulta um CEST nos anexos do Convênio ICMS 142/18 e retorna o código, a descrição e o segmento. Retorna null exatamente quando `cest.isValid` é false.",
+          "",
+          "- Mesmas regras de entrada de `cest.isValid`: item revogado, código desconhecido e valor fora das formas aceitas retornam null.",
+          "- `code` são os 7 dígitos, sem máscara. `description` é a redação vigente do anexo. `segment` é o nome do segmento no Anexo I.",
+          "- Retorna um objeto novo a cada chamada."
+        ]
+      },
+      "references": ["https://www.confaz.fazenda.gov.br/legislacao/convenios/2018/CV142_18"],
+      "params": [{ "name": "value", "type": "string | number" }],
+      "returns": "Cest?",
+      "tests": [
+        { "args": ["05.001.00"], "returns": { "code": "0500100", "description": "Cimento", "segment": "Cimentos" }, "note": "from the maintainer briefing, #564" },
+        { "args": ["0500100"], "returns": { "code": "0500100", "description": "Cimento", "segment": "Cimentos" }, "note": "JavaScript's own test: should return the entry for a known code written as 7 digits" },
+        { "args": ["01.001.00"], "returns": { "code": "0100100", "description": "Catalisadores em colmeia cerâmica ou metálica para conversão catalítica de gases de escape de veículos e outros catalisadores", "segment": "Autopeças" }, "note": "JavaScript's own test: should return the entry for a code in the NN.NNN.NN form the annexes print" },
+        { "args": [500100], "returns": { "code": "0500100", "description": "Cimento", "segment": "Cimentos" }, "note": "JavaScript's own test: should left pad a bare code to 7 digits, as a number or as a string" },
+        { "args": ["500100"], "returns": { "code": "0500100", "description": "Cimento", "segment": "Cimentos" }, "note": "JavaScript's own test: should left pad a bare code to 7 digits, as a number or as a string" },
+        { "args": [2899900], "returns": { "code": "2899900", "description": "Outros produtos comercializados pelo sistema de marketing direto porta-a-porta a consumidor final não relacionados em outros itens deste anexo", "segment": "Venda de mercadorias pelo sistema porta a porta" }, "note": "JavaScript's own test: should left pad a bare code to 7 digits, as a number or as a string" },
+        { "args": ["5.001.00"], "returns": null, "note": "JavaScript's own test: should not pad a masked code" },
+        { "args": [" 05.001.00 "], "returns": { "code": "0500100", "description": "Cimento", "segment": "Cimentos" }, "note": "JavaScript's own test: should accept any single documented separator and the whitespace around a code" },
+        { "args": ["\t05 001-00\n"], "returns": { "code": "0500100", "description": "Cimento", "segment": "Cimentos" }, "note": "JavaScript's own test: should accept any single documented separator and the whitespace around a code" },
+        { "args": ["05/00100"], "returns": { "code": "0500100", "description": "Cimento", "segment": "Cimentos" }, "note": "JavaScript's own test: should accept any single documented separator and the whitespace around a code" },
+        {
+          "args": ["16.001.00"],
+          "returns": {
+            "code": "1600100",
+            "description": "Pneus novos, dos tipos utilizados em automóveis de passageiros (incluídos os veículos de uso misto - camionetas e os automóveis de corrida)",
+            "segment": "Pneumáticos, câmaras de ar e protetores de borracha"
+          },
+          "note": "JavaScript's own test: should name the segment by its code, not by its item number in Anexo I (segments 16 and 28)"
+        },
+        { "args": ["09.004.00"], "returns": { "code": "0900400", "description": "“Starter”", "segment": "Lâmpadas, reatores e “starter”" }, "note": "JavaScript's own test: should keep the annex punctuation, without the trailing one (09.004.00 and 13.009.00)" },
+        { "args": ["03.001.00"], "returns": null, "note": "JavaScript's own test: should return null for a revoked item (03.001.00, 17.049.08 and 20.035.01)" },
+        { "args": ["17.049.08"], "returns": null, "note": "JavaScript's own test: should return null for a revoked item (03.001.00, 17.049.08 and 20.035.01)" },
+        { "args": ["20.035.01"], "returns": null, "note": "JavaScript's own test: should return null for a revoked item (03.001.00, 17.049.08 and 20.035.01)" },
+        { "args": ["0000000"], "returns": null, "note": "JavaScript's own test: should return null for an unknown code and for a segment that does not exist (15 and 18)" },
+        { "args": ["15.001.00"], "returns": null, "note": "JavaScript's own test: should return null for an unknown code and for a segment that does not exist (15 and 18)" },
+        { "args": ["18.001.00"], "returns": null, "note": "JavaScript's own test: should return null for an unknown code and for a segment that does not exist (15 and 18)" },
+        { "args": ["05001000"], "returns": null, "note": "JavaScript's own test: should return null for a code longer than 7 digits" },
+        { "args": [50010000], "returns": null, "note": "JavaScript's own test: should return null for a code longer than 7 digits" },
+        { "args": [""], "returns": null, "note": "JavaScript's own test: should return null for a string that is not a documented form" },
+        { "args": ["abc0500100"], "returns": null, "note": "JavaScript's own test: should return null for a string that is not a documented form" },
+        { "args": ["05..001.00"], "returns": null, "note": "JavaScript's own test: should return null for a string that is not a documented form" },
+        { "args": ["050.01.00"], "returns": null, "note": "JavaScript's own test: should return null for a string that is not a documented form" },
+        { "args": [-500100], "returns": null, "note": "JavaScript's own test: should return null for a number that is not a non-negative safe integer" },
+        { "args": [50010.5], "returns": null, "note": "JavaScript's own test: should return null for a number that is not a non-negative safe integer" },
+        { "args": [9007199254740992], "returns": null, "note": "JavaScript's own test: should return null for a number that is not a non-negative safe integer" }
+      ]
+    },
+    "isValid": {
+      "summary": { "en": "Checks whether a CEST is in force.", "pt-BR": "Verifica se um CEST está vigente." },
+      "description": {
+        "en": [
+          "Checks whether a CEST is listed in the annexes of Convênio ICMS 142/18 (Anexos II to XXVI of the consolidated text, last amended by Convênio ICMS 180/24).",
+          "",
+          "- Accepted string forms: 7 digits, or `NN.NNN.NN` with a single separator (space, `.`, `-` or `/`) between the groups, with optional surrounding whitespace. Any other string is invalid: its digits are not picked out.",
+          "- Bare digits are left-padded with zeros to 7, as a string or as a number, because segments 01 to 09 start with zero: `100100`, `\"100100\"` and `\"0100100\"` are the same code. A masked value is read as written.",
+          "- A number is read only when it is a non-negative safe integer. A negative, fractional, not finite or unsafe number is invalid.",
+          "- Revoked items are invalid: 01.110.00, 03.001.00, 03.002.00, 03.004.00, 03.010.03, 03.014.00, 03.016.00, 10.023.00, 17.049.08, 17.049.09 and 20.035.01.",
+          "- The table has 1040 codes in 25 segments (Anexo I). Segments 15, 18 and 27 do not exist.",
+          "- The NCM/SH column of the annexes is not loaded, and there is no CEST×NCM cross-check. By cláusula sétima, the description is what decides.",
+          "- Whether a state applies ICMS-ST to the code depends on state law and is out of scope. MVA/PMPF and Anexo XXVII are out of scope too.",
+          "- `cest.isValid` does not load the descriptions: it weighs about 3.5 KB minified (0.8 KB gzip)."
+        ],
+        "pt-BR": [
+          "Verifica se um CEST consta dos anexos do Convênio ICMS 142/18 (Anexos II a XXVI do texto consolidado, alterado até o Convênio ICMS 180/24).",
+          "",
+          "- Formas aceitas em string: 7 dígitos, ou `NN.NNN.NN` com um único separador (espaço, `.`, `-` ou `/`) entre os grupos, com espaços opcionais em volta. Qualquer outra string é inválida: os dígitos não são garimpados.",
+          "- Dígitos sem máscara são completados com zeros à esquerda até 7, em string ou em número, porque os segmentos 01 a 09 começam com zero: `100100`, `\"100100\"` e `\"0100100\"` são o mesmo código. Um valor com máscara é lido como foi escrito.",
+          "- Um número só é lido quando é um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro é inválido.",
+          "- Itens revogados são inválidos: 01.110.00, 03.001.00, 03.002.00, 03.004.00, 03.010.03, 03.014.00, 03.016.00, 10.023.00, 17.049.08, 17.049.09 e 20.035.01.",
+          "- A tabela tem 1040 códigos em 25 segmentos (Anexo I). Os segmentos 15, 18 e 27 não existem.",
+          "- A coluna NCM/SH dos anexos não é carregada, e não há validação cruzada CEST×NCM. Pela cláusula sétima, a descrição é o critério que decide.",
+          "- Se o estado aplica ICMS-ST ao código depende da lei estadual e fica fora do escopo. MVA/PMPF e o Anexo XXVII também ficam fora.",
+          "- `cest.isValid` não carrega as descrições: pesa cerca de 3,5 KB minificado (0,8 KB gzip)."
+        ]
+      },
+      "references": ["https://www.confaz.fazenda.gov.br/legislacao/convenios/2018/CV142_18"],
+      "params": [{ "name": "value", "type": "string | number" }],
+      "returns": "boolean",
+      "tests": [
+        { "args": ["01.001.00"], "returns": true, "note": "from the maintainer briefing, #564" },
+        { "args": [100100], "returns": true, "note": "from the maintainer briefing, #564 (read as 0100100)" },
+        { "args": ["03.001.00"], "returns": false, "note": "from the maintainer briefing, #564 (revoked)" },
+        { "args": ["01.110.00"], "returns": false, "note": "from the maintainer briefing, #564 (revoked)" },
+        { "args": ["03.002.00"], "returns": false, "note": "from the maintainer briefing, #564 (revoked)" },
+        { "args": ["03.004.00"], "returns": false, "note": "from the maintainer briefing, #564 (revoked)" },
+        { "args": ["03.010.03"], "returns": false, "note": "from the maintainer briefing, #564 (revoked)" },
+        { "args": ["03.014.00"], "returns": false, "note": "from the maintainer briefing, #564 (revoked)" },
+        { "args": ["03.016.00"], "returns": false, "note": "from the maintainer briefing, #564 (revoked)" },
+        { "args": ["10.023.00"], "returns": false, "note": "from the maintainer briefing, #564 (revoked)" },
+        { "args": ["17.049.08"], "returns": false, "note": "from the maintainer briefing, #564 (revoked)" },
+        { "args": ["17.049.09"], "returns": false, "note": "from the maintainer briefing, #564 (revoked)" },
+        { "args": ["20.035.01"], "returns": false, "note": "from the maintainer briefing, #564 (revoked)" },
+        { "args": ["27.001.00"], "returns": false, "note": "from the maintainer briefing, #564 (segment 27 does not exist)" },
+        { "args": ["0100100"], "returns": true, "note": "JavaScript's own test: should validate a CEST without a mask" },
+        { "args": ["28.999.00"], "returns": true, "note": "JavaScript's own test: should validate a CEST in the NN.NNN.NN form" },
+        { "args": ["100100"], "returns": true, "note": "JavaScript's own test: should validate a bare code that lost its leading zero, as a number or as a string" },
+        { "args": ["03.021.00"], "returns": true, "note": "JavaScript's own test: should validate the specifications of an item (03.021.00 to 03.021.06)" },
+        { "args": ["03.021.06"], "returns": true, "note": "JavaScript's own test: should validate the specifications of an item (03.021.00 to 03.021.06)" },
+        { "args": ["03.021.07"], "returns": false, "note": "JavaScript's own test: should validate the specifications of an item (03.021.00 to 03.021.06)" },
+        { "args": ["0000000"], "returns": false, "note": "JavaScript's own test: should reject an unknown code" },
+        { "args": ["9999999"], "returns": false, "note": "JavaScript's own test: should reject an unknown code" },
+        { "args": [""], "returns": false, "note": "JavaScript's own test: should reject a value that is not a documented form" },
+        { "args": ["abc0100100"], "returns": false, "note": "JavaScript's own test: should reject a value that is not a documented form" },
+        { "args": ["01.001.00."], "returns": false, "note": "JavaScript's own test: should reject a value that is not a documented form" },
+        { "args": ["1.001.00"], "returns": false, "note": "JavaScript's own test: should reject a value that is not a documented form" },
+        { "args": [-100100], "returns": false, "note": "JavaScript's own test: should reject a number that is not a non-negative safe integer" },
+        { "args": [10010.5], "returns": false, "note": "JavaScript's own test: should reject a number that is not a non-negative safe integer" },
+        { "name": "whitespace-only", "args": ["       "], "returns": false }
+      ]
+    },
+    "parse": {
+      "summary": {
+        "en": "Removes the formatting characters of a CEST and returns only the digits.",
+        "pt-BR": "Remove os caracteres de formatação de um CEST e retorna só os dígitos."
+      },
+      "description": {
+        "en": [
+          "Removes CEST formatting and keeps only digits, capped at 7.",
+          "",
+          "- The function does not left-pad the value. It keeps a partial code as written, so the leading zero of segments 01 to 09 has to be written out. `cest.isValid` and `cest.get` do pad bare digits.",
+          "- A number is read only when it is a non-negative safe integer. A negative, fractional, not finite or unsafe number returns an empty string."
+        ],
+        "pt-BR": [
+          "Remove a formatação do CEST e mantém apenas os dígitos, limitados a 7.",
+          "",
+          "- A função não completa o valor com zeros à esquerda. Ela mantém um código parcial como foi escrito, então o zero dos segmentos 01 a 09 precisa ser escrito. `cest.isValid` e `cest.get` completam dígitos sem máscara.",
+          "- Um número só é lido quando é um inteiro seguro não negativo. Um número negativo, fracionário, não finito ou inseguro retorna uma string vazia."
+        ]
+      },
+      "references": ["https://www.confaz.fazenda.gov.br/legislacao/convenios/2018/CV142_18"],
+      "params": [{ "name": "value", "type": "string | number" }],
+      "returns": "string",
+      "tests": [
+        { "args": ["01.001.00"], "returns": "0100100", "note": "JavaScript's own test: should remove the CEST mask characters" },
+        { "args": ["CEST 28-999/00 "], "returns": "2899900", "note": "JavaScript's own test: should remove every character that is not a digit" },
+        { "args": ["01001009876"], "returns": "0100100", "note": "JavaScript's own test: should ignore the digits after the CEST length" },
+        { "args": [2899900], "returns": "2899900", "note": "JavaScript's own test: should read a number as the string of its digits, without padding it" },
+        { "args": [100100], "returns": "100100", "note": "JavaScript's own test: should read a number as the string of its digits, without padding it" },
+        { "args": ["28.999"], "returns": "28999", "note": "JavaScript's own test: should keep a partial code as written" },
+        { "args": [""], "returns": "", "note": "JavaScript's own test: should keep a partial code as written" },
+        { "args": [28999.00001], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": [-1], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" }
+      ]
+    }
+  }
+}

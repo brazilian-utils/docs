@@ -1,0 +1,160 @@
+{
+  "$schema": "../../schema/contract.schema.json",
+  "domain": "gtin",
+  "title": { "en": "GTIN (EAN/UPC)", "pt-BR": "GTIN (EAN/UPC)" },
+  "summary": {
+    "en": "Global Trade Item Number, the number under an EAN/UPC barcode: GTIN-8, GTIN-12, GTIN-13 and GTIN-14, ending in a GS1 modulus 10 check digit. The NF-e carries it in the cEAN and cEANTrib fields.",
+    "pt-BR": "Global Trade Item Number, o número sob um código de barras EAN/UPC: GTIN-8, GTIN-12, GTIN-13 e GTIN-14, terminado em um dígito verificador GS1 por módulo 10. A NF-e o leva nos campos cEAN e cEANTrib."
+  },
+  "category": "products",
+  "order": 1,
+  "related": ["isbn", "ncm", "cest"],
+  "functions": {
+    "getInfo": {
+      "summary": { "en": "Reads the fields of a GTIN.", "pt-BR": "Lê os campos de um GTIN." },
+      "description": {
+        "en": [
+          "Reads the fields of a GTIN: structure, length, GS1 prefix, whether the prefix is Brazilian or a restricted range, and the check digit. Accepts the same input as `gtin.isValid` without options and returns null exactly when `gtin.isValid` is false.",
+          "",
+          "- `type` (`GTIN-8`, `GTIN-12`, `GTIN-13` or `GTIN-14`) and `length` describe the value as written. A GTIN-14 that starts with 0 is reported as `GTIN-14`.",
+          "- `prefix` is read from the 14-digit form (the value left-padded with zeros): positions 7 to 9 when positions 2 to 6 are zeros (a GS1-8 prefix, as in every GTIN-8), positions 2 to 4 otherwise. The first digit, a padding zero or the indicator digit, is never part of the prefix. So `10000078912349` has prefix `789`, and the prefix of a GTIN-12 starts with 0.",
+          "- `isBrazilian` is true for the prefixes 789 and 790 (GS1 Brasil, as the SEFAZ rules name them).",
+          "- `isRestrictedCirculation` is true for the Restricted Circulation Number ranges of the GS1 General Specifications: GS1 prefixes 02, 04, 20 to 29 and 0000000, and GS1-8 prefixes 000 to 099 and 200 to 299. A restricted range does not make the code invalid. It is only reported.",
+          "- `checkDigit` is the last digit, as a number.",
+          "- The prefix is not checked against the list of GS1 Member Organisations, and no country name is returned. The prefix names the GS1 organisation that licensed the number, not the country of origin.",
+          "- Returns a new object on every call."
+        ],
+        "pt-BR": [
+          "Lê os campos de um GTIN: estrutura, comprimento, prefixo GS1, se o prefixo é brasileiro ou de faixa restrita, e o dígito verificador. Aceita a mesma entrada que `gtin.isValid` sem opções e retorna null exatamente quando `gtin.isValid` é false.",
+          "",
+          "- `type` (`GTIN-8`, `GTIN-12`, `GTIN-13` ou `GTIN-14`) e `length` descrevem o valor como foi escrito. Um GTIN-14 que começa com 0 é reportado como `GTIN-14`.",
+          "- `prefix` é lido da forma de 14 dígitos (o valor completado com zeros à esquerda): posições 7 a 9 quando as posições 2 a 6 são zeros (um prefixo GS1-8, como em todo GTIN-8), posições 2 a 4 nos outros casos. O primeiro dígito, zero de preenchimento ou indicador, nunca entra no prefixo. Assim `10000078912349` tem prefixo `789`, e o prefixo de um GTIN-12 começa com 0.",
+          "- `isBrazilian` é true para os prefixos 789 e 790 (GS1 Brasil, como as regras da SEFAZ os chamam).",
+          "- `isRestrictedCirculation` é true para as faixas de circulação restrita das GS1 General Specifications: prefixos GS1 02, 04, 20 a 29 e 0000000, e prefixos GS1-8 000 a 099 e 200 a 299. Faixa restrita não invalida o código. Só é reportada.",
+          "- `checkDigit` é o último dígito, como número.",
+          "- O prefixo não é conferido contra a lista de Member Organisations da GS1, e nenhum nome de país é retornado. O prefixo indica a organização GS1 que licenciou o número, não o país de origem.",
+          "- Retorna um objeto novo a cada chamada."
+        ]
+      },
+      "references": [
+        "https://ref.gs1.org/standards/genspecs/",
+        "https://www.gs1.org/services/how-calculate-check-digit-manually",
+        "https://www.nfe.fazenda.gov.br/portal/exibirArquivo.aspx?conteudo=SrQT9ys8ODo%3D",
+        "https://www.nfe.fazenda.gov.br/portal/exibirArquivo.aspx?conteudo=Oc+fygAxwmc%3D"
+      ],
+      "flatName": "getGtinInfo",
+      "params": [{ "name": "value", "type": "string" }],
+      "returns": "GtinInfo?",
+      "tests": [
+        { "args": ["17890000000014"], "returns": { "type": "GTIN-14", "length": 14, "prefix": "789", "isBrazilian": true, "isRestrictedCirculation": false, "checkDigit": 4 }, "note": "from the maintainer briefing, #563" },
+        { "args": ["2000000000015"], "returns": { "type": "GTIN-13", "length": 13, "prefix": "200", "isBrazilian": false, "isRestrictedCirculation": true, "checkDigit": 5 }, "note": "from the maintainer briefing, #563 (isRestrictedCirculation is true)" },
+        { "args": ["10000078912349"], "returns": { "type": "GTIN-14", "length": 14, "prefix": "789", "isBrazilian": true, "isRestrictedCirculation": false, "checkDigit": 9 }, "note": "from the maintainer briefing, #563 (prefix 789)" },
+        { "args": ["7890000000017"], "returns": { "type": "GTIN-13", "length": 13, "prefix": "789", "isBrazilian": true, "isRestrictedCirculation": false, "checkDigit": 7 }, "note": "JavaScript's own test: for a GTIN-13 of GS1 Brasil with the 789 prefix" },
+        { "args": ["7901234567891"], "returns": { "type": "GTIN-13", "length": 13, "prefix": "790", "isBrazilian": true, "isRestrictedCirculation": false, "checkDigit": 1 }, "note": "JavaScript's own test: for a GTIN-13 of GS1 Brasil with the 790 prefix" },
+        { "args": ["6291041500213"], "returns": { "type": "GTIN-13", "length": 13, "prefix": "629", "isBrazilian": false, "isRestrictedCirculation": false, "checkDigit": 3 }, "note": "JavaScript's own test: for the GTIN-13 example of the GS1 check digit page" },
+        { "args": ["78912342"], "returns": { "type": "GTIN-8", "length": 8, "prefix": "789", "isBrazilian": true, "isRestrictedCirculation": false, "checkDigit": 2 }, "note": "JavaScript's own test: for a GTIN-8, reading the GS1-8 Prefix" },
+        { "args": ["061414112345"], "returns": { "type": "GTIN-12", "length": 12, "prefix": "006", "isBrazilian": false, "isRestrictedCirculation": false, "checkDigit": 5 }, "note": "JavaScript's own test: for a GTIN-12, whose GS1 Prefix carries the implied leading zero" },
+        { "args": ["09524141234564"], "returns": { "type": "GTIN-14", "length": 14, "prefix": "952", "isBrazilian": false, "isRestrictedCirculation": false, "checkDigit": 4 }, "note": "JavaScript's own test: for the 14 digit example of the GS1 General Specifications, a GRAI read here as a GTIN-14" },
+        { "args": ["00000078912342"], "returns": { "type": "GTIN-14", "length": 14, "prefix": "789", "isBrazilian": true, "isRestrictedCirculation": false, "checkDigit": 2 }, "note": "JavaScript's own test: for a GTIN-8 written in the 14 digit form, reading the GS1-8 Prefix" },
+        { "args": ["  7890000000017\n"], "returns": { "type": "GTIN-13", "length": 13, "prefix": "789", "isBrazilian": true, "isRestrictedCirculation": false, "checkDigit": 7 }, "note": "JavaScript's own test: with surrounding whitespace" },
+        { "args": ["12345670"], "returns": { "type": "GTIN-8", "length": 8, "prefix": "123", "isBrazilian": false, "isRestrictedCirculation": false, "checkDigit": 0 }, "note": "JavaScript's own test: with a check digit of zero" },
+        { "args": ["7880000000018"], "returns": { "type": "GTIN-13", "length": 13, "prefix": "788", "isBrazilian": false, "isRestrictedCirculation": false, "checkDigit": 8 }, "note": "JavaScript's own test: telling the neighbours of the Brazilian prefixes apart" },
+        { "args": ["0789000000004"], "returns": { "type": "GTIN-13", "length": 13, "prefix": "078", "isBrazilian": false, "isRestrictedCirculation": false, "checkDigit": 4 }, "note": "JavaScript's own test: telling the neighbours of the Brazilian prefixes apart" },
+        { "args": ["0200000000011"], "returns": { "type": "GTIN-13", "length": 13, "prefix": "020", "isBrazilian": false, "isRestrictedCirculation": true, "checkDigit": 1 }, "note": "JavaScript's own test: for the GS1 Prefixes 02, 04 and 20 to 29" },
+        { "args": ["0400000000015"], "returns": { "type": "GTIN-13", "length": 13, "prefix": "040", "isBrazilian": false, "isRestrictedCirculation": true, "checkDigit": 5 }, "note": "JavaScript's own test: for the GS1 Prefixes 02, 04 and 20 to 29" },
+        { "args": ["12000000000012"], "returns": { "type": "GTIN-14", "length": 14, "prefix": "200", "isBrazilian": false, "isRestrictedCirculation": true, "checkDigit": 2 }, "note": "JavaScript's own test: for the GS1 Prefixes 02, 04 and 20 to 29" },
+        { "args": ["200000000004"], "returns": { "type": "GTIN-12", "length": 12, "prefix": "020", "isBrazilian": false, "isRestrictedCirculation": true, "checkDigit": 4 }, "note": "JavaScript's own test: for the U.P.C. Prefixes 2 and 4 of a GTIN-12" },
+        { "args": ["01234565"], "returns": { "type": "GTIN-8", "length": 8, "prefix": "012", "isBrazilian": false, "isRestrictedCirculation": true, "checkDigit": 5 }, "note": "JavaScript's own test: for the GS1-8 Prefixes 000 to 099 and 200 to 299" },
+        { "args": ["20000004"], "returns": { "type": "GTIN-8", "length": 8, "prefix": "200", "isBrazilian": false, "isRestrictedCirculation": true, "checkDigit": 4 }, "note": "JavaScript's own test: for the GS1-8 Prefixes 000 to 099 and 200 to 299" },
+        { "args": ["10000008912340"], "returns": { "type": "GTIN-14", "length": 14, "prefix": "089", "isBrazilian": false, "isRestrictedCirculation": true, "checkDigit": 0 }, "note": "JavaScript's own test: for a GS1-8 Prefix packed in a GTIN-14 behind an indicator digit" },
+        { "args": ["0000000123457"], "returns": { "type": "GTIN-13", "length": 13, "prefix": "001", "isBrazilian": false, "isRestrictedCirculation": true, "checkDigit": 7 }, "note": "JavaScript's own test: for the GS1 Prefix 0000000, which reads as a GS1-8 Prefix that starts with zero" },
+        { "args": [""], "returns": null, "note": "JavaScript's own test: when the value is empty or blank" },
+        { "args": ["   "], "returns": null, "note": "JavaScript's own test: when the value is empty or blank" },
+        { "args": ["SEM GTIN"], "returns": null, "note": "JavaScript's own test: when the value is the literal the NF-e uses for a product without a GTIN" },
+        { "args": ["7 890000 000017"], "returns": null, "note": "JavaScript's own test: when the value carries anything but digits" },
+        { "args": ["789-0000-000017"], "returns": null, "note": "JavaScript's own test: when the value carries anything but digits" },
+        { "args": ["+7890000000017"], "returns": null, "note": "JavaScript's own test: when the value carries anything but digits" },
+        { "args": ["78900000000:0"], "returns": null, "note": "JavaScript's own test: when a character next to the digits in the ASCII table would add up to the check digit" },
+        { "args": ["789123457"], "returns": null, "note": "JavaScript's own test: when the length is not 8, 12, 13 or 14" },
+        { "args": ["178900000000143"], "returns": null, "note": "JavaScript's own test: when the length is not 8, 12, 13 or 14" },
+        { "args": ["7890000000018"], "returns": null, "note": "JavaScript's own test: when the check digit is wrong" },
+        { "args": ["17890000000013"], "returns": null, "note": "JavaScript's own test: when the check digit is wrong" },
+        { "args": ["9521234500011"], "returns": null, "note": "JavaScript's own test: when the check digit is the Luhn one instead of the GS1 one" },
+        { "args": ["0000000000000"], "returns": null, "note": "a value of zeros only is not a GTIN (gtin.isValid)" }
+      ]
+    },
+    "isValid": {
+      "summary": { "en": "Checks whether a GTIN is valid.", "pt-BR": "Verifica se um GTIN é válido." },
+      "description": {
+        "en": [
+          "Validates a GTIN: 8, 12, 13 or 14 digits and the GS1 modulus 10 check digit.",
+          "",
+          "- Check digit: the other digits weighted 3 and 1 alternately from the right. The check digit brings the sum to the next multiple of 10. This is what NF-e rules I03-10 and I12-10 check in the `cEAN` and `cEANTrib` fields.",
+          "- Only a string of digits is read, without surrounding whitespace. A mask, a space inside the value and a letter are rejected. A number is also rejected, because the leading zeros define the length.",
+          "- A value of zeros only is rejected at any length, although its check digit is valid. This is a rule of the library: zeros are the usual placeholder for a missing GTIN.",
+          "- `SEM GTIN`, the text the NF-e uses for a product without a GTIN, is rejected.",
+          "- `options.lengths` limits the accepted lengths, for example `{ lengths: [13] }`. An empty list accepts nothing. When it is missing or is not a list, the four lengths are accepted.",
+          "- The prefix does not change the result: Restricted Circulation Numbers and the ISBN, ISSN and coupon ranges share the structure and are valid. Use `gtin.getInfo` to read the prefix.",
+          "- The prefix is not checked against a list. SEFAZ also checks it against its own \"Tabela Prefixo GS1\" (rules I03-20 and I12-20), which the library does not carry. Registration with GS1 (the Cadastro Centralizado de GTIN) cannot be checked offline."
+        ],
+        "pt-BR": [
+          "Valida um GTIN: 8, 12, 13 ou 14 dígitos e o dígito verificador GS1 por módulo 10.",
+          "",
+          "- Dígito verificador: os outros dígitos com pesos 3 e 1 alternados a partir da direita. O dígito verificador leva a soma ao próximo múltiplo de 10. É o que as regras I03-10 e I12-10 da NF-e verificam nos campos `cEAN` e `cEANTrib`.",
+          "- Só uma string de dígitos é lida, sem os espaços em volta. Máscara, espaço no meio e letra são rejeitados. Número também é rejeitado, porque os zeros à esquerda definem o comprimento.",
+          "- Um valor só de zeros é rejeitado em qualquer comprimento, apesar de o dígito verificador ser válido. É uma regra da biblioteca: zeros são o preenchimento comum de um GTIN ausente.",
+          "- `SEM GTIN`, o texto que a NF-e usa para produto sem GTIN, é rejeitado.",
+          "- `options.lengths` limita os comprimentos aceitos, por exemplo `{ lengths: [13] }`. Uma lista vazia não aceita nada. Quando ausente ou quando não é uma lista, os quatro comprimentos são aceitos.",
+          "- O prefixo não muda o resultado: números de circulação restrita e as faixas de ISBN, ISSN e cupons têm a mesma estrutura e são válidos. Use `gtin.getInfo` para ler o prefixo.",
+          "- O prefixo não é conferido contra lista. A SEFAZ também o confere contra a sua \"Tabela Prefixo GS1\" (regras I03-20 e I12-20), que a biblioteca não carrega. O registro na GS1 (Cadastro Centralizado de GTIN) não pode ser verificado offline."
+        ]
+      },
+      "references": [
+        "https://ref.gs1.org/standards/genspecs/",
+        "https://www.gs1.org/services/how-calculate-check-digit-manually",
+        "https://www.nfe.fazenda.gov.br/portal/exibirArquivo.aspx?conteudo=SrQT9ys8ODo%3D"
+      ],
+      "params": [
+        { "name": "value", "type": "string" },
+        { "name": "options", "type": "IsValidGtinOptions", "optional": true }
+      ],
+      "returns": "boolean",
+      "tests": [
+        { "args": ["7890000000017"], "returns": true, "note": "from the maintainer briefing, #563" },
+        { "args": ["17890000000014", { "lengths": [8, 12, 13] }], "returns": false, "note": "from the maintainer briefing, #563" },
+        { "args": ["78912342"], "returns": true, "note": "JavaScript's own test: for a GTIN-8" },
+        { "args": ["061414112345"], "returns": true, "note": "JavaScript's own test: for a GTIN-12 built from the U.P.C. Company Prefix 614141 of the GS1 General Specifications" },
+        { "args": ["7901234567891"], "returns": true, "note": "JavaScript's own test: for a GTIN-13 with each prefix of GS1 Brasil" },
+        { "args": ["17890000000014"], "returns": true, "note": "JavaScript's own test: for a GTIN-14" },
+        { "args": ["6291041500213"], "returns": true, "note": "JavaScript's own test: for the numbers GS1 publishes as examples: a GTIN-13, a GLN and a GRAI" },
+        { "args": ["09524141234564"], "returns": true, "note": "JavaScript's own test: for the numbers GS1 publishes as examples: a GTIN-13, a GLN and a GRAI" },
+        { "args": ["7880000000018"], "returns": true, "note": "JavaScript's own test: for a prefix that is not Brazilian" },
+        { "args": ["2000000000015"], "returns": true, "note": "JavaScript's own test: for a Restricted Circulation Number and for an ISSN or ISBN, which share the structure" },
+        { "args": ["9771234567003"], "returns": true, "note": "JavaScript's own test: for a Restricted Circulation Number and for an ISSN or ISBN, which share the structure" },
+        { "args": ["9780000000019"], "returns": true, "note": "JavaScript's own test: for a Restricted Circulation Number and for an ISSN or ISBN, which share the structure" },
+        { "args": [" 7890000000017\t"], "returns": true, "note": "JavaScript's own test: with surrounding whitespace" },
+        { "args": [""], "returns": false, "note": "JavaScript's own test: when the value is empty" },
+        { "args": ["SEM GTIN"], "returns": false, "note": "JavaScript's own test: when the value is the literal the NF-e uses for a product without a GTIN" },
+        { "args": ["78912343"], "returns": false, "note": "JavaScript's own test: when the check digit is wrong" },
+        { "args": ["061414112346"], "returns": false, "note": "JavaScript's own test: when the check digit is wrong" },
+        { "args": ["7890000000018"], "returns": false, "note": "JavaScript's own test: when the check digit is wrong" },
+        { "args": ["17890000000015"], "returns": false, "note": "JavaScript's own test: when the check digit is wrong" },
+        { "args": ["789000017"], "returns": false, "note": "JavaScript's own test: when the length is not 8, 12, 13 or 14" },
+        { "args": ["78900000017"], "returns": false, "note": "JavaScript's own test: when the length is not 8, 12, 13 or 14" },
+        { "args": ["376104250021234569"], "returns": false, "note": "JavaScript's own test: when the length is not 8, 12, 13 or 14" },
+        { "args": ["7 890000 000017"], "returns": false, "note": "JavaScript's own test: when the value carries a mask or a letter" },
+        { "args": ["789000000001X"], "returns": false, "note": "JavaScript's own test: when the value carries a mask or a letter" },
+        { "args": ["7890000000017", { "lengths": [13] }], "returns": true, "note": "JavaScript's own test: should accept only the lengths it lists" },
+        { "args": ["78912342", { "lengths": [13] }], "returns": false, "note": "JavaScript's own test: should accept only the lengths it lists" },
+        { "args": ["78912342", { "lengths": [8, 14] }], "returns": true, "note": "JavaScript's own test: should accept only the lengths it lists" },
+        { "args": ["17890000000014", { "lengths": [8, 14] }], "returns": true, "note": "JavaScript's own test: should accept only the lengths it lists" },
+        { "args": ["7890000000017", { "lengths": [] }], "returns": false, "note": "JavaScript's own test: should accept nothing when the list is empty" },
+        { "args": ["7890000000018", { "lengths": [13] }], "returns": false, "note": "JavaScript's own test: should still turn down a wrong check digit of a listed length" },
+        { "args": ["78912342", {}], "returns": true, "note": "JavaScript's own test: should accept the four lengths when it is left out or is not a list" },
+        { "args": ["0000000000000"], "returns": false, "note": "JavaScript's own test: should reject a value of zeros only, a rule of this library that no NF-e rejection states" },
+        { "args": ["00000000"], "returns": false, "note": "JavaScript's own test: should reject a value of zeros only, a rule of this library that no NF-e rejection states" },
+        { "args": ["00000000000000"], "returns": false, "note": "JavaScript's own test: should reject a value of zeros only, a rule of this library that no NF-e rejection states" }
+      ]
+    }
+  }
+}

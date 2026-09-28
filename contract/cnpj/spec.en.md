@@ -47,6 +47,31 @@ The CNPJ is a unique identification number that the Brazilian Federal Revenue Se
    - If the remainder is `0` or `1`, DV2 is `0`. If not, DV2 is `11 - remainder`.
 6. Compare the calculated check digits with the last two characters of the CNPJ.
 
+## Fields of the number
+
+IN RFB nº 2.229/2024 (Anexo XV of IN RFB nº 2.119/2022) lays the 14 positions out as:
+
+| Positions | Field | `getCnpjInfo` key |
+|---|---|---|
+| 1 to 8 | root (raiz), shared by every establishment of the entity | `root` |
+| 9 to 12 | número de ordem of the establishment | `branch` |
+| 13 and 14 | check digits, always numeric | `checkDigits` |
+
+- `getCnpjInfo(value, { version })` returns these fields and `isInitialHeadquarters`. It returns `null` exactly when `isValidCnpj(value, { version })` is `false`, so an alphanumeric CNPJ read under version 1 gives `null`. The fields of an alphanumeric CNPJ come back in upper case. The result has no `format` field.
+- `isInitialHeadquarters` is `true` when the branch is `0001`. The Receita Federal gives `0001` to the headquarters (matriz) when the root is registered. A filial can later become the matriz without having the branch `0001` (question 25 of the Receita Federal Q&A on the alphanumeric CNPJ), so the flag only says what the number said at creation.
+- `generateCnpj({ branch })` uses the same name. A random branch is never `0000`, since establishments are numbered from `0001`. 2.4.0 could return `0000` (about once in 10,000 numeric CNPJs).
+
+Examples:
+
+- `getCnpjInfo("12.345.678/0001-95")` returns `{ root: "12345678", branch: "0001", checkDigits: "95", isInitialHeadquarters: true }`.
+- `getCnpjInfo("12.abc.345/01de-35", { version: 2 })` returns `{ root: "12ABC345", branch: "01DE", checkDigits: "35", isInitialHeadquarters: false }`.
+- `getCnpjInfo("12.ABC.345/01DE-35")` returns `null` (alphanumeric, read under version 1).
+
+## Masking and numbers
+
+- `formatCnpj(value, { obfuscate: true })` hides the first 2 characters and the 2 check digits (`**.345.678/0001-**`). This is a convention of the library, with no official source: no law or Receita Federal act sets a masking rule for the CNPJ, whose data are public. It follows the rule the Leis de Diretrizes Orçamentárias set for the CPF.
+- `formatCnpj` and `parseCnpj` also take a number. It is read only when it is a non-negative safe integer. A negative, fractional, not finite or unsafe number gives an empty string. 2.4.0 read the digits of any number.
+
 ## Regex
 
 - Unformatted CNPJ: `^[A-Z0-9]{12}[0-9]{2}$`

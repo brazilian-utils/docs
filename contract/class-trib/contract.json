@@ -10,7 +10,7 @@
     "pt-BR": "Código de Classificação Tributária do IBS e da CBS: a classificação de 6 dígitos que o documento traz junto do CST-IBS/CBS."
   },
   "category": "tax",
-  "order": 8,
+  "order": 9,
   "related": [
     "cstIbsCbs"
   ],

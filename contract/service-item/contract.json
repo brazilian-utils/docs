@@ -10,7 +10,7 @@
     "pt-BR": "Os subitens da lista de serviços anexa à Lei Complementar 116/2003, os serviços sobre os quais incide o ISS."
   },
   "category": "tax",
-  "order": 10,
+  "order": 11,
   "related": [
     "nbs",
     "nfseKey"

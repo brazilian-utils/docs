@@ -10,7 +10,7 @@
     "pt-BR": "Código de Situação Tributária do IBS e da CBS, os tributos da reforma tributária do consumo (LC 214/2025)."
   },
   "category": "tax",
-  "order": 7,
+  "order": 8,
   "related": [
     "cst",
     "classTrib"

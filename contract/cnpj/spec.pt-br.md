@@ -47,6 +47,31 @@ O CNPJ é o número de identificação que a Receita Federal atribui a empresas,
    - Se o resto for `0` ou `1`, o DV2 é `0`. Se não, o DV2 é `11 - resto`.
 6. Comparar os dígitos verificadores calculados com os 2 últimos caracteres do CNPJ.
 
+## Campos do número
+
+A IN RFB nº 2.229/2024 (Anexo XV da IN RFB nº 2.119/2022) divide as 14 posições assim:
+
+| Posições | Campo | Chave em `getCnpjInfo` |
+|---|---|---|
+| 1 a 8 | raiz, comum a todos os estabelecimentos da entidade | `root` |
+| 9 a 12 | número de ordem do estabelecimento | `branch` |
+| 13 e 14 | dígitos verificadores, sempre numéricos | `checkDigits` |
+
+- `getCnpjInfo(value, { version })` retorna esses campos e `isInitialHeadquarters`. Retorna `null` exatamente quando `isValidCnpj(value, { version })` é `false`, então um CNPJ alfanumérico lido na versão 1 dá `null`. Os campos de um CNPJ alfanumérico vêm em maiúsculas. O resultado não tem campo `format`.
+- `isInitialHeadquarters` é `true` quando a filial é `0001`. A Receita Federal dá `0001` à matriz quando a raiz é inscrita. Uma filial pode depois virar matriz sem ter a ordem `0001` (questão 25 do P&R da Receita Federal sobre o CNPJ alfanumérico), então o indicador só diz o que o número dizia na geração.
+- `generateCnpj({ branch })` usa o mesmo nome. Uma filial sorteada nunca é `0000`, porque os estabelecimentos são numerados a partir de `0001`. A 2.4.0 podia retornar `0000` (cerca de uma vez a cada 10.000 CNPJs numéricos).
+
+Exemplos:
+
+- `getCnpjInfo("12.345.678/0001-95")` retorna `{ root: "12345678", branch: "0001", checkDigits: "95", isInitialHeadquarters: true }`.
+- `getCnpjInfo("12.abc.345/01de-35", { version: 2 })` retorna `{ root: "12ABC345", branch: "01DE", checkDigits: "35", isInitialHeadquarters: false }`.
+- `getCnpjInfo("12.ABC.345/01DE-35")` retorna `null` (alfanumérico, lido na versão 1).
+
+## Máscara de ocultação e números
+
+- `formatCnpj(value, { obfuscate: true })` oculta os 2 primeiros caracteres e os 2 dígitos verificadores (`**.345.678/0001-**`). É uma convenção da biblioteca, sem fonte oficial: nenhuma lei ou ato da Receita Federal fixa regra de mascaramento para o CNPJ, cujos dados são públicos. Ela segue a regra que as Leis de Diretrizes Orçamentárias fixam para o CPF.
+- `formatCnpj` e `parseCnpj` também recebem número. Ele só é lido quando é um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia. A 2.4.0 lia os dígitos de qualquer número.
+
 ## Regex
 
 - CNPJ sem formatação: `^[A-Z0-9]{12}[0-9]{2}$`

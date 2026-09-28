@@ -21,7 +21,8 @@
           "",
           "- `options.pad` first left-pads the value with zeros to 14 characters.",
           "- `options.version`: `1` (default) keeps digits only. `2` (alphanumeric CNPJ) keeps letters (upper-cased) and digits.",
-          "- `options.obfuscate` hides the first 2 digits and the 2 check digits with `*`, after padding.",
+          "- `options.obfuscate` hides the first 2 characters and the 2 check digits with `*`, after padding. This is a convention of the library, with no official source: no law or Receita Federal act sets a masking rule for the CNPJ, whose data are public. It follows the rule the Leis de Diretrizes Orçamentárias set for the CPF.",
+          "- A number is read only when it is a non-negative safe integer. A negative, fractional, not finite or unsafe number returns an empty string. 2.4.0 read the digits of any number.",
           "- Pending decision (findings §2 #2, #3): the reference (JS) formats only the characters an incomplete value has and returns an empty string for empty or invalid input. Other libraries return null."
         ],
         "pt-BR": [
@@ -29,7 +30,8 @@
           "",
           "- `options.pad` primeiro completa o valor com zeros à esquerda até 14 caracteres.",
           "- `options.version`: `1` (padrão) mantém somente dígitos. `2` (CNPJ alfanumérico) mantém letras (em maiúsculas) e dígitos.",
-          "- `options.obfuscate` oculta os 2 primeiros dígitos e os 2 dígitos verificadores com `*`, depois do preenchimento.",
+          "- `options.obfuscate` oculta os 2 primeiros caracteres e os 2 dígitos verificadores com `*`, depois do preenchimento. É uma convenção da biblioteca, sem fonte oficial: nenhuma lei ou ato da Receita Federal fixa regra de mascaramento para o CNPJ, cujos dados são públicos. Ela segue a regra que as Leis de Diretrizes Orçamentárias fixam para o CPF.",
+          "- Um número só é lido quando é um inteiro seguro não negativo. Um número negativo, fracionário, não finito ou inseguro retorna uma string vazia. A 2.4.0 lia os dígitos de qualquer número.",
           "- Decisão pendente (findings §2 #2, #3): a referência (JS) formata só os caracteres que um valor incompleto tem e retorna uma string vazia para entrada vazia ou inválida. Outras bibliotecas retornam null."
         ]
       },
@@ -132,7 +134,13 @@
         { "args": ["4", { "pad": true, "obfuscate": true }], "returns": "**.000.000/0000-**", "note": "JavaScript's own test: should pad before obfuscating" },
         { "args": ["q0SLFMBD7VX439", { "version": 2, "obfuscate": true }], "returns": "**.SLF.MBD/7VX4-**", "note": "JavaScript's own test: should apply the same positions to the alphanumeric CNPJ (version 2)" },
         { "args": ["46843485000186", { "obfuscate": false }], "returns": "46.843.485/0001-86", "note": "JavaScript's own test: should behave exactly as without the option when obfuscate is false or absent" },
-        { "args": ["q0SLFMBD7VX439", { "version": 2, "obfuscate": false }], "returns": "Q0.SLF.MBD/7VX4-39", "note": "JavaScript's own test: should behave exactly as without the option when obfuscate is false or absent" }
+        { "args": ["q0SLFMBD7VX439", { "version": 2, "obfuscate": false }], "returns": "Q0.SLF.MBD/7VX4-39", "note": "JavaScript's own test: should behave exactly as without the option when obfuscate is false or absent" },
+        { "args": ["q0slfmbd7vx439", { "version": 2 }], "returns": "Q0.SLF.MBD/7VX4-39", "note": "JavaScript's own test: should upper-case lower case letters for version 2, the official set being A to Z" },
+        { "args": ["12abc34501de35", { "version": 2 }], "returns": "12.ABC.345/01DE-35", "note": "JavaScript's own test: should upper-case lower case letters for version 2, the official set being A to Z" },
+        { "args": [-11222333000181], "returns": "", "note": "JavaScript's JSDoc example; changed in 2.5.0 (#593): a number is read only when it is a non-negative safe integer" },
+        { "args": [-1], "returns": "", "note": "changed in 2.5.0 (#593): a number is read only when it is a non-negative safe integer" },
+        { "args": [1.5], "returns": "", "note": "changed in 2.5.0 (#593): a number is read only when it is a non-negative safe integer" },
+        { "args": [9007199254740992], "returns": "", "note": "changed in 2.5.0 (#593): a number is read only when it is a non-negative safe integer" }
       ]
     },
     "generate": {
@@ -142,25 +150,99 @@
           "Generates a valid random CNPJ, unformatted.",
           "",
           "- `versionOrParams` picks the version: `1` (default, numeric) or `2` (alphanumeric). It can also set the branch (número de ordem), an integer from 1 to 9999. The branch is random by default, and an invalid branch is ignored.",
-          "- The branch block stays numeric in both versions."
+          "- A branch given in `branch` is written as 4 digits in both versions (`3` gives `0003`). A random branch under version 2 can carry letters, like the root.",
+          "- A random branch is never `0000`: the establishments of a root are numbered from `0001`, the headquarters (matriz). 2.4.0 could return `0000`, about once in 10,000 numeric CNPJs."
         ],
         "pt-BR": [
           "Gera um CNPJ aleatório e válido, sem formatação.",
           "",
           "- `versionOrParams` escolhe a versão: `1` (padrão, numérico) ou `2` (alfanumérico). Também pode definir a filial (número de ordem), um inteiro de 1 a 9999. A filial é aleatória por padrão, e uma filial inválida é ignorada.",
-          "- O bloco da filial continua numérico nas duas versões."
+          "- Uma filial dada em `branch` é escrita com 4 dígitos nas duas versões (`3` dá `0003`). Uma filial sorteada na versão 2 pode ter letras, como a raiz.",
+          "- Uma filial sorteada nunca é `0000`: os estabelecimentos de uma raiz são numerados a partir de `0001`, a matriz. A 2.4.0 podia retornar `0000`, cerca de uma vez a cada 10.000 CNPJs numéricos."
         ]
       },
       "references": [
         "https://www.gov.br/receitafederal/pt-br/assuntos/orientacao-tributaria/cadastros/cnpj",
         "https://www.gov.br/receitafederal/pt-br/centrais-de-conteudo/publicacoes/documentos-tecnicos/cnpj/manual-dv-cnpj.pdf",
-        "https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/cnpj-alfanumerico"
+        "https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/cnpj-alfanumerico",
+        "https://www.gov.br/receitafederal/pt-br/centrais-de-conteudo/publicacoes/perguntas-e-respostas/cnpj/cnpj-alfanumerico.pdf"
       ],
       "level": "core",
       "params": [{ "name": "versionOrParams", "type": "1 | 2 | GenerateCnpjParams", "optional": true }],
       "returns": "string",
       "tests": [
-        { "name": "generated-is-valid", "args": [], "satisfies": "cnpj.isValid", "repeat": 5, "note": "every generated value must pass the lib's own validator" }
+        { "name": "generated-is-valid", "args": [], "satisfies": "cnpj.isValid", "repeat": 5, "note": "every generated value must pass the lib's own validator" },
+        { "name": "branch-never-0000", "args": [], "matches": "^[0-9]{8}([1-9][0-9]{3}|0[1-9][0-9]{2}|00[1-9][0-9]|000[1-9])[0-9]{2}$", "repeat": 20, "note": "changed in 2.5.0 (#593): generateCnpj never draws the branch 0000" },
+        { "name": "given-branch", "args": [{ "branch": 3 }], "matches": "^[0-9]{8}0003[0-9]{2}$", "repeat": 5, "note": "JavaScript's JSDoc example: generateCnpj({ branch: 3 }), the ordem block is 0003" },
+        { "name": "version-2-branch-never-0000", "args": [2], "matches": "^[0-9A-Z]{8}([1-9A-Z][0-9A-Z]{3}|0[1-9A-Z][0-9A-Z]{2}|00[1-9A-Z][0-9A-Z]|000[1-9A-Z])[0-9]{2}$", "repeat": 20, "note": "changed in 2.5.0 (#593): generateCnpj never draws the branch 0000 (under version 2 a random branch can carry letters)" }
+      ]
+    },
+    "getInfo": {
+      "summary": {
+        "en": "Reads the root, branch and check digits of a CNPJ.",
+        "pt-BR": "Lê a raiz, a filial e os dígitos verificadores de um CNPJ."
+      },
+      "description": {
+        "en": [
+          "Reads the fields of a CNPJ: root, branch and check digits, and whether the branch is `0001`. Returns null exactly when `cnpj.isValid` is false for the same arguments.",
+          "",
+          "- `root` is positions 1 to 8. `branch` is positions 9 to 12, the número de ordem of the establishment. `checkDigits` is positions 13 and 14. The name `branch` is the same as in `cnpj.generate`.",
+          "- `options.version` works as in `cnpj.isValid`: `1` (default) reads numeric CNPJs only, `2` reads numeric and alphanumeric CNPJs, and any other value is read as `1`. An alphanumeric CNPJ read under version 1 returns null.",
+          "- The fields of an alphanumeric CNPJ come back in upper case.",
+          "- `isInitialHeadquarters` is true when the branch is `0001`. It marks the headquarters (matriz) only at the time the CNPJ was created: a filial can become the matriz without having the branch `0001` (question 25 of the Receita Federal Q&A on the alphanumeric CNPJ). Only the Receita Federal registry tells the current headquarters.",
+          "- The result has no `format` field. Use `cnpj.format` for the mask.",
+          "- Returns a new object on every call."
+        ],
+        "pt-BR": [
+          "Lê os campos de um CNPJ: raiz, filial e dígitos verificadores, e se a filial é `0001`. Retorna null exatamente quando `cnpj.isValid` é false para os mesmos argumentos.",
+          "",
+          "- `root` são as posições 1 a 8. `branch` são as posições 9 a 12, o número de ordem do estabelecimento. `checkDigits` são as posições 13 e 14. O nome `branch` é o mesmo de `cnpj.generate`.",
+          "- `options.version` funciona como em `cnpj.isValid`: `1` (padrão) lê só CNPJ numérico, `2` lê CNPJ numérico e alfanumérico, e qualquer outro valor é lido como `1`. Um CNPJ alfanumérico lido na versão 1 retorna null.",
+          "- Os campos de um CNPJ alfanumérico vêm em maiúsculas.",
+          "- `isInitialHeadquarters` é true quando a filial é `0001`. Indica a matriz só no momento da geração do CNPJ: uma filial pode virar matriz sem ter a ordem `0001` (questão 25 do P&R da Receita Federal sobre o CNPJ alfanumérico). Só o cadastro da Receita Federal diz qual é a matriz atual.",
+          "- O resultado não tem campo `format`. Use `cnpj.format` para a máscara.",
+          "- Retorna um objeto novo a cada chamada."
+        ]
+      },
+      "references": [
+        "http://normas.receita.fazenda.gov.br/sijut2consulta/link.action?idAto=141102",
+        "https://www.gov.br/receitafederal/pt-br/centrais-de-conteudo/publicacoes/perguntas-e-respostas/cnpj/cnpj-alfanumerico.pdf",
+        "https://www.gov.br/receitafederal/pt-br/centrais-de-conteudo/publicacoes/documentos-tecnicos/cnpj/manual-dv-cnpj.pdf",
+        "https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/cnpj-alfanumerico"
+      ],
+      "flatName": "getCnpjInfo",
+      "params": [
+        { "name": "value", "type": "string" },
+        { "name": "options", "type": "GetCnpjInfoOptions", "optional": true }
+      ],
+      "returns": "CnpjInfo?",
+      "tests": [
+        { "args": ["12.345.678/0001-95"], "returns": { "root": "12345678", "branch": "0001", "checkDigits": "95", "isInitialHeadquarters": true }, "note": "from the maintainer briefing, #560" },
+        { "args": ["12.abc.345/01de-35", { "version": 2 }], "returns": { "root": "12ABC345", "branch": "01DE", "checkDigits": "35", "isInitialHeadquarters": false }, "note": "from the maintainer briefing, #560" },
+        { "args": ["12.ABC.345/01DE-35"], "returns": null, "note": "from the maintainer briefing, #560 (alphanumeric read under version 1)" },
+        { "args": ["12345678000195"], "returns": { "root": "12345678", "branch": "0001", "checkDigits": "95", "isInitialHeadquarters": true }, "note": "JavaScript's own test: should return the fields of the CNPJ for the headquarters branch" },
+        { "args": ["12345678000276"], "returns": { "root": "12345678", "branch": "0002", "checkDigits": "76", "isInitialHeadquarters": false }, "note": "JavaScript's own test: should return the fields of the CNPJ for another branch" },
+        { "args": ["00000001000136"], "returns": { "root": "00000001", "branch": "0001", "checkDigits": "36", "isInitialHeadquarters": true }, "note": "JavaScript's own test: should return the fields of the CNPJ for a root with leading zeros" },
+        { "args": ["  12 345 678 0002 76  "], "returns": { "root": "12345678", "branch": "0002", "checkDigits": "76", "isInitialHeadquarters": false }, "note": "JavaScript's own test: should return the fields of the CNPJ for a value with a whitespace mask and surrounding whitespace" },
+        { "args": ["12.345.678/0001-95", { "version": 2 }], "returns": { "root": "12345678", "branch": "0001", "checkDigits": "95", "isInitialHeadquarters": true }, "note": "JavaScript's own test: should return the fields of the CNPJ under version 2, which reads both formats" },
+        { "args": ["12345678000195", { "version": 3 }], "returns": { "root": "12345678", "branch": "0001", "checkDigits": "95", "isInitialHeadquarters": true }, "note": "JavaScript's own test: should return the fields of the CNPJ under an unknown version, read as version 1" },
+        { "args": ["12.ABC.345/01DE-35", { "version": 2 }], "returns": { "root": "12ABC345", "branch": "01DE", "checkDigits": "35", "isInitialHeadquarters": false }, "note": "JavaScript's own test: should return the fields of the CNPJ for the example of the Receita Federal check digit manual" },
+        { "args": ["12abc34501de35", { "version": 2 }], "returns": { "root": "12ABC345", "branch": "01DE", "checkDigits": "35", "isInitialHeadquarters": false }, "note": "JavaScript's own test: should return the fields of the CNPJ for a lowercase value, upper casing the fields" },
+        { "args": ["AB.12C.D34/0001-84", { "version": 2 }], "returns": { "root": "AB12CD34", "branch": "0001", "checkDigits": "84", "isInitialHeadquarters": true }, "note": "JavaScript's own test: should return the fields of the CNPJ for an alphanumeric root with the headquarters branch" },
+        { "args": ["AA345678/000A-29", { "version": 2 }], "returns": { "root": "AA345678", "branch": "000A", "checkDigits": "29", "isInitialHeadquarters": false }, "note": "JavaScript's own test: should return the fields of the CNPJ for an alphanumeric root and branch (Receita Federal Q&A, question 23)" },
+        { "args": ["12.345.678/000A-08", { "version": 2 }], "returns": { "root": "12345678", "branch": "000A", "checkDigits": "08", "isInitialHeadquarters": false }, "note": "JavaScript's own test: should return the fields of the CNPJ for a numeric root with an alphanumeric branch (Receita Federal Q&A, question 23)" },
+        { "args": ["12.ABC.345/01DE-35", {}], "returns": null, "note": "JavaScript's own test: should return null when an alphanumeric CNPJ is read under the default version" },
+        { "args": ["12.ABC.345/01DE-35", { "version": 1 }], "returns": null, "note": "JavaScript's own test: should return null when an alphanumeric CNPJ is read under the default version" },
+        { "args": ["12345678000190"], "returns": null, "note": "JavaScript's own test: should return null when the check digits do not match" },
+        { "args": ["12ABC34501DE34", { "version": 2 }], "returns": null, "note": "JavaScript's own test: should return null when the check digits do not match" },
+        { "args": ["12ABC34501DE3A", { "version": 2 }], "returns": null, "note": "JavaScript's own test: should return null when a check digit is a letter" },
+        { "args": ["00000000000000"], "returns": null, "note": "JavaScript's own test: should return null when it is a reserved repeated digits number" },
+        { "args": ["11111111111111", { "version": 2 }], "returns": null, "note": "JavaScript's own test: should return null when it is a reserved repeated digits number" },
+        { "args": ["1234567800019"], "returns": null, "note": "JavaScript's own test: should return null when it is shorter or longer than 14 characters" },
+        { "args": ["123456780001955"], "returns": null, "note": "JavaScript's own test: should return null when it is shorter or longer than 14 characters" },
+        { "args": ["12.345.678/0001-95x"], "returns": null, "note": "JavaScript's own test: should return null when it carries a character outside the mask" },
+        { "args": ["12_345_678_0001_95"], "returns": null, "note": "JavaScript's own test: should return null when it carries a character outside the mask" },
+        { "args": [""], "returns": null, "note": "JavaScript's own test: should return null when it is an empty string" }
       ]
     },
     "isValid": {
@@ -247,12 +329,14 @@
         "en": [
           "Removes CNPJ formatting and returns the normalized value, capped at 14 characters.",
           "",
-          "- `options.version`: `1` (default) keeps digits only. `2` keeps letters and digits, upper-cased."
+          "- `options.version`: `1` (default) keeps digits only. `2` keeps letters and digits, upper-cased.",
+          "- A number is read only when it is a non-negative safe integer. A negative, fractional, not finite or unsafe number returns an empty string. 2.4.0 read the digits of any number."
         ],
         "pt-BR": [
           "Remove a formatação do CNPJ e retorna o valor normalizado, limitado a 14 caracteres.",
           "",
-          "- `options.version`: `1` (padrão) mantém somente dígitos. `2` mantém letras e dígitos, em maiúsculas."
+          "- `options.version`: `1` (padrão) mantém somente dígitos. `2` mantém letras e dígitos, em maiúsculas.",
+          "- Um número só é lido quando é um inteiro seguro não negativo. Um número negativo, fracionário, não finito ou inseguro retorna uma string vazia. A 2.4.0 lia os dígitos de qualquer número."
         ]
       },
       "references": [
@@ -282,7 +366,13 @@
         { "args": ["64.977.017/6473-33"], "returns": "64977017647333", "note": "consensus of 3 libs (python, ruby, rust)" },
         { "args": ["62.932.200/8085-87"], "returns": "62932200808587", "note": "consensus of 3 libs (python, ruby, rust)" },
         { "args": ["Q0.SLF.MBD/7VX4-39", { "version": 2 }], "returns": "Q0SLFMBD7VX439", "note": "JavaScript's own test: should keep alphanumeric characters for version 2" },
-        { "args": ["Q0.SLF.MBD/7VX4-39ABC", { "version": 2 }], "returns": "Q0SLFMBD7VX439", "note": "JavaScript's own test: should ignore characters after the CNPJ length for version 2" }
+        { "args": ["Q0.SLF.MBD/7VX4-39ABC", { "version": 2 }], "returns": "Q0SLFMBD7VX439", "note": "JavaScript's own test: should ignore characters after the CNPJ length for version 2" },
+        { "args": ["12.abc.345/01de-35", { "version": 2 }], "returns": "12ABC34501DE35", "note": "JavaScript's own test: should upper-case lower case letters for version 2, the official set being A to Z" },
+        { "args": ["q0slfmbd7vx439", { "version": 2 }], "returns": "Q0SLFMBD7VX439", "note": "JavaScript's own test: should upper-case lower case letters for version 2, the official set being A to Z" },
+        { "args": [-11222333000181], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number; changed in 2.5.0 (#593): a number is read only when it is a non-negative safe integer" },
+        { "args": [-1], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number; changed in 2.5.0 (#593): a number is read only when it is a non-negative safe integer" },
+        { "args": [1.5], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number; changed in 2.5.0 (#593): a number is read only when it is a non-negative safe integer" },
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number; changed in 2.5.0 (#593): a number is read only when it is a non-negative safe integer" }
       ]
     }
   }

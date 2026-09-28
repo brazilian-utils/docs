@@ -10,7 +10,7 @@
     "pt-BR": "A chave de acesso de 50 dígitos da NFS-e nacional, a nota fiscal de serviço do Sistema Nacional NFS-e."
   },
   "category": "tax",
-  "order": 6,
+  "order": 7,
   "related": [
     "nfeKey",
     "municipality"

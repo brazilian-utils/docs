@@ -10,7 +10,7 @@
     "pt-BR": "Nomenclatura Brasileira de Serviços: os códigos de classificação de serviços da tabela NBS 2.0, informados na NFS-e nacional."
   },
   "category": "tax",
-  "order": 9,
+  "order": 10,
   "related": [
     "serviceItem",
     "nfseKey"
