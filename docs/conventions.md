@@ -24,7 +24,7 @@ Status:
 
 | # | Convention | Status |
 |---|---|---|
-| 1 | Validators return false on bad input and never fail | Agreed |
+| 1 | Validators return false on bad input and never fail; lookups never fail either | Agreed |
 | 2 | Formatters on empty, garbage or incomplete input | Pending decision ([§2 #2, #3](findings.md#2-decisions-needed-not-encoded-yet)) |
 | 3 | Single-item lookups return null when nothing matches | Pending decision ([§2 #6](findings.md#2-decisions-needed-not-encoded-yet)) |
 | 4 | List lookups return an empty list when nothing matches | Reference only |
@@ -39,11 +39,16 @@ Status:
 | 13 | Only network functions are asynchronous | Agreed |
 | 14 | Text written out in words ("por extenso") is lower case | Pending decision ([§1b](findings.md#1b-found-by-the-506-cases-added-from-the-js-reference-tests)) |
 | 15 | Optional behaviors are optional parameters (`options`) | Pending decision ([§2](findings.md#2-decisions-needed-not-encoded-yet), API shape) |
+| 16 | A number is read only when it is a safe non-negative integer | Reference only |
+| 17 | State codes (UF) are case-insensitive and trimmed | Reference only |
+| 18 | `stateCode` in the holiday and business-day functions: national, state or rejected | Reference only |
+| 19 | A getter returns null exactly when its validator returns false | Reference only |
 
 ## Details
 
 1. **Validators never fail on bad input.** `*.isValid` returns false for an empty string,
-   whitespace or garbage, and never raises. The `isValid` cases of the contract for `""`,
+   whitespace or garbage, and never raises. Offline lookups (`*.get*`, `*.list*`) never raise either:
+   they return null or an empty list (rules 3 and 4). The `isValid` cases of the contract for `""`,
    `"   "` and `"abc"` pass in every library.
 
 2. **Formatters on bad input.** The reference returns an empty string for empty or garbage
@@ -56,7 +61,7 @@ Status:
 
 3. **Single-item lookups** (`*.get`, `*.getInfo`, `*.getBy*`) return null when nothing matches.
    Go returns `""` for an unknown legal nature code (`legalNature.getDescription`). Python,
-   Ruby and Rust return null.
+   Ruby and Rust return null. See also rule 19.
 
 4. **List lookups** (`*.list`, `*.listBy*`, `date.getHolidays`) return an empty list for an
    unknown filter or out-of-range input, never null.
@@ -93,9 +98,9 @@ Status:
     its check digits match. Every library agrees. For PIS, the reference (JS) also rejects
     such numbers, and the other six libraries accept them (findings §1).
 
-12. **Lookups return fresh values.** A change to a returned list or record never affects the
-    next call. Today, only the reference has these lookups. In languages with immutable data,
-    the rule is always true.
+12. **Lookups return fresh values.** Every object or list a function returns is a new copy. A
+    change to it never affects the next call or the library's own tables. In languages with
+    immutable data, the rule is always true.
 
 13. **Synchronous API.** Every function returns its result directly. The exception is the
     network functions of rule 5. They can be asynchronous where the language has an idiom for
@@ -111,3 +116,31 @@ Status:
     optional parameters or do not have the behavior. The contract lists them as one optional
     `options` parameter. People also disagree about some defaults: the default phone mask
     (§2 #4) and whether `currency.format` adds `R$` (§1b).
+
+16. **Numbers as input.** Every function that takes `string | number` reads a number only when
+    it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number is
+    invalid input: validators return false, formatters return `""`, parsers return `""` and
+    lookups return null. Strings and safe non-negative integers give the same results as
+    before. Until 2.4.0 the reference read some negative or fractional numbers by their digits
+    (`formatNcm(-84713012)` gave `8471.30.12`, `isValidRenavam(-639884962)` gave true).
+
+17. **State codes.** Every function that takes a state code (UF) ignores case and surrounding
+    whitespace: `"sp"`, `" SP "` and `"Sp"` all mean `"SP"`. This covers the municipality,
+    area code, state, holiday and business-day functions, and the generators that take a state
+    (`cpf.generate`, `voterId.generate`), and `registroProfissional.isValid`. Until 2.4.0,
+    `municipality.list("sp")` returned an empty list and the holiday functions read `"sp"` as
+    no state.
+
+18. **`stateCode` in the holiday and business-day functions** (`date.getHolidays`,
+    `date.isHoliday`, `date.isBusinessDay`, `date.addBusinessDays`, `date.subBusinessDays`,
+    `date.differenceInBusinessDays`). Without `stateCode`, only national holidays count. A valid
+    state code, in any case, adds that state's holidays. Any other value is rejected with the
+    function's "no result": `getHolidays` returns `[]`, `isHoliday` and `isBusinessDay` return
+    false, and the three business-day calculations return null. Until 2.4.0, an unknown or
+    lower-case code silently fell back to the national holidays. Municipal holidays are never
+    included.
+
+19. **Getters follow their validator.** For every pair `isValidX` / `getX` (or `getXInfo`),
+    `getX(v)` is null exactly when `isValidX(v)` is false. Most getters call the validator
+    first. `classTrib.get`, `cid10.get` and `legalNature.get` do their own lookup to keep the
+    validator small, with the same result.

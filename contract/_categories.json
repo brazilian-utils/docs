@@ -4,6 +4,7 @@
     { "id": "documents", "label": { "en": "Personal documents", "pt-BR": "Documentos pessoais" } },
     { "id": "companies", "label": { "en": "Companies", "pt-BR": "Empresas" } },
     { "id": "tax", "label": { "en": "Tax documents", "pt-BR": "Documentos fiscais" } },
+    { "id": "products", "label": { "en": "Products", "pt-BR": "Produtos" } },
     { "id": "finance", "label": { "en": "Finance", "pt-BR": "Financeiro" } },
     { "id": "address", "label": { "en": "Address", "pt-BR": "Endereço" } },
     { "id": "telecom", "label": { "en": "Phone and email", "pt-BR": "Telefone e e-mail" } },
