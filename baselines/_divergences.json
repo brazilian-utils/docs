@@ -109,6 +109,8 @@
     "dotnet,go,javascript,python,ruby,rust | erlang"
   ],
   "licensePlate.isValid": [
+    "dotnet,go,javascript,python,ruby,rust | erlang",
+    "dotnet,go,python,ruby,rust | erlang | javascript",
     "erlang,python | javascript,ruby",
     "erlang,python,ruby | javascript"
   ],

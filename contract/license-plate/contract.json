@@ -200,11 +200,13 @@
         "en": [
           "Validates a license plate in the old format (`ABC1234`) or the Mercosul format (`ABC1D23`), in any case, with or without a hyphen or space.",
           "",
+          "- `type` restricts the check to one format: `\"old_format\"` (`ABC1234`) or `\"mercosul\"` (`ABC1D23`). Without it, or with any other value, both formats are accepted.",
           "- Any other sequence of letters and digits, or extra characters, makes it invalid."
         ],
         "pt-BR": [
           "Valida uma placa no formato antigo (`ABC1234`) ou no padrão Mercosul (`ABC1D23`), em maiúsculas ou minúsculas, com ou sem hífen ou espaço.",
           "",
+          "- `type` restringe a checagem a um formato: `\"old_format\"` (`ABC1234`) ou `\"mercosul\"` (`ABC1D23`). Sem ele, ou com qualquer outro valor, os dois formatos são aceitos.",
           "- Qualquer outra sequência de letras e dígitos, ou caracteres a mais, torna a placa inválida."
         ]
       },
@@ -213,7 +215,10 @@
         "https://www.gov.br/transportes/pt-br/assuntos/transito/conteudo-contran/resolucoes/resolucao9692022anexos.pdf"
       ],
       "level": "core",
-      "params": [{ "name": "value", "type": "string" }],
+      "params": [
+        { "name": "value", "type": "string" },
+        { "name": "type", "type": "\"old_format\" | \"mercosul\"", "optional": true }
+      ],
       "returns": "boolean",
       "tests": [
         { "args": ["WDG1S21"], "returns": true, "note": "consensus of 3 libs (javascript, python, ruby)" },
@@ -243,7 +248,15 @@
         { "args": ["ABC1D23"], "returns": true, "note": "JavaScript's own test: should return true when mercosul license plate format is valid" },
         { "args": ["ABC 1234"], "returns": true, "note": "JavaScript's own test: should return true when it has a whitespace mask" },
         { "args": ["  abc1234 "], "returns": true, "note": "JavaScript's own test: should return true when it has a whitespace mask" },
-        { "args": ["ABC-1D23"], "returns": true, "note": "JavaScript's own test: should return true when the mercosul format has a hyphen mask" }
+        { "args": ["ABC-1D23"], "returns": true, "note": "JavaScript's own test: should return true when the mercosul format has a hyphen mask" },
+        { "args": ["ABC1D23", "mercosul"], "returns": true, "note": "type restricts the check to one format" },
+        { "args": ["ABC1D23", "old_format"], "returns": false, "note": "type restricts the check to one format" },
+        { "args": ["ABC1234", "old_format"], "returns": true, "note": "type restricts the check to one format" },
+        { "args": ["ABC1234", "mercosul"], "returns": false, "note": "type restricts the check to one format" },
+        { "args": ["abc1d23", "mercosul"], "returns": true, "note": "type restricts the check to one format, in any case" },
+        { "args": ["ABC12D3", "mercosul"], "returns": false, "note": "the withdrawn motorcycle sequence stays invalid with a type" },
+        { "args": ["abc", "old_format"], "returns": false, "note": "an invalid plate stays invalid with a type" },
+        { "args": ["ABC1D23", "LLLNLNN"], "returns": true, "note": "any other type value is ignored: both formats are accepted" }
       ]
     },
     "parse": {
