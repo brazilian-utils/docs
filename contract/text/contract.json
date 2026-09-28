@@ -22,7 +22,9 @@
           "",
           "- Prepositions and articles (`de`, `da`, `do`, `e`, …) stay lower case between two words. Company designations and abbreviations (`LTDA`, `S.A.`, `ME`, `CNPJ`) and roman numerals are upper-cased. `options` can replace either list.",
           "- Words split at whitespace, `-`, `/`, apostrophes and adjoining punctuation. Runs of whitespace collapse into one space.",
-          "- A lower-case word keeps its capital when it is first, last or followed by punctuation. `ME` is upper-cased only as a designation. `SA` without dots is left alone (the surname Sá). A state code after a `/` is upper-cased."
+          "- A lower-case word keeps its capital when it is first, last or followed by punctuation. `ME` is upper-cased only as a designation. `SA` without dots is left alone (the surname Sá).",
+          "- Roman numerals from `II` to `XXXIX` are upper-cased (`\"rua xxiv de maio\"` becomes `\"Rua XXIV de Maio\"`). `VI` is left out because it is also the verb form \"vi\", and numerals from `XL` on are left out because letters such as L, C and D spell ordinary words. Upper-casing numerals is Correios addressing practice; no norm fixes it. 2.4.0 stopped at `XXIII`.",
+          "- A state code (UF) is upper-cased after a `/` (`\"santana/rs\"` becomes `\"Santana/RS\"`). As the last word, it is also upper-cased after a spaced hyphen, a spaced en dash or a comma, the \"Cidade - UF\" form of the Correios addressing guide: `\"brasília - df\"` becomes `\"Brasília - DF\"`. Anywhere else, or after an unspaced hyphen (`\"brasília-df\"`), the two letters are an ordinary word. 2.4.0 upper-cased a state code only after `/`."
         ],
         "pt-BR": [
           "Coloca em maiúscula a primeira letra de cada palavra do jeito que se escreve um nome de pessoa, de empresa ou um endereço no Brasil.",
@@ -31,7 +33,9 @@
           "",
           "- Preposições e artigos (`de`, `da`, `do`, `e`, …) ficam em minúsculas entre duas palavras. Designações de empresa e abreviações (`LTDA`, `S.A.`, `ME`, `CNPJ`) e numerais romanos ficam em maiúsculas. `options` pode substituir qualquer uma das listas.",
           "- As palavras são separadas por espaços, `-`, `/`, apóstrofos e pontuação vizinha. Sequências de espaços viram um só espaço.",
-          "- Uma palavra minúscula mantém a inicial maiúscula quando é a primeira, a última ou vem seguida de pontuação. `ME` fica em maiúsculas só como designação. `SA` sem pontos fica como está (o sobrenome Sá). A sigla de um estado depois de `/` fica em maiúsculas."
+          "- Uma palavra minúscula mantém a inicial maiúscula quando é a primeira, a última ou vem seguida de pontuação. `ME` fica em maiúsculas só como designação. `SA` sem pontos fica como está (o sobrenome Sá).",
+          "- Numerais romanos de `II` a `XXXIX` ficam em maiúsculas (`\"rua xxiv de maio\"` vira `\"Rua XXIV de Maio\"`). `VI` fica de fora porque também é a forma verbal \"vi\", e os numerais a partir de `XL` ficam de fora porque letras como L, C e D formam palavras comuns. Numeral romano em maiúsculas é prática de endereçamento dos Correios; nenhuma norma fixa isso. A 2.4.0 parava em `XXIII`.",
+          "- A sigla de um estado (UF) fica em maiúsculas depois de `/` (`\"santana/rs\"` vira `\"Santana/RS\"`). Como última palavra, ela também fica em maiúsculas depois de hífen com espaços, travessão (en dash) com espaços ou vírgula, a forma \"Cidade - UF\" do guia de endereçamento dos Correios: `\"brasília - df\"` vira `\"Brasília - DF\"`. Em qualquer outra posição, ou depois de hífen sem espaços (`\"brasília-df\"`), as duas letras são uma palavra comum. A 2.4.0 só colocava a sigla em maiúsculas depois de `/`."
         ]
       },
       "references": [
@@ -42,7 +46,8 @@
         "https://www.planalto.gov.br/ccivil_03/leis/2002/l10406compilada.htm",
         "https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp123.htm",
         "https://www.gov.br/empresas-e-negocios/pt-br/drei/legislacao/instrucoes-normativas/arquivos-instrucoes-normativas-em-vigor/anexo-iv-limitada_link.pdf",
-        "https://www.gov.br/empresas-e-negocios/pt-br/drei/legislacao/instrucoes-normativas"
+        "https://www.gov.br/empresas-e-negocios/pt-br/drei/legislacao/instrucoes-normativas",
+        "https://www.correios.com.br/enviar/precisa-de-ajuda/guia-de-enderecamento/guia-de-enderecamento"
       ],
       "flatName": "capitalize",
       "params": [
@@ -173,7 +178,28 @@
         { "args": ["ßa"], "returns": "ßa", "note": "JavaScript's own test: should capitalize when the first letter changes length between cases: the dotted İ is one character in upper case and two in lower case, and a letter whose upper case is two letters keeps its case" },
         { "args": ["ﬁm"], "returns": "ﬁm", "note": "JavaScript's own test: should capitalize when the first letter changes length between cases: the dotted İ is one character in upper case and two in lower case, and a letter whose upper case is two letters keeps its case" },
         { "args": ["ǆemal"], "returns": "Ǆemal", "note": "JavaScript's own test: should capitalize when the first letter changes length between cases: the dotted İ is one character in upper case and two in lower case, and a letter whose upper case is two letters keeps its case" },
-        { "args": ["--de paula"], "returns": "--De Paula", "note": "JavaScript's own test: should capitalize when consecutive separators produce an empty token, which must not be counted as a word either" }
+        { "args": ["--de paula"], "returns": "--De Paula", "note": "JavaScript's own test: should capitalize when consecutive separators produce an empty token, which must not be counted as a word either" },
+        { "args": ["brasília - df"], "returns": "Brasília - DF", "note": "from the maintainer briefing, #593: a state code after a spaced hyphen is upper-cased; 2.4.0 gave 'Brasília - Df'" },
+        { "args": ["são paulo – sp"], "returns": "São Paulo – SP", "note": "JavaScript's own test: when a state code ends the value after a spaced hyphen, an en dash or a comma, the Correios' 'Cidade – UF'" },
+        { "args": ["curitiba, pr"], "returns": "Curitiba, PR", "note": "JavaScript's own test: when a state code ends the value after a spaced hyphen, an en dash or a comma, the Correios' 'Cidade – UF'" },
+        { "args": ["rua x, 10, centro, recife - pe"], "returns": "Rua X, 10, Centro, Recife - PE", "note": "JavaScript's own test: when a state code ends the value after a spaced hyphen, an en dash or a comma, the Correios' 'Cidade – UF'" },
+        { "args": ["BRASÍLIA - DF", { "upperCaseWords": [] }], "returns": "Brasília - DF", "note": "JavaScript's own test: when a state code ends the value after a spaced hyphen, an en dash or a comma, the Correios' 'Cidade – UF'" },
+        { "args": ["recife - PE"], "returns": "Recife - PE" },
+        { "args": ["rs - centro"], "returns": "Rs - Centro", "note": "JavaScript's own test: when a state code after those separators is not the last word, or the separator is not spaced, it is an ordinary word" },
+        { "args": ["brasília - df sul"], "returns": "Brasília - Df Sul", "note": "JavaScript's own test: when a state code after those separators is not the last word, or the separator is not spaced, it is an ordinary word" },
+        { "args": ["brasília-df"], "returns": "Brasília-Df", "note": "JavaScript's own test: when a state code after those separators is not the last word, or the separator is not spaced, it is an ordinary word" },
+        { "args": ["brasília -df"], "returns": "Brasília -Df", "note": "JavaScript's own test: when a state code after those separators is not the last word, or the separator is not spaced, it is an ordinary word" },
+        { "args": ["brasília,df"], "returns": "Brasília,Df", "note": "JavaScript's own test: when a state code after those separators is not the last word, or the separator is not spaced, it is an ordinary word" },
+        { "args": ["brasília - br"], "returns": "Brasília - Br", "note": "JavaScript's own test: when a state code after those separators is not the last word, or the separator is not spaced, it is an ordinary word" },
+        { "args": ["- df"], "returns": "- Df", "note": "JavaScript's own test: when a state code after those separators is not the last word, or the separator is not spaced, it is an ordinary word" },
+        { "args": ["rua xxiv de maio"], "returns": "Rua XXIV de Maio", "note": "from the maintainer briefing, #593: roman numerals up to XXXIX; 2.4.0 stopped at XXIII" },
+        { "args": ["rua xxv de março"], "returns": "Rua XXV de Março", "note": "JavaScript's own test: when the value carries a roman numeral" },
+        { "args": ["praça xxix de junho"], "returns": "Praça XXIX de Junho", "note": "JavaScript's own test: when the value carries a roman numeral" },
+        { "args": ["rua xxxi de março"], "returns": "Rua XXXI de Março", "note": "JavaScript's own test: when the value carries a roman numeral" },
+        { "args": ["capítulo xxxix"], "returns": "Capítulo XXXIX", "note": "JavaScript's own test: when the value carries a roman numeral" },
+        { "args": ["rua xxiii"], "returns": "Rua XXIII" },
+        { "args": ["capítulo xl"], "returns": "Capítulo Xl", "note": "JavaScript's own test: when a roman numeral is past XXXIX, uses a letter other than I, V and X, or is VI, it is an ordinary word" },
+        { "args": ["eu li o livro"], "returns": "Eu Li o Livro", "note": "JavaScript's own test: when a roman numeral is past XXXIX, uses a letter other than I, V and X, or is VI, it is an ordinary word" }
       ]
     },
     "removeAccents": {

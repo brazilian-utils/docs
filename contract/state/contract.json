@@ -3,12 +3,12 @@
   "domain": "state",
   "title": { "en": "States (UF)", "pt-BR": "Estados (UF)" },
   "summary": {
-    "en": "Brazilian states (unidades federativas): codes, names, IBGE codes and time zones.",
-    "pt-BR": "Unidades federativas: siglas, nomes, códigos do IBGE e fusos horários."
+    "en": "Brazilian states (unidades federativas): codes, names, IBGE codes, capitals, regions and time zones.",
+    "pt-BR": "Unidades federativas: siglas, nomes, códigos do IBGE, capitais, regiões e fusos horários."
   },
   "category": "address",
   "order": 2,
-  "related": ["municipality", "areaCode"],
+  "related": ["municipality", "areaCode", "cep"],
   "functions": {
     "getByIbgeCode": {
       "summary": {
@@ -20,6 +20,8 @@
           "Returns the state whose 2-digit IBGE code (cUF, the code in the first field of a DF-e access key) matches `code`.",
           "",
           "- `code` may be a string or a non-negative integer.",
+          "- A string has every character that is not a digit removed first, as in 2.4.0: `\"35/SP\"` and `\" 35 \"` resolve to São Paulo.",
+          "- A negative or fractional number is not read as a code and returns null.",
           "- The result has the code, name, region code, region name and IBGE code.",
           "- Returns null when the code matches no state."
         ],
@@ -27,6 +29,8 @@
           "Retorna o estado cujo código IBGE de 2 dígitos (cUF, o código no primeiro campo da chave de acesso de um DF-e) corresponde a `code`.",
           "",
           "- `code` pode ser uma string ou um inteiro não negativo.",
+          "- De uma string, todo caractere que não é dígito é removido antes, como na 2.4.0: `\"35/SP\"` e `\" 35 \"` resolvem para São Paulo.",
+          "- Um número negativo ou fracionário não é lido como código e retorna null.",
           "- O resultado tem a sigla, o nome, o código da região, o nome da região e o código IBGE.",
           "- Retorna null quando o código não corresponde a nenhum estado."
         ]
@@ -47,7 +51,60 @@
         { "name": "empty", "args": [""], "returns": null },
         { "args": [-35], "returns": null, "note": "JavaScript's own test: should return null for a negative number, not read it as the cUF 35" },
         { "args": [3.5], "returns": null, "note": "JavaScript's own test: should return null for a fractional number, not read it as the cUF 35" },
-        { "args": ["   "], "returns": null, "note": "JavaScript's own test: should return null for whitespace only" }
+        { "args": ["   "], "returns": null, "note": "JavaScript's own test: should return null for whitespace only" },
+        { "args": ["35/SP"], "returns": { "code": "SP", "name": "São Paulo", "regionCode": "SE", "regionName": "Sudeste", "ibgeCode": 35 }, "note": "from the maintainer briefing, #596: every non-digit is removed from a string, as in 2.4.0" },
+        { "args": [" 35 "], "returns": { "code": "SP", "name": "São Paulo", "regionCode": "SE", "regionName": "Sudeste", "ibgeCode": 35 }, "note": "from the maintainer briefing, #596: every non-digit is removed from a string, as in 2.4.0" },
+        { "args": ["0x1"], "returns": null, "note": "from the maintainer briefing, #596: `0x1` is read as the digits 01, which is no state" }
+      ]
+    },
+    "getCapital": {
+      "summary": {
+        "en": "Gets the capital of a Brazilian state as a municipality.",
+        "pt-BR": "Obtém a capital de um estado como município."
+      },
+      "description": {
+        "en": [
+          "Returns the capital of a state, in the same shape `municipality.getByCode` returns: the 7-digit IBGE code, the name and the state code.",
+          "",
+          "- The match ignores case and surrounding whitespace: `\"to\"` and `\" TO \"` both give Palmas.",
+          "- The Distrito Federal has no municipalities. Its capital is Brasília, with the code the IBGE gives the whole district (5300108).",
+          "- Returns null for a string that is not a state code, and for a value that is not a string.",
+          "- The `State` type has no capital field. The capital comes only from this function.",
+          "- Each call returns a new object."
+        ],
+        "pt-BR": [
+          "Retorna a capital de um estado, no mesmo formato de `municipality.getByCode`: o código IBGE de 7 dígitos, o nome e a sigla da UF.",
+          "",
+          "- A comparação ignora maiúsculas e minúsculas e espaços nas pontas: `\"to\"` e `\" TO \"` dão Palmas.",
+          "- O Distrito Federal não tem municípios. A capital é Brasília, com o código que o IBGE dá ao distrito inteiro (5300108).",
+          "- Retorna null para uma string que não é sigla de estado e para um valor que não é string.",
+          "- O tipo `State` não tem campo de capital. A capital vem só desta função.",
+          "- Cada chamada retorna um objeto novo."
+        ]
+      },
+      "references": [
+        "https://anuario.ibge.gov.br/2024/territorio/posicao-e-extensao.html",
+        "https://servicodados.ibge.gov.br/api/v1/localidades/estados"
+      ],
+      "flatName": "getStateCapital",
+      "params": [{ "name": "stateCode", "type": "string" }],
+      "returns": "Municipality?",
+      "tests": [
+        { "args": ["SP"], "returns": { "code": "3550308", "name": "São Paulo", "stateCode": "SP" }, "note": "JavaScript's own test: should return the capital of a state" },
+        { "args": ["to"], "returns": { "code": "1721000", "name": "Palmas", "stateCode": "TO" }, "note": "from the maintainer briefing, #601" },
+        { "args": ["ZZ"], "returns": null, "note": "from the maintainer briefing, #601" },
+        { "args": ["TO"], "returns": { "code": "1721000", "name": "Palmas", "stateCode": "TO" }, "note": "JavaScript's own test: should return the capital of a state" },
+        { "args": ["RR"], "returns": { "code": "1400100", "name": "Boa Vista", "stateCode": "RR" }, "note": "JavaScript's own test: should return the capital of a state" },
+        { "args": ["DF"], "returns": { "code": "5300108", "name": "Brasília", "stateCode": "DF" }, "note": "JavaScript's own test: should return Brasília for the Distrito Federal" },
+        { "args": [" mg "], "returns": { "code": "3106200", "name": "Belo Horizonte", "stateCode": "MG" }, "note": "JavaScript's own test: should ignore case and surrounding whitespace" },
+        { "args": ["rj"], "returns": { "code": "3304557", "name": "Rio de Janeiro", "stateCode": "RJ" } },
+        { "args": ["PE"], "returns": { "code": "2611606", "name": "Recife", "stateCode": "PE" }, "note": "JavaScript's own test: should return Recife for PE" },
+        { "name": "empty", "args": [""], "returns": null, "note": "JavaScript's own test: should return null for a code that is not a state" },
+        { "name": "blank", "args": ["   "], "returns": null },
+        { "args": ["__proto__"], "returns": null, "note": "JavaScript's own test: should return null for a code that is not a state" },
+        { "args": ["S P"], "returns": null },
+        { "args": ["SPX"], "returns": null },
+        { "args": [35], "returns": null, "note": "JavaScript's own test: should return null for a value that is not a string" }
       ]
     },
     "getCodeByName": {
@@ -129,6 +186,46 @@
         { "args": ["Sp"], "returns": "São Paulo", "note": "JavaScript's own test: should be case-insensitive" },
         { "args": ["  rj  "], "returns": "Rio de Janeiro", "note": "JavaScript's own test: should combine casing and trimming together" },
         { "args": ["   "], "returns": null, "note": "JavaScript's own test: should return null for whitespace only" }
+      ]
+    },
+    "getRegions": {
+      "summary": {
+        "en": "Gets the five Brazilian regions (Grandes Regiões) with their codes and IBGE identifiers.",
+        "pt-BR": "Obtém as cinco Grandes Regiões do Brasil, com códigos e identificadores do IBGE."
+      },
+      "description": {
+        "en": [
+          "Returns the five Grandes Regiões of the IBGE, sorted by their IBGE identifier: Norte (1), Nordeste (2), Sudeste (3), Sul (4) and Centro-Oeste (5).",
+          "",
+          "- Each entry has the region code (`N`, `NE`, `SE`, `S`, `CO`, the same `regionCode` every state carries), the name and the IBGE identifier.",
+          "- The `State` type has no region identifier field. The identifier comes only from this function.",
+          "- Each call returns a new array of new objects."
+        ],
+        "pt-BR": [
+          "Retorna as cinco Grandes Regiões do IBGE, ordenadas pelo identificador do IBGE: Norte (1), Nordeste (2), Sudeste (3), Sul (4) e Centro-Oeste (5).",
+          "",
+          "- Cada item tem o código da região (`N`, `NE`, `SE`, `S`, `CO`, o mesmo `regionCode` de cada estado), o nome e o identificador do IBGE.",
+          "- O tipo `State` não tem campo com o identificador da região. O identificador vem só desta função.",
+          "- Cada chamada retorna um array novo com objetos novos."
+        ]
+      },
+      "references": ["https://servicodados.ibge.gov.br/api/v1/localidades/regioes"],
+      "flatName": "getRegions",
+      "params": [],
+      "returns": "Region[]",
+      "tests": [
+        {
+          "name": "all-regions",
+          "args": [],
+          "returns": [
+            { "code": "N", "name": "Norte", "ibgeCode": 1 },
+            { "code": "NE", "name": "Nordeste", "ibgeCode": 2 },
+            { "code": "SE", "name": "Sudeste", "ibgeCode": 3 },
+            { "code": "S", "name": "Sul", "ibgeCode": 4 },
+            { "code": "CO", "name": "Centro-Oeste", "ibgeCode": 5 }
+          ],
+          "note": "JavaScript's own test: should return the five regions in the order of their IBGE identifier"
+        }
       ]
     },
     "getTimezone": {
@@ -265,6 +362,165 @@
           ],
           "note": "27 federative units sorted by name, as held by the reference"
         }
+      ]
+    },
+    "listByRegion": {
+      "summary": {
+        "en": "Gets the Brazilian states of a region (Grande Região).",
+        "pt-BR": "Obtém os estados de uma Grande Região."
+      },
+      "description": {
+        "en": [
+          "Returns the states of a region, given its code: `N`, `NE`, `SE`, `S` or `CO`.",
+          "",
+          "- The match ignores case and surrounding whitespace: `\"co\"` and `\" CO \"` give the same list.",
+          "- The states come sorted by name, as in `state.list`, with the same fields.",
+          "- Returns an empty list for an unknown code (a region name such as `Norte` included) and for a value that is not a string.",
+          "- Each call returns a new array of new objects."
+        ],
+        "pt-BR": [
+          "Retorna os estados de uma região, dado o código dela: `N`, `NE`, `SE`, `S` ou `CO`.",
+          "",
+          "- A comparação ignora maiúsculas e minúsculas e espaços nas pontas: `\"co\"` e `\" CO \"` dão a mesma lista.",
+          "- Os estados vêm ordenados por nome, como em `state.list`, com os mesmos campos.",
+          "- Retorna uma lista vazia para um código desconhecido (inclusive um nome de região como `Norte`) e para um valor que não é string.",
+          "- Cada chamada retorna um array novo com objetos novos."
+        ]
+      },
+      "references": [
+        "https://servicodados.ibge.gov.br/api/v1/localidades/estados",
+        "https://servicodados.ibge.gov.br/api/v1/localidades/regioes"
+      ],
+      "flatName": "getStatesByRegion",
+      "params": [{ "name": "regionCode", "type": "string" }],
+      "returns": "State[]",
+      "tests": [
+        {
+          "args": ["co"],
+          "returns": [
+            {
+              "code": "DF",
+              "name": "Distrito Federal",
+              "regionCode": "CO",
+              "regionName": "Centro-Oeste",
+              "ibgeCode": 53
+            },
+            { "code": "GO", "name": "Goiás", "regionCode": "CO", "regionName": "Centro-Oeste", "ibgeCode": 52 },
+            { "code": "MT", "name": "Mato Grosso", "regionCode": "CO", "regionName": "Centro-Oeste", "ibgeCode": 51 },
+            {
+              "code": "MS",
+              "name": "Mato Grosso do Sul",
+              "regionCode": "CO",
+              "regionName": "Centro-Oeste",
+              "ibgeCode": 50
+            }
+          ],
+          "note": "from the maintainer briefing, #601"
+        },
+        { "args": ["X"], "returns": [], "note": "from the maintainer briefing, #601" },
+        {
+          "args": ["N"],
+          "returns": [
+            { "code": "AC", "name": "Acre", "regionCode": "N", "regionName": "Norte", "ibgeCode": 12 },
+            { "code": "AP", "name": "Amapá", "regionCode": "N", "regionName": "Norte", "ibgeCode": 16 },
+            { "code": "AM", "name": "Amazonas", "regionCode": "N", "regionName": "Norte", "ibgeCode": 13 },
+            { "code": "PA", "name": "Pará", "regionCode": "N", "regionName": "Norte", "ibgeCode": 15 },
+            { "code": "RO", "name": "Rondônia", "regionCode": "N", "regionName": "Norte", "ibgeCode": 11 },
+            { "code": "RR", "name": "Roraima", "regionCode": "N", "regionName": "Norte", "ibgeCode": 14 },
+            { "code": "TO", "name": "Tocantins", "regionCode": "N", "regionName": "Norte", "ibgeCode": 17 }
+          ],
+          "note": "JavaScript's own test: should list the states of each region, sorted by name"
+        },
+        {
+          "args": ["NE"],
+          "returns": [
+            { "code": "AL", "name": "Alagoas", "regionCode": "NE", "regionName": "Nordeste", "ibgeCode": 27 },
+            { "code": "BA", "name": "Bahia", "regionCode": "NE", "regionName": "Nordeste", "ibgeCode": 29 },
+            { "code": "CE", "name": "Ceará", "regionCode": "NE", "regionName": "Nordeste", "ibgeCode": 23 },
+            { "code": "MA", "name": "Maranhão", "regionCode": "NE", "regionName": "Nordeste", "ibgeCode": 21 },
+            { "code": "PB", "name": "Paraíba", "regionCode": "NE", "regionName": "Nordeste", "ibgeCode": 25 },
+            { "code": "PE", "name": "Pernambuco", "regionCode": "NE", "regionName": "Nordeste", "ibgeCode": 26 },
+            { "code": "PI", "name": "Piauí", "regionCode": "NE", "regionName": "Nordeste", "ibgeCode": 22 },
+            {
+              "code": "RN",
+              "name": "Rio Grande do Norte",
+              "regionCode": "NE",
+              "regionName": "Nordeste",
+              "ibgeCode": 24
+            },
+            { "code": "SE", "name": "Sergipe", "regionCode": "NE", "regionName": "Nordeste", "ibgeCode": 28 }
+          ],
+          "note": "JavaScript's own test: should list the states of each region, sorted by name"
+        },
+        {
+          "args": ["SE"],
+          "returns": [
+            { "code": "ES", "name": "Espírito Santo", "regionCode": "SE", "regionName": "Sudeste", "ibgeCode": 32 },
+            { "code": "MG", "name": "Minas Gerais", "regionCode": "SE", "regionName": "Sudeste", "ibgeCode": 31 },
+            { "code": "RJ", "name": "Rio de Janeiro", "regionCode": "SE", "regionName": "Sudeste", "ibgeCode": 33 },
+            { "code": "SP", "name": "São Paulo", "regionCode": "SE", "regionName": "Sudeste", "ibgeCode": 35 }
+          ],
+          "note": "JavaScript's own test: should list the states of each region, sorted by name"
+        },
+        {
+          "args": ["S"],
+          "returns": [
+            { "code": "PR", "name": "Paraná", "regionCode": "S", "regionName": "Sul", "ibgeCode": 41 },
+            { "code": "RS", "name": "Rio Grande do Sul", "regionCode": "S", "regionName": "Sul", "ibgeCode": 43 },
+            { "code": "SC", "name": "Santa Catarina", "regionCode": "S", "regionName": "Sul", "ibgeCode": 42 }
+          ],
+          "note": "JavaScript's own test: should list the states of each region, sorted by name"
+        },
+        {
+          "args": ["CO"],
+          "returns": [
+            {
+              "code": "DF",
+              "name": "Distrito Federal",
+              "regionCode": "CO",
+              "regionName": "Centro-Oeste",
+              "ibgeCode": 53
+            },
+            { "code": "GO", "name": "Goiás", "regionCode": "CO", "regionName": "Centro-Oeste", "ibgeCode": 52 },
+            { "code": "MT", "name": "Mato Grosso", "regionCode": "CO", "regionName": "Centro-Oeste", "ibgeCode": 51 },
+            {
+              "code": "MS",
+              "name": "Mato Grosso do Sul",
+              "regionCode": "CO",
+              "regionName": "Centro-Oeste",
+              "ibgeCode": 50
+            }
+          ],
+          "note": "JavaScript's own test: should list the states of each region, sorted by name"
+        },
+        {
+          "args": [" co "],
+          "returns": [
+            {
+              "code": "DF",
+              "name": "Distrito Federal",
+              "regionCode": "CO",
+              "regionName": "Centro-Oeste",
+              "ibgeCode": 53
+            },
+            { "code": "GO", "name": "Goiás", "regionCode": "CO", "regionName": "Centro-Oeste", "ibgeCode": 52 },
+            { "code": "MT", "name": "Mato Grosso", "regionCode": "CO", "regionName": "Centro-Oeste", "ibgeCode": 51 },
+            {
+              "code": "MS",
+              "name": "Mato Grosso do Sul",
+              "regionCode": "CO",
+              "regionName": "Centro-Oeste",
+              "ibgeCode": 50
+            }
+          ],
+          "note": "JavaScript's own test: should ignore case and surrounding whitespace"
+        },
+        { "args": ["s"], "returns": [{ "code": "PR", "name": "Paraná", "regionCode": "S", "regionName": "Sul", "ibgeCode": 41 }, { "code": "RS", "name": "Rio Grande do Sul", "regionCode": "S", "regionName": "Sul", "ibgeCode": 43 }, { "code": "SC", "name": "Santa Catarina", "regionCode": "S", "regionName": "Sul", "ibgeCode": 42 }] },
+        { "name": "empty", "args": [""], "returns": [], "note": "JavaScript's own test: should return an empty array for an unknown region code" },
+        { "args": ["Norte"], "returns": [], "note": "JavaScript's own test: should return an empty array for an unknown region code" },
+        { "args": ["C O"], "returns": [] },
+        { "args": ["constructor"], "returns": [] },
+        { "args": [1], "returns": [], "note": "JavaScript's own test: should return an empty array for a value that is not a string" }
       ]
     }
   }

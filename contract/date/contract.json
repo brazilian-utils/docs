@@ -17,22 +17,58 @@
       },
       "description": {
         "en": [
-          "Adds a number of Brazilian business days (dias úteis) to a date. It skips Saturdays, Sundays and the holidays that `date.isBusinessDay` skips.",
+          "Adds a number of Brazilian business days (dias úteis) to a date. It walks one calendar day at a time and counts only the days `date.isBusinessDay` accepts with the same `options`.",
           "",
-          "- `options` may count the optional holidays (Carnaval and Corpus Christi, which count by default) and the holidays of one state.",
-          "- Returns a new date and keeps the time of day. The function never changes the input.",
+          "- Returns a new date and keeps the time of day. The function never changes the input. When the result day does not have that time (a daylight saving jump), the result is the nearest instant of that day.",
           "- An `amount` of 0 returns the same date, even on a non-business day. A negative `amount` walks backwards.",
-          "- Returns null for an invalid date, a non-integer `amount`, or a result outside the years 1900 to 2099."
+          "- `options.includeOptional` (default true) counts the optional holidays (Carnaval Monday and Tuesday, Corpus Christi) as non-business days. With false, only `national` and `state` holidays count, so Corpus Christi still counts in DF, in MA from 2024 and in RJ from 2026, where it is a state holiday.",
+          "- `options.includeSaturday` (default false) counts Saturday as a business day, the labour law count of the payroll deadline (CLT art. 459 § 1º, read through IN MTP nº 2/2021, art. 14, I). Sunday and holidays stay excluded, including a holiday on a Saturday (Finados 2024-11-02, Independência 2024-09-07).",
+          "- `includeSaturday` does not cover municipal holidays, which the IN also excludes. An exact count for a municipality has to remove them separately. The option name does not promise \"CLT\" for that reason.",
+          "- A truthy value that is not a boolean (for example `\"false\"`) turns `includeSaturday` or `includeOptional` on.",
+          "- `options.stateCode` is read ignoring case and surrounding whitespace, as in every state util: `\"sp\"` and `\" SP \"` add the holidays of São Paulo. Only an omitted (undefined) `stateCode` means national holidays only.",
+          "- A `stateCode` that is present and is not a state code (`\"XX\"`, `\"\"`, `\"__proto__\"`, a number, null, an object) is rejected: the function returns null without looking at the date. 2.4.0 silently fell back to the national holidays for an unknown or lower-case code, so `\"sp\"` counted 9 July as a business day in São Paulo.",
+          "- Returns null for an invalid date, an `amount` that is not a finite integer, or a start or result outside the years 1900 to 2099.",
+          "- The walk always ends. 2.4.0 could loop forever in time zones where a local day does not exist (Pacific/Apia and Pacific/Fakaofo on 2011-12-30, Pacific/Kiritimati and Pacific/Enderbury on 1994-12-31, Pacific/Kwajalein on 1993-08-21); the walk now skips that day. The half-hour shift of Australia/Lord_Howe was fixed too. Other results are unchanged.",
+          "",
+          "Recipes (no dedicated helper exists):",
+          "",
+          "- Next business day: `addBusinessDays(d, 1)`.",
+          "- N-th business day of a month: `addBusinessDays(new Date(y, m, 0), n)`, starting from the last day of the previous month. When `n` is larger than the month's business days, the result falls in the next month; check its month.",
+          "- Last business day of a month: `subBusinessDays(new Date(y, m + 1, 1), 1)`, starting from the first day of the next month.",
+          "- Edges: the n-th business day of January 1900 and the last business day of December 2099 return null, because the starting day is outside 1900 to 2099.",
+          "- With `{ includeSaturday: true }` the same recipe gives the labour law \"quinto dia útil\": `addBusinessDays(new Date(2024, 2, 0), 5, { includeSaturday: true })` is Wednesday 2024-03-06, while the banking count without the option is Thursday 2024-03-07."
         ],
         "pt-BR": [
-          "Soma um número de dias úteis a uma data. Pula sábados, domingos e os feriados que `date.isBusinessDay` pula.",
+          "Soma um número de dias úteis a uma data. Anda um dia do calendário por vez e conta só os dias que `date.isBusinessDay` aceita com as mesmas `options`.",
           "",
-          "- `options` pode contar os feriados opcionais (Carnaval e Corpus Christi, que contam por padrão) e os feriados de um estado.",
-          "- Retorna uma nova data e mantém a hora do dia. A função nunca altera a entrada.",
+          "- Retorna uma nova data e mantém a hora do dia. A função nunca altera a entrada. Quando o dia do resultado não tem essa hora (um salto de horário de verão), o resultado é o instante mais próximo daquele dia.",
           "- Um `amount` de 0 retorna a mesma data, mesmo em um dia que não é útil. Um `amount` negativo anda para trás.",
-          "- Retorna null para uma data inválida, um `amount` não inteiro ou um resultado fora dos anos 1900 a 2099."
+          "- `options.includeOptional` (padrão true) conta os feriados opcionais (segunda e terça de Carnaval, Corpus Christi) como dias não úteis. Com false, só contam os feriados `national` e `state`, então Corpus Christi continua contando no DF, no MA a partir de 2024 e no RJ a partir de 2026, onde é feriado estadual.",
+          "- `options.includeSaturday` (padrão false) conta o sábado como dia útil, a contagem trabalhista do prazo do salário (CLT art. 459 § 1º, lida pela IN MTP nº 2/2021, art. 14, I). Domingo e feriados continuam excluídos, inclusive feriado que cai no sábado (Finados 02/11/2024, Independência 07/09/2024).",
+          "- `includeSaturday` não cobre feriados municipais, que a IN também exclui. Uma contagem exata para um município precisa removê-los à parte. Por isso o nome da opção não promete \"CLT\".",
+          "- Um valor truthy que não é booleano (por exemplo `\"false\"`) liga `includeSaturday` ou `includeOptional`.",
+          "- `options.stateCode` é lido sem diferenciar maiúsculas de minúsculas e sem os espaços das pontas, como em todo util que recebe UF: `\"sp\"` e `\" SP \"` somam os feriados de São Paulo. Só um `stateCode` omitido (undefined) significa apenas feriados nacionais.",
+          "- Um `stateCode` presente que não é sigla de estado (`\"XX\"`, `\"\"`, `\"__proto__\"`, um número, null, um objeto) é rejeitado: a função retorna null sem olhar a data. A 2.4.0 caía em silêncio nos feriados nacionais para uma sigla desconhecida ou em minúsculas, então `\"sp\"` contava 9 de julho como dia útil em São Paulo.",
+          "- Retorna null para uma data inválida, um `amount` que não é inteiro finito, ou um início ou resultado fora dos anos 1900 a 2099.",
+          "- A caminhada sempre termina. A 2.4.0 podia entrar em loop infinito em fusos onde um dia local não existe (Pacific/Apia e Pacific/Fakaofo em 30/12/2011, Pacific/Kiritimati e Pacific/Enderbury em 31/12/1994, Pacific/Kwajalein em 21/08/1993); agora a caminhada pula esse dia. O deslocamento de meia hora de Australia/Lord_Howe também foi corrigido. Os demais resultados não mudam.",
+          "",
+          "Receitas (não existe helper próprio):",
+          "",
+          "- Próximo dia útil: `addBusinessDays(d, 1)`.",
+          "- N-ésimo dia útil do mês: `addBusinessDays(new Date(y, m, 0), n)`, partindo do último dia do mês anterior. Se `n` passar do número de dias úteis do mês, o resultado cai no mês seguinte; confira o mês.",
+          "- Último dia útil do mês: `subBusinessDays(new Date(y, m + 1, 1), 1)`, partindo do primeiro dia do mês seguinte.",
+          "- Bordas: o n-ésimo dia útil de janeiro/1900 e o último dia útil de dezembro/2099 retornam null, porque o dia de partida fica fora de 1900 a 2099.",
+          "- Com `{ includeSaturday: true }` a mesma receita dá o \"quinto dia útil\" trabalhista: `addBusinessDays(new Date(2024, 2, 0), 5, { includeSaturday: true })` é quarta 06/03/2024, enquanto a contagem bancária, sem a opção, é quinta 07/03/2024."
         ]
       },
+      "references": [
+        "https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm",
+        "https://www.gov.br/trabalho-e-emprego/pt-br/assuntos/inspecao-do-trabalho/areas-de-atuacao/in-2-de-8-denovembro-de-2021.pdf",
+        "https://www.planalto.gov.br/ccivil_03/leis/l9093.htm",
+        "https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20CMN&numero=4880",
+        "https://alerjln1.alerj.rj.gov.br/contlei.nsf/f25edae7e64db53b032564fe005262ef/46837e4d22b01f3503258d2c0048abda?OpenDocument",
+        "https://www.in.gov.br/web/dou/-/portaria-mgi-n-11.460-de-29-de-dezembro-de-2025-678388627"
+      ],
       "flatName": "addBusinessDays",
       "params": [
         { "name": "date", "type": "date" },
@@ -121,18 +157,26 @@
           "",
           "- Counts `earlierDate` when it is a business day, and every business day strictly between the two. It never counts `laterDate`. The time of day is ignored.",
           "- The result is negative when `laterDate` is before `earlierDate`, and 0 on the same calendar day.",
-          "- `options` as in `date.addBusinessDays`.",
-          "- Returns null when either date is invalid or outside the years 1900 to 2099."
+          "- `options` as in `date.addBusinessDays`: `includeOptional`, `includeSaturday` and `stateCode`. With `{ includeSaturday: true }`, 2024-01-01 to 2024-01-08 gives 5 (1 January is a holiday, Sunday is excluded).",
+          "- Returns null when either date is invalid or outside the years 1900 to 2099, and when `options.stateCode` is present and is not a state code (2.4.0 fell back to national holidays)."
         ],
         "pt-BR": [
           "Conta os dias úteis entre duas datas.",
           "",
           "- Conta `earlierDate` quando é dia útil e todos os dias úteis estritamente entre as duas. Nunca conta `laterDate`. A hora do dia é ignorada.",
           "- O resultado é negativo quando `laterDate` é antes de `earlierDate`, e 0 no mesmo dia do calendário.",
-          "- `options` como em `date.addBusinessDays`.",
-          "- Retorna null quando uma das datas é inválida ou está fora dos anos 1900 a 2099."
+          "- `options` como em `date.addBusinessDays`: `includeOptional`, `includeSaturday` e `stateCode`. Com `{ includeSaturday: true }`, de 01/01/2024 a 08/01/2024 dá 5 (1º de janeiro é feriado, domingo fica fora).",
+          "- Retorna null quando uma das datas é inválida ou está fora dos anos 1900 a 2099, e quando `options.stateCode` está presente e não é sigla de estado (a 2.4.0 caía nos feriados nacionais)."
         ]
       },
+      "references": [
+        "https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm",
+        "https://www.gov.br/trabalho-e-emprego/pt-br/assuntos/inspecao-do-trabalho/areas-de-atuacao/in-2-de-8-denovembro-de-2021.pdf",
+        "https://www.planalto.gov.br/ccivil_03/leis/l9093.htm",
+        "https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20CMN&numero=4880",
+        "https://alerjln1.alerj.rj.gov.br/contlei.nsf/f25edae7e64db53b032564fe005262ef/46837e4d22b01f3503258d2c0048abda?OpenDocument",
+        "https://www.in.gov.br/web/dou/-/portaria-mgi-n-11.460-de-29-de-dezembro-de-2025-678388627"
+      ],
       "flatName": "differenceInBusinessDays",
       "params": [
         { "name": "laterDate", "type": "date" },
@@ -148,18 +192,54 @@
       },
       "description": {
         "en": [
-          "Returns the national Brazilian holidays of a year, sorted by date.",
+          "Returns the Brazilian holidays of a year, sorted by date: the national ones, plus those of one state when `stateCode` is given.",
           "",
-          "- Each holiday has a name, a date and a `type`: `national`, `state`, `optional` (ponto facultativo, for example Carnaval and Corpus Christi) or `religious`.",
-          "- \"Dia da Consciência Negra\" (Nov 20) is national from 2024 on.",
-          "- Returns an empty list when `year` is not an integer from 1900 to 2099."
+          "- `options` is `{ year, stateCode? }`. JavaScript also accepts a bare year, `getHolidays(2024)`, for the national holidays.",
+          "- Each holiday has a name, a date and a `type`: `national`, `state`, `optional` (ponto facultativo) or `religious` (Páscoa, listed for convenience; no norm declares it).",
+          "- `stateCode` is read ignoring case and surrounding whitespace, as in every state util. Only an omitted (undefined) `stateCode` means national holidays only.",
+          "- A `stateCode` that is present and is not a state code (`\"XX\"`, `\"\"`, `\"__proto__\"`, a number, null, an object) returns an empty list. 2.4.0 returned the national holidays for it, so `{ year: 2024, stateCode: \"sp\" }` left out the São Paulo holidays.",
+          "- Returns an empty list when `year` is not an integer from 1900 to 2099.",
+          "- Each holiday appears only in the years its norm was in force:",
+          "  - Fixed national holidays appear only in the years a federal norm declared them. Finados appears up to 1948 and from 2003 on, not from 1949 to 2002 (2.4.0 listed it every year). Nossa Senhora Aparecida appears from 1980. Dia da Consciência Negra (20 November) is national from 2024.",
+          "  - State holidays appear from the year their law took effect, and up to the year it was revoked.",
+          "- Sexta-feira Santa is `national` every year. Carnaval Monday and Tuesday and Corpus Christi are `optional`, the pontos facultativos of the federal calendar (2.4.0 did not list the Monday).",
+          "- The first round of the elections is a `national` holiday: the first Sunday of October in even years from 1998 on (15 November in 2020), under art. 380 of the Código Eleitoral. The second round is not listed.",
+          "- A state entry with the same name and date as a national one replaces it. Corpus Christi is typed `state` in DF, in MA from 2024 and in RJ from 2026, and stays an optional federal ponto facultativo elsewhere. The Carnaval Tuesday is a state holiday in RJ from 2009.",
+          "- Changes in 2.5.0, each from the state norm cited in the JavaScript source:",
+          "  - RJ: Corpus Christi from 2026 (Lei RJ nº 11.002/2025, upheld by the STF in ADI 7898, final on 13/08/2026). 2.4.0 did not list it.",
+          "  - AL: 20/11 from 1995 to 2023; 30/11 (moved to Monday when it falls on a Tuesday and to Friday when it falls on a Thursday).",
+          "  - AC: 20/01. AP: 20/11 from 2008 to 2023; 15/05; 25/07 from 2012 to 2018.",
+          "  - MA: Corpus Christi from 2024; 08/03 from 2027. PB: 05/08 from 1968.",
+          "  - SE: 08/07 from 1990; 24/10 from 1989 to 1999. PR: 19/12 from 1963 to 2013 (Lei PR 4.658/1962, revoked by Lei PR 18.384/2014).",
+          "  - PE: 06/03 in 2008 and 2009 as `optional` (Lei PE 13.386/2007). AM: 08/12 stays `optional` (decree, DOE-AM of 02/12/2025).",
+          "- Municipal holidays are not covered.",
+          "- One-year moves made by decree are not applied; the table keeps the statutory date. Examples: Decreto GO nº 10.987/2026 moved 28/10/2026 to 30/10; Decreto GO nº 10.935/2026 moved 26/07/2026 to 20/07.",
+          "- Kept as they are while the sources are silent or in conflict: Acre's move of holidays to Friday, the yearly moves of 26/07 in GO, AL 16/09, and the ADIs against AP 25/07 and MA 08/03."
         ],
         "pt-BR": [
-          "Retorna os feriados nacionais brasileiros de um ano, ordenados por data.",
+          "Retorna os feriados brasileiros de um ano, ordenados por data: os nacionais, mais os de um estado quando `stateCode` é informado.",
           "",
-          "- Cada feriado tem um nome, uma data e um `type`: `national`, `state`, `optional` (ponto facultativo, por exemplo Carnaval e Corpus Christi) ou `religious`.",
-          "- O \"Dia da Consciência Negra\" (20 de novembro) é nacional a partir de 2024.",
-          "- Retorna uma lista vazia quando `year` não é um inteiro de 1900 a 2099."
+          "- `options` é `{ year, stateCode? }`. O JavaScript também aceita só o ano, `getHolidays(2024)`, para os feriados nacionais.",
+          "- Cada feriado tem um nome, uma data e um `type`: `national`, `state`, `optional` (ponto facultativo) ou `religious` (Páscoa, listada por conveniência; nenhuma norma a declara).",
+          "- `stateCode` é lido sem diferenciar maiúsculas de minúsculas e sem os espaços das pontas, como em todo util que recebe UF. Só um `stateCode` omitido (undefined) significa apenas feriados nacionais.",
+          "- Um `stateCode` presente que não é sigla de estado (`\"XX\"`, `\"\"`, `\"__proto__\"`, um número, null, um objeto) retorna uma lista vazia. A 2.4.0 retornava os feriados nacionais nesse caso, então `{ year: 2024, stateCode: \"sp\" }` omitia os feriados de São Paulo.",
+          "- Retorna uma lista vazia quando `year` não é um inteiro de 1900 a 2099.",
+          "- Cada feriado só aparece nos anos em que a norma vigia:",
+          "  - Feriados nacionais de data fixa só aparecem nos anos em que uma norma federal os declarava. Finados aparece até 1948 e a partir de 2003, e não de 1949 a 2002 (a 2.4.0 listava todo ano). Nossa Senhora Aparecida aparece a partir de 1980. O Dia da Consciência Negra (20 de novembro) é nacional a partir de 2024.",
+          "  - Feriados estaduais aparecem a partir do ano em que a lei passou a valer, e até o ano em que foi revogada.",
+          "- A Sexta-feira Santa é `national` todo ano. A segunda e a terça de Carnaval e Corpus Christi são `optional`, os pontos facultativos do calendário federal (a 2.4.0 não listava a segunda).",
+          "- O 1º turno das eleições é feriado `national`: o primeiro domingo de outubro dos anos pares a partir de 1998 (15 de novembro em 2020), pelo art. 380 do Código Eleitoral. O 2º turno não é listado.",
+          "- Um item estadual com o mesmo nome e a mesma data de um nacional o substitui. Corpus Christi vem como `state` no DF, no MA a partir de 2024 e no RJ a partir de 2026, e continua ponto facultativo federal nos outros estados. A terça de Carnaval é feriado estadual no RJ desde 2009.",
+          "- Mudanças da 2.5.0, cada uma pela norma estadual citada no código JavaScript:",
+          "  - RJ: Corpus Christi a partir de 2026 (Lei RJ nº 11.002/2025, mantida pelo STF na ADI 7898, com trânsito em julgado em 13/08/2026). A 2.4.0 não listava.",
+          "  - AL: 20/11 de 1995 a 2023; 30/11 (vai para a segunda quando cai na terça e para a sexta quando cai na quinta).",
+          "  - AC: 20/01. AP: 20/11 de 2008 a 2023; 15/05; 25/07 de 2012 a 2018.",
+          "  - MA: Corpus Christi desde 2024; 08/03 a partir de 2027. PB: 05/08 desde 1968.",
+          "  - SE: 08/07 desde 1990; 24/10 de 1989 a 1999. PR: 19/12 de 1963 a 2013 (Lei PR 4.658/1962, revogada pela Lei PR 18.384/2014).",
+          "  - PE: 06/03 de 2008 e 2009 como `optional` (Lei PE 13.386/2007). AM: 08/12 continua `optional` (decreto, DOE-AM de 02/12/2025).",
+          "- Feriados municipais não são cobertos.",
+          "- Mudanças de um ano feitas por decreto não entram; a tabela mantém a data da lei. Exemplos: o Decreto GO nº 10.987/2026 moveu 28/10/2026 para 30/10; o Decreto GO nº 10.935/2026 moveu 26/07/2026 para 20/07.",
+          "- Mantidos como estão enquanto as fontes são omissas ou conflitam: o adiamento para sexta-feira no AC, as mudanças anuais do 26/07 em GO, AL 16/09 e as ADIs contra AP 25/07 e MA 08/03."
         ]
       },
       "references": [
@@ -221,11 +301,46 @@
         "https://www.planalto.gov.br/ccivil_03/leis/l6802.htm",
         "https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2023/lei/l14759.htm",
         "https://www.planalto.gov.br/ccivil_03/leis/l9093.htm",
-        "https://www.in.gov.br/web/dou/-/portaria-mgi-n-11.460-de-29-de-dezembro-de-2025-678388627"
+        "https://www.in.gov.br/web/dou/-/portaria-mgi-n-11.460-de-29-de-dezembro-de-2025-678388627",
+        "https://alerjln1.alerj.rj.gov.br/contlei.nsf/f25edae7e64db53b032564fe005262ef/46837e4d22b01f3503258d2c0048abda?OpenDocument",
+        "https://portal.stf.jus.br/processos/detalhe.asp?incidente=7434201",
+        "http://alerjln1.alerj.rj.gov.br/contlei.nsf/f25edae7e64db53b032564fe005262ef/063f7c027766eab48325744a007a4ab0?OpenDocument",
+        "http://arquivos.al.ma.leg.br:8080/ged/legislacao/LEI_11539",
+        "http://arquivos.al.ma.leg.br:8080/ged/legislacao/LEI_12800",
+        "https://legis.ac.gov.br/detalhar/2249",
+        "https://www.legisweb.com.br/legislacao/?id=116708",
+        "https://diario.imprensaoficial.al.gov.br/apinova/api/editions/downloadPdf/24602",
+        "https://www.al.ap.leg.br/ver_texto_lei.php?iddocumento=77794",
+        "https://www.al.ap.leg.br/ver_texto_lei.php?iddocumento=35896",
+        "https://www.al.ap.leg.br/ver_texto_lei.php?iddocumento=96475",
+        "https://sapl.al.pb.leg.br/media/sapl/public/normajuridica/1967/2945/2945_texto_integral.pdf",
+        "https://www.legislacao.pr.gov.br/legislacao/exibirAto.do?action=localizarAto&codTipoAto=1&nroAto=4658&dataAto=18%2F12%2F1962&tipoVisualizacao=original",
+        "https://legis.alepe.pe.gov.br/texto.aspx?tiponorma=1&numero=13386&complemento=0&ano=2007&tipo=&url=",
+        "https://diario.imprensaoficial.am.gov.br/portal/edicoes/download/17974",
+        "https://legisla.casacivil.go.gov.br/api/v2/pesquisa/legislacoes/115759",
+        "https://www.planalto.gov.br/ccivil_03/leis/l4737compilado.htm",
+        "https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc16.htm",
+        "https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc107.htm"
       ],
       "flatName": "getHolidays",
-      "params": [{ "name": "year", "type": "number" }],
-      "returns": "Holiday[]"
+      "params": [{ "name": "options", "type": "GetHolidaysParams" }],
+      "returns": "Holiday[]",
+      "tests": [
+        { "name": "unknown-state", "args": [{ "year": 2024, "stateCode": "XX" }], "returns": [], "note": "from the maintainer briefing, #603: changed in 2.5.0 (#603): a stateCode that is not a state code is rejected; 2.4.0 returned the national holidays" },
+        { "name": "empty-state", "args": [{ "year": 2024, "stateCode": "" }], "returns": [], "note": "changed in 2.5.0 (#603): a stateCode that is not a state code is rejected; 2.4.0 returned the national holidays" },
+        { "name": "blank-state", "args": [{ "year": 2024, "stateCode": "   " }], "returns": [], "note": "changed in 2.5.0 (#603): a stateCode that is not a state code is rejected; 2.4.0 returned the national holidays" },
+        { "name": "spaced-letters", "args": [{ "year": 2024, "stateCode": "S P" }], "returns": [], "note": "changed in 2.5.0 (#603): a stateCode that is not a state code is rejected; 2.4.0 returned the national holidays" },
+        { "name": "prototype-key", "args": [{ "year": 2024, "stateCode": "__proto__" }], "returns": [], "note": "changed in 2.5.0 (#603): a stateCode that is not a state code is rejected; 2.4.0 returned the national holidays" },
+        { "name": "numeric-state", "args": [{ "year": 2024, "stateCode": 5 }], "returns": [], "note": "changed in 2.5.0 (#603): a stateCode that is not a state code is rejected; 2.4.0 returned the national holidays" },
+        { "name": "null-state", "args": [{ "year": 2024, "stateCode": null }], "returns": [], "note": "changed in 2.5.0 (#603): a stateCode that is not a state code is rejected; 2.4.0 returned the national holidays" },
+        { "name": "object-state", "args": [{ "year": 2024, "stateCode": {} }], "returns": [], "note": "changed in 2.5.0 (#603): a stateCode that is not a state code is rejected; 2.4.0 returned the national holidays" },
+        { "name": "year-before-1900", "args": [{ "year": 1899 }], "returns": [], "note": "JavaScript's own test: should return an empty array for a year outside 1900-2099" },
+        { "name": "year-after-2099", "args": [{ "year": 2100, "stateCode": "SP" }], "returns": [], "note": "JavaScript's own test: should return an empty array for a year outside 1900-2099" },
+        { "name": "fractional-year", "args": [{ "year": 2024.5 }], "returns": [] },
+        { "name": "string-year", "args": [{ "year": "2024" }], "returns": [] },
+        { "name": "missing-year", "args": [{}], "returns": [] },
+        { "name": "null-options", "args": [null], "returns": [] }
+      ]
     },
     "isBusinessDay": {
       "summary": {
@@ -234,25 +349,41 @@
       },
       "description": {
         "en": [
-          "Checks whether a date is a Brazilian business day (dia útil), by its local calendar date. A business day is not a Saturday, a Sunday or a holiday of `date.getHolidays`.",
+          "Checks whether a date is a Brazilian business day (dia útil), by its local calendar date. A business day is not a Saturday, a Sunday or a holiday of `date.getHolidays` for the same state.",
           "",
-          "- `options` may count the optional holidays (Carnaval and Corpus Christi, which count by default) and the holidays of one state.",
+          "- `options.includeOptional` (default true) counts the optional holidays (Carnaval Monday and Tuesday, Corpus Christi) as non-business days. With false, only `national` and `state` holidays count, so Corpus Christi still counts in DF, in MA from 2024 and in RJ from 2026, where it is a state holiday.",
+          "- `options.includeSaturday` (default false) counts Saturday as a business day, the labour law count of the payroll deadline (CLT art. 459 § 1º, read through IN MTP nº 2/2021, art. 14, I). Sunday and holidays stay excluded, including a holiday on a Saturday (Finados 2024-11-02, Independência 2024-09-07).",
+          "- `includeSaturday` does not cover municipal holidays, which the IN also excludes. An exact count for a municipality has to remove them separately. The option name does not promise \"CLT\" for that reason.",
+          "- A truthy value that is not a boolean (for example `\"false\"`) turns `includeSaturday` or `includeOptional` on.",
+          "- `options.stateCode` is read ignoring case and surrounding whitespace, as in every state util: `\"sp\"` and `\" SP \"` add the holidays of São Paulo. Only an omitted (undefined) `stateCode` means national holidays only.",
+          "- A `stateCode` that is present and is not a state code (`\"XX\"`, `\"\"`, `\"__proto__\"`, a number, null, an object) is rejected: the function returns false without looking at the date. 2.4.0 silently fell back to the national holidays for an unknown or lower-case code, so `\"sp\"` counted 9 July as a business day in São Paulo.",
+          "- This is not by itself a bank or court calendar: banks also close on their branch's local holidays, and courts follow their own calendars.",
           "- Returns false for an invalid date or a year outside 1900 to 2099."
         ],
         "pt-BR": [
-          "Verifica se uma data é dia útil, pela data local do calendário. Dia útil não é sábado, domingo nem feriado de `date.getHolidays`.",
+          "Verifica se uma data é dia útil, pela data local do calendário. Dia útil não é sábado, domingo nem feriado de `date.getHolidays` para o mesmo estado.",
           "",
-          "- `options` pode contar os feriados opcionais (Carnaval e Corpus Christi, que contam por padrão) e os feriados de um estado.",
+          "- `options.includeOptional` (padrão true) conta os feriados opcionais (segunda e terça de Carnaval, Corpus Christi) como dias não úteis. Com false, só contam os feriados `national` e `state`, então Corpus Christi continua contando no DF, no MA a partir de 2024 e no RJ a partir de 2026, onde é feriado estadual.",
+          "- `options.includeSaturday` (padrão false) conta o sábado como dia útil, a contagem trabalhista do prazo do salário (CLT art. 459 § 1º, lida pela IN MTP nº 2/2021, art. 14, I). Domingo e feriados continuam excluídos, inclusive feriado que cai no sábado (Finados 02/11/2024, Independência 07/09/2024).",
+          "- `includeSaturday` não cobre feriados municipais, que a IN também exclui. Uma contagem exata para um município precisa removê-los à parte. Por isso o nome da opção não promete \"CLT\".",
+          "- Um valor truthy que não é booleano (por exemplo `\"false\"`) liga `includeSaturday` ou `includeOptional`.",
+          "- `options.stateCode` é lido sem diferenciar maiúsculas de minúsculas e sem os espaços das pontas, como em todo util que recebe UF: `\"sp\"` e `\" SP \"` somam os feriados de São Paulo. Só um `stateCode` omitido (undefined) significa apenas feriados nacionais.",
+          "- Um `stateCode` presente que não é sigla de estado (`\"XX\"`, `\"\"`, `\"__proto__\"`, um número, null, um objeto) é rejeitado: a função retorna false sem olhar a data. A 2.4.0 caía em silêncio nos feriados nacionais para uma sigla desconhecida ou em minúsculas, então `\"sp\"` contava 9 de julho como dia útil em São Paulo.",
+          "- Isso não é, por si só, o calendário bancário ou forense: bancos também fecham nos feriados locais da agência, e tribunais seguem calendários próprios.",
           "- Retorna false para uma data inválida ou um ano fora de 1900 a 2099."
         ]
       },
       "references": [
+        "https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm",
+        "https://www.gov.br/trabalho-e-emprego/pt-br/assuntos/inspecao-do-trabalho/areas-de-atuacao/in-2-de-8-denovembro-de-2021.pdf",
+        "https://www.planalto.gov.br/ccivil_03/leis/l9093.htm",
+        "https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20CMN&numero=4880",
+        "https://alerjln1.alerj.rj.gov.br/contlei.nsf/f25edae7e64db53b032564fe005262ef/46837e4d22b01f3503258d2c0048abda?OpenDocument",
+        "https://www.in.gov.br/web/dou/-/portaria-mgi-n-11.460-de-29-de-dezembro-de-2025-678388627",
         "https://www.planalto.gov.br/ccivil_03/leis/l0662.htm",
         "https://www.planalto.gov.br/ccivil_03/leis/2002/l10607.htm",
         "https://www.planalto.gov.br/ccivil_03/leis/l6802.htm",
-        "https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2023/lei/l14759.htm",
-        "https://www.planalto.gov.br/ccivil_03/leis/l9093.htm",
-        "https://www.in.gov.br/web/dou/-/portaria-mgi-n-11.460-de-29-de-dezembro-de-2025-678388627"
+        "https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2023/lei/l14759.htm"
       ],
       "flatName": "isBusinessDay",
       "params": [
@@ -270,13 +401,17 @@
         "en": [
           "Checks whether a date is a Brazilian holiday, by its local calendar date.",
           "",
-          "- `options` carries the target date and, optionally, a state code whose holidays also count. The function ignores an unknown code.",
+          "- `options` carries the target date and, optionally, a state code whose holidays also count. Every holiday `date.getHolidays` lists counts, optional ones and the first round of the elections included.",
+          "- `options.stateCode` is read ignoring case and surrounding whitespace, as in every state util: `\"sp\"` and `\" SP \"` add the holidays of São Paulo. Only an omitted (undefined) `stateCode` means national holidays only.",
+          "- A `stateCode` that is present and is not a state code (`\"XX\"`, `\"\"`, `\"__proto__\"`, a number, null, an object) is rejected: the function returns false without looking at the date. 2.4.0 silently fell back to the national holidays for an unknown or lower-case code, so `\"sp\"` counted 9 July as a business day in São Paulo.",
           "- Returns false when the date is missing or invalid."
         ],
         "pt-BR": [
           "Verifica se uma data é feriado no Brasil, pela data local do calendário.",
           "",
-          "- `options` traz a data alvo e, opcionalmente, a sigla de um estado cujos feriados também contam. A função ignora uma sigla desconhecida.",
+          "- `options` traz a data alvo e, opcionalmente, a sigla de um estado cujos feriados também contam. Todo feriado que `date.getHolidays` lista conta, inclusive os opcionais e o 1º turno das eleições.",
+          "- `options.stateCode` é lido sem diferenciar maiúsculas de minúsculas e sem os espaços das pontas, como em todo util que recebe UF: `\"sp\"` e `\" SP \"` somam os feriados de São Paulo. Só um `stateCode` omitido (undefined) significa apenas feriados nacionais.",
+          "- Um `stateCode` presente que não é sigla de estado (`\"XX\"`, `\"\"`, `\"__proto__\"`, um número, null, um objeto) é rejeitado: a função retorna false sem olhar a data. A 2.4.0 caía em silêncio nos feriados nacionais para uma sigla desconhecida ou em minúsculas, então `\"sp\"` contava 9 de julho como dia útil em São Paulo.",
           "- Retorna false quando a data está ausente ou é inválida."
         ]
       },
@@ -293,7 +428,8 @@
       "params": [{ "name": "options", "type": "IsHolidayParams", "optional": true }],
       "returns": "boolean",
       "tests": [
-        { "args": [], "returns": false, "note": "JavaScript's own test: should return false when called without arguments" }
+        { "args": [], "returns": false, "note": "JavaScript's own test: should return false when called without arguments" },
+        { "name": "unknown-state-without-date", "args": [{ "stateCode": "XX" }], "returns": false }
       ]
     },
     "subBusinessDays": {
@@ -305,14 +441,24 @@
         "en": [
           "Subtracts a number of Brazilian business days from a date. This is the same as `date.addBusinessDays` with the opposite `amount`.",
           "",
-          "- Same rules as `date.addBusinessDays`. A negative `amount` walks forwards."
+          "- Same rules and options as `date.addBusinessDays` (`includeOptional`, `includeSaturday`, `stateCode`), including the same caveat on the time of day. A negative `amount` walks forwards.",
+          "- Last business day of a month: `subBusinessDays(new Date(y, m + 1, 1), 1)`. For December 2099 this returns null, because the starting day is in 2100."
         ],
         "pt-BR": [
           "Subtrai um número de dias úteis de uma data. É o mesmo que `date.addBusinessDays` com o `amount` oposto.",
           "",
-          "- Mesmas regras de `date.addBusinessDays`. Um `amount` negativo anda para frente."
+          "- Mesmas regras e opções de `date.addBusinessDays` (`includeOptional`, `includeSaturday`, `stateCode`), inclusive a mesma ressalva sobre a hora do dia. Um `amount` negativo anda para frente.",
+          "- Último dia útil do mês: `subBusinessDays(new Date(y, m + 1, 1), 1)`. Para dezembro/2099 isso retorna null, porque o dia de partida fica em 2100."
         ]
       },
+      "references": [
+        "https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm",
+        "https://www.gov.br/trabalho-e-emprego/pt-br/assuntos/inspecao-do-trabalho/areas-de-atuacao/in-2-de-8-denovembro-de-2021.pdf",
+        "https://www.planalto.gov.br/ccivil_03/leis/l9093.htm",
+        "https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20CMN&numero=4880",
+        "https://alerjln1.alerj.rj.gov.br/contlei.nsf/f25edae7e64db53b032564fe005262ef/46837e4d22b01f3503258d2c0048abda?OpenDocument",
+        "https://www.in.gov.br/web/dou/-/portaria-mgi-n-11.460-de-29-de-dezembro-de-2025-678388627"
+      ],
       "flatName": "subBusinessDays",
       "params": [
         { "name": "date", "type": "date" },

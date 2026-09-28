@@ -5,3 +5,7 @@
 - [Tudo sobre CEP, Correios](https://www.correios.com.br/enviar/precisa-de-ajuda/tudo-sobre-cep)
 
 - [Guia de Endereçamento, Correios](https://www.correios.com.br/enviar/precisa-de-ajuda/guia-de-enderecamento/guia-de-enderecamento)
+
+- [Busca Faixa de CEP, Correios](https://buscacepinter.correios.com.br/app/faixa_cep_uf_localidade/index.php)
+
+- [Localidades alvo, Correios](https://www.correios.com.br/acesso-a-informacao/licitacoes-e-contratos/credenciamento-ponto-de-coleta/arquivos/localidades)

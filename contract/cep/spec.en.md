@@ -27,6 +27,15 @@ The CEP is a numeric code of eight digits. The postal service assigns these code
 - Unformatted CEP: `^\d{8}$`
 - Formatted CEP: `^\d{5}-\d{3}$`
 
+## State ranges
+
+The Correios assign each state one or more blocks of CEPs. `cep.getState` reads the state from these blocks, offline.
+
+- A block belongs to a state, but not every CEP inside it is in use. `10000-000` falls in the SP block although no city uses `10xxx`.
+- Two blocks belong to no state: `00000-000` to `00999-999` and `78900-000` to `78999-999`. MT ends at `78899-999`.
+- AM, DF and GO have two blocks each. `72800-000` to `72999-999`, inside the DF block, belongs to GO.
+- The full table is in the description of `cep.getState`.
+
 ## Examples
 
 - Valid: `01310200`

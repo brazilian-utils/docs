@@ -8,8 +8,65 @@
   },
   "category": "telecom",
   "order": 2,
-  "related": ["phone", "state"],
+  "related": ["phone", "state", "municipality"],
   "functions": {
+    "getByMunicipalityCode": {
+      "summary": {
+        "en": "Gets the DDD (area code) in force for a Brazilian municipality, from its 7-digit IBGE code.",
+        "pt-BR": "Obtém o DDD em vigor de um município a partir do código IBGE de 7 dígitos."
+      },
+      "description": {
+        "en": [
+          "Returns the DDD (area code, the Código Nacional of the Plano Geral de Numeração) that a municipality dials, given its 7-digit IBGE code.",
+          "",
+          "- `code` is read as `municipality.getByCode` reads it: a string with every non-digit removed, or a non-negative integer.",
+          "- Each of the 5,571 municipalities has exactly one DDD, so null only means that the code is not a municipality.",
+          "- A DDD mostly follows state lines. The exceptions: 61, the DDD of Brasília, also covers 12 municipalities of Goiás. Porto União (SC) dials 42, Rio Negro (PR) dials 47 and Barracão (PR) dials 49.",
+          "- `areaCode.getInfo` gives the state and region the DDD is seated in.",
+          "- The table comes from the Anatel Códigos Nacionais file of 21/09/2026, rows in force only."
+        ],
+        "pt-BR": [
+          "Retorna o DDD (o Código Nacional do Plano Geral de Numeração) que um município disca, dado o código IBGE de 7 dígitos.",
+          "",
+          "- `code` é lido como em `municipality.getByCode`: uma string da qual todo não-dígito é removido, ou um inteiro não negativo.",
+          "- Cada um dos 5.571 municípios tem exatamente um DDD, então null só significa que o código não é de município.",
+          "- O DDD quase sempre segue a divisa estadual. As exceções: o 61, DDD de Brasília, também atende 12 municípios de Goiás. Porto União (SC) disca 42, Rio Negro (PR) disca 47 e Barracão (PR) disca 49.",
+          "- `areaCode.getInfo` dá o estado e a região sede do DDD.",
+          "- A tabela vem do arquivo de Códigos Nacionais da Anatel de 21/09/2026, só linhas vigentes."
+        ]
+      },
+      "references": [
+        "https://informacoes.anatel.gov.br/paineis/areas-tarifarias/codigos-nacionais",
+        "https://www.anatel.gov.br/dadosabertos/paineis_de_dados/areastarifarias/pgcn.zip",
+        "https://servicodados.ibge.gov.br/api/docs/localidades"
+      ],
+      "flatName": "getAreaCodeByMunicipalityCode",
+      "params": [{ "name": "code", "type": "string | number" }],
+      "returns": "number?",
+      "tests": [
+        { "args": ["3550308"], "returns": 11, "note": "from the maintainer briefing, #597" },
+        { "args": ["4122305"], "returns": 47, "note": "from the maintainer briefing, #597: Rio Negro (PR) dials the DDD of Santa Catarina" },
+        { "args": ["3509502"], "returns": 19, "note": "JavaScript's own test: should return the DDD of a municipality" },
+        { "args": ["3304557"], "returns": 21, "note": "JavaScript's own test: should return the DDD of a municipality" },
+        { "args": ["1200401"], "returns": 68, "note": "JavaScript's own test: should return the DDD of a municipality" },
+        { "args": ["2605459"], "returns": 81, "note": "JavaScript's own test: should return the DDD of a municipality" },
+        { "name": "number", "args": [3518800], "returns": 11, "note": "JavaScript's own test: should accept a number" },
+        { "name": "masked", "args": [" 355-030-8 "], "returns": 11, "note": "JavaScript's own test: should strip non-digit characters from a string" },
+        { "args": ["3550308 SP"], "returns": 11, "note": "JavaScript's own test: should read the digits of a string, as getMunicipalityByCode does" },
+        { "name": "brasilia", "args": ["5300108"], "returns": 61, "note": "JavaScript's own test: should give DDD 61 to Brasília and to the municipalities of Goiás around it" },
+        { "args": ["5212501"], "returns": 61, "note": "JavaScript's own test: should give DDD 61 to Brasília and to the municipalities of Goiás around it" },
+        { "args": ["5222203"], "returns": 61, "note": "JavaScript's own test: should give DDD 61 to Brasília and to the municipalities of Goiás around it" },
+        { "args": ["4213609"], "returns": 42, "note": "JavaScript's own test: should give the neighboring state's DDD to the three municipalities that dial it: Porto União (SC)" },
+        { "args": ["4102604"], "returns": 49, "note": "JavaScript's own test: should give the neighboring state's DDD to the three municipalities that dial it: Barracão (PR)" },
+        { "args": ["0000000"], "returns": null, "note": "JavaScript's own test: should return null for a code that is not a municipality" },
+        { "name": "too-short", "args": ["355030"], "returns": null, "note": "JavaScript's own test: should return null for a code that is not a municipality" },
+        { "name": "too-long", "args": ["35503080"], "returns": null },
+        { "name": "empty", "args": [""], "returns": null, "note": "JavaScript's own test: should return null for a code that is not a municipality" },
+        { "args": ["SP"], "returns": null, "note": "JavaScript's own test: should return null for a string without digits" },
+        { "args": [-3550308], "returns": null, "note": "JavaScript's own test: should return null for a negative or fractional number" },
+        { "args": [355030.8], "returns": null, "note": "JavaScript's own test: should return null for a negative or fractional number" }
+      ]
+    },
     "getInfo": {
       "summary": {
         "en": "Gets the state (and its region) that a Brazilian DDD (area code) belongs to.",
@@ -20,6 +77,7 @@
           "Returns the state and region that a DDD (area code) belongs to, among the 67 DDDs in use under the Anatel Plano Geral de Numeração.",
           "",
           "- `areaCode` may be a string or a non-negative integer.",
+          "- A string has every character that is not a digit removed first, as in 2.4.0: `\"(0xx11)\"` and `\" 11 \"` resolve to 11.",
           "- The result carries the DDD, the state it is seated in (code and name), its region (code and name) and every state it serves.",
           "- Four DDDs straddle a state border (61, 42, 47 and 49). For these, the list of states also has the other state, with the seat first.",
           "- Returns null for a DDD not in use, a negative or non-integer number, or anything else."
@@ -28,6 +86,7 @@
           "Retorna o estado e a região a que pertence um DDD, entre os 67 DDDs em uso no Plano Geral de Numeração da Anatel.",
           "",
           "- `areaCode` pode ser uma string ou um inteiro não negativo.",
+          "- De uma string, todo caractere que não é dígito é removido antes, como na 2.4.0: `\"(0xx11)\"` e `\" 11 \"` resolvem para 11.",
           "- O resultado traz o DDD, o estado sede (sigla e nome), a região (código e nome) e todos os estados que ele atende.",
           "- Quatro DDDs cruzam uma divisa estadual (61, 42, 47 e 49). Para eles, a lista de estados também tem o outro estado, com a sede primeiro.",
           "- Retorna null para um DDD fora de uso, um número negativo ou não inteiro, ou qualquer outro valor."
@@ -50,7 +109,9 @@
         { "name": "empty", "args": [""], "returns": null },
         { "args": ["68"], "returns": { "areaCode": 68, "stateCode": "AC", "stateName": "Acre", "regionCode": "N", "regionName": "Norte", "stateCodes": ["AC"] }, "note": "JavaScript's own test: should resolve DDD 68 to Acre, Norte" },
         { "args": [-11], "returns": null, "note": "JavaScript's own test: should return null for a negative number, not read it as the DDD 11" },
-        { "args": [1.1], "returns": null, "note": "JavaScript's own test: should return null for a fractional number, not read it as the DDD 11" }
+        { "args": [1.1], "returns": null, "note": "JavaScript's own test: should return null for a fractional number, not read it as the DDD 11" },
+        { "args": ["(0xx11)"], "returns": { "areaCode": 11, "stateCode": "SP", "stateName": "São Paulo", "regionCode": "SE", "regionName": "Sudeste", "stateCodes": ["SP"] }, "note": "from the maintainer briefing, #596: every non-digit is removed from a string, as in 2.4.0" },
+        { "args": [" 11 "], "returns": { "areaCode": 11, "stateCode": "SP", "stateName": "São Paulo", "regionCode": "SE", "regionName": "Sudeste", "stateCodes": ["SP"] }, "note": "from the maintainer briefing, #596: every non-digit is removed from a string, as in 2.4.0" }
       ]
     },
     "listByState": {
@@ -62,14 +123,14 @@
         "en": [
           "Returns every DDD (area code) that serves a state, sorted in ascending order.",
           "",
-          "- `stateCode` is matched case-insensitively.",
+          "- `stateCode` is matched ignoring case and surrounding whitespace, as it already was in 2.4.0.",
           "- A DDD that straddles a border is listed under every state it serves.",
           "- Returns an empty list when `stateCode` is not a Brazilian state."
         ],
         "pt-BR": [
           "Retorna todos os DDDs que atendem um estado, em ordem crescente.",
           "",
-          "- A comparação de `stateCode` não diferencia maiúsculas de minúsculas.",
+          "- A comparação de `stateCode` ignora maiúsculas e minúsculas e espaços nas pontas, como já acontecia na 2.4.0.",
           "- Um DDD que cruza uma divisa aparece em todos os estados que atende.",
           "- Retorna uma lista vazia quando `stateCode` não é um estado brasileiro."
         ]

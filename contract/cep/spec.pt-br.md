@@ -27,6 +27,15 @@ O CEP é um código numérico de oito algarismos. Os Correios atribuem esses có
 - CEP sem formatação: `^\d{8}$`
 - CEP formatado: `^\d{5}-\d{3}$`
 
+## Faixas por estado
+
+Os Correios atribuem a cada estado um ou mais blocos de CEP. `cep.getState` lê o estado desses blocos, offline.
+
+- Um bloco pertence a um estado, mas nem todo CEP dentro dele está em uso. `10000-000` cai no bloco de SP, embora nenhuma cidade use `10xxx`.
+- Dois blocos não pertencem a nenhum estado: `00000-000` a `00999-999` e `78900-000` a `78999-999`. MT termina em `78899-999`.
+- AM, DF e GO têm dois blocos cada. `72800-000` a `72999-999`, dentro do bloco do DF, pertence a GO.
+- A tabela completa está na descrição de `cep.getState`.
+
 ## Exemplos
 
 - Válido: `01310200`
