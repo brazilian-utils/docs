@@ -15,6 +15,7 @@ import type { AdapterContext, LanguageAdapter } from "../languages/types.js";
 import { valuesEqual } from "./conformance.js";
 import { bindLib } from "./analyze.js";
 import type { ApiSurface, Contract, ContractFunction, NativeSymbol, RunnerCall } from "./model.js";
+import { nativeArgs } from "./signature.js";
 import { flat } from "./naming.js";
 import { parseCType, type CType } from "./ctype.js";
 import { shortName } from "../../site/src/lib/usage-format.mjs";
@@ -185,7 +186,7 @@ export async function differential(
     const symbols = new Map(fns.map((fn) => [fn.id, bind(contract, lib, fn)]));
     const items = plan.map((p) => ({ p, symbol: symbols.get(p.fn.id) }));
     const runnableItems = items.filter((x): x is { p: (typeof plan)[number]; symbol: NativeSymbol } => !!x.symbol);
-    const results = await runBatch(lib, runnableItems.map((x) => ({ symbol: x.symbol, args: x.p.args })));
+    const results = await runBatch(lib, runnableItems.map((x) => ({ symbol: x.symbol, args: nativeArgs(x.p.fn, x.symbol, lib.adapter, x.p.args) })));
     const byPlan = new Map(runnableItems.map((x, i) => [x.p, results[i]]));
     answers.set(lib.name, plan.map((p) => byPlan.get(p)));
   }

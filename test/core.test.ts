@@ -403,6 +403,62 @@ describe("analysis + conformance (fake lib)", () => {
   });
 });
 
+describe("options object spread into separate parameters", () => {
+  const contract = loadContract(
+    tmpContract({
+      "plate/contract.json": {
+        domain: "plate",
+        functions: {
+          isValid: {
+            params: [
+              { name: "value", type: "string" },
+              { name: "options", type: "IsValidPlateOptions", optional: true, fields: [{ name: "format", type: "string", optional: true }] }
+            ],
+            returns: "boolean",
+            tests: [
+              { args: ["ABC1234"], returns: true },
+              { args: ["ABC1D23", { format: "LLLNNNN" }], returns: false },
+              { args: ["ABC1D23", {}], returns: true }
+            ]
+          }
+        }
+      }
+    })
+  );
+  const calls: unknown[][] = [];
+  const impls = {
+    "plate.is_valid": (...a: unknown[]) => {
+      calls.push(a);
+      return !(a[1] === "LLLNNNN" && a[0] === "ABC1D23");
+    }
+  };
+  const surface: ApiSurface = { library: "lib", language: "fake", warnings: [], symbols: [sym("plate.is_valid", ["plate:str", "plate_format?:str"], "bool")] };
+
+  it("matches a lib that takes the fields as parameters and passes them positionally", async () => {
+    const report = await analyzeLib({ contract, adapter: fakeAdapter(impls), ctx: { lib: lib(), root: "/", workDir: "/tmp" }, surface, runTests: true });
+    const fn = report.functions.find((f) => f.id === "plate.isValid")!;
+    assert.equal(fn.status, "ok");
+    assert.ok(fn.issues.some((i) => i.code === "spread-options"));
+    assert.deepEqual(calls, [["ABC1234"], ["ABC1D23", "LLLNNNN"], ["ABC1D23"]]);
+  });
+
+  it("leaves a lib that takes the object itself alone", async () => {
+    const objectLib: ApiSurface = { ...surface, symbols: [sym("plate.is_valid", ["plate:str", "options?:dict"], "bool")] };
+    calls.length = 0;
+    const report = await analyzeLib({ contract, adapter: fakeAdapter(impls), ctx: { lib: lib(), root: "/", workDir: "/tmp" }, surface: objectLib, runTests: true });
+    const fn = report.functions.find((f) => f.id === "plate.isValid")!;
+    assert.ok(!fn.issues.some((i) => i.code === "spread-options"));
+    assert.deepEqual(calls[1], ["ABC1D23", { format: "LLLNNNN" }]);
+  });
+
+  it("only the last parameter can list fields", () => {
+    const dir = tmpContract({
+      "x/contract.json": { domain: "x", functions: { f: { params: [{ name: "o", type: "O", fields: [{ name: "a", type: "string" }] }, { name: "v", type: "string" }], returns: "string" } } }
+    });
+    assert.throws(() => loadContract(dir), /only the last parameter can list fields/);
+  });
+});
+
 describe("value comparison", () => {
   it("compares objects across naming conventions and treats absent as null", () => {
     assert.ok(valuesEqual({ zipCode: "1", street: null }, { zip_code: "1" }));

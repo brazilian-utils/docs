@@ -15,6 +15,7 @@
  */
 import type { LanguageAdapter, AdapterContext } from "../languages/types.js";
 import type { ContractFunction, ContractTest, LibConfig, NativeSymbol, RunnerCall, RunnerResult, TestOutcome } from "./model.js";
+import { nativeArgs } from "./signature.js";
 import { flat } from "./naming.js";
 
 export function valuesEqual(expected: unknown, actual: unknown): boolean {
@@ -83,7 +84,7 @@ export async function runConformance(
       const callIds: string[] = [];
       for (let r = 0; r < test.repeat; r++) {
         const id = `${test.id}@${r}`;
-        calls.push({ id, symbol, args: test.args });
+        calls.push({ id, symbol, args: nativeArgs(fn, symbol, adapter, test.args) });
         callIds.push(id);
       }
       planned.push({ test, fn, callIds });

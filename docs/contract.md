@@ -64,7 +64,7 @@ lines. A file looks like this:
 | `aliases` (function) | other `domain.operation` spellings in use |
 | `level` | `core`: every library must have it. `extended` (default) |
 | `network` | `true`: calls a remote service (tests and diff skip it by default) |
-| `params`, `returns` | canonical types (below). `optional: true` for optional params |
+| `params`, `returns` | canonical types (below). `optional: true` for optional params. The last param can be an options object that lists its `fields` (`name`, `type`, `optional`): a library that takes those fields as separate parameters instead of one object still matches, and the tests pass them to it positionally |
 | `tests[]` | args and exactly one of `returns` (any JSON value), `throws: true` (must fail), `matches` (regex on a string result), `satisfies` (the result, given to that function, must return `true`). Optional: `name`, `repeat`, `note` |
 
 ## Bilingual summary and description

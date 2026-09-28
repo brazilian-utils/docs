@@ -114,8 +114,11 @@ Status:
 15. **Optional behaviors.** In the reference, optional behaviors (padding, obfuscation,
     version, mask, precision…) go in a single options object. Other libraries take positional
     optional parameters or do not have the behavior. The contract lists them as one optional
-    `options` parameter. People also disagree about some defaults: the default phone mask
-    (§2 #4) and whether `currency.format` adds `R$` (§1b).
+    `options` parameter. When it lists the object's `fields`, a library that takes them as
+    separate parameters (Go `IsValid(plate, plateType)`, Python `is_valid(plate, type=None)`)
+    matches too: the validator pairs each field with a parameter by name, then in order, and
+    the tests pass the values positionally. People also disagree about some defaults: the
+    default phone mask (§2 #4) and whether `currency.format` adds `R$` (§1b).
 
 16. **Numbers as input.** Every function that takes `string | number` reads a number only when
     it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number is

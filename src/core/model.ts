@@ -19,6 +19,11 @@ export interface ContractParam {
   type: string;
   optional?: boolean;
   description?: string;
+  /**
+   * The fields of an options object. A lib that takes them as separate parameters instead of one
+   * object (Go, Rust, positional Python) still matches: see `spreadOptions` in signature.ts.
+   */
+  fields?: ContractParam[];
 }
 
 /** Expectation for a single conformance test case. Exactly one kind is set. */

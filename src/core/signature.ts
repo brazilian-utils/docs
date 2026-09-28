@@ -10,6 +10,55 @@ import type { ContractFunction, Issue, NativeSymbol } from "./model.js";
  * and whatever the lib returns must be something the contract allows.
  */
 function checkSignature(fn: ContractFunction, symbol: NativeSymbol, adapter: LanguageAdapter): Issue[] {
+  const spread = spreadOptions(fn, symbol, adapter);
+  if (!spread) return checkFlat(fn, symbol, adapter);
+  const options = fn.params[spread.index];
+  const fields = spread.fields.map((name) => {
+    const f = options.fields!.find((x) => x.name === name)!;
+    return { ...f, name: `${options.name}.${f.name}`, optional: true };
+  });
+  return [
+    { severity: "info", code: "spread-options", message: `takes ${fields.map((f) => f.name).join(", ")} as separate parameters` },
+    ...checkFlat({ ...fn, params: [...fn.params.slice(0, spread.index), ...fields] }, symbol, adapter)
+  ];
+}
+
+/**
+ * A lib that takes the fields of the contract's options object as separate parameters (Go and
+ * Rust have no options objects; many Python and Ruby APIs use positional or keyword arguments):
+ * `isValid(value, { format })` in the contract, `IsValid(plate string, plateType string)` in Go.
+ * Returns which contract field each of the lib's trailing parameters stands for (matched by name,
+ * then in order), or undefined when the lib takes the object itself or has no such parameters.
+ */
+export function spreadOptions(fn: ContractFunction, symbol: NativeSymbol, adapter: LanguageAdapter): { index: number; fields: string[] } | undefined {
+  const index = fn.params.length - 1;
+  const options = fn.params[index];
+  if (!options?.fields?.length) return undefined;
+  const trailing = symbol.params.filter((p) => !p.rest).slice(index);
+  if (trailing.length === 0 || trailing.length > options.fields.length) return undefined;
+  if (checkParam(parseCType(options.type), adapter.mapType(trailing[0].typeNode, "param", symbol)).level !== "error") return undefined;
+  const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
+  const left = options.fields.map((f) => f.name);
+  const named = trailing.map((p) => {
+    const n = norm(p.name);
+    const hit = left.find((f) => n === norm(f));
+    if (hit) left.splice(left.indexOf(hit), 1);
+    return hit;
+  });
+  return { index, fields: named.map((f) => f ?? left.shift()!) };
+}
+
+/** The arguments of a contract call as the lib takes them (an options object spread, see above). */
+export function nativeArgs(fn: ContractFunction, symbol: NativeSymbol, adapter: LanguageAdapter, args: unknown[]): unknown[] {
+  const spread = spreadOptions(fn, symbol, adapter);
+  const options = spread && args[spread.index];
+  if (!spread || args.length <= spread.index || !options || typeof options !== "object" || Array.isArray(options)) return args;
+  const values = spread.fields.map((f) => (options as Record<string, unknown>)[f]);
+  while (values.length && values[values.length - 1] === undefined) values.pop();
+  return [...args.slice(0, spread.index), ...values.map((v) => (v === undefined ? null : v))];
+}
+
+function checkFlat(fn: ContractFunction, symbol: NativeSymbol, adapter: LanguageAdapter): Issue[] {
   const issues: Issue[] = [];
   const positional = symbol.params.filter((p) => !p.rest && !p.keyword);
   const hasRest = symbol.params.some((p) => p.rest && !p.keyword);

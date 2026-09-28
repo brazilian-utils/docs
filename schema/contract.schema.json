@@ -79,7 +79,22 @@
                 "name": { "type": "string", "minLength": 1 },
                 "type": { "type": "string", "minLength": 1 },
                 "optional": { "type": "boolean" },
-                "description": { "type": "string" }
+                "description": { "type": "string" },
+                "fields": {
+                  "minItems": 1,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": { "type": "string", "minLength": 1 },
+                      "type": { "type": "string", "minLength": 1 },
+                      "optional": { "type": "boolean" },
+                      "description": { "type": "string" }
+                    },
+                    "required": ["name", "type"],
+                    "additionalProperties": false
+                  }
+                }
               },
               "required": ["name", "type"],
               "additionalProperties": false

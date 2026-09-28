@@ -45,7 +45,7 @@ const TestSchema = z
     }
   });
 
-const ParamSchema = z
+const FieldSchema = z
   .object({
     name: z.string().min(1),
     type: z.string().min(1),
@@ -53,6 +53,9 @@ const ParamSchema = z
     description: z.string().optional()
   })
   .strict();
+
+/** A parameter; an options object may list its fields (each one a parameter of its own elsewhere). */
+const ParamSchema = FieldSchema.extend({ fields: z.array(FieldSchema).min(1).optional() }).strict();
 
 const FunctionSchema = z
   .object({
@@ -179,13 +182,14 @@ export function loadContract(dir: string): Contract {
     for (const [operation, fn] of Object.entries(doc.functions)) {
       const id = `${doc.domain}.${operation}`;
       const where = `${rel}: ${id}`;
-      for (const p of fn.params) {
+      for (const p of fn.params.flatMap((x) => [x, ...(x.fields ?? []).map((f) => ({ ...f, name: `${x.name}.${f.name}` }))])) {
         try {
           parseCType(p.type);
         } catch (e) {
           problems.push(`${where}: param ${p.name}: ${(e as Error).message}`);
         }
       }
+      if (fn.params.slice(0, -1).some((p) => p.fields)) problems.push(`${where}: only the last parameter can list fields (an options object)`);
       try {
         parseCType(fn.returns);
       } catch (e) {
