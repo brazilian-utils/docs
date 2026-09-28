@@ -15,16 +15,27 @@
         "en": [
           "Formats a CNH number as `000000000-00` (9 digits, hyphen, 2 check digits).",
           "",
-          "- `options.pad` left-pads the value with zeros to 11 digits first."
+          "- `options.pad` left-pads the value with zeros to 11 digits first.",
+          "- `options.obfuscate` (default `false`) hides the first 3 digits and the 2 check digits with `*`: `***503064-**`. It works with `pad` and on a partial value.",
+          "- No authority publishes a masking rule for the CNH. The rule is an analogy with the one the Leis de Diretrizes Orçamentárias set for publishing a CPF (\"ocultar os três primeiros dígitos e os dois dígitos verificadores\", Lei nº 12.309/2010, art. 87, § 5º, repeated up to the LDO 2026, Lei nº 15.321/2025, art. 163), not a published norm.",
+          "- `cns.format` and `passport.format` have no `obfuscate` option.",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number)."
         ],
         "pt-BR": [
           "Formata um número de CNH como `000000000-00` (9 dígitos, hífen, 2 dígitos verificadores).",
           "",
-          "- `options.pad` primeiro completa o valor com zeros à esquerda até 11 dígitos."
+          "- `options.pad` primeiro completa o valor com zeros à esquerda até 11 dígitos.",
+          "- `options.obfuscate` (padrão `false`) oculta com `*` os 3 primeiros dígitos e os 2 dígitos verificadores: `***503064-**`. Funciona junto com `pad` e em um valor parcial.",
+          "- Nenhuma autoridade publica uma regra de mascaramento para a CNH. A regra é uma analogia com a que as Leis de Diretrizes Orçamentárias fixam para publicar um CPF (\"ocultar os três primeiros dígitos e os dois dígitos verificadores\", Lei nº 12.309/2010, art. 87, § 5º, repetida até a LDO 2026, Lei nº 15.321/2025, art. 163), não uma norma publicada.",
+          "- `cns.format` e `passport.format` não têm a opção `obfuscate`.",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número)."
         ]
       },
       "references": [
-        "https://www.gov.br/transportes/pt-br/assuntos/transito/conteudo-contran/resolucoes/Resolucao8862021F.pdf"
+        "https://www.gov.br/transportes/pt-br/assuntos/transito/conteudo-contran/resolucoes/Resolucao8862021F.pdf",
+        "https://www.gov.br/transportes/pt-br/assuntos/transito/conteudo-contran/resolucoes/Resolucao10202025.pdf",
+        "https://www.planalto.gov.br/ccivil_03/_ato2007-2010/2010/lei/l12309.htm",
+        "https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2025/lei/L15321.htm#art163"
       ],
       "params": [
         { "name": "value", "type": "string | number" },
@@ -44,7 +55,18 @@
         { "args": ["000000"], "returns": "000000", "note": "JavaScript's own test: should format CNH values" },
         { "args": ["0000000"], "returns": "0000000", "note": "JavaScript's own test: should format CNH values" },
         { "args": ["00000000"], "returns": "00000000", "note": "JavaScript's own test: should format CNH values" },
-        { "args": ["000000001"], "returns": "000000001", "note": "JavaScript's own test: should format CNH values" }
+        { "args": ["000000001"], "returns": "000000001", "note": "JavaScript's own test: should format CNH values" },
+        { "args": ["02650306461", { "obfuscate": true }], "returns": "***503064-**", "note": "from the maintainer briefing, #567" },
+        { "args": ["98765432119", { "obfuscate": true }], "returns": "***654321-**", "note": "JavaScript's own test: should hide the first 3 digits and the 2 check digits when obfuscate is truthy" },
+        { "args": [98765432119, { "obfuscate": true }], "returns": "***654321-**", "note": "JavaScript's own test: should hide the first 3 digits and the 2 check digits when obfuscate is truthy" },
+        { "args": ["9876", { "obfuscate": true }], "returns": "***6", "note": "JavaScript's own test: should hide the first 3 digits and the 2 check digits when obfuscate is truthy" },
+        { "args": ["9876", { "pad": true, "obfuscate": true }], "returns": "***000098-**", "note": "JavaScript's own test: should hide the first 3 digits and the 2 check digits when obfuscate is truthy" },
+        { "args": ["98765432119", { "obfuscate": false }], "returns": "987654321-19", "note": "JavaScript's own test: should behave exactly as without the option when obfuscate is falsy" },
+        { "args": ["8900", { "pad": true }], "returns": "000000089-00", "note": "JavaScript's documented example: pad" },
+        { "args": [-1], "returns": "", "note": "changed in 2.5.0 (#593): a negative number is not a safe non-negative integer. 2.4.0 returned \"1\". JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": [1.5], "returns": "", "note": "changed in 2.5.0 (#593): a fractional number gives an empty string. 2.4.0 returned \"15\". JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number (2^53)" },
+        { "args": [9007199254740992, { "pad": true }], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" }
       ]
     },
     "generate": {
@@ -54,7 +76,8 @@
         "pt-BR": ["Gera um número de CNH aleatório e válido: 11 dígitos, sem máscara, que `cnh.isValid` aceita."]
       },
       "references": [
-        "https://www.gov.br/transportes/pt-br/assuntos/transito/conteudo-contran/resolucoes/Resolucao8862021F.pdf"
+        "https://www.gov.br/transportes/pt-br/assuntos/transito/conteudo-contran/resolucoes/Resolucao8862021F.pdf",
+        "https://www.gov.br/transportes/pt-br/assuntos/transito/conteudo-contran/resolucoes/Resolucao10202025.pdf"
       ],
       "params": [],
       "returns": "string",
@@ -70,6 +93,7 @@
           "",
           "- The function ignores spaces, dots and hyphens. Any other character makes the value invalid.",
           "- Rejects a value whose 11 digits are all the same.",
+          "- No official text publishes the check-digit weights. Resolução CONTRAN nº 886/2021, art. 4º, and Resolução CONTRAN nº 1.020/2025, art. 10, give only the layout (9 characters and 2 check digits). The algorithm follows a community reference.",
           "- Pending decision (findings §1): the reference (JS) keeps a remainder of 1 in the first check digit as `1`, as real registry numbers do (art. 4º § 1º says `0`). Python and Erlang use a different (2022) algorithm."
         ],
         "pt-BR": [
@@ -77,11 +101,13 @@
           "",
           "- A função ignora espaços, pontos e hífens. Qualquer outro caractere torna o valor inválido.",
           "- Rejeita um valor com os 11 dígitos iguais.",
+          "- Nenhum texto oficial publica os pesos dos dígitos verificadores. A Resolução CONTRAN nº 886/2021, art. 4º, e a Resolução CONTRAN nº 1.020/2025, art. 10, dão só o leiaute (9 caracteres e 2 dígitos verificadores). O algoritmo segue uma referência da comunidade.",
           "- Decisão pendente (findings §1): a referência (JS) mantém um resto 1 no primeiro dígito verificador como `1`, como fazem os números de registro reais (o art. 4º § 1º diz `0`). Python e Erlang usam um algoritmo diferente (de 2022)."
         ]
       },
       "references": [
-        "https://www.gov.br/transportes/pt-br/assuntos/transito/conteudo-contran/resolucoes/Resolucao8862021F.pdf"
+        "https://www.gov.br/transportes/pt-br/assuntos/transito/conteudo-contran/resolucoes/Resolucao8862021F.pdf",
+        "https://www.gov.br/transportes/pt-br/assuntos/transito/conteudo-contran/resolucoes/Resolucao10202025.pdf"
       ],
       "level": "core",
       "params": [{ "name": "value", "type": "string" }],
@@ -119,11 +145,20 @@
         "pt-BR": "Remove os caracteres de formatação de uma CNH e retorna só os dígitos."
       },
       "description": {
-        "en": ["Removes CNH formatting and keeps only digits, capped at 11 digits."],
-        "pt-BR": ["Remove a formatação da CNH e mantém apenas os dígitos, com no máximo 11 dígitos."]
+        "en": [
+          "Removes CNH formatting and keeps only digits, capped at 11 digits.",
+          "",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number)."
+        ],
+        "pt-BR": [
+          "Remove a formatação da CNH e mantém apenas os dígitos, com no máximo 11 dígitos.",
+          "",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número)."
+        ]
       },
       "references": [
-        "https://www.gov.br/transportes/pt-br/assuntos/transito/conteudo-contran/resolucoes/Resolucao8862021F.pdf"
+        "https://www.gov.br/transportes/pt-br/assuntos/transito/conteudo-contran/resolucoes/Resolucao8862021F.pdf",
+        "https://www.gov.br/transportes/pt-br/assuntos/transito/conteudo-contran/resolucoes/Resolucao10202025.pdf"
       ],
       "params": [{ "name": "value", "type": "string | number" }],
       "returns": "string",
@@ -132,7 +167,11 @@
         { "name": "unmasked", "args": ["00000000119"], "returns": "00000000119" },
         { "name": "strips-non-digits", "args": ["000.abc000001-19"], "returns": "00000000119" },
         { "name": "empty", "args": [""], "returns": "" },
-        { "name": "caps-length", "args": ["00000000119123"], "returns": "00000000119", "note": "reference truncates to the 11 characters of the document; asserted by the reference (JS) unit tests" }
+        { "name": "caps-length", "args": ["00000000119123"], "returns": "00000000119", "note": "reference truncates to the 11 characters of the document; asserted by the reference (JS) unit tests" },
+        { "args": [-1], "returns": "", "note": "changed in 2.5.0 (#593): a negative number gives an empty string. JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": [1.5], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number (2^53)" },
+        { "args": [119], "returns": "119", "note": "a safe non-negative integer is read as before" }
       ]
     }
   }

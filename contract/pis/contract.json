@@ -19,19 +19,29 @@
           "Formats a PIS as `000.00000.00-0`.",
           "",
           "- `options.pad` left-pads the value with zeros to 11 digits first.",
+          "- `options.obfuscate` (default `false`) hides the first 3 digits and the check digit with `*`: `***.45678.90-*`. It works with `pad` and on a partial value.",
+          "- No authority publishes a masking rule for the PIS. The rule is an analogy with the one the Leis de Diretrizes Orçamentárias set for publishing a CPF (\"ocultar os três primeiros dígitos e os dois dígitos verificadores\", Lei nº 12.309/2010, art. 87, § 5º, repeated up to the LDO 2026, Lei nº 15.321/2025, art. 163), not a published norm.",
+          "- `cns.format` and `passport.format` have no `obfuscate` option.",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number).",
           "- Pending decision (findings §2 #2, #3): the reference (JS) formats only the characters an incomplete value has and returns an empty string for empty or invalid input. Other libraries return null."
         ],
         "pt-BR": [
           "Formata um PIS como `000.00000.00-0`.",
           "",
           "- `options.pad` primeiro completa o valor com zeros à esquerda até 11 dígitos.",
+          "- `options.obfuscate` (padrão `false`) oculta com `*` os 3 primeiros dígitos e o dígito verificador: `***.45678.90-*`. Funciona junto com `pad` e em um valor parcial.",
+          "- Nenhuma autoridade publica uma regra de mascaramento para o PIS. A regra é uma analogia com a que as Leis de Diretrizes Orçamentárias fixam para publicar um CPF (\"ocultar os três primeiros dígitos e os dois dígitos verificadores\", Lei nº 12.309/2010, art. 87, § 5º, repetida até a LDO 2026, Lei nº 15.321/2025, art. 163), não uma norma publicada.",
+          "- `cns.format` e `passport.format` não têm a opção `obfuscate`.",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número).",
           "- Decisão pendente (findings §2 #2, #3): a referência (JS) formata só os caracteres que um valor incompleto tem e retorna uma string vazia para entrada vazia ou inválida. Outras bibliotecas retornam null."
         ]
       },
       "references": [
         "https://www.gov.br/inss/pt-br/direitos-e-deveres/inscricao-e-contribuicao/inscricao",
         "https://www.gov.br/esocial/pt-br/documentacao-tecnica/manuais/mos-manual-de-orientacao-do-esocial-vs-2-4.pdf",
-        "https://www.sirc.gov.br/wp-content/uploads/manual_sirc_recomendacoes_tecnicas_v7.pdf"
+        "https://www.sirc.gov.br/wp-content/uploads/manual_sirc_recomendacoes_tecnicas_v7.pdf",
+        "https://www.planalto.gov.br/ccivil_03/_ato2007-2010/2010/lei/l12309.htm",
+        "https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2025/lei/L15321.htm#art163"
       ],
       "level": "core",
       "params": [
@@ -83,18 +93,29 @@
         { "args": [10000000000], "returns": "100.00000.00-0", "note": "JavaScript's own test: when it is a integer number" },
         { "args": [100000000000], "returns": "100.00000.00-0", "note": "JavaScript's own test: when it is a integer number" },
         { "args": [1000000000000], "returns": "100.00000.00-0", "note": "JavaScript's own test: when it is a integer number" },
-        { "args": [100.1], "returns": "100.1", "note": "JavaScript's own test: when it is a float number" },
-        { "args": [100.11], "returns": "100.11", "note": "JavaScript's own test: when it is a float number" },
-        { "args": [100.101], "returns": "100.101", "note": "JavaScript's own test: when it is a float number" },
-        { "args": [100.1001], "returns": "100.1001", "note": "JavaScript's own test: when it is a float number" },
-        { "args": [100.10001], "returns": "100.10001", "note": "JavaScript's own test: when it is a float number" },
-        { "args": [100.100001], "returns": "100.10000.1", "note": "JavaScript's own test: when it is a float number" },
-        { "args": [100.1000001], "returns": "100.10000.01", "note": "JavaScript's own test: when it is a float number" },
-        { "args": [100.10000001], "returns": "100.10000.00-1", "note": "JavaScript's own test: when it is a float number" },
-        { "args": [100.100000001], "returns": "100.10000.00-0", "note": "JavaScript's own test: when it is a float number" },
+        { "args": [100.1], "returns": "", "note": "changed in 2.5.0 (#593): a fractional number is not a safe non-negative integer, so it gives an empty string. 2.4.0 returned \"100.1\". JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": [100.11], "returns": "", "note": "changed in 2.5.0 (#593): a fractional number is not a safe non-negative integer, so it gives an empty string. 2.4.0 returned \"100.11\". JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": [100.101], "returns": "", "note": "changed in 2.5.0 (#593): a fractional number is not a safe non-negative integer, so it gives an empty string. 2.4.0 returned \"100.101\". JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": [100.1001], "returns": "", "note": "changed in 2.5.0 (#593): a fractional number is not a safe non-negative integer, so it gives an empty string. 2.4.0 returned \"100.1001\". JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": [100.10001], "returns": "", "note": "changed in 2.5.0 (#593): a fractional number is not a safe non-negative integer, so it gives an empty string. 2.4.0 returned \"100.10001\". JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": [100.100001], "returns": "", "note": "changed in 2.5.0 (#593): a fractional number is not a safe non-negative integer, so it gives an empty string. 2.4.0 returned \"100.10000.1\". JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": [100.1000001], "returns": "", "note": "changed in 2.5.0 (#593): a fractional number is not a safe non-negative integer, so it gives an empty string. 2.4.0 returned \"100.10000.01\". JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": [100.10000001], "returns": "", "note": "changed in 2.5.0 (#593): a fractional number is not a safe non-negative integer, so it gives an empty string. 2.4.0 returned \"100.10000.00-1\". JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": [100.100000001], "returns": "", "note": "changed in 2.5.0 (#593): a fractional number is not a safe non-negative integer, so it gives an empty string. 2.4.0 returned \"100.10000.00-0\". JavaScript's own test: when it is a negative, fractional or unsafe number" },
         { "args": ["0000000000000"], "returns": "000.00000.00-0", "note": "JavaScript's own test" },
         { "args": ["00000000000000"], "returns": "000.00000.00-0", "note": "JavaScript's own test" },
-        { "args": ["000000000000000"], "returns": "000.00000.00-0", "note": "JavaScript's own test" }
+        { "args": ["000000000000000"], "returns": "000.00000.00-0", "note": "JavaScript's own test" },
+        { "args": ["12345678901", { "obfuscate": true }], "returns": "***.45678.90-*", "note": "from the maintainer briefing, #567" },
+        { "args": ["12056412547", { "obfuscate": true }], "returns": "***.56412.54-*", "note": "JavaScript's own test: should hide the first 3 digits and the check digit when obfuscate is truthy" },
+        { "args": [12056412547, { "obfuscate": true }], "returns": "***.56412.54-*", "note": "JavaScript's own test: should hide the first 3 digits and the check digit when obfuscate is truthy" },
+        { "args": ["1205", { "obfuscate": true }], "returns": "***.5", "note": "JavaScript's own test: should hide the first 3 digits and the check digit when obfuscate is truthy" },
+        { "args": ["1205", { "pad": true, "obfuscate": true }], "returns": "***.00001.20-*", "note": "JavaScript's own test: should hide the first 3 digits and the check digit when obfuscate is truthy" },
+        { "args": ["12056412547", { "obfuscate": false }], "returns": "120.56412.54-7", "note": "JavaScript's own test: should behave exactly as without the option when obfuscate is falsy" },
+        { "args": ["1205", { "pad": true, "obfuscate": false }], "returns": "000.00001.20-5", "note": "JavaScript's own test: should behave exactly as without the option when obfuscate is falsy" },
+        { "args": [-12345678901], "returns": "", "note": "changed in 2.5.0 (#593): a negative number is not a safe non-negative integer. 2.4.0 returned \"123.45678.90-1\"" },
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number (2^53)" },
+        { "args": [100.1, { "pad": true }], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": [100.1, { "obfuscate": true }], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" }
       ]
     },
     "generate": {
@@ -103,13 +124,22 @@
         "pt-BR": "Gera um número de PIS aleatório e válido."
       },
       "description": {
-        "en": ["Generates a valid random PIS: 11 digits, unformatted."],
-        "pt-BR": ["Gera um PIS aleatório e válido: 11 dígitos, sem máscara."]
+        "en": [
+          "Generates a valid random PIS: 11 digits, unformatted.",
+          "",
+          "- No official source publishes the check-digit weights. The eSocial MOS gives 11 digits with the check digit, and the SIRC manual says the check digit uses modulus 11; the Caixa layouts ask only for a \"Número de PIS/PASEP válido\". The weights follow a community reference (brutils)."
+        ],
+        "pt-BR": [
+          "Gera um PIS aleatório e válido: 11 dígitos, sem máscara.",
+          "",
+          "- Nenhuma fonte oficial publica os pesos do dígito verificador. O MOS do eSocial dá 11 dígitos com o verificador, e o manual do SIRC diz que o verificador usa módulo 11; os leiautes da Caixa pedem só um \"Número de PIS/PASEP válido\". Os pesos seguem uma referência da comunidade (brutils)."
+        ]
       },
       "references": [
         "https://www.gov.br/inss/pt-br/direitos-e-deveres/inscricao-e-contribuicao/inscricao",
         "https://www.gov.br/esocial/pt-br/documentacao-tecnica/manuais/mos-manual-de-orientacao-do-esocial-vs-2-4.pdf",
-        "https://www.sirc.gov.br/wp-content/uploads/manual_sirc_recomendacoes_tecnicas_v7.pdf"
+        "https://www.sirc.gov.br/wp-content/uploads/manual_sirc_recomendacoes_tecnicas_v7.pdf",
+        "https://www.caixa.gov.br/Downloads/fgts-grrf-aplicativo-arquivos/Leiaute_Folha_Pgto_GRRF_v204.pdf"
       ],
       "level": "core",
       "params": [],
@@ -124,12 +154,14 @@
         "en": [
           "Validates a PIS/PASEP/NIT: 10 base digits and a modulus 11 check digit.",
           "",
+          "- No official source publishes the check-digit weights. The eSocial MOS gives 11 digits with the check digit, and the SIRC manual says the check digit uses modulus 11; the Caixa layouts ask only for a \"Número de PIS/PASEP válido\". The weights follow a community reference (brutils).",
           "- Pending decision (findings §1): the reference (JS) rejects a value whose digits are all the same as a reserved number. Six libraries accept them when the check digit matches.",
           "- Pending decision (findings §2 #1): the reference (JS) ignores the usual formatting characters and whitespace. Other libraries accept digits only."
         ],
         "pt-BR": [
           "Valida um PIS/PASEP/NIT: 10 dígitos base e um dígito verificador por módulo 11.",
           "",
+          "- Nenhuma fonte oficial publica os pesos do dígito verificador. O MOS do eSocial dá 11 dígitos com o verificador, e o manual do SIRC diz que o verificador usa módulo 11; os leiautes da Caixa pedem só um \"Número de PIS/PASEP válido\". Os pesos seguem uma referência da comunidade (brutils).",
           "- Decisão pendente (findings §1): a referência (JS) rejeita como número reservado um valor com todos os dígitos iguais. Seis bibliotecas aceitam esses valores quando o dígito verificador confere.",
           "- Decisão pendente (findings §2 #1): a referência (JS) ignora os caracteres de formatação usuais e os espaços em branco. Outras bibliotecas aceitam apenas dígitos."
         ]
@@ -137,7 +169,8 @@
       "references": [
         "https://www.gov.br/inss/pt-br/direitos-e-deveres/inscricao-e-contribuicao/inscricao",
         "https://www.gov.br/esocial/pt-br/documentacao-tecnica/manuais/mos-manual-de-orientacao-do-esocial-vs-2-4.pdf",
-        "https://www.sirc.gov.br/wp-content/uploads/manual_sirc_recomendacoes_tecnicas_v7.pdf"
+        "https://www.sirc.gov.br/wp-content/uploads/manual_sirc_recomendacoes_tecnicas_v7.pdf",
+        "https://www.caixa.gov.br/Downloads/fgts-grrf-aplicativo-arquivos/Leiaute_Folha_Pgto_GRRF_v204.pdf"
       ],
       "level": "core",
       "params": [{ "name": "pis", "type": "string" }],
@@ -182,8 +215,16 @@
         "pt-BR": "Remove os caracteres de formatação de um número de PIS e retorna só os dígitos."
       },
       "description": {
-        "en": ["Removes PIS formatting and keeps only digits, capped at 11 digits."],
-        "pt-BR": ["Remove a formatação do PIS e mantém apenas os dígitos, com no máximo 11 dígitos."]
+        "en": [
+          "Removes PIS formatting and keeps only digits, capped at 11 digits.",
+          "",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number)."
+        ],
+        "pt-BR": [
+          "Remove a formatação do PIS e mantém apenas os dígitos, com no máximo 11 dígitos.",
+          "",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número)."
+        ]
       },
       "references": [
         "https://www.gov.br/inss/pt-br/direitos-e-deveres/inscricao-e-contribuicao/inscricao",
@@ -207,7 +248,10 @@
         { "args": ["73532010295"], "returns": "73532010295", "note": "consensus of 3 libs (python, ruby, rust)" },
         { "args": ["559.84775.36-3"], "returns": "55984775363", "note": "consensus of 3 libs (python, ruby, rust)" },
         { "args": ["363.65790.38-0"], "returns": "36365790380", "note": "consensus of 3 libs (python, ruby, rust)" },
-        { "args": ["735.32010.29-4"], "returns": "73532010294", "note": "consensus of 3 libs (python, ruby, rust)" }
+        { "args": ["735.32010.29-4"], "returns": "73532010294", "note": "consensus of 3 libs (python, ruby, rust)" },
+        { "args": [100.1], "returns": "", "note": "changed in 2.5.0 (#593): a fractional number gives an empty string. 2.4.0 returned \"1001\". JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": [-1], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": [12345678901], "returns": "12345678901", "note": "a safe non-negative integer is read as before" }
       ]
     }
   }

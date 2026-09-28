@@ -5,6 +5,7 @@
   "summary": { "en": "Email address validation.", "pt-BR": "Validação de endereços de e-mail." },
   "category": "telecom",
   "order": 3,
+  "related": ["pixKey"],
   "functions": {
     "isValid": {
       "summary": {
@@ -17,14 +18,16 @@
           "",
           "- Local part: letters, digits and `_'+-.`, with no leading or trailing dot and no two dots in a row.",
           "- Domain: at least one dot, labels of up to 63 characters, the final label 2 to 63 letters.",
-          "- Quoted local parts and address literals are rejected."
+          "- Quoted local parts and address literals are rejected.",
+          "- A Pix email key does not use this function. `pixKey.isValid` follows the pattern of the DICT API, which is wider in some places: it accepts `fulano@example`, `a@localhost` and `a{b}@example.com`, which this function rejects."
         ],
         "pt-BR": [
           "Valida um endereço de e-mail: um subconjunto prático do \"valid e-mail address\" do WHATWG HTML.",
           "",
           "- Parte local: letras, dígitos e `_'+-.`, sem ponto no início ou no fim e sem dois pontos seguidos.",
           "- Domínio: pelo menos um ponto, rótulos de até 63 caracteres, o último rótulo com 2 a 63 letras.",
-          "- Partes locais entre aspas e literais de endereço são rejeitados."
+          "- Partes locais entre aspas e literais de endereço são rejeitados.",
+          "- Uma chave Pix de e-mail não usa esta função. `pixKey.isValid` segue o padrão da API do DICT, que é mais amplo em alguns pontos: aceita `fulano@example`, `a@localhost` e `a{b}@example.com`, que esta função rejeita."
         ]
       },
       "references": [
@@ -51,7 +54,17 @@
         { "args": ["user__user@example.com"], "returns": true, "note": "JavaScript's own test: should return true when is a valid email" },
         { "args": ["test@subdomain.example.com"], "returns": true, "note": "JavaScript's own test: should return true when is a valid email with subdomain" },
         { "args": ["user@ex-ample.com"], "returns": true, "note": "JavaScript's own test: should return true when a domain label carries an inner hyphen" },
-        { "args": ["user+tag@example.co.uk"], "returns": true, "note": "JavaScript's own test: should return true when is a valid email with special characters" }
+        { "args": ["user+tag@example.co.uk"], "returns": true, "note": "JavaScript's own test: should return true when is a valid email with special characters" },
+        { "args": ["fulano@example"], "returns": false, "note": "a single-label domain is rejected here, although it is a Pix email key (#593, pixKey.isValid)" },
+        { "args": ["a@localhost"], "returns": false, "note": "a single-label domain is rejected here, although it is a Pix email key (#593, pixKey.isValid)" },
+        { "args": ["a{b}@example.com"], "returns": false, "note": "outside the local-part characters of this function, although it is a Pix email key (#593, pixKey.isValid)" },
+        { "args": [".ab@example.com"], "returns": false, "note": "a leading dot is rejected" },
+        { "args": ["ab.@example.com"], "returns": false, "note": "a trailing dot in the local part is rejected" },
+        { "args": ["a&b@example.com"], "returns": false, "note": "& is outside the local-part characters of this function" },
+        { "args": ["user@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.com"], "returns": false, "note": "JavaScript's own test: when a domain label is longer than the 63 characters WHATWG allows" },
+        { "args": ["user@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.com"], "returns": true, "note": "JavaScript's own test: when a domain label is exactly 63 characters long" },
+        { "args": ["user@example.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"], "returns": false, "note": "JavaScript's own test: when the final domain label is longer than the 63 characters WHATWG allows" },
+        { "args": ["User@Example.COM"], "returns": true, "note": "the check ignores case" }
       ]
     }
   }

@@ -21,7 +21,10 @@
           "Gera um RENAVAM aleatório e válido no formato de 11 dígitos: 10 dígitos base mais o dígito verificador."
         ]
       },
-      "references": ["https://www.planalto.gov.br/ccivil_03/leis/l9503compilado.htm"],
+      "references": [
+        "https://www.planalto.gov.br/ccivil_03/leis/l9503compilado.htm",
+        "https://www.gov.br/transportes/pt-br/assuntos/transito/arquivos-senatran/portarias/2013/portaria0272013.pdf"
+      ],
       "params": [],
       "returns": "string",
       "tests": [
@@ -35,16 +38,23 @@
           "Validates a RENAVAM: the old format (9 digits, left-padded to 11) or the new format (11 digits), with a modulus 11 check digit.",
           "",
           "- The function ignores spaces, dots and hyphens. Any other character, in particular a letter, makes the value invalid.",
-          "- A value whose digits are all the same is rejected."
+          "- A value whose digits are all the same is rejected.",
+          "- A number is read only when it is a safe non-negative integer. A negative or fractional number is invalid: 2.4.0 accepted `-639884962` and `63988496.2`. Strings and non-negative integers give the same result as before.",
+          "- Portaria DENATRAN nº 27/2013 gives 10 digits and a check digit \"calculado através do módulo 11, peso 9\". It does not write out the weights, the handling of a remainder of 0, 1 or 10, or how a 9-digit code is read as 11 digits. Those parts follow community references and market practice."
         ],
         "pt-BR": [
           "Valida um RENAVAM: o formato antigo (9 dígitos, completado com zeros à esquerda até 11) ou o novo (11 dígitos), com dígito verificador por módulo 11.",
           "",
           "- A função ignora espaços, pontos e hífens. Qualquer outro caractere, em especial uma letra, torna o valor inválido.",
-          "- Um valor com todos os dígitos iguais é rejeitado."
+          "- Um valor com todos os dígitos iguais é rejeitado.",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo ou fracionário é inválido: a 2.4.0 aceitava `-639884962` e `63988496.2`. Strings e inteiros não negativos dão o mesmo resultado de antes.",
+          "- A Portaria DENATRAN nº 27/2013 dá 10 dígitos e um dígito verificador \"calculado através do módulo 11, peso 9\". Ela não escreve os pesos, o tratamento de resto 0, 1 ou 10, nem como um código de 9 dígitos é lido em 11. Essas partes seguem referências da comunidade e a prática de mercado."
         ]
       },
-      "references": ["https://www.planalto.gov.br/ccivil_03/leis/l9503compilado.htm"],
+      "references": [
+        "https://www.planalto.gov.br/ccivil_03/leis/l9503compilado.htm",
+        "https://www.gov.br/transportes/pt-br/assuntos/transito/arquivos-senatran/portarias/2013/portaria0272013.pdf"
+      ],
       "level": "core",
       "params": [{ "name": "renavam", "type": "string | number" }],
       "returns": "boolean",
@@ -80,7 +90,11 @@
         { "args": ["00639884-962"], "returns": true, "note": "JavaScript's own test: should return true when is a RENAVAM valid with the usual mask characters" },
         { "args": [" 00639884962 "], "returns": true, "note": "JavaScript's own test: should return true when is a RENAVAM valid with the usual mask characters" },
         { "args": ["12345678900"], "returns": true, "note": "JavaScript's own test: should return true when the multiplier cycle wraps from 9 back to 2 on non-zero digits" },
-        { "args": ["00000000060"], "returns": true, "note": "JavaScript's own test: should return true when the checksum remainder is exactly 1 (expected digit 0, not 10)" }
+        { "args": ["00000000060"], "returns": true, "note": "JavaScript's own test: should return true when the checksum remainder is exactly 1 (expected digit 0, not 10)" },
+        { "args": [-639884962], "returns": false, "note": "changed in 2.5.0 (#592): a negative number is not a safe non-negative integer. 2.4.0 returned true. From the maintainer briefing, #592" },
+        { "args": [63988496.2], "returns": false, "note": "changed in 2.5.0 (#592): a fractional number is not a safe non-negative integer. 2.4.0 returned true. From the maintainer briefing, #592" },
+        { "args": [9007199254740992], "returns": false, "note": "#593 number rule: 2^53 is past Number.MAX_SAFE_INTEGER" },
+        { "args": [12345678900], "returns": true, "note": "a safe non-negative integer is read as before" }
       ]
     }
   }

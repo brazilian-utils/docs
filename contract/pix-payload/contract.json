@@ -22,7 +22,8 @@
           "- `params` carries the key or URL, the merchant name and city, and optionally the amount, the txid and a description.",
           "- The function normalizes a key as `pixKey.getInfo` does. A URL makes the payload dynamic (Point of Initiation `12`) and cannot carry an amount or txid. The URL is host and path without scheme, at most 77 characters.",
           "- The amount has two decimal places. The function rejects a value with more, or one that rounds to 0.00. The txid is 1 to 25 alphanumerics (default `***`).",
-          "- Merchant name, city and description lose their accents. The function truncates them to 25, 15 and what the template has left."
+          "- Merchant name, city and description lose their accents. The function truncates them to 25, 15 and what the template has left.",
+          "- Every payload the function returns is one `pixPayload.isValid` accepts: the key in its DICT form, the 62-05 txid always written, the name and city within their limits and an amount greater than zero. An email key follows the DICT pattern, so a key with `&` gives null."
         ],
         "pt-BR": [
           "Gera o payload de um BR Code Pix. Informe exatamente um entre uma chave (estático) ou uma URL do PSP (dinâmico). Caso contrário, a função retorna null.",
@@ -30,14 +31,16 @@
           "- `params` traz a chave ou a URL, o nome e a cidade do recebedor e, opcionalmente, o valor, o txid e uma descrição.",
           "- A função normaliza a chave como `pixKey.getInfo` faz. Uma URL torna o payload dinâmico (Point of Initiation `12`) e não pode trazer valor nem txid. A URL é host e caminho sem esquema, com no máximo 77 caracteres.",
           "- O valor tem duas casas decimais. A função rejeita um valor com mais casas ou que arredonde para 0.00. O txid tem de 1 a 25 caracteres alfanuméricos (padrão `***`).",
-          "- Nome do recebedor, cidade e descrição perdem os acentos. A função os trunca em 25, 15 e o espaço que resta no template."
+          "- Nome do recebedor, cidade e descrição perdem os acentos. A função os trunca em 25, 15 e o espaço que resta no template.",
+          "- Todo payload que a função retorna é aceito por `pixPayload.isValid`: a chave na forma do DICT, o txid 62-05 sempre escrito, nome e cidade dentro dos limites e um valor maior que zero. Uma chave de e-mail segue o padrão do DICT, então uma chave com `&` dá null."
         ]
       },
       "references": [
         "https://www.bcb.gov.br/content/estabilidadefinanceira/spb_docs/ManualBRCode.pdf",
         "https://www.bcb.gov.br/content/estabilidadefinanceira/pix/Regulamento_Pix/II_ManualdePadroesparaIniciacaodoPix.pdf",
         "https://github.com/bacen/pix-api",
-        "https://www.bcb.gov.br/content/estabilidadefinanceira/pix/API-DICT.html"
+        "https://www.bcb.gov.br/content/estabilidadefinanceira/pix/API-DICT.html",
+        "https://www.emvco.com/terms-of-use/?u=/wp-content/uploads/documents/EMVCo-Merchant-Presented-QR-Specification-v1-1.pdf"
       ],
       "params": [{ "name": "params", "type": "GeneratePixPayloadParams" }],
       "returns": "string?",
@@ -52,7 +55,10 @@
         { "args": [{ "key": "71c7d9be-4b85-4e43-9f1c-1f3b8b4e9a2d", "merchantName": "   ", "merchantCity": "Brasilia" }], "returns": null, "note": "JavaScript's own test: should return null when the merchant name is missing or empty after folding" },
         { "args": [{ "key": "71c7d9be-4b85-4e43-9f1c-1f3b8b4e9a2d", "merchantName": "💸", "merchantCity": "Brasilia" }], "returns": null, "note": "JavaScript's own test: should return null when the merchant name is missing or empty after folding" },
         { "args": [{ "key": "71c7d9be-4b85-4e43-9f1c-1f3b8b4e9a2d", "merchantName": "Fulano", "merchantCity": " " }], "returns": null, "note": "JavaScript's own test: should return null when the merchant city is missing or empty after folding" },
-        { "args": [{ "key": "123e4567-e12b-12d1-a456-426655440000", "merchantName": "Fulano de Tal", "merchantCity": "BRASILIA" }], "returns": "00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-4266554400005204000053039865802BR5913Fulano de Tal6008BRASILIA62070503***63041D3D", "note": "JavaScript's own test: should generate a valid payload matching the static example of the Bacen manual" }
+        { "args": [{ "key": "123e4567-e12b-12d1-a456-426655440000", "merchantName": "Fulano de Tal", "merchantCity": "BRASILIA" }], "returns": "00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-4266554400005204000053039865802BR5913Fulano de Tal6008BRASILIA62070503***63041D3D", "note": "JavaScript's own test: should generate a valid payload matching the static example of the Bacen manual" },
+        { "args": [{ "key": "a&b@example.com", "merchantName": "Fulano", "merchantCity": "Brasilia" }], "returns": null, "note": "from the maintainer briefing, #593: an e-mail key with & is not a key (DICT API 2.12.1)" },
+        { "args": [{ "key": "a{b}@example.com", "merchantName": "Fulano", "merchantCity": "Brasilia" }], "returns": "00020126380014br.gov.bcb.pix0116a{b}@example.com5204000053039865802BR5906Fulano6008Brasilia62070503***63049AB3", "note": "changed in 2.5.0 (#593): an e-mail key only the DICT pattern accepts" },
+        { "name": "generated-is-valid", "args": [{ "key": "12345678909", "merchantName": "Fulano de Tal", "merchantCity": "BRASILIA", "amount": 10.5, "txid": "PEDIDO42" }], "satisfies": "pixPayload.isValid", "note": "every generated payload must pass the lib's own validator" }
       ]
     },
     "getInfo": {
@@ -62,25 +68,28 @@
       },
       "description": {
         "en": [
-          "Parses a Pix BR Code payload into its fields. Returns null for anything `pixPayload.isValid` rejects, never a partial result.",
+          "Parses a Pix BR Code payload into its fields. Returns null exactly when `pixPayload.isValid` returns false, never a partial result.",
           "",
           "- Fields: merchant name and city, point of initiation (dynamic when there is a PSP location or object `01` is `12`, static otherwise) and either the key (static) or the URL (dynamic).",
           "- Amount, txid, description and the withdrawal facilitator of a Pix Saque are present only when the payload carries them. The `***` txid marker means no txid.",
-          "- With a PSP location, the function ignores amount and txid, as the manual requires."
+          "- With a PSP location, the function leaves out the amount and the txid, as §2.7 of the manual requires (\"Se preenchidos, seu conteúdo deve ser ignorado\").",
+          "- Every rule of `pixPayload.isValid` applies, so a payload without object `62`, with a static txid outside 1 to 25 letters and digits, or with a key not in its DICT form gives null. 2.4.0 parsed those payloads."
         ],
         "pt-BR": [
-          "Decompõe o payload de um BR Code Pix em seus campos. Retorna null para tudo que `pixPayload.isValid` rejeita, nunca um resultado parcial.",
+          "Decompõe o payload de um BR Code Pix em seus campos. Retorna null exatamente quando `pixPayload.isValid` retorna false, nunca um resultado parcial.",
           "",
           "- Campos: nome e cidade do recebedor, point of initiation (dinâmico quando há uma location do PSP ou o objeto `01` é `12`, estático nos outros casos) e a chave (estático) ou a URL (dinâmico).",
           "- Valor, txid, descrição e o facilitador de saque de um Pix Saque só aparecem quando o payload os traz. O marcador de txid `***` significa sem txid.",
-          "- Com uma location do PSP, a função ignora o valor e o txid, como o manual exige."
+          "- Com uma location do PSP, a função deixa de fora o valor e o txid, como o §2.7 do manual exige (\"Se preenchidos, seu conteúdo deve ser ignorado\").",
+          "- Todas as regras de `pixPayload.isValid` valem, então um payload sem o objeto `62`, com txid estático fora de 1 a 25 letras e dígitos ou com chave fora da forma do DICT dá null. A 2.4.0 decompunha esses payloads."
         ]
       },
       "references": [
         "https://www.bcb.gov.br/content/estabilidadefinanceira/spb_docs/ManualBRCode.pdf",
         "https://www.bcb.gov.br/content/estabilidadefinanceira/pix/Regulamento_Pix/II_ManualdePadroesparaIniciacaodoPix.pdf",
         "https://github.com/bacen/pix-api",
-        "https://www.bcb.gov.br/content/estabilidadefinanceira/pix/API-DICT.html"
+        "https://www.bcb.gov.br/content/estabilidadefinanceira/pix/API-DICT.html",
+        "https://www.emvco.com/terms-of-use/?u=/wp-content/uploads/documents/EMVCo-Merchant-Presented-QR-Specification-v1-1.pdf"
       ],
       "flatName": "getPixPayloadInfo",
       "params": [{ "name": "value", "type": "string" }],
@@ -92,14 +101,8 @@
           "args": [
             "00020126580014br.gov.bcb.pix0136bee05743-4291-4f3c-9259-595df1307ba1520400005303986540510.005802BR5914Alexandre Lima6019Presidente Prudente62180514Um-Id-Qualquer6304D475"
           ],
-          "returns": {
-            "key": "bee05743-4291-4f3c-9259-595df1307ba1",
-            "merchantName": "Alexandre Lima",
-            "merchantCity": "Presidente Prudente",
-            "amount": 10,
-            "txid": "Um-Id-Qualquer",
-            "pointOfInitiation": "static"
-          }
+          "returns": null,
+          "note": "changed in 2.5.0 (#593): the city has 19 characters (EMV 60: up to 15) and the txid Um-Id-Qualquer has '-' (§2.6.2). 2.4.0 parsed it. JavaScript's own test: when the payloads are taken as published"
         },
         { "name": "wrong-crc", "args": ["00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-4266554400005204000053039865802BR5913Fulano de Tal6008BRASILIA62070503***63041D3E"], "returns": null },
         { "name": "empty", "args": [""], "returns": null },
@@ -137,15 +140,8 @@
           "args": [
             "00020104141234567890123426580014BR.GOV.BCB.PIX0136123e4567-e12b-12d1-a456-42665544000027300012BR.COM.OUTRO011001234567895204000053039865406123.455802BR5917NOME DO RECEBEDOR6008BRASILIA61087007490062190515RP12345678-201980390012BR.COM.OUTRO01190123.ABCD.3456.WXYZ6304AD38"
           ],
-          "returns": {
-            "key": "123e4567-e12b-12d1-a456-426655440000",
-            "merchantName": "NOME DO RECEBEDOR",
-            "merchantCity": "BRASILIA",
-            "amount": 123.45,
-            "txid": "RP12345678-2019",
-            "pointOfInitiation": "static"
-          },
-          "note": "JavaScript's own test: should parse a static payload picking the Pix arrangement out of the multi-arrangement payload from the 'Manual do BR Code' §2.2"
+          "returns": null,
+          "note": "changed in 2.5.0 (#593): the txid RP12345678-2019 has a '-', outside the letters and digits of §2.6.2 of the Pix manual; the briefing keeps it excluded in a static payload. 2.4.0 parsed it. JavaScript's own test: when the payloads are taken as published"
         },
         {
           "args": [
@@ -194,7 +190,81 @@
             "pointOfInitiation": "dynamic"
           },
           "note": "JavaScript's own test: should parse a dynamic payload when the point of initiation method is 11, since the PSP location is what makes it dynamic"
-        }
+        },
+        {
+          "args": [
+            "00020104141234567890123426580014BR.GOV.BCB.PIX0136123e4567-e12b-12d1-a456-42665544000027300012BR.COM.OUTRO011001234567895204000053039865406123.455802BR5917NOME DO RECEBEDOR6008BRASILIA61087007490062180514RP12345678201980390012BR.COM.OUTRO01190123.ABCD.3456.WXYZ6304126F"
+          ],
+          "returns": {
+            "merchantName": "NOME DO RECEBEDOR",
+            "merchantCity": "BRASILIA",
+            "pointOfInitiation": "static",
+            "key": "123e4567-e12b-12d1-a456-426655440000",
+            "amount": 123.45,
+            "txid": "RP123456782019"
+          },
+          "note": "JavaScript's own test: should parse the multi-arrangement payload from the 'Manual do BR Code' §2.2, with a txid the Pix manual allows"
+        },
+        {
+          "args": [
+            "00020126580014br.gov.bcb.pix0136bee05743-4291-4f3c-9259-595df1307ba1520400005303986540510.005802BR5914Alexandre Lima6010Presidente62160512UmIdQualquer63049404"
+          ],
+          "returns": {
+            "merchantName": "Alexandre Lima",
+            "merchantCity": "Presidente",
+            "pointOfInitiation": "static",
+            "key": "bee05743-4291-4f3c-9259-595df1307ba1",
+            "amount": 10,
+            "txid": "UmIdQualquer"
+          },
+          "note": "JavaScript's own test: should parse a community payload with an amount and a txid, brought within the Pix manual"
+        },
+        {
+          "args": [
+            "00020126700014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-426655440000030812345678520400005303986540550.005802BR5913Fulano de Tal6008BRASILIA62070503***630419A4"
+          ],
+          "returns": {
+            "merchantName": "Fulano de Tal",
+            "merchantCity": "BRASILIA",
+            "pointOfInitiation": "static",
+            "key": "123e4567-e12b-12d1-a456-426655440000",
+            "withdrawalFacilitator": "12345678",
+            "amount": 50
+          },
+          "note": "a Pix Saque BR Code: withdrawalFacilitator reads the fss (26-03)"
+        },
+        { "args": ["00020126480014br.gov.bcb.pix2526pix.example.com/qr/v2/123452040000530398654040.005802BR5913Fulano de Tal6008BRASILIA62070503***6304A029"], "returns": { "merchantName": "Fulano de Tal", "merchantCity": "BRASILIA", "pointOfInitiation": "dynamic", "url": "pix.example.com/qr/v2/1234" }, "note": "a dynamic payload with a zero amount: the amount is left out next to a PSP location" },
+        {
+          "args": [
+            "00020101021226700014br.gov.bcb.pix2548pix.example.com/8b3da2f39a4140d1a91abd93113bd4415204000053039865802BR5913Fulano de Tal6008BRASILIA62190515RP12345678-20196304F315"
+          ],
+          "returns": {
+            "merchantName": "Fulano de Tal",
+            "merchantCity": "BRASILIA",
+            "pointOfInitiation": "dynamic",
+            "url": "pix.example.com/8b3da2f39a4140d1a91abd93113bd441"
+          },
+          "note": "from the maintainer briefing, #593: a dynamic BR Code with 62-05 filled is valid and its txid is left out (§2.7)"
+        },
+        { "args": ["00020126560014br.gov.bcb.pix0111123456789090219Pagamento do pedido5204000053039865802BR5913Fulano de Tal6008BRASILIA62070503***63041B76"], "returns": { "merchantName": "Fulano de Tal", "merchantCity": "BRASILIA", "pointOfInitiation": "static", "key": "12345678909", "description": "Pagamento do pedido" }, "note": "the description (26-02) is present when the payload carries it" },
+        {
+          "args": [
+            "00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-426655440000520400005303986540398.5802BR5913Fulano de Tal6008BRASILIA62070503***6304E1E3"
+          ],
+          "returns": {
+            "merchantName": "Fulano de Tal",
+            "merchantCity": "BRASILIA",
+            "pointOfInitiation": "static",
+            "key": "123e4567-e12b-12d1-a456-426655440000",
+            "amount": 98
+          },
+          "note": "\"98.\" reads as 98 (EMV allows the decimal mark with no decimals)"
+        },
+        { "args": ["00020126330014br.gov.bcb.pix0111123456789095204000053039865802BR5913Fulano de Tal6008BRASILIA62130509abcXYZ01963047D9D"], "returns": { "merchantName": "Fulano de Tal", "merchantCity": "BRASILIA", "pointOfInitiation": "static", "key": "12345678909", "txid": "abcXYZ019" }, "note": "a static txid of letters and digits is read" },
+        { "args": ["00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-4266554400005204000053039865802BR5913Fulano de Tal6008BRASILIA6304740C"], "returns": null, "note": "changed in 2.5.0 (#593): the manual has 62-05 \"sempre presente em um BR Code\" (§2.6, footnote 21), so a payload without object 62 is invalid. 2.4.0 parsed it" },
+        { "args": ["00020126330014br.gov.bcb.pix0111123456789095204000053039865802BR5913Fulano de Tal6008BRASILIA62190515RP12345678-201963049060"], "returns": null, "note": "from the maintainer briefing, #593: in a static payload the '-' of RP12345678-2019 stays excluded" },
+        { "args": ["00020126360014br.gov.bcb.pix0114123.456.789-095204000053039865802BR5913Fulano de Tal6008BRASILIA62070503***6304B354"], "returns": null, "note": "changed in 2.5.0 (#593): the key must be in its DICT form (§2.5.1)" },
+        { "args": ["00020126330014br.gov.bcb.pix0111123456789095204000053039865802BR5913Fulano de Tal6019Presidente Prudente62070503***63040E59"], "returns": null, "note": "changed in 2.5.0 (#593): EMV 60 allows up to 15 characters" }
       ]
     },
     "isValid": {
@@ -204,33 +274,51 @@
       },
       "description": {
         "en": [
-          "Validates a Pix BR Code payload. The function does not check the key itself (use `pixKey.isValid`).",
+          "Validates a Pix BR Code payload against the Manual de Padrões para Iniciação do Pix v2.10.0 and, where the manual is silent, the EMV QRCPS-MPM it builds on. The function checks the form of the key, not whether the key is registered in the DICT.",
           "",
-          "- Checks the TLV structure, the CRC-16 and the mandatory objects (format indicator, category code, currency, country, merchant name and city).",
-          "- One Merchant Account Information template (IDs 26 to 51) must carry the `br.gov.bcb.pix` GUI with a key (static) or a PSP URL (dynamic), never both.",
-          "- Objects `01` and `62` are optional. When `01` is present, it must be `11` or `12`. An amount (`54`) must be greater than zero, except in a Pix Saque.",
-          "- The function ignores unreserved templates (IDs 80 to 99)."
+          "- Structure: well-formed TLV with every length from `01` to `99`, the payload format indicator `000201` as the first object, and the CRC-16 (`63`) closing the payload and matching it. A CRC in lowercase hexadecimal is accepted, as in 2.4.0 (no official source fixes the case).",
+          "- Mandatory objects: merchant category code (`52`) of 4 digits, currency (`53`) `986`, country (`58`) `BR` in uppercase, merchant name (`59`) of at most 25 characters and merchant city (`60`) of at most 15.",
+          "- One Merchant Account Information template (IDs 26 to 51) carries the `br.gov.bcb.pix` GUI (case-insensitive) with exactly one of: a Pix key written in its DICT form, as `pixKey.getInfo` returns it (no mask, lowercase email or UUID, `+55` phone), optionally with the 8-digit ISPB of a Pix Saque facilitator (`fss`, 26-03); or a PSP location (26-25), host and path of at most 77 characters, never next to a `fss`.",
+          "- Object `01` is optional. When present, it must be `11` or `12`.",
+          "- The amount (`54`) is digits with an optional `.` decimal mark, at most 2 decimals and 13 characters. Zero is accepted only in a Pix Saque (with a `fss`) or next to a PSP location; a payload with a key alone needs an amount greater than zero.",
+          "- The Additional Data Field Template (`62`) with the txid (62-05) is mandatory (\"sempre presente em um BR Code\", §2.6). The txid is `***` (no txid) or 1 to 25 letters and digits (§2.6.2). So in a static payload the `-` of the Manual do BR Code example `RP12345678-2019` is excluded.",
+          "- Next to a PSP location, only the presence of 62-05 is checked. §2.7 says a filled txid or amount in a dynamic BR Code must be ignored, so a dynamic payload with a filled 62-05 stays valid.",
+          "- Unreserved templates (IDs 80 to 99) are ignored. A composite Pix Automático QR Code that also carries a key or a payment location is read as an ordinary payload.",
+          "- 2.4.0 checked mostly the structure. It accepted a payload without `62`, a txid with `-`, `_` or spaces, a masked or uppercase key, a name or city over the limits, a lowercase country code and a merchant category code that is not 4 digits."
         ],
         "pt-BR": [
-          "Valida o payload de um BR Code Pix. A função não verifica a chave em si (use `pixKey.isValid`).",
+          "Valida o payload de um BR Code Pix contra o Manual de Padrões para Iniciação do Pix v2.10.0 e, onde o manual é omisso, o EMV QRCPS-MPM em que ele se baseia. A função verifica a forma da chave, não se ela está registrada no DICT.",
           "",
-          "- Verifica a estrutura TLV, o CRC-16 e os objetos obrigatórios (indicador de formato, código de categoria, moeda, país, nome e cidade do recebedor).",
-          "- Um template Merchant Account Information (IDs 26 a 51) deve trazer o GUI `br.gov.bcb.pix` com uma chave (estático) ou uma URL do PSP (dinâmico), nunca as duas.",
-          "- Os objetos `01` e `62` são opcionais. Quando presente, `01` deve ser `11` ou `12`. Um valor (`54`) deve ser maior que zero, exceto em um Pix Saque.",
-          "- A função ignora templates não reservados (IDs 80 a 99)."
+          "- Estrutura: TLV bem formado com todo tamanho de `01` a `99`, o indicador de formato `000201` como primeiro objeto e o CRC-16 (`63`) fechando o payload e conferindo. Um CRC em hexadecimal minúsculo é aceito, como na 2.4.0 (nenhuma fonte oficial fixa a caixa).",
+          "- Objetos obrigatórios: código de categoria (`52`) com 4 dígitos, moeda (`53`) `986`, país (`58`) `BR` em maiúsculas, nome do recebedor (`59`) com no máximo 25 caracteres e cidade (`60`) com no máximo 15.",
+          "- Um template Merchant Account Information (IDs 26 a 51) traz o GUI `br.gov.bcb.pix` (sem distinção de caixa) com exatamente um entre: uma chave Pix na forma do DICT, como `pixKey.getInfo` a retorna (sem máscara, e-mail ou UUID em minúsculas, telefone com `+55`), opcionalmente com o ISPB de 8 dígitos de um facilitador de Pix Saque (`fss`, 26-03); ou uma location do PSP (26-25), host e caminho com no máximo 77 caracteres, nunca junto de um `fss`.",
+          "- O objeto `01` é opcional. Quando presente, deve ser `11` ou `12`.",
+          "- O valor (`54`) tem dígitos com um `.` decimal opcional, no máximo 2 casas e 13 caracteres. Zero só é aceito em um Pix Saque (com `fss`) ou junto de uma location do PSP; um payload só com chave precisa de valor maior que zero.",
+          "- O Additional Data Field Template (`62`) com o txid (62-05) é obrigatório (\"sempre presente em um BR Code\", §2.6). O txid é `***` (sem txid) ou de 1 a 25 letras e dígitos (§2.6.2). Assim, num payload estático o `-` do exemplo do Manual do BR Code `RP12345678-2019` fica excluído.",
+          "- Junto de uma location do PSP, só a presença do 62-05 é verificada. O §2.7 diz que txid ou valor preenchidos num BR Code dinâmico devem ser ignorados, então um payload dinâmico com 62-05 preenchido continua válido.",
+          "- Templates não reservados (IDs 80 a 99) são ignorados. Um QR Code composto do Pix Automático que também traz uma chave ou uma location de pagamento é lido como um payload comum.",
+          "- A 2.4.0 verificava sobretudo a estrutura. Aceitava payload sem `62`, txid com `-`, `_` ou espaços, chave com máscara ou em maiúsculas, nome ou cidade acima dos limites, código de país em minúsculas e código de categoria que não tem 4 dígitos."
         ]
       },
       "references": [
         "https://www.bcb.gov.br/content/estabilidadefinanceira/spb_docs/ManualBRCode.pdf",
         "https://www.bcb.gov.br/content/estabilidadefinanceira/pix/Regulamento_Pix/II_ManualdePadroesparaIniciacaodoPix.pdf",
         "https://github.com/bacen/pix-api",
-        "https://www.bcb.gov.br/content/estabilidadefinanceira/pix/API-DICT.html"
+        "https://www.bcb.gov.br/content/estabilidadefinanceira/pix/API-DICT.html",
+        "https://www.emvco.com/terms-of-use/?u=/wp-content/uploads/documents/EMVCo-Merchant-Presented-QR-Specification-v1-1.pdf"
       ],
       "params": [{ "name": "value", "type": "string" }],
       "returns": "boolean",
       "tests": [
         { "name": "bacen-static-example", "args": ["00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-4266554400005204000053039865802BR5913Fulano de Tal6008BRASILIA62070503***63041D3D"], "returns": true },
-        { "name": "with-amount-and-txid", "args": ["00020126580014br.gov.bcb.pix0136bee05743-4291-4f3c-9259-595df1307ba1520400005303986540510.005802BR5914Alexandre Lima6019Presidente Prudente62180514Um-Id-Qualquer6304D475"], "returns": true },
+        {
+          "name": "with-amount-and-txid",
+          "args": [
+            "00020126580014br.gov.bcb.pix0136bee05743-4291-4f3c-9259-595df1307ba1520400005303986540510.005802BR5914Alexandre Lima6019Presidente Prudente62180514Um-Id-Qualquer6304D475"
+          ],
+          "returns": false,
+          "note": "changed in 2.5.0 (#593): the city has 19 characters (EMV 60: up to 15) and the txid Um-Id-Qualquer has '-' (§2.6.2). 2.4.0 returned true. JavaScript's own test: when the payloads are taken as published"
+        },
         { "name": "wrong-crc", "args": ["00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-4266554400005204000053039865802BR5913Fulano de Tal6008BRASILIA62070503***63041D3E"], "returns": false },
         { "name": "empty", "args": [""], "returns": false },
         { "args": ["00020101021226700014br.gov.bcb.pix2548pix.example.com/8b3da2f39a4140d1a91abd93113bd4415204000053039865802BR5913Fulano de Tal6008BRASILIA62070503***630464E4"], "returns": true, "note": "JavaScript's own test: should return true for the dynamic QR Code example in the Bacen 'Manual de Padrões para Iniciação do Pix'" },
@@ -245,10 +333,10 @@
           "args": [
             "00020104141234567890123426580014BR.GOV.BCB.PIX0136123e4567-e12b-12d1-a456-42665544000027300012BR.COM.OUTRO011001234567895204000053039865406123.455802BR5917NOME DO RECEBEDOR6008BRASILIA61087007490062190515RP12345678-201980390012BR.COM.OUTRO01190123.ABCD.3456.WXYZ6304AD38"
           ],
-          "returns": true,
-          "note": "JavaScript's own test: should return true for the multi-arrangement payload from the 'Manual do BR Code' §2.2"
+          "returns": false,
+          "note": "changed in 2.5.0 (#593): the txid RP12345678-2019 has a '-', outside the letters and digits of §2.6.2 of the Pix manual; the briefing keeps it excluded in a static payload. 2.4.0 returned true. JavaScript's own test: when the payloads are taken as published"
         },
-        { "args": ["00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-4266554400005204000053039865802BR5913Fulano de Tal6008BRASILIA6304740C"], "returns": true, "note": "JavaScript's own test: should return true when the additional data template is absent" },
+        { "args": ["00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-4266554400005204000053039865802BR5913Fulano de Tal6008BRASILIA6304740C"], "returns": false, "note": "changed in 2.5.0 (#593): the manual has 62-05 \"sempre presente em um BR Code\" (§2.6, footnote 21), so a payload without object 62 is invalid. 2.4.0 returned true" },
         { "args": ["00020101021226330014br.gov.bcb.pix0111123456789095204000053039865802BR5913Fulano de Tal6008BRASILIA62070503***63043CAC"], "returns": true, "note": "JavaScript's own test: should return true when a key payload marks itself single use with the point of initiation method 12" },
         { "args": ["00020101021126480014br.gov.bcb.pix2526pix.example.com/qr/v2/12345204000053039865802BR5913Fulano de Tal6008BRASILIA62070503***6304F299"], "returns": true, "note": "JavaScript's own test: should return true when a url payload carries the point of initiation method 11, which the manual leaves optional" },
         { "args": ["00020126480014br.gov.bcb.pix2526pix.example.com/qr/v2/12345204000053039865802BR5913Fulano de Tal6008BRASILIA62070503***63041420"], "returns": true, "note": "JavaScript's own test: should return true when a url payload carries no point of initiation method at all" },
@@ -269,7 +357,51 @@
         { "args": ["00020126180014br.gov.bcb.pix5204000053039865802BR5913Fulano de Tal6008BRASILIA62070503***6304A335"], "returns": false, "note": "JavaScript's own test: should return false when the merchant account information holds neither a key nor a URL" },
         { "args": ["00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-42665544000052040000530398654061R3.455802BR5913Fulano de Tal6008BRASILIA62070503***63049FEF"], "returns": false, "note": "JavaScript's own test: should return false when the amount is not a number" },
         { "args": ["10491443385511900000200000000141325230000093423"], "returns": false, "note": "JavaScript's own test: should return false when it is a boleto or free text" },
-        { "args": ["pix copia e cola"], "returns": false, "note": "JavaScript's own test: should return false when it is a boleto or free text" }
+        { "args": ["pix copia e cola"], "returns": false, "note": "JavaScript's own test: should return false when it is a boleto or free text" },
+        {
+          "args": [
+            "00020104141234567890123426580014BR.GOV.BCB.PIX0136123e4567-e12b-12d1-a456-42665544000027300012BR.COM.OUTRO011001234567895204000053039865406123.455802BR5917NOME DO RECEBEDOR6008BRASILIA61087007490062180514RP12345678201980390012BR.COM.OUTRO01190123.ABCD.3456.WXYZ6304126F"
+          ],
+          "returns": true,
+          "note": "JavaScript's own test: for the multi-arrangement payload from the 'Manual do BR Code' §2.2, with a txid the Pix manual allows (RP123456782019)"
+        },
+        { "args": ["00020126580014br.gov.bcb.pix0136bee05743-4291-4f3c-9259-595df1307ba1520400005303986540510.005802BR5914Alexandre Lima6010Presidente62160512UmIdQualquer63049404"], "returns": true, "note": "JavaScript's own test: for a widely published community payload with an amount and a txid, brought within the Pix manual" },
+        { "args": ["00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-4266554400005204000053039865406100.505802BR5913Fulano de Tal6008BRASILIA62070503***80740014br.gov.bcb.pix2552pix.example.com/rec/2353c790eefb11eaadc10242ac12000263042875"], "returns": true, "note": "JavaScript's own test: for the composite QR Code example of §2.8.2, a key with an amount and a recurrence location" },
+        { "args": ["00020126380014br.gov.bcb.pix0116a{b}@example.com5204000053039865802BR5913Fulano de Tal6008BRASILIA62070503***63043CF0"], "returns": true, "note": "JavaScript's own test: for a key in each DICT form (an e-mail key only the DICT pattern accepts)" },
+        { "args": ["00020126360014br.gov.bcb.pix011412ABC34501DE355204000053039865802BR5913Fulano de Tal6008BRASILIA62070503***63047359"], "returns": true, "note": "JavaScript's own test: for a key in each DICT form" },
+        { "args": ["00020126360014br.gov.bcb.pix0114+55619123456785204000053039865802BR5913Fulano de Tal6008BRASILIA62070503***63040284"], "returns": true, "note": "JavaScript's own test: for a key in each DICT form" },
+        { "args": ["00020126360014br.gov.bcb.pix0114123.456.789-095204000053039865802BR5913Fulano de Tal6008BRASILIA62070503***6304B354"], "returns": false, "note": "changed in 2.5.0 (#593): the key must be in its DICT form (§2.5.1). 2.4.0 returned true. JavaScript's own test: when the key is not written in the DICT form" },
+        { "args": ["00020126400014br.gov.bcb.pix0118Fulano@Example.com5204000053039865802BR5913Fulano de Tal6008BRASILIA62070503***63049F84"], "returns": false, "note": "changed in 2.5.0 (#593): the key must be in its DICT form (§2.5.1). JavaScript's own test: when the key is not written in the DICT form" },
+        { "args": ["00020126370014br.gov.bcb.pix0115a&b@example.com5204000053039865802BR5913Fulano de Tal6008BRASILIA62070503***6304E129"], "returns": false, "note": "from the maintainer briefing, #593: an e-mail key with & is not a key (DICT API 2.12.1)" },
+        { "args": ["00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-4266554400005204000053039865802BR5913Fulano de Tal6008BRASILIA62070503***63041d3d"], "returns": true, "note": "JavaScript's own test: when the CRC is written in lowercase (kept from 2.4.0)" },
+        { "args": ["00020126700014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-426655440000030812345678520400005303986540550.005802BR5913Fulano de Tal6008BRASILIA62070503***630419A4"], "returns": true, "note": "JavaScript's own test: for a Pix Saque BR Code, whose fss (26-03) goes with the amount of the withdrawal" },
+        { "args": ["00020126480014br.gov.bcb.pix2526pix.example.com/qr/v2/123452040000530398654040.005802BR5913Fulano de Tal6008BRASILIA62070503***6304A029"], "returns": true, "note": "from the maintainer briefing, #593: zero is accepted next to a PSP location. JavaScript's own test: for a dynamic payload with a transaction amount of zero, which the payer ignores" },
+        { "args": ["00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-426655440000520400005303986540398.5802BR5913Fulano de Tal6008BRASILIA62070503***6304E1E3"], "returns": true, "note": "JavaScript's own test: when the amount carries the decimal mark with no decimals, as the EMV examples allow" },
+        { "args": ["00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-426655440000520400005303986540105802BR5913Fulano de Tal6008BRASILIA62070503***63049169"], "returns": false, "note": "from the maintainer briefing, #593: a payload with a key alone cannot state zero. JavaScript's own test: when a key payload states a transaction amount of zero" },
+        { "args": ["00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-426655440000520400005303986540698.7355802BR5913Fulano de Tal6008BRASILIA62070503***63047FD6"], "returns": false, "note": "JavaScript's own test: when the amount is not digits with at most one decimal mark and two decimals" },
+        { "args": ["00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-42665544000052040000530398654139999999999.995802BR5913Fulano de Tal6008BRASILIA62070503***6304603E"], "returns": true, "note": "JavaScript's own test: when the amount is longer than 13 characters (13 is the limit)" },
+        { "args": ["00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-426655440000520400005303986541499999999999.995802BR5913Fulano de Tal6008BRASILIA62070503***630498EF"], "returns": false, "note": "JavaScript's own test: when the amount is longer than 13 characters" },
+        { "args": ["00020126330014br.gov.bcb.pix0111123456789095204000053039865802BR5913Fulano de Tal6008BRASILIA62070103***630476F6"], "returns": false, "note": "changed in 2.5.0 (#593): 62 without 62-05. 2.4.0 returned true. JavaScript's own test: when the additional data template carries no txid (62-05)" },
+        { "args": ["00020126330014br.gov.bcb.pix0111123456789095204000053039865802BR5913Fulano de Tal6008BRASILIA62290525AAAAAAAAAAAAAAAAAAAAAAAAA63048097"], "returns": true, "note": "JavaScript's own test: when the txid is neither *** nor 1 to 25 letters and digits (§2.6.2): 25 letters are accepted" },
+        { "args": ["00020126330014br.gov.bcb.pix0111123456789095204000053039865802BR5913Fulano de Tal6008BRASILIA62300526AAAAAAAAAAAAAAAAAAAAAAAAAA6304E639"], "returns": false, "note": "JavaScript's own test: when the txid is neither *** nor 1 to 25 letters and digits (§2.6.2)" },
+        { "args": ["00020126330014br.gov.bcb.pix0111123456789095204000053039865802BR5913Fulano de Tal6008BRASILIA62190515RP12345678-201963049060"], "returns": false, "note": "from the maintainer briefing, #593: in a static payload the '-' of RP12345678-2019 stays excluded (§2.6.2). JavaScript's own test: when the txid is neither *** nor 1 to 25 letters and digits" },
+        { "args": ["00020126330014br.gov.bcb.pix0111123456789095204000053039865802BR5913Fulano de Tal6008BRASILIA62130509pedido_426304FF3C"], "returns": false, "note": "JavaScript's own test: when the txid is neither *** nor 1 to 25 letters and digits (§2.6.2)" },
+        { "args": ["00020126330014br.gov.bcb.pix0111123456789095204000053039865802BR5913Fulano de Tal6008BRASILIA62130509abcXYZ01963047D9D"], "returns": true, "note": "JavaScript's own test: when the txid is neither *** nor 1 to 25 letters and digits (§2.6.2): lower and upper case letters and digits are accepted" },
+        {
+          "args": [
+            "00020101021226700014br.gov.bcb.pix2548pix.example.com/8b3da2f39a4140d1a91abd93113bd4415204000053039865802BR5913Fulano de Tal6008BRASILIA62190515RP12345678-20196304F315"
+          ],
+          "returns": true,
+          "note": "from the maintainer briefing, #593: a dynamic BR Code with 62-05 filled stays valid (§2.7: \"Se preenchidos, seu conteúdo deve ser ignorado\"). JavaScript's own test: should accept a payload with a PSP location whose 62-05 is filled"
+        },
+        { "args": ["00020126990014br.gov.bcb.pix2577pix.example.com/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa5204000053039865802BR5913Fulano de Tal6008BRASILIA62070503***6304C335"], "returns": true, "note": "JavaScript's own test: when the PSP location is longer than 77 characters (§2.5.2): 77 is the limit" },
+        { "args": ["00020126330014br.gov.bcb.pix0111123456789095204000053039865802BR5926AAAAAAAAAAAAAAAAAAAAAAAAAA6008BRASILIA62070503***63042185"], "returns": false, "note": "changed in 2.5.0 (#593): EMV 59 allows up to 25 characters. JavaScript's own test: when the merchant name is longer than 25 characters" },
+        { "args": ["00020126330014br.gov.bcb.pix0111123456789095204000053039865802BR5913Fulano de Tal6015Presidente Prud62070503***6304259D"], "returns": true, "note": "JavaScript's own test: when the merchant city is longer than 15 characters: 15 is the limit" },
+        { "args": ["00020126330014br.gov.bcb.pix0111123456789095204000053039865802BR5913Fulano de Tal6019Presidente Prudente62070503***63040E59"], "returns": false, "note": "changed in 2.5.0 (#593): EMV 60 allows up to 15 characters. 2.4.0 returned true. JavaScript's own test: when the merchant city is longer than 15 characters" },
+        { "args": ["00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-4266554400005204000053039865802br5913Fulano de Tal6008BRASILIA62070503***63047792"], "returns": false, "note": "changed in 2.5.0 (#593): the ISO 3166-1 code is the uppercase BR. 2.4.0 returned true. JavaScript's own test: when the country code is not the uppercase BR of ISO 3166-1" },
+        { "args": ["00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-4266554400005204000053039865802BR5913Fulano de Tal6008BRASILIA62070503***61006304A8F7"], "returns": false, "note": "changed in 2.5.0 (#593): EMV lengths go from 01 to 99. 2.4.0 returned true. JavaScript's own test: when an object declares the length 00" },
+        { "args": ["00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-4266554400005204000053039865802BR5913Fulano de Tal6008BRASILIA62070503***000202630405AB"], "returns": false, "note": "JavaScript's own test: when the payload format indicator is repeated later with another value" },
+        { "args": ["00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-426655440000520358153039865802BR5913Fulano de Tal6008BRASILIA62070503***630430A6"], "returns": false, "note": "changed in 2.5.0 (#593): EMV 52 is 4 digits. 2.4.0 returned true. JavaScript's own test: when the merchant category code is not 4 digits" }
       ]
     }
   }
