@@ -1,26 +1,17 @@
 {
   "$schema": "../../schema/contract.schema.json",
   "domain": "nbs",
-  "title": {
-    "en": "NBS",
-    "pt-BR": "NBS"
-  },
+  "title": { "en": "NBS", "pt-BR": "NBS" },
   "summary": {
     "en": "Nomenclatura Brasileira de Serviços: the service classification codes of the NBS 2.0 table, carried by the national NFS-e.",
     "pt-BR": "Nomenclatura Brasileira de Serviços: os códigos de classificação de serviços da tabela NBS 2.0, informados na NFS-e nacional."
   },
   "category": "tax",
   "order": 10,
-  "related": [
-    "serviceItem",
-    "nfseKey"
-  ],
+  "related": ["serviceItem", "nfseKey"],
   "functions": {
     "format": {
-      "summary": {
-        "en": "Formats an NBS code.",
-        "pt-BR": "Formata um código NBS."
-      },
+      "summary": { "en": "Formats an NBS code.", "pt-BR": "Formata um código NBS." },
       "description": {
         "en": [
           "Formats an NBS code with the mask `N.NNNN.NN.NN`. Only the structure changes (use `nbs.isValid` to check the code).",
@@ -40,143 +31,27 @@
       "references": [
         "https://www.gov.br/mdic/pt-br/assuntos/sdic/comercio-e-servicos/nbs-nomenclatura-brasileira-de-servicos"
       ],
-      "params": [
-        {
-          "name": "value",
-          "type": "string | number"
-        }
-      ],
+      "params": [{ "name": "value", "type": "string | number" }],
       "returns": "string",
       "tests": [
-        {
-          "args": [
-            -101011100
-          ],
-          "returns": "",
-          "note": "from the maintainer briefing, #569"
-        },
-        {
-          "args": [
-            "101011100"
-          ],
-          "returns": "1.0101.11.00",
-          "note": "JavaScript's own test: should format an NBS code given as digits"
-        },
-        {
-          "args": [
-            126050000
-          ],
-          "returns": "1.2605.00.00",
-          "note": "JavaScript's own test: should format an NBS code given as a number"
-        },
-        {
-          "name": "already-formatted",
-          "args": [
-            "1.0101.11.00"
-          ],
-          "returns": "1.0101.11.00",
-          "note": "JavaScript's own test: should keep a code that already has the mask"
-        },
-        {
-          "args": [
-            "999999999"
-          ],
-          "returns": "9.9999.99.99",
-          "note": "JavaScript's own test: should not validate whether the code exists in the official table"
-        },
-        {
-          "args": [
-            "1"
-          ],
-          "returns": "1",
-          "note": "JavaScript's own test: should mask a partial value progressively"
-        },
-        {
-          "args": [
-            "10"
-          ],
-          "returns": "1.0",
-          "note": "JavaScript's own test: should mask a partial value progressively"
-        },
-        {
-          "name": "partial",
-          "args": [
-            "10101"
-          ],
-          "returns": "1.0101",
-          "note": "JavaScript's own test: should mask a partial value progressively"
-        },
-        {
-          "args": [
-            "101011"
-          ],
-          "returns": "1.0101.1",
-          "note": "JavaScript's own test: should mask a partial value progressively"
-        },
-        {
-          "args": [
-            "1010111"
-          ],
-          "returns": "1.0101.11",
-          "note": "JavaScript's own test: should mask a partial value progressively"
-        },
-        {
-          "args": [
-            "10101110"
-          ],
-          "returns": "1.0101.11.0",
-          "note": "JavaScript's own test: should mask a partial value progressively"
-        },
-        {
-          "args": [
-            "abc101011100"
-          ],
-          "returns": "1.0101.11.00",
-          "note": "JavaScript's own test: should drop the characters outside the mask and the digits after the ninth"
-        },
-        {
-          "args": [
-            "1010111009"
-          ],
-          "returns": "1.0101.11.00",
-          "note": "JavaScript's own test: should drop the characters outside the mask and the digits after the ninth"
-        },
-        {
-          "name": "empty",
-          "args": [
-            ""
-          ],
-          "returns": "",
-          "note": "JavaScript's own test: should return an empty string when there is no digit"
-        },
-        {
-          "args": [
-            "abc"
-          ],
-          "returns": "",
-          "note": "JavaScript's own test: should return an empty string when there is no digit"
-        },
-        {
-          "args": [
-            -1
-          ],
-          "returns": "",
-          "note": "JavaScript's own test: when it is a negative, fractional or unsafe number"
-        },
-        {
-          "args": [
-            1.5
-          ],
-          "returns": "",
-          "note": "JavaScript's own test: when it is a negative, fractional or unsafe number"
-        },
-        {
-          "args": [
-            1e+21
-          ],
-          "returns": "",
-          "note": "JavaScript's own test: when it is a negative, fractional or unsafe number"
-        }
+        { "args": [-101011100], "returns": "", "note": "from the maintainer briefing, #569" },
+        { "args": ["101011100"], "returns": "1.0101.11.00", "note": "JavaScript's own test: should format an NBS code given as digits" },
+        { "args": [126050000], "returns": "1.2605.00.00", "note": "JavaScript's own test: should format an NBS code given as a number" },
+        { "name": "already-formatted", "args": ["1.0101.11.00"], "returns": "1.0101.11.00", "note": "JavaScript's own test: should keep a code that already has the mask" },
+        { "args": ["999999999"], "returns": "9.9999.99.99", "note": "JavaScript's own test: should not validate whether the code exists in the official table" },
+        { "args": ["1"], "returns": "1", "note": "JavaScript's own test: should mask a partial value progressively" },
+        { "args": ["10"], "returns": "1.0", "note": "JavaScript's own test: should mask a partial value progressively" },
+        { "name": "partial", "args": ["10101"], "returns": "1.0101", "note": "JavaScript's own test: should mask a partial value progressively" },
+        { "args": ["101011"], "returns": "1.0101.1", "note": "JavaScript's own test: should mask a partial value progressively" },
+        { "args": ["1010111"], "returns": "1.0101.11", "note": "JavaScript's own test: should mask a partial value progressively" },
+        { "args": ["10101110"], "returns": "1.0101.11.0", "note": "JavaScript's own test: should mask a partial value progressively" },
+        { "args": ["abc101011100"], "returns": "1.0101.11.00", "note": "JavaScript's own test: should drop the characters outside the mask and the digits after the ninth" },
+        { "args": ["1010111009"], "returns": "1.0101.11.00", "note": "JavaScript's own test: should drop the characters outside the mask and the digits after the ninth" },
+        { "name": "empty", "args": [""], "returns": "", "note": "JavaScript's own test: should return an empty string when there is no digit" },
+        { "args": ["abc"], "returns": "", "note": "JavaScript's own test: should return an empty string when there is no digit" },
+        { "args": [-1], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": [1.5], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": [1e+21], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" }
       ]
     },
     "get": {
@@ -203,243 +78,36 @@
         "https://www.gov.br/nfse/pt-br/biblioteca/documentacao-tecnica/documentacao-atual"
       ],
       "flatName": "getNbs",
-      "params": [
-        {
-          "name": "value",
-          "type": "string | number"
-        }
-      ],
+      "params": [{ "name": "value", "type": "string | number" }],
       "returns": "Nbs?",
       "tests": [
-        {
-          "args": [
-            "1.0101.11.00"
-          ],
-          "returns": {
-            "code": "101011100",
-            "description": "Serviços de construção de edificações residenciais de um e dois pavimentos"
-          },
-          "note": "from the maintainer briefing, #569"
-        },
-        {
-          "args": [
-            "101011100"
-          ],
-          "returns": {
-            "code": "101011100",
-            "description": "Serviços de construção de edificações residenciais de um e dois pavimentos"
-          },
-          "note": "JavaScript's own test: should return the code for the 9 digits without a mask"
-        },
-        {
-          "args": [
-            101011100
-          ],
-          "returns": {
-            "code": "101011100",
-            "description": "Serviços de construção de edificações residenciais de um e dois pavimentos"
-          },
-          "note": "JavaScript's own test: should return the code for a number"
-        },
-        {
-          "args": [
-            126050000
-          ],
-          "returns": {
-            "code": "126050000",
-            "description": "Serviços domésticos"
-          },
-          "note": "JavaScript's own test: should return the code for a number"
-        },
-        {
-          "args": [
-            "  1.0101.11.00\n"
-          ],
-          "returns": {
-            "code": "101011100",
-            "description": "Serviços de construção de edificações residenciais de um e dois pavimentos"
-          },
-          "note": "JavaScript's own test: should ignore surrounding whitespace"
-        },
-        {
-          "args": [
-            "1 0101 11 00"
-          ],
-          "returns": {
-            "code": "101011100",
-            "description": "Serviços de construção de edificações residenciais de um e dois pavimentos"
-          },
-          "note": "JavaScript's own test: should accept any single mask character between the groups"
-        },
-        {
-          "args": [
-            "1-0101-11-00"
-          ],
-          "returns": {
-            "code": "101011100",
-            "description": "Serviços de construção de edificações residenciais de um e dois pavimentos"
-          },
-          "note": "JavaScript's own test: should accept any single mask character between the groups"
-        },
-        {
-          "args": [
-            "1/0101/11/00"
-          ],
-          "returns": {
-            "code": "101011100",
-            "description": "Serviços de construção de edificações residenciais de um e dois pavimentos"
-          },
-          "note": "JavaScript's own test: should accept any single mask character between the groups"
-        },
-        {
-          "args": [
-            "1.010111.00"
-          ],
-          "returns": {
-            "code": "101011100",
-            "description": "Serviços de construção de edificações residenciais de um e dois pavimentos"
-          },
-          "note": "JavaScript's own test: should accept any single mask character between the groups"
-        },
-        {
-          "args": [
-            "1.0904.40.00"
-          ],
-          "returns": {
-            "code": "109044000",
-            "description": "Serviços de retrocessão"
-          },
-          "note": "JavaScript's own test: should resolve the three codes of the NBS 2.0 the ANEXO B of the NFS-e leaves out"
-        },
-        {
-          "args": [
-            "1.0402.29.00"
-          ],
-          "returns": {
-            "code": "104022900",
-            "description": "Serviços de transporte aquaviário nacional, exceto local, de passageiros não classificados em subposições anteriores"
-          },
-          "note": "JavaScript's own test: should resolve the three codes of the NBS 2.0 the ANEXO B of the NFS-e leaves out"
-        },
-        {
-          "args": [
-            "1.0402.11.10"
-          ],
-          "returns": {
-            "code": "104021110",
-            "description": "Serviços de transporte rodoviário nacional, exceto local, prestados exclusivamente por meio de ônibus"
-          },
-          "note": "JavaScript's own test: should resolve the codes the Portaria 2.000/2018 renumbered and not the ones it replaced"
-        },
-        {
-          "args": [
-            "1.0402.11.11"
-          ],
-          "returns": null,
-          "note": "JavaScript's own test: should resolve the codes the Portaria 2.000/2018 renumbered and not the ones it replaced"
-        },
-        {
-          "args": [
-            "1.1706.24.00"
-          ],
-          "returns": {
-            "code": "117062400",
-            "description": "Serviços de distribuição de programas de televisão por assinatura, na modalidade \"pague por exibição\" (pay-per-view)"
-          },
-          "note": "JavaScript's own test: should return the only description the official CSV quotes, without its CSV quoting"
-        },
-        {
-          "args": [
-            "1.01"
-          ],
-          "returns": null,
-          "note": "JavaScript's own test: should return null for the chapter, position and subposition headings"
-        },
-        {
-          "args": [
-            "1.0101"
-          ],
-          "returns": null,
-          "note": "JavaScript's own test: should return null for the chapter, position and subposition headings"
-        },
-        {
-          "args": [
-            "1.0101.1"
-          ],
-          "returns": null,
-          "note": "JavaScript's own test: should return null for the chapter, position and subposition headings"
-        },
-        {
-          "args": [
-            "1.9999.99.99"
-          ],
-          "returns": null,
-          "note": "JavaScript's own test: should return null for a 9 digit code the table does not carry"
-        },
-        {
-          "args": [
-            "9.9999.99.99"
-          ],
-          "returns": null,
-          "note": "JavaScript's own test: should return null for a 9 digit code the table does not carry"
-        },
-        {
-          "args": [
-            "1..0101.11.00"
-          ],
-          "returns": null,
-          "note": "JavaScript's own test: should return null for a group boundary written with more than one separator"
-        },
-        {
-          "args": [
-            "1.0101abc11.00"
-          ],
-          "returns": null,
-          "note": "JavaScript's own test: should return null for a string that is not written in a documented form"
-        },
-        {
-          "args": [
-            "10.101.11.00"
-          ],
-          "returns": null,
-          "note": "JavaScript's own test: should return null for a string that is not written in a documented form"
-        },
-        {
-          "args": [
-            "1010111000"
-          ],
-          "returns": null,
-          "note": "JavaScript's own test: should return null for a string that is not written in a documented form"
-        },
-        {
-          "args": [
-            "1,0101,11,00"
-          ],
-          "returns": null,
-          "note": "JavaScript's own test: should return null for a string that is not written in a documented form"
-        },
-        {
-          "name": "empty",
-          "args": [
-            ""
-          ],
-          "returns": null,
-          "note": "JavaScript's own test: should return null for an empty string and for whitespace only"
-        },
-        {
-          "args": [
-            -101011100
-          ],
-          "returns": null,
-          "note": "JavaScript's own test: should return null for a number that is not a non-negative safe integer"
-        },
-        {
-          "args": [
-            101011100.5
-          ],
-          "returns": null,
-          "note": "JavaScript's own test: should return null for a number that is not a non-negative safe integer"
-        }
+        { "args": ["1.0101.11.00"], "returns": { "code": "101011100", "description": "Serviços de construção de edificações residenciais de um e dois pavimentos" }, "note": "from the maintainer briefing, #569" },
+        { "args": ["101011100"], "returns": { "code": "101011100", "description": "Serviços de construção de edificações residenciais de um e dois pavimentos" }, "note": "JavaScript's own test: should return the code for the 9 digits without a mask" },
+        { "args": [101011100], "returns": { "code": "101011100", "description": "Serviços de construção de edificações residenciais de um e dois pavimentos" }, "note": "JavaScript's own test: should return the code for a number" },
+        { "args": [126050000], "returns": { "code": "126050000", "description": "Serviços domésticos" }, "note": "JavaScript's own test: should return the code for a number" },
+        { "args": ["  1.0101.11.00\n"], "returns": { "code": "101011100", "description": "Serviços de construção de edificações residenciais de um e dois pavimentos" }, "note": "JavaScript's own test: should ignore surrounding whitespace" },
+        { "args": ["1 0101 11 00"], "returns": { "code": "101011100", "description": "Serviços de construção de edificações residenciais de um e dois pavimentos" }, "note": "JavaScript's own test: should accept any single mask character between the groups" },
+        { "args": ["1-0101-11-00"], "returns": { "code": "101011100", "description": "Serviços de construção de edificações residenciais de um e dois pavimentos" }, "note": "JavaScript's own test: should accept any single mask character between the groups" },
+        { "args": ["1/0101/11/00"], "returns": { "code": "101011100", "description": "Serviços de construção de edificações residenciais de um e dois pavimentos" }, "note": "JavaScript's own test: should accept any single mask character between the groups" },
+        { "args": ["1.010111.00"], "returns": { "code": "101011100", "description": "Serviços de construção de edificações residenciais de um e dois pavimentos" }, "note": "JavaScript's own test: should accept any single mask character between the groups" },
+        { "args": ["1.0904.40.00"], "returns": { "code": "109044000", "description": "Serviços de retrocessão" }, "note": "JavaScript's own test: should resolve the three codes of the NBS 2.0 the ANEXO B of the NFS-e leaves out" },
+        { "args": ["1.0402.29.00"], "returns": { "code": "104022900", "description": "Serviços de transporte aquaviário nacional, exceto local, de passageiros não classificados em subposições anteriores" }, "note": "JavaScript's own test: should resolve the three codes of the NBS 2.0 the ANEXO B of the NFS-e leaves out" },
+        { "args": ["1.0402.11.10"], "returns": { "code": "104021110", "description": "Serviços de transporte rodoviário nacional, exceto local, prestados exclusivamente por meio de ônibus" }, "note": "JavaScript's own test: should resolve the codes the Portaria 2.000/2018 renumbered and not the ones it replaced" },
+        { "args": ["1.0402.11.11"], "returns": null, "note": "JavaScript's own test: should resolve the codes the Portaria 2.000/2018 renumbered and not the ones it replaced" },
+        { "args": ["1.1706.24.00"], "returns": { "code": "117062400", "description": "Serviços de distribuição de programas de televisão por assinatura, na modalidade \"pague por exibição\" (pay-per-view)" }, "note": "JavaScript's own test: should return the only description the official CSV quotes, without its CSV quoting" },
+        { "args": ["1.01"], "returns": null, "note": "JavaScript's own test: should return null for the chapter, position and subposition headings" },
+        { "args": ["1.0101"], "returns": null, "note": "JavaScript's own test: should return null for the chapter, position and subposition headings" },
+        { "args": ["1.0101.1"], "returns": null, "note": "JavaScript's own test: should return null for the chapter, position and subposition headings" },
+        { "args": ["1.9999.99.99"], "returns": null, "note": "JavaScript's own test: should return null for a 9 digit code the table does not carry" },
+        { "args": ["9.9999.99.99"], "returns": null, "note": "JavaScript's own test: should return null for a 9 digit code the table does not carry" },
+        { "args": ["1..0101.11.00"], "returns": null, "note": "JavaScript's own test: should return null for a group boundary written with more than one separator" },
+        { "args": ["1.0101abc11.00"], "returns": null, "note": "JavaScript's own test: should return null for a string that is not written in a documented form" },
+        { "args": ["10.101.11.00"], "returns": null, "note": "JavaScript's own test: should return null for a string that is not written in a documented form" },
+        { "args": ["1010111000"], "returns": null, "note": "JavaScript's own test: should return null for a string that is not written in a documented form" },
+        { "args": ["1,0101,11,00"], "returns": null, "note": "JavaScript's own test: should return null for a string that is not written in a documented form" },
+        { "name": "empty", "args": [""], "returns": null, "note": "JavaScript's own test: should return null for an empty string and for whitespace only" },
+        { "args": [-101011100], "returns": null, "note": "JavaScript's own test: should return null for a number that is not a non-negative safe integer" },
+        { "args": [101011100.5], "returns": null, "note": "JavaScript's own test: should return null for a number that is not a non-negative safe integer" }
       ]
     },
     "isValid": {
@@ -469,155 +137,29 @@
         "https://www.gov.br/mdic/pt-br/assuntos/sdic/comercio-e-servicos/nbs-nomenclatura-brasileira-de-servicos",
         "https://www.gov.br/nfse/pt-br/biblioteca/documentacao-tecnica/documentacao-atual"
       ],
-      "params": [
-        {
-          "name": "value",
-          "type": "string | number"
-        }
-      ],
+      "params": [{ "name": "value", "type": "string | number" }],
       "returns": "boolean",
       "tests": [
-        {
-          "args": [
-            "1.0101"
-          ],
-          "returns": false,
-          "note": "from the maintainer briefing, #569"
-        },
-        {
-          "args": [
-            "101011100"
-          ],
-          "returns": true,
-          "note": "JavaScript's own test: should validate an NBS code without a mask"
-        },
-        {
-          "args": [
-            "1.0101.11.00"
-          ],
-          "returns": true,
-          "note": "JavaScript's own test: should validate an NBS code with the N.NNNN.NN.NN mask"
-        },
-        {
-          "args": [
-            "1.2606.00.00"
-          ],
-          "returns": true,
-          "note": "JavaScript's own test: should validate an NBS code with the N.NNNN.NN.NN mask"
-        },
-        {
-          "args": [
-            101011100
-          ],
-          "returns": true,
-          "note": "JavaScript's own test: should validate an NBS code given as a number"
-        },
-        {
-          "args": [
-            "1.01"
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should reject the headings of the nomenclature"
-        },
-        {
-          "args": [
-            "1.0101.1"
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should reject the headings of the nomenclature"
-        },
-        {
-          "args": [
-            "1.9999.99.99"
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should reject a well formed code the table does not carry"
-        },
-        {
-          "args": [
-            "1.0101.11.01"
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should reject a well formed code the table does not carry"
-        },
-        {
-          "args": [
-            "1.0101abc11.00"
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should reject a malformed value"
-        },
-        {
-          "args": [
-            "1..0101.11.00"
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should reject a malformed value"
-        },
-        {
-          "name": "empty",
-          "args": [
-            ""
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should reject a malformed value"
-        },
-        {
-          "args": [
-            -101011100
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should reject null, undefined and non lookup values"
-        },
-        {
-          "args": [
-            "constructor"
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should reject the keys of Object.prototype"
-        },
-        {
-          "args": [
-            "  1.0101.11.00\n"
-          ],
-          "returns": true,
-          "note": "JavaScript's own test: should ignore surrounding whitespace"
-        },
-        {
-          "args": [
-            "1.0402.29.00"
-          ],
-          "returns": true,
-          "note": "the NBS 2.0 code the ANEXO B of the NFS-e leaves out; valid here (maintainer briefing, #569)"
-        },
-        {
-          "args": [
-            "1.0403.29.00"
-          ],
-          "returns": true,
-          "note": "the NBS 2.0 code the ANEXO B of the NFS-e leaves out; valid here (maintainer briefing, #569)"
-        },
-        {
-          "args": [
-            "1.0904.40.00"
-          ],
-          "returns": true,
-          "note": "the NBS 2.0 code the ANEXO B of the NFS-e leaves out; valid here (maintainer briefing, #569)"
-        },
-        {
-          "args": [
-            "9.9999.99.99"
-          ],
-          "returns": false,
-          "note": "the ANEXO B placeholder is not accepted (maintainer briefing, #569)"
-        },
-        {
-          "name": "fractional",
-          "args": [
-            101011100.5
-          ],
-          "returns": false
-        }
+        { "args": ["1.0101"], "returns": false, "note": "from the maintainer briefing, #569" },
+        { "args": ["101011100"], "returns": true, "note": "JavaScript's own test: should validate an NBS code without a mask" },
+        { "args": ["1.0101.11.00"], "returns": true, "note": "JavaScript's own test: should validate an NBS code with the N.NNNN.NN.NN mask" },
+        { "args": ["1.2606.00.00"], "returns": true, "note": "JavaScript's own test: should validate an NBS code with the N.NNNN.NN.NN mask" },
+        { "args": [101011100], "returns": true, "note": "JavaScript's own test: should validate an NBS code given as a number" },
+        { "args": ["1.01"], "returns": false, "note": "JavaScript's own test: should reject the headings of the nomenclature" },
+        { "args": ["1.0101.1"], "returns": false, "note": "JavaScript's own test: should reject the headings of the nomenclature" },
+        { "args": ["1.9999.99.99"], "returns": false, "note": "JavaScript's own test: should reject a well formed code the table does not carry" },
+        { "args": ["1.0101.11.01"], "returns": false, "note": "JavaScript's own test: should reject a well formed code the table does not carry" },
+        { "args": ["1.0101abc11.00"], "returns": false, "note": "JavaScript's own test: should reject a malformed value" },
+        { "args": ["1..0101.11.00"], "returns": false, "note": "JavaScript's own test: should reject a malformed value" },
+        { "name": "empty", "args": [""], "returns": false, "note": "JavaScript's own test: should reject a malformed value" },
+        { "args": [-101011100], "returns": false, "note": "JavaScript's own test: should reject null, undefined and non lookup values" },
+        { "args": ["constructor"], "returns": false, "note": "JavaScript's own test: should reject the keys of Object.prototype" },
+        { "args": ["  1.0101.11.00\n"], "returns": true, "note": "JavaScript's own test: should ignore surrounding whitespace" },
+        { "args": ["1.0402.29.00"], "returns": true, "note": "the NBS 2.0 code the ANEXO B of the NFS-e leaves out; valid here (maintainer briefing, #569)" },
+        { "args": ["1.0403.29.00"], "returns": true, "note": "the NBS 2.0 code the ANEXO B of the NFS-e leaves out; valid here (maintainer briefing, #569)" },
+        { "args": ["1.0904.40.00"], "returns": true, "note": "the NBS 2.0 code the ANEXO B of the NFS-e leaves out; valid here (maintainer briefing, #569)" },
+        { "args": ["9.9999.99.99"], "returns": false, "note": "the ANEXO B placeholder is not accepted (maintainer briefing, #569)" },
+        { "name": "fractional", "args": [101011100.5], "returns": false }
       ]
     }
   }

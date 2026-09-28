@@ -83,7 +83,8 @@
   ],
   "legalProcess.format": [
     "dotnet,python,ruby,rust | go | javascript",
-    "dotnet,python,ruby,rust | go,javascript"
+    "dotnet,python,ruby,rust | go,javascript",
+    "javascript | python | ruby"
   ],
   "legalProcess.isValid": [
     "dotnet,go,javascript,ruby,rust | python",
@@ -118,6 +119,7 @@
     "erlang,python | javascript"
   ],
   "phone.format": [
+    "erlang | javascript | python,ruby",
     "erlang,go,python,ruby,rust | javascript",
     "erlang,python,ruby | go | javascript | rust",
     "erlang,python,ruby | go,rust | javascript",
@@ -152,7 +154,8 @@
   "voterId.format": [
     "dotnet,erlang,python,ruby,rust | go | javascript",
     "dotnet,erlang,python,ruby,rust | go,javascript",
-    "dotnet,javascript,ruby | erlang | go,python,rust"
+    "dotnet,javascript,ruby | erlang | go,python,rust",
+    "erlang | javascript | python,ruby"
   ],
   "voterId.isValid": [
     "dotnet,erlang,javascript,python,ruby,rust | go",

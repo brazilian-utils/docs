@@ -20,13 +20,15 @@
           "Formats a court case number with the CNJ mask `NNNNNNN-DD.AAAA.J.TR.OOOO`.",
           "",
           "- `options.pad` first left-pads the value with zeros to 20 digits.",
-          "- Pending decision (findings §2 #2, #3): the reference (JS) formats only the characters an incomplete value has and returns an empty string for empty or invalid input. Other libraries return null."
+          "- Pending decision (findings §2 #2, #3): the reference (JS) formats only the characters an incomplete value has and returns an empty string for empty or invalid input. Other libraries return null.",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
         ],
         "pt-BR": [
           "Formata um número do processo judicial com a máscara do CNJ `NNNNNNN-DD.AAAA.J.TR.OOOO`.",
           "",
           "- `options.pad` primeiro completa o valor com zeros à esquerda até 20 dígitos.",
-          "- Decisão pendente (findings §2 #2, #3): a referência (JS) formata só os caracteres que um valor incompleto tem e retorna uma string vazia para entrada vazia ou inválida. Outras bibliotecas retornam null."
+          "- Decisão pendente (findings §2 #2, #3): a referência (JS) formata só os caracteres que um valor incompleto tem e retorna uma string vazia para entrada vazia ou inválida. Outras bibliotecas retornam null.",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
         ]
       },
       "references": ["https://atos.cnj.jus.br/atos/detalhar/119"],
@@ -66,7 +68,10 @@
         { "args": ["0002080252012515004"], "returns": "0002080-25.2012.5.15.004", "note": "JavaScript's own test: should format processo juridico with mask" },
         { "args": ["00020802520125150049"], "returns": "0002080-25.2012.5.15.0049", "note": "JavaScript's own test: should format processo juridico with mask" },
         { "args": ["00020802520125150049123123"], "returns": "0002080-25.2012.5.15.0049", "note": "JavaScript's own test" },
-        { "args": ["0002080@$25201%!@2515.%0049123123"], "returns": "0002080-25.2012.5.15.0049", "note": "JavaScript's own test: should remove all non numeric characters" }
+        { "args": ["0002080@$25201%!@2515.%0049123123"], "returns": "0002080-25.2012.5.15.0049", "note": "JavaScript's own test: should remove all non numeric characters" },
+        { "args": [-1], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [1.5], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" }
       ]
     },
     "generate": {
@@ -119,17 +124,21 @@
           "",
           "- `J` and `TR` must name a segment and a tribunal that exist. The unidade de origem `OOOO` is only checked as four digits.",
           "- Accepts the 20 digits bare or with the CNJ mask. Letters make it invalid.",
-          "- Pending decision (findings §2 #7): Go, Python, Ruby and Rust reject numbers that the reference (JS) generates for the current year. The segment/tribunal rules need to be reconciled."
+          "- Pending decision (findings §2 #7): Go, Python, Ruby and Rust reject numbers that the reference (JS) generates for the current year. The segment/tribunal rules need to be reconciled.",
+          "- The check digits follow art. 1º § 2º and Anexo VIII (\"Cálculo do dígito verificador\") of Resolução CNJ 65/2008. The TRF da 6ª Região (`4.06`) is valid per Resolução CNJ 477/2022.",
+          "- The TRF6 example printed in Anexo II, `0000100-15.2008.406.0000`, is fictitious, as the Anexo says. Written in the `NNNNNNN-DD.AAAA.J.TR.OOOO` form its check digits are 68, not 15, so the library accepts `0000100-68.2008.4.06.0000` and rejects the printed one."
         ],
         "pt-BR": [
           "Valida um número do processo judicial (Resolução CNJ nº 65/2008). Verifica o formato `NNNNNNN-DD.AAAA.J.TR.OOOO`, os dígitos verificadores `DD` (ISO 7064 MOD 97-10) e o par `J`/`TR`.",
           "",
           "- `J` e `TR` precisam indicar um segmento e um tribunal que existem. A unidade de origem `OOOO` só é verificada como quatro dígitos.",
           "- Aceita os 20 dígitos sem máscara ou com a máscara do CNJ. Letras tornam o número inválido.",
-          "- Decisão pendente (findings §2 #7): Go, Python, Ruby e Rust rejeitam números que a referência (JS) gera para o ano atual. As regras de segmento/tribunal precisam ser conciliadas."
+          "- Decisão pendente (findings §2 #7): Go, Python, Ruby e Rust rejeitam números que a referência (JS) gera para o ano atual. As regras de segmento/tribunal precisam ser conciliadas.",
+          "- Os dígitos verificadores seguem o art. 1º § 2º e o Anexo VIII (\"Cálculo do dígito verificador\") da Resolução CNJ 65/2008. O TRF da 6ª Região (`4.06`) é válido conforme a Resolução CNJ 477/2022.",
+          "- O exemplo do TRF6 impresso no Anexo II, `0000100-15.2008.406.0000`, é fictício, como o próprio Anexo diz. Escrito na forma `NNNNNNN-DD.AAAA.J.TR.OOOO`, os dígitos verificadores dele são 68, não 15, então a lib aceita `0000100-68.2008.4.06.0000` e rejeita o impresso."
         ]
       },
-      "references": ["https://atos.cnj.jus.br/atos/detalhar/119"],
+      "references": ["https://atos.cnj.jus.br/atos/detalhar/119", "https://atos.cnj.jus.br/atos/detalhar/4781"],
       "level": "core",
       "params": [{ "name": "value", "type": "string" }],
       "returns": "boolean",
@@ -179,7 +188,8 @@
         { "args": ["0000100-47.2008.5.90.0000"], "returns": true, "note": "JavaScript's own test: should return true when the number originates in the CJF or in the CSJT, whose tribunal is 90 (art. 1º, § 5º, II)" },
         { "args": ["0000100-52.2008.5.00.0000"], "returns": true, "note": "JavaScript's own test: should return true when the TST, the TSE or the STM zeroes the tribunal (art. 1º, § 5º, I)" },
         { "args": ["0000100-68.2008.6.00.0000"], "returns": true, "note": "JavaScript's own test: should return true when the TST, the TSE or the STM zeroes the tribunal (art. 1º, § 5º, I)" },
-        { "args": ["0000100-84.2008.7.00.0000"], "returns": true, "note": "JavaScript's own test: should return true when the TST, the TSE or the STM zeroes the tribunal (art. 1º, § 5º, I)" }
+        { "args": ["0000100-84.2008.7.00.0000"], "returns": true, "note": "JavaScript's own test: should return true when the TST, the TSE or the STM zeroes the tribunal (art. 1º, § 5º, I)" },
+        { "args": ["0000100-15.2008.4.06.0000"], "returns": false, "note": "#593 citation fix: the Anexo II TRF6 example has fictitious check digits 15; the right ones are 68" }
       ]
     },
     "parse": {
@@ -188,8 +198,16 @@
         "pt-BR": "Remove os caracteres de formatação de um número de processo judicial e retorna só os dígitos."
       },
       "description": {
-        "en": ["Removes court case number formatting and keeps only digits, capped at 20 digits."],
-        "pt-BR": ["Remove a formatação do processo judicial e mantém somente os dígitos, limitados a 20 dígitos."]
+        "en": [
+          "Removes court case number formatting and keeps only digits, capped at 20 digits.",
+          "",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
+        ],
+        "pt-BR": [
+          "Remove a formatação do processo judicial e mantém somente os dígitos, limitados a 20 dígitos.",
+          "",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
+        ]
       },
       "references": ["https://atos.cnj.jus.br/atos/detalhar/119"],
       "params": [{ "name": "value", "type": "string | number" }],
@@ -210,7 +228,10 @@
         { "args": ["1666923-98.2026.9.26.4931"], "returns": "16669239820269264931", "note": "consensus of 3 libs (python, ruby, rust)" },
         { "args": ["5507954-68.2026.9.13.4836"], "returns": "55079546820269134836", "note": "consensus of 3 libs (python, ruby, rust)" },
         { "args": ["4709757-95.2026.3.00.5802"], "returns": "47097579520263005802", "note": "consensus of 3 libs (python, ruby, rust)" },
-        { "args": ["0002080-25.2012.515.0049"], "returns": "00020802520125150049", "note": "JavaScript's own test: should also accept the legacy fused mask" }
+        { "args": ["0002080-25.2012.515.0049"], "returns": "00020802520125150049", "note": "JavaScript's own test: should also accept the legacy fused mask" },
+        { "args": [-1], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [1.5], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" }
       ]
     }
   }

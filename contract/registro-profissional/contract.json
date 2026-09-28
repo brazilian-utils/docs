@@ -18,29 +18,34 @@
         "en": [
           "Checks the structure of a professional council registration number: digit count and UF only, never a check digit.",
           "",
-          "- `params` contains the value, the council (OAB, CRM, CRO, CRP or CRC) and optionally the expected state.",
-          "- OAB and CRM: 4 to 6 digits plus the UF (`123456/SP`, `123456-SP`). CRO: 3 to 6 digits plus the UF.",
+          "- `params` contains the value, the council (OAB, CRM, CRO, CRP or CRC) and optionally the expected state. The state code is read without regard to case and with surrounding spaces trimmed (2.4.0 compared it as written).",
+          "- OAB and CRM: 4 to 6 digits plus the UF (`123456/SP`, `123456-SP`).",
+          "- CRO: 3 to 6 digits plus the UF (`12345/SP`), or the form of art. 115, § 1º, of the Consolidação das Normas do CFO (Resolução CFO-63/2005): the council sigla first (`CRO-SP`), joined by a hyphen to the category when there is one (`TPD`, `TSB`, `ASB`, `APD`, `CLM`/`CLF`, `LPM`/`LPF`, `PV`, `T`), then the number, with `-IS` for an inscrição secundária or `-R` for an inscrição remida (`CRO-SP 12345`, `CRO-SP-TPD 1234-IS`, `CRO-SP 12345-R`). New in 2.5.0; 2.4.0 rejected this form.",
+          "- In the art. 115 form, only the cirurgião-dentista (no category) and `TPD` may carry `-R`. `TSB`, `ASB` and `APD` may carry `-IS` only, and the other categories no suffix. The UF of the sigla is the one compared with the expected state.",
           "- CRP: a 2-digit regional code (`01` to `24`) plus 4 to 6 digits (`06/12345`). The function ignores the expected state.",
           "- CRC: UF, 6 digits, registration type (`O` or `P`) and a digit (`SP-123456/O-3`), with an optional transfer suffix (`T-MG` or `S-MG`). The expected state matches the originating UF.",
-          "- The OAB, CRM, CRO and CRP shapes follow convention (there is no published format). The function does not cover CREA."
+          "- Only the CRO art. 115 form, the CRC shape and the CRP regional codes rest on a published source. Art. 115 fixes no digit count, so the 3 to 6 CRO digits are conventional, like the OAB and CRM ranges and the CRP body. The function does not cover CREA."
         ],
         "pt-BR": [
           "Verifica a estrutura de um número de registro em conselho profissional: apenas a quantidade de dígitos e a UF, nunca um dígito verificador.",
           "",
-          "- `params` contém o valor, o conselho (OAB, CRM, CRO, CRP ou CRC) e, opcionalmente, o estado esperado.",
-          "- OAB e CRM: 4 a 6 dígitos mais a UF (`123456/SP`, `123456-SP`). CRO: 3 a 6 dígitos mais a UF.",
+          "- `params` contém o valor, o conselho (OAB, CRM, CRO, CRP ou CRC) e, opcionalmente, o estado esperado. A sigla do estado é lida sem distinção de caixa e sem os espaços em volta (a 2.4.0 a comparava como estava escrita).",
+          "- OAB e CRM: 4 a 6 dígitos mais a UF (`123456/SP`, `123456-SP`).",
+          "- CRO: 3 a 6 dígitos mais a UF (`12345/SP`), ou a forma do art. 115, § 1º, da Consolidação das Normas do CFO (Resolução CFO-63/2005): primeiro a sigla do conselho (`CRO-SP`), ligada por hífen à categoria quando houver (`TPD`, `TSB`, `ASB`, `APD`, `CLM`/`CLF`, `LPM`/`LPF`, `PV`, `T`), depois o número, com `-IS` para inscrição secundária ou `-R` para inscrição remida (`CRO-SP 12345`, `CRO-SP-TPD 1234-IS`, `CRO-SP 12345-R`). Novo na 2.5.0; a 2.4.0 rejeitava essa forma.",
+          "- Na forma do art. 115, só o cirurgião-dentista (sem categoria) e o `TPD` podem ter `-R`. `TSB`, `ASB` e `APD` só podem ter `-IS`, e as demais categorias nenhum sufixo. A UF da sigla é a comparada com o estado esperado.",
           "- CRP: um código regional de 2 dígitos (`01` a `24`) mais 4 a 6 dígitos (`06/12345`). A função ignora o estado esperado.",
           "- CRC: UF, 6 dígitos, tipo de registro (`O` ou `P`) e um dígito (`SP-123456/O-3`), com um sufixo opcional de transferência (`T-MG` ou `S-MG`). O estado esperado corresponde à UF de origem.",
-          "- Os formatos de OAB, CRM, CRO e CRP seguem a convenção (não há formato publicado). A função não cobre o CREA."
+          "- Só a forma do art. 115 do CRO, o formato do CRC e os códigos regionais do CRP se apoiam em fonte publicada. O art. 115 não fixa quantidade de dígitos, então os 3 a 6 dígitos do CRO são convenção, como as faixas da OAB e do CRM e o corpo do CRP. A função não cobre o CREA."
         ]
       },
       "references": [
         "https://cfc.org.br/wp-content/uploads/2018/04/1_manual_registro.pdf",
         "https://www1.cfc.org.br/sisweb/SRE/docs/Res_1707.pdf",
         "https://site.cfp.org.br/cfp/sistema-conselhos/conselhos-pelo-brasil/",
-        "https://www.oab.org.br/",
-        "https://portal.cfm.org.br/",
-        "https://cfo.org.br/"
+        "https://www.oab.org.br/util/print?numero=95/2000&print=Legislacao&origem=Provimentos",
+        "https://www.planalto.gov.br/ccivil_03/decreto/1950-1969/d44045.htm",
+        "https://transparencia.cfo.org.br/wp-content/uploads/2023/09/Consolida%C3%A7%C3%A3o-das-Normas-Atualizado-emsetembro-de-2023.pdf",
+        "https://transparencia.cfp.org.br/wp-content/uploads/2025/12/Classificacao-de-Portes-dos-CRPs-2026.csv"
       ],
       "params": [{ "name": "params", "type": "IsValidRegistroProfissionalParams" }],
       "returns": "boolean",
@@ -77,7 +82,34 @@
         { "args": [{ "value": "TO-654321/P-8 T-SC", "council": "CRC" }], "returns": true, "note": "JavaScript's own test: should return true for \"TO-654321/P-8 T-SC\", the Manual de Registro's own example of a registro provisório transferido" },
         { "args": [{ "value": "PI-111222/O-5 S-AC", "council": "CRC" }], "returns": true, "note": "JavaScript's own test: should return true for \"PI-111222/O-5 S-AC\", the Manual de Registro's own example of a registro secundário" },
         { "args": [{ "value": "SP-123456/O-3 T-MG", "council": "CRC", "stateCode": "SP" }], "returns": true, "note": "JavaScript's own test: should return true for a transferred CRC number matching params.stateCode, which is the originating UF" },
-        { "args": [{ "value": "SP-123456/O-3 T-MG", "council": "CRC", "stateCode": "MG" }], "returns": false, "note": "JavaScript's own test: should return true for a transferred CRC number matching params.stateCode, which is the originating UF" }
+        { "args": [{ "value": "SP-123456/O-3 T-MG", "council": "CRC", "stateCode": "MG" }], "returns": false, "note": "JavaScript's own test: should return true for a transferred CRC number matching params.stateCode, which is the originating UF" },
+        { "args": [{ "value": "CRO-SP 12345", "council": "CRO", "stateCode": "SP" }], "returns": true, "note": "changed in 2.5.0 (#593): 2.4.0 rejected the art. 115 form. JavaScript's own test: should return true for a CRO number in the form of the Consolidação das Normas do CFO, art. 115, § 1º" },
+        { "args": [{ "value": "CRO-SP-TPD 1234", "council": "CRO", "stateCode": "SP" }], "returns": true, "note": "JavaScript's own test: should return true for a CRO number in the form of the Consolidação das Normas do CFO, art. 115, § 1º" },
+        { "args": [{ "value": "CRO-SP-TSB 1234", "council": "CRO", "stateCode": "SP" }], "returns": true, "note": "JavaScript's own test: should return true for a CRO number in the form of the Consolidação das Normas do CFO, art. 115, § 1º" },
+        { "args": [{ "value": "CRO-SP-ASB 1234", "council": "CRO", "stateCode": "SP" }], "returns": true, "note": "JavaScript's own test: should return true for a CRO number in the form of the Consolidação das Normas do CFO, art. 115, § 1º" },
+        { "args": [{ "value": "CRO-SP-APD 1234", "council": "CRO", "stateCode": "SP" }], "returns": true, "note": "JavaScript's own test: should return true for a CRO number in the form of the Consolidação das Normas do CFO, art. 115, § 1º" },
+        { "args": [{ "value": "CRO-SP-CLM 1234", "council": "CRO", "stateCode": "SP" }], "returns": true, "note": "JavaScript's own test: should return true for a CRO number in the form of the Consolidação das Normas do CFO, art. 115, § 1º" },
+        { "args": [{ "value": "CRO-SP-CLF 1234", "council": "CRO", "stateCode": "SP" }], "returns": true, "note": "JavaScript's own test: should return true for a CRO number in the form of the Consolidação das Normas do CFO, art. 115, § 1º" },
+        { "args": [{ "value": "CRO-SP-LPM 1234", "council": "CRO", "stateCode": "SP" }], "returns": true, "note": "JavaScript's own test: should return true for a CRO number in the form of the Consolidação das Normas do CFO, art. 115, § 1º" },
+        { "args": [{ "value": "CRO-SP-LPF 1234", "council": "CRO", "stateCode": "SP" }], "returns": true, "note": "JavaScript's own test: should return true for a CRO number in the form of the Consolidação das Normas do CFO, art. 115, § 1º" },
+        { "args": [{ "value": "CRO-SP-PV 1234", "council": "CRO", "stateCode": "SP" }], "returns": true, "note": "JavaScript's own test: should return true for a CRO number in the form of the Consolidação das Normas do CFO, art. 115, § 1º" },
+        { "args": [{ "value": "CRO-SP-T 1234", "council": "CRO", "stateCode": "SP" }], "returns": true, "note": "JavaScript's own test: should return true for a CRO number in the form of the Consolidação das Normas do CFO, art. 115, § 1º" },
+        { "args": [{ "value": "CRO-SP 12345-IS", "council": "CRO", "stateCode": "SP" }], "returns": true, "note": "JavaScript's own test: should return true for a CRO number in the form of the Consolidação das Normas do CFO, art. 115, § 1º" },
+        { "args": [{ "value": "CRO-SP-TSB 1234-IS", "council": "CRO", "stateCode": "SP" }], "returns": true, "note": "JavaScript's own test: should return true for a CRO number in the form of the Consolidação das Normas do CFO, art. 115, § 1º" },
+        { "args": [{ "value": "CRO-SP 12345-R", "council": "CRO", "stateCode": "SP" }], "returns": true, "note": "JavaScript's own test: should return true for a CRO number in the form of the Consolidação das Normas do CFO, art. 115, § 1º" },
+        { "args": [{ "value": "CRO-SP-TPD 1234-R", "council": "CRO", "stateCode": "SP" }], "returns": true, "note": "JavaScript's own test: should return true for a CRO number in the form of the Consolidação das Normas do CFO, art. 115, § 1º" },
+        { "args": [{ "value": "CRO-XX 12345", "council": "CRO" }], "returns": false, "note": "JavaScript's own test: should return false for a CRO number of art. 115 whose sigla, category or suffix is not one it lists" },
+        { "args": [{ "value": "CRO-SP-ABC 1234", "council": "CRO" }], "returns": false, "note": "JavaScript's own test: should return false for a CRO number of art. 115 whose sigla, category or suffix is not one it lists" },
+        { "args": [{ "value": "CRO-SP-PV 1234-IS", "council": "CRO" }], "returns": false, "note": "JavaScript's own test: should return false for a CRO number of art. 115 whose sigla, category or suffix is not one it lists" },
+        { "args": [{ "value": "CRO-SP-TSB 1234-R", "council": "CRO" }], "returns": false, "note": "JavaScript's own test: should return false for a CRO number of art. 115 whose sigla, category or suffix is not one it lists" },
+        { "args": [{ "value": "CRO-SP-CLM 1234-R", "council": "CRO" }], "returns": false, "note": "JavaScript's own test: should return false for a CRO number of art. 115 whose sigla, category or suffix is not one it lists" },
+        { "args": [{ "value": "CRO 12345", "council": "CRO" }], "returns": false, "note": "JavaScript's own test: should return false for a CRO number of art. 115 whose sigla, category or suffix is not one it lists" },
+        { "args": [{ "value": "CRM-SP 12345", "council": "CRO" }], "returns": false, "note": "JavaScript's own test: should return false for a CRO number of art. 115 whose sigla, category or suffix is not one it lists" },
+        { "args": [{ "value": "CRO-RJ 12345", "council": "CRO", "stateCode": "SP" }], "returns": false, "note": "JavaScript's own test: should return false for a CRO number of art. 115 whose sigla, category or suffix is not one it lists (the sigla's UF must match params.stateCode)" },
+        { "args": [{ "value": "CRO-SP-TPD 1234-IS", "council": "CRO" }], "returns": true, "note": "CFO art. 115: inscrição secundária of a TPD" },
+        { "args": [{ "value": "CRO-SP 12", "council": "CRO" }], "returns": false, "note": "fewer than 3 digits" },
+        { "args": [{ "value": "12345/SP", "council": "CRO", "stateCode": "sp" }], "returns": true, "note": "changed in 2.5.0 (#604): the state code is read without regard to case; 2.4.0 returned false" },
+        { "args": [{ "value": "12345/SP", "council": "CRO", "stateCode": " sp " }], "returns": true, "note": "changed in 2.5.0 (#604): the state code is trimmed and read without regard to case; 2.4.0 returned false" }
       ]
     }
   }

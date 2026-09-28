@@ -1,7 +1,7 @@
 {
   "library": "brazilian-utils-javascript",
   "language": "typescript",
-  "revision": "ce2df9cce27c904c2a8edfef34ace6a7afb25a92",
+  "revision": "cd0c58758c2c4edde16eed07c4dafd7ca0c80bf3",
   "symbols": [
     {
       "name": "addBusinessDays",

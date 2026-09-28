@@ -1,20 +1,14 @@
 {
   "$schema": "../../schema/contract.schema.json",
   "domain": "cstIbsCbs",
-  "title": {
-    "en": "CST IBS/CBS",
-    "pt-BR": "CST IBS/CBS"
-  },
+  "title": { "en": "CST IBS/CBS", "pt-BR": "CST IBS/CBS" },
   "summary": {
     "en": "Código de Situação Tributária of the IBS and the CBS, the taxes of the consumption tax reform (LC 214/2025).",
     "pt-BR": "Código de Situação Tributária do IBS e da CBS, os tributos da reforma tributária do consumo (LC 214/2025)."
   },
   "category": "tax",
   "order": 8,
-  "related": [
-    "cst",
-    "classTrib"
-  ],
+  "related": ["cst", "classTrib"],
   "functions": {
     "get": {
       "summary": {
@@ -43,215 +37,32 @@
         "https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp214.htm"
       ],
       "flatName": "getCstIbsCbs",
-      "params": [
-        {
-          "name": "value",
-          "type": "string | number"
-        }
-      ],
+      "params": [{ "name": "value", "type": "string | number" }],
       "returns": "CstIbsCbs?",
       "tests": [
-        {
-          "args": [
-            410
-          ],
-          "returns": {
-            "code": "410",
-            "description": "Imunidade e não incidência"
-          },
-          "note": "from the maintainer briefing, #566"
-        },
-        {
-          "args": [
-            "000"
-          ],
-          "returns": {
-            "code": "000",
-            "description": "Tributação integral"
-          },
-          "note": "JavaScript's own test: should return the entry of a known code"
-        },
-        {
-          "args": [
-            620
-          ],
-          "returns": {
-            "code": "620",
-            "description": "Tributação monofásica"
-          },
-          "note": "JavaScript's own test: should return the entry of a known code"
-        },
-        {
-          "args": [
-            "200"
-          ],
-          "returns": {
-            "code": "200",
-            "description": "Alíquota reduzida"
-          },
-          "note": "JavaScript's own test: should take the description from the CST sheet, not the per classification wording of the cClassTrib sheet"
-        },
-        {
-          "args": [
-            "011"
-          ],
-          "returns": {
-            "code": "011",
-            "description": "Tributação com alíquotas uniformes reduzidas"
-          },
-          "note": "JavaScript's own test: should take the description from the CST sheet, not the per classification wording of the cClassTrib sheet"
-        },
-        {
-          "args": [
-            "820"
-          ],
-          "returns": {
-            "code": "820",
-            "description": "Tributação em documento específico"
-          },
-          "note": "JavaScript's own test: should carry the wording Informe Técnico 2025.002 v.1.40 gave CST 820"
-        },
-        {
-          "args": [
-            "222"
-          ],
-          "returns": {
-            "code": "222",
-            "description": "Redução de base de cálculo"
-          },
-          "note": "JavaScript's own test: should carry the codes later versions of the table added (222, 515 and 811)"
-        },
-        {
-          "args": [
-            "515"
-          ],
-          "returns": {
-            "code": "515",
-            "description": "Diferimento com redução de alíquota"
-          },
-          "note": "JavaScript's own test: should carry the codes later versions of the table added (222, 515 and 811)"
-        },
-        {
-          "args": [
-            "811"
-          ],
-          "returns": {
-            "code": "811",
-            "description": "Ajustes"
-          },
-          "note": "JavaScript's own test: should carry the codes later versions of the table added (222, 515 and 811)"
-        },
-        {
-          "args": [
-            10
-          ],
-          "returns": {
-            "code": "010",
-            "description": "Tributação com alíquotas uniformes"
-          },
-          "note": "JavaScript's own test: should pad a value with leading zeros, as a number or as a string"
-        },
-        {
-          "args": [
-            "10"
-          ],
-          "returns": {
-            "code": "010",
-            "description": "Tributação com alíquotas uniformes"
-          },
-          "note": "JavaScript's own test: should pad a value with leading zeros, as a number or as a string"
-        },
-        {
-          "args": [
-            " 010 "
-          ],
-          "returns": {
-            "code": "010",
-            "description": "Tributação com alíquotas uniformes"
-          },
-          "note": "JavaScript's own test: should pad a value with leading zeros, as a number or as a string"
-        },
-        {
-          "args": [
-            0
-          ],
-          "returns": {
-            "code": "000",
-            "description": "Tributação integral"
-          },
-          "note": "JavaScript's own test: should pad a value with leading zeros, as a number or as a string"
-        },
-        {
-          "args": [
-            "100"
-          ],
-          "returns": null,
-          "note": "JavaScript's own test: should return null for a code the table does not carry"
-        },
-        {
-          "args": [
-            "060"
-          ],
-          "returns": null,
-          "note": "JavaScript's own test: should return null for a code the table does not carry"
-        },
-        {
-          "args": [
-            "0000"
-          ],
-          "returns": null,
-          "note": "JavaScript's own test: should return null for a code the table does not carry"
-        },
-        {
-          "args": [
-            "200001"
-          ],
-          "returns": null,
-          "note": "JavaScript's own test: should return null for a code the table does not carry"
-        },
-        {
-          "args": [
-            "cst200"
-          ],
-          "returns": null,
-          "note": "JavaScript's own test: should return null for a string that is not bare digits"
-        },
-        {
-          "args": [
-            "2-00"
-          ],
-          "returns": null,
-          "note": "JavaScript's own test: should return null for a string that is not bare digits"
-        },
-        {
-          "name": "empty",
-          "args": [
-            ""
-          ],
-          "returns": null,
-          "note": "JavaScript's own test: should return null for a string that is not bare digits"
-        },
-        {
-          "args": [
-            "__proto__"
-          ],
-          "returns": null,
-          "note": "JavaScript's own test: should return null for a string that is not bare digits"
-        },
-        {
-          "args": [
-            -200
-          ],
-          "returns": null,
-          "note": "JavaScript's own test: should return null for a number that is not a non-negative safe integer"
-        },
-        {
-          "args": [
-            20.5
-          ],
-          "returns": null,
-          "note": "JavaScript's own test: should return null for a number that is not a non-negative safe integer"
-        }
+        { "args": [410], "returns": { "code": "410", "description": "Imunidade e não incidência" }, "note": "from the maintainer briefing, #566" },
+        { "args": ["000"], "returns": { "code": "000", "description": "Tributação integral" }, "note": "JavaScript's own test: should return the entry of a known code" },
+        { "args": [620], "returns": { "code": "620", "description": "Tributação monofásica" }, "note": "JavaScript's own test: should return the entry of a known code" },
+        { "args": ["200"], "returns": { "code": "200", "description": "Alíquota reduzida" }, "note": "JavaScript's own test: should take the description from the CST sheet, not the per classification wording of the cClassTrib sheet" },
+        { "args": ["011"], "returns": { "code": "011", "description": "Tributação com alíquotas uniformes reduzidas" }, "note": "JavaScript's own test: should take the description from the CST sheet, not the per classification wording of the cClassTrib sheet" },
+        { "args": ["820"], "returns": { "code": "820", "description": "Tributação em documento específico" }, "note": "JavaScript's own test: should carry the wording Informe Técnico 2025.002 v.1.40 gave CST 820" },
+        { "args": ["222"], "returns": { "code": "222", "description": "Redução de base de cálculo" }, "note": "JavaScript's own test: should carry the codes later versions of the table added (222, 515 and 811)" },
+        { "args": ["515"], "returns": { "code": "515", "description": "Diferimento com redução de alíquota" }, "note": "JavaScript's own test: should carry the codes later versions of the table added (222, 515 and 811)" },
+        { "args": ["811"], "returns": { "code": "811", "description": "Ajustes" }, "note": "JavaScript's own test: should carry the codes later versions of the table added (222, 515 and 811)" },
+        { "args": [10], "returns": { "code": "010", "description": "Tributação com alíquotas uniformes" }, "note": "JavaScript's own test: should pad a value with leading zeros, as a number or as a string" },
+        { "args": ["10"], "returns": { "code": "010", "description": "Tributação com alíquotas uniformes" }, "note": "JavaScript's own test: should pad a value with leading zeros, as a number or as a string" },
+        { "args": [" 010 "], "returns": { "code": "010", "description": "Tributação com alíquotas uniformes" }, "note": "JavaScript's own test: should pad a value with leading zeros, as a number or as a string" },
+        { "args": [0], "returns": { "code": "000", "description": "Tributação integral" }, "note": "JavaScript's own test: should pad a value with leading zeros, as a number or as a string" },
+        { "args": ["100"], "returns": null, "note": "JavaScript's own test: should return null for a code the table does not carry" },
+        { "args": ["060"], "returns": null, "note": "JavaScript's own test: should return null for a code the table does not carry" },
+        { "args": ["0000"], "returns": null, "note": "JavaScript's own test: should return null for a code the table does not carry" },
+        { "args": ["200001"], "returns": null, "note": "JavaScript's own test: should return null for a code the table does not carry" },
+        { "args": ["cst200"], "returns": null, "note": "JavaScript's own test: should return null for a string that is not bare digits" },
+        { "args": ["2-00"], "returns": null, "note": "JavaScript's own test: should return null for a string that is not bare digits" },
+        { "name": "empty", "args": [""], "returns": null, "note": "JavaScript's own test: should return null for a string that is not bare digits" },
+        { "args": ["__proto__"], "returns": null, "note": "JavaScript's own test: should return null for a string that is not bare digits" },
+        { "args": [-200], "returns": null, "note": "JavaScript's own test: should return null for a number that is not a non-negative safe integer" },
+        { "args": [20.5], "returns": null, "note": "JavaScript's own test: should return null for a number that is not a non-negative safe integer" }
       ]
     },
     "isValid": {
@@ -284,191 +95,34 @@
         "https://dfe-portal.svrs.rs.gov.br/DFE/TabelaClassificacaoTributaria",
         "https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp214.htm"
       ],
-      "params": [
-        {
-          "name": "value",
-          "type": "string | number"
-        }
-      ],
+      "params": [{ "name": "value", "type": "string | number" }],
       "returns": "boolean",
       "tests": [
-        {
-          "args": [
-            10
-          ],
-          "returns": true,
-          "note": "from the maintainer briefing, #566"
-        },
-        {
-          "args": [
-            "000"
-          ],
-          "returns": true,
-          "note": "JavaScript's own test: should validate the 18 codes of the CST table published on 23/06/2026"
-        },
-        {
-          "args": [
-            "410"
-          ],
-          "returns": true,
-          "note": "JavaScript's own test: should validate the 18 codes of the CST table published on 23/06/2026"
-        },
-        {
-          "args": [
-            "830"
-          ],
-          "returns": true,
-          "note": "JavaScript's own test: should validate the 18 codes of the CST table published on 23/06/2026"
-        },
-        {
-          "args": [
-            200
-          ],
-          "returns": true,
-          "note": "JavaScript's own test: should validate a code given as a number"
-        },
-        {
-          "args": [
-            0
-          ],
-          "returns": true,
-          "note": "JavaScript's own test: should pad a value with leading zeros, as a number or as a string"
-        },
-        {
-          "args": [
-            "0"
-          ],
-          "returns": true,
-          "note": "JavaScript's own test: should pad a value with leading zeros, as a number or as a string"
-        },
-        {
-          "args": [
-            "11"
-          ],
-          "returns": true,
-          "note": "JavaScript's own test: should pad a value with leading zeros, as a number or as a string"
-        },
-        {
-          "args": [
-            " 410 "
-          ],
-          "returns": true,
-          "note": "JavaScript's own test: should validate a code with surrounding whitespace"
-        },
-        {
-          "args": [
-            "220"
-          ],
-          "returns": true,
-          "note": "JavaScript's own test: should keep CST 220 valid, which the CST table still lists after its classifications were excluded"
-        },
-        {
-          "args": [
-            "100"
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should return false for a 3 digit code the table does not carry"
-        },
-        {
-          "args": [
-            "999"
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should return false for a 3 digit code the table does not carry"
-        },
-        {
-          "args": [
-            20
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should return false for a 3 digit code the table does not carry"
-        },
-        {
-          "args": [
-            "060"
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should return false for an ICMS, IPI, PIS or COFINS CST"
-        },
-        {
-          "args": [
-            "49"
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should return false for an ICMS, IPI, PIS or COFINS CST"
-        },
-        {
-          "args": [
-            "0000"
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should return false for a wider value, a cClassTrib included"
-        },
-        {
-          "args": [
-            "200001"
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should return false for a wider value, a cClassTrib included"
-        },
-        {
-          "args": [
-            "cst200"
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should return false for a string that is not bare digits"
-        },
-        {
-          "args": [
-            "2.00"
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should return false for a string that is not bare digits"
-        },
-        {
-          "args": [
-            "200\n1"
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should return false for a string that is not bare digits"
-        },
-        {
-          "name": "empty",
-          "args": [
-            ""
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should return false for a string that is not bare digits"
-        },
-        {
-          "name": "whitespace",
-          "args": [
-            "   "
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should return false for a string that is not bare digits"
-        },
-        {
-          "args": [
-            -200
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should return false for a number that is not a non-negative safe integer"
-        },
-        {
-          "args": [
-            20.5
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should return false for a number that is not a non-negative safe integer"
-        },
-        {
-          "args": [
-            "constructor"
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should return false for a key of the prototype chain"
-        }
+        { "args": [10], "returns": true, "note": "from the maintainer briefing, #566" },
+        { "args": ["000"], "returns": true, "note": "JavaScript's own test: should validate the 18 codes of the CST table published on 23/06/2026" },
+        { "args": ["410"], "returns": true, "note": "JavaScript's own test: should validate the 18 codes of the CST table published on 23/06/2026" },
+        { "args": ["830"], "returns": true, "note": "JavaScript's own test: should validate the 18 codes of the CST table published on 23/06/2026" },
+        { "args": [200], "returns": true, "note": "JavaScript's own test: should validate a code given as a number" },
+        { "args": [0], "returns": true, "note": "JavaScript's own test: should pad a value with leading zeros, as a number or as a string" },
+        { "args": ["0"], "returns": true, "note": "JavaScript's own test: should pad a value with leading zeros, as a number or as a string" },
+        { "args": ["11"], "returns": true, "note": "JavaScript's own test: should pad a value with leading zeros, as a number or as a string" },
+        { "args": [" 410 "], "returns": true, "note": "JavaScript's own test: should validate a code with surrounding whitespace" },
+        { "args": ["220"], "returns": true, "note": "JavaScript's own test: should keep CST 220 valid, which the CST table still lists after its classifications were excluded" },
+        { "args": ["100"], "returns": false, "note": "JavaScript's own test: should return false for a 3 digit code the table does not carry" },
+        { "args": ["999"], "returns": false, "note": "JavaScript's own test: should return false for a 3 digit code the table does not carry" },
+        { "args": [20], "returns": false, "note": "JavaScript's own test: should return false for a 3 digit code the table does not carry" },
+        { "args": ["060"], "returns": false, "note": "JavaScript's own test: should return false for an ICMS, IPI, PIS or COFINS CST" },
+        { "args": ["49"], "returns": false, "note": "JavaScript's own test: should return false for an ICMS, IPI, PIS or COFINS CST" },
+        { "args": ["0000"], "returns": false, "note": "JavaScript's own test: should return false for a wider value, a cClassTrib included" },
+        { "args": ["200001"], "returns": false, "note": "JavaScript's own test: should return false for a wider value, a cClassTrib included" },
+        { "args": ["cst200"], "returns": false, "note": "JavaScript's own test: should return false for a string that is not bare digits" },
+        { "args": ["2.00"], "returns": false, "note": "JavaScript's own test: should return false for a string that is not bare digits" },
+        { "args": ["200\n1"], "returns": false, "note": "JavaScript's own test: should return false for a string that is not bare digits" },
+        { "name": "empty", "args": [""], "returns": false, "note": "JavaScript's own test: should return false for a string that is not bare digits" },
+        { "name": "whitespace", "args": ["   "], "returns": false, "note": "JavaScript's own test: should return false for a string that is not bare digits" },
+        { "args": [-200], "returns": false, "note": "JavaScript's own test: should return false for a number that is not a non-negative safe integer" },
+        { "args": [20.5], "returns": false, "note": "JavaScript's own test: should return false for a number that is not a non-negative safe integer" },
+        { "args": ["constructor"], "returns": false, "note": "JavaScript's own test: should return false for a key of the prototype chain" }
       ]
     }
   }

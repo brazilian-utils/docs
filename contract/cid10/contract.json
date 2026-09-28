@@ -1,25 +1,17 @@
 {
   "$schema": "../../schema/contract.schema.json",
   "domain": "cid10",
-  "title": {
-    "en": "CID-10",
-    "pt-BR": "CID-10"
-  },
+  "title": { "en": "CID-10", "pt-BR": "CID-10" },
   "summary": {
     "en": "The Brazilian edition of the ICD-10 (CID-10), the disease classification codes DATASUS publishes.",
     "pt-BR": "A Classificação Internacional de Doenças, 10ª revisão (CID-10), com os códigos publicados pelo DATASUS."
   },
   "category": "documents",
   "order": 9,
-  "related": [
-    "cns"
-  ],
+  "related": ["cns"],
   "functions": {
     "format": {
-      "summary": {
-        "en": "Formats a CID-10 code.",
-        "pt-BR": "Formata um código CID-10."
-      },
+      "summary": { "en": "Formats a CID-10 code.", "pt-BR": "Formata um código CID-10." },
       "description": {
         "en": [
           "Formats a CID-10 code the way it is printed: upper case, with a dot between the 3-character category and the fourth character (`A00.0`). Only the structure changes (use `cid10.isValid` to check the code).",
@@ -36,132 +28,26 @@
           "- Um valor que não é string retorna string vazia."
         ]
       },
-      "references": [
-        "http://www2.datasus.gov.br/cid10/V2008/descrcsv.htm"
-      ],
-      "params": [
-        {
-          "name": "value",
-          "type": "string"
-        }
-      ],
+      "references": ["http://www2.datasus.gov.br/cid10/V2008/descrcsv.htm"],
+      "params": [{ "name": "value", "type": "string" }],
       "returns": "string",
       "tests": [
-        {
-          "args": [
-            "f322"
-          ],
-          "returns": "F32.2",
-          "note": "from the maintainer briefing, #568"
-        },
-        {
-          "args": [
-            "A000"
-          ],
-          "returns": "A00.0",
-          "note": "JavaScript's own test: should add the dot to a subcategory"
-        },
-        {
-          "args": [
-            "M545"
-          ],
-          "returns": "M54.5",
-          "note": "JavaScript's own test: should add the dot to a subcategory"
-        },
-        {
-          "name": "already-formatted",
-          "args": [
-            "A00.0"
-          ],
-          "returns": "A00.0",
-          "note": "JavaScript's own test: should keep a subcategory that already has the dot"
-        },
-        {
-          "args": [
-            "A00"
-          ],
-          "returns": "A00",
-          "note": "JavaScript's own test: should leave a category without a dot"
-        },
-        {
-          "args": [
-            "A00."
-          ],
-          "returns": "A00",
-          "note": "JavaScript's own test: should leave a category without a dot"
-        },
-        {
-          "args": [
-            "A"
-          ],
-          "returns": "A",
-          "note": "JavaScript's own test: should mask a partial value progressively"
-        },
-        {
-          "name": "partial",
-          "args": [
-            "A0"
-          ],
-          "returns": "A0",
-          "note": "JavaScript's own test: should mask a partial value progressively"
-        },
-        {
-          "args": [
-            " A-00/0 "
-          ],
-          "returns": "A00.0",
-          "note": "JavaScript's own test: should drop the characters outside the mask"
-        },
-        {
-          "args": [
-            "A00.01"
-          ],
-          "returns": "A00.0",
-          "note": "JavaScript's own test: should not add characters after the subcategory length"
-        },
-        {
-          "args": [
-            "A00012345"
-          ],
-          "returns": "A00.0",
-          "note": "JavaScript's own test: should not add characters after the subcategory length"
-        },
-        {
-          "args": [
-            "Z999"
-          ],
-          "returns": "Z99.9",
-          "note": "JavaScript's own test: should not validate whether the code exists in the official table"
-        },
-        {
-          "args": [
-            "0A9Z"
-          ],
-          "returns": "0A9.Z",
-          "note": "JavaScript's own test: should not validate whether the code exists in the official table"
-        },
-        {
-          "name": "empty",
-          "args": [
-            ""
-          ],
-          "returns": "",
-          "note": "JavaScript's own test: should return an empty string for an empty value"
-        },
-        {
-          "args": [
-            " . "
-          ],
-          "returns": "",
-          "note": "JavaScript's own test: should return an empty string for an empty value"
-        },
-        {
-          "args": [
-            1000
-          ],
-          "returns": "",
-          "note": "JavaScript's own test: should return an empty string for a value that is not a string"
-        }
+        { "args": ["f322"], "returns": "F32.2", "note": "from the maintainer briefing, #568" },
+        { "args": ["A000"], "returns": "A00.0", "note": "JavaScript's own test: should add the dot to a subcategory" },
+        { "args": ["M545"], "returns": "M54.5", "note": "JavaScript's own test: should add the dot to a subcategory" },
+        { "name": "already-formatted", "args": ["A00.0"], "returns": "A00.0", "note": "JavaScript's own test: should keep a subcategory that already has the dot" },
+        { "args": ["A00"], "returns": "A00", "note": "JavaScript's own test: should leave a category without a dot" },
+        { "args": ["A00."], "returns": "A00", "note": "JavaScript's own test: should leave a category without a dot" },
+        { "args": ["A"], "returns": "A", "note": "JavaScript's own test: should mask a partial value progressively" },
+        { "name": "partial", "args": ["A0"], "returns": "A0", "note": "JavaScript's own test: should mask a partial value progressively" },
+        { "args": [" A-00/0 "], "returns": "A00.0", "note": "JavaScript's own test: should drop the characters outside the mask" },
+        { "args": ["A00.01"], "returns": "A00.0", "note": "JavaScript's own test: should not add characters after the subcategory length" },
+        { "args": ["A00012345"], "returns": "A00.0", "note": "JavaScript's own test: should not add characters after the subcategory length" },
+        { "args": ["Z999"], "returns": "Z99.9", "note": "JavaScript's own test: should not validate whether the code exists in the official table" },
+        { "args": ["0A9Z"], "returns": "0A9.Z", "note": "JavaScript's own test: should not validate whether the code exists in the official table" },
+        { "name": "empty", "args": [""], "returns": "", "note": "JavaScript's own test: should return an empty string for an empty value" },
+        { "args": [" . "], "returns": "", "note": "JavaScript's own test: should return an empty string for an empty value" },
+        { "args": [1000], "returns": "", "note": "JavaScript's own test: should return an empty string for a value that is not a string" }
       ]
     },
     "get": {
@@ -189,240 +75,35 @@
         "ftp://ftp.datasus.gov.br/dissemin/publicos/SIM/CID10/TABELAS/CID10.DBF"
       ],
       "flatName": "getCid10",
-      "params": [
-        {
-          "name": "value",
-          "type": "string"
-        }
-      ],
+      "params": [{ "name": "value", "type": "string" }],
       "returns": "Cid10?",
       "tests": [
-        {
-          "args": [
-            "A00.0"
-          ],
-          "returns": {
-            "code": "A000",
-            "description": "Cólera devida a Vibrio cholerae 01, biótipo cholerae"
-          },
-          "note": "from the maintainer briefing, #568"
-        },
-        {
-          "args": [
-            "a000"
-          ],
-          "returns": {
-            "code": "A000",
-            "description": "Cólera devida a Vibrio cholerae 01, biótipo cholerae"
-          },
-          "note": "from the maintainer briefing, #568"
-        },
-        {
-          "args": [
-            "A00.5"
-          ],
-          "returns": null,
-          "note": "from the maintainer briefing, #568"
-        },
-        {
-          "args": [
-            "F322"
-          ],
-          "returns": {
-            "code": "F322",
-            "description": "Episódio depressivo grave sem sintomas psicóticos"
-          },
-          "note": "JavaScript's own test: should return a subcategory written without the dot"
-        },
-        {
-          "args": [
-            "A00"
-          ],
-          "returns": {
-            "code": "A00",
-            "description": "Cólera"
-          },
-          "note": "JavaScript's own test: should return a category"
-        },
-        {
-          "args": [
-            "F32"
-          ],
-          "returns": {
-            "code": "F32",
-            "description": "Episódios depressivos"
-          },
-          "note": "JavaScript's own test: should return a category"
-        },
-        {
-          "args": [
-            "I10"
-          ],
-          "returns": {
-            "code": "I10",
-            "description": "Hipertensão essencial (primária)"
-          },
-          "note": "JavaScript's own test: should return a category that has no subcategory (I10)"
-        },
-        {
-          "args": [
-            "Z99.9"
-          ],
-          "returns": {
-            "code": "Z999",
-            "description": "Dependência de máquina e aparelho capacitante não especificado"
-          },
-          "note": "JavaScript's own test: should return the first and the last code of the table"
-        },
-        {
-          "args": [
-            "F43.0"
-          ],
-          "returns": {
-            "code": "F430",
-            "description": "Reação aguda ao \"stress\""
-          },
-          "note": "JavaScript's own test: should keep the quotes and brackets a description carries"
-        },
-        {
-          "args": [
-            "Z76.5"
-          ],
-          "returns": {
-            "code": "Z765",
-            "description": "Pessoa fingindo ser doente [simulação consciente]"
-          },
-          "note": "JavaScript's own test: should keep the quotes and brackets a description carries"
-        },
-        {
-          "args": [
-            " m54.5 "
-          ],
-          "returns": {
-            "code": "M545",
-            "description": "Dor lombar baixa"
-          },
-          "note": "JavaScript's own test: should ignore the letter case and surrounding whitespace"
-        },
-        {
-          "args": [
-            "I10.0"
-          ],
-          "returns": null,
-          "note": "JavaScript's own test: should return null for a subcategory its category does not have"
-        },
-        {
-          "args": [
-            "U07"
-          ],
-          "returns": {
-            "code": "U07",
-            "description": "Uso emergencial do U07"
-          },
-          "note": "JavaScript's own test: should find the U07 codes the SIM table adds to the V2008 files"
-        },
-        {
-          "args": [
-            "U07.0"
-          ],
-          "returns": {
-            "code": "U070",
-            "description": "Doença por cigarro eletrônico"
-          },
-          "note": "JavaScript's own test: should find the U07 codes the SIM table adds to the V2008 files"
-        },
-        {
-          "args": [
-            "U07.1"
-          ],
-          "returns": {
-            "code": "U071",
-            "description": "Infecção pelo novo Coronavírus (COVID-19)"
-          },
-          "note": "JavaScript's own test: should find the U07 codes the SIM table adds to the V2008 files"
-        },
-        {
-          "args": [
-            "U07.2"
-          ],
-          "returns": {
-            "code": "U072",
-            "description": "COVID-19, vírus não identificado"
-          },
-          "note": "JavaScript's own test: should find the U07 codes the SIM table adds to the V2008 files"
-        },
-        {
-          "args": [
-            "A10"
-          ],
-          "returns": null,
-          "note": "JavaScript's own test: should return null for a category the table does not have"
-        },
-        {
-          "args": [
-            "U09.9"
-          ],
-          "returns": null,
-          "note": "JavaScript's own test: should return null for a category the table does not have"
-        },
-        {
-          "args": [
-            "U10.9"
-          ],
-          "returns": null,
-          "note": "JavaScript's own test: should return null for a category the table does not have"
-        },
-        {
-          "name": "empty",
-          "args": [
-            ""
-          ],
-          "returns": null,
-          "note": "JavaScript's own test: should return null for a value that is not written in a documented form"
-        },
-        {
-          "name": "whitespace",
-          "args": [
-            "   "
-          ],
-          "returns": null,
-          "note": "JavaScript's own test: should return null for a value that is not written in a documented form"
-        },
-        {
-          "args": [
-            "A00-0"
-          ],
-          "returns": null,
-          "note": "JavaScript's own test: should return null for a value that is not written in a documented form"
-        },
-        {
-          "args": [
-            "A00.00"
-          ],
-          "returns": null,
-          "note": "JavaScript's own test: should return null for a value that is not written in a documented form"
-        },
-        {
-          "args": [
-            "A00.0 Cólera"
-          ],
-          "returns": null,
-          "note": "JavaScript's own test: should return null for a value that is not written in a documented form"
-        },
-        {
-          "args": [
-            "constructor"
-          ],
-          "returns": null,
-          "note": "JavaScript's own test: should return null for the keys of Object.prototype"
-        },
-        {
-          "args": [
-            100
-          ],
-          "returns": null,
-          "note": "JavaScript's own test: should return null for a value that is not a string"
-        }
+        { "args": ["A00.0"], "returns": { "code": "A000", "description": "Cólera devida a Vibrio cholerae 01, biótipo cholerae" }, "note": "from the maintainer briefing, #568" },
+        { "args": ["a000"], "returns": { "code": "A000", "description": "Cólera devida a Vibrio cholerae 01, biótipo cholerae" }, "note": "from the maintainer briefing, #568" },
+        { "args": ["A00.5"], "returns": null, "note": "from the maintainer briefing, #568" },
+        { "args": ["F322"], "returns": { "code": "F322", "description": "Episódio depressivo grave sem sintomas psicóticos" }, "note": "JavaScript's own test: should return a subcategory written without the dot" },
+        { "args": ["A00"], "returns": { "code": "A00", "description": "Cólera" }, "note": "JavaScript's own test: should return a category" },
+        { "args": ["F32"], "returns": { "code": "F32", "description": "Episódios depressivos" }, "note": "JavaScript's own test: should return a category" },
+        { "args": ["I10"], "returns": { "code": "I10", "description": "Hipertensão essencial (primária)" }, "note": "JavaScript's own test: should return a category that has no subcategory (I10)" },
+        { "args": ["Z99.9"], "returns": { "code": "Z999", "description": "Dependência de máquina e aparelho capacitante não especificado" }, "note": "JavaScript's own test: should return the first and the last code of the table" },
+        { "args": ["F43.0"], "returns": { "code": "F430", "description": "Reação aguda ao \"stress\"" }, "note": "JavaScript's own test: should keep the quotes and brackets a description carries" },
+        { "args": ["Z76.5"], "returns": { "code": "Z765", "description": "Pessoa fingindo ser doente [simulação consciente]" }, "note": "JavaScript's own test: should keep the quotes and brackets a description carries" },
+        { "args": [" m54.5 "], "returns": { "code": "M545", "description": "Dor lombar baixa" }, "note": "JavaScript's own test: should ignore the letter case and surrounding whitespace" },
+        { "args": ["I10.0"], "returns": null, "note": "JavaScript's own test: should return null for a subcategory its category does not have" },
+        { "args": ["U07"], "returns": { "code": "U07", "description": "Uso emergencial do U07" }, "note": "JavaScript's own test: should find the U07 codes the SIM table adds to the V2008 files" },
+        { "args": ["U07.0"], "returns": { "code": "U070", "description": "Doença por cigarro eletrônico" }, "note": "JavaScript's own test: should find the U07 codes the SIM table adds to the V2008 files" },
+        { "args": ["U07.1"], "returns": { "code": "U071", "description": "Infecção pelo novo Coronavírus (COVID-19)" }, "note": "JavaScript's own test: should find the U07 codes the SIM table adds to the V2008 files" },
+        { "args": ["U07.2"], "returns": { "code": "U072", "description": "COVID-19, vírus não identificado" }, "note": "JavaScript's own test: should find the U07 codes the SIM table adds to the V2008 files" },
+        { "args": ["A10"], "returns": null, "note": "JavaScript's own test: should return null for a category the table does not have" },
+        { "args": ["U09.9"], "returns": null, "note": "JavaScript's own test: should return null for a category the table does not have" },
+        { "args": ["U10.9"], "returns": null, "note": "JavaScript's own test: should return null for a category the table does not have" },
+        { "name": "empty", "args": [""], "returns": null, "note": "JavaScript's own test: should return null for a value that is not written in a documented form" },
+        { "name": "whitespace", "args": ["   "], "returns": null, "note": "JavaScript's own test: should return null for a value that is not written in a documented form" },
+        { "args": ["A00-0"], "returns": null, "note": "JavaScript's own test: should return null for a value that is not written in a documented form" },
+        { "args": ["A00.00"], "returns": null, "note": "JavaScript's own test: should return null for a value that is not written in a documented form" },
+        { "args": ["A00.0 Cólera"], "returns": null, "note": "JavaScript's own test: should return null for a value that is not written in a documented form" },
+        { "args": ["constructor"], "returns": null, "note": "JavaScript's own test: should return null for the keys of Object.prototype" },
+        { "args": [100], "returns": null, "note": "JavaScript's own test: should return null for a value that is not a string" }
       ]
     },
     "isValid": {
@@ -455,205 +136,36 @@
         "http://www2.datasus.gov.br/cid10/V2008/downloads/CID10CSV.zip",
         "ftp://ftp.datasus.gov.br/dissemin/publicos/SIM/CID10/TABELAS/CID10.DBF"
       ],
-      "params": [
-        {
-          "name": "value",
-          "type": "string"
-        }
-      ],
+      "params": [{ "name": "value", "type": "string" }],
       "returns": "boolean",
       "tests": [
-        {
-          "args": [
-            "I10.0"
-          ],
-          "returns": false,
-          "note": "from the maintainer briefing, #568"
-        },
-        {
-          "args": [
-            "A00.0"
-          ],
-          "returns": true,
-          "note": "JavaScript's own test: should validate a subcategory written with the dot"
-        },
-        {
-          "args": [
-            "A00.9"
-          ],
-          "returns": true,
-          "note": "JavaScript's own test: should validate a subcategory written with the dot"
-        },
-        {
-          "args": [
-            "A000"
-          ],
-          "returns": true,
-          "note": "JavaScript's own test: should validate a subcategory written without the dot"
-        },
-        {
-          "args": [
-            "F322"
-          ],
-          "returns": true,
-          "note": "JavaScript's own test: should validate a subcategory written without the dot"
-        },
-        {
-          "args": [
-            "A00"
-          ],
-          "returns": true,
-          "note": "JavaScript's own test: should validate a category, subdivided or not"
-        },
-        {
-          "args": [
-            "I10"
-          ],
-          "returns": true,
-          "note": "JavaScript's own test: should validate a category, subdivided or not"
-        },
-        {
-          "args": [
-            "Z99.9"
-          ],
-          "returns": true,
-          "note": "JavaScript's own test: should validate the first and the last code of the table"
-        },
-        {
-          "args": [
-            "m54.5"
-          ],
-          "returns": true,
-          "note": "JavaScript's own test: should ignore the letter case and surrounding whitespace"
-        },
-        {
-          "args": [
-            " M545 "
-          ],
-          "returns": true,
-          "note": "JavaScript's own test: should ignore the letter case and surrounding whitespace"
-        },
-        {
-          "args": [
-            "A00.2"
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should reject a subcategory its category does not have"
-        },
-        {
-          "args": [
-            "A00.5"
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should reject a subcategory its category does not have"
-        },
-        {
-          "args": [
-            "I109"
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should reject any subcategory of a category that is not subdivided"
-        },
-        {
-          "args": [
-            "U07"
-          ],
-          "returns": true,
-          "note": "JavaScript's own test: should accept the U07 codes the SIM table adds to the V2008 files"
-        },
-        {
-          "args": [
-            "U07.1"
-          ],
-          "returns": true,
-          "note": "JavaScript's own test: should accept the U07 codes the SIM table adds to the V2008 files"
-        },
-        {
-          "args": [
-            "u072"
-          ],
-          "returns": true,
-          "note": "JavaScript's own test: should accept the U07 codes the SIM table adds to the V2008 files"
-        },
-        {
-          "args": [
-            "U07.3"
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should accept the U07 codes the SIM table adds to the V2008 files"
-        },
-        {
-          "args": [
-            "A10"
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should reject a category the table does not have"
-        },
-        {
-          "args": [
-            "U09.9"
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should reject a category the table does not have"
-        },
-        {
-          "name": "empty",
-          "args": [
-            ""
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should reject a value that is not written in a documented form"
-        },
-        {
-          "name": "whitespace",
-          "args": [
-            "   "
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should reject a value that is not written in a documented form"
-        },
-        {
-          "args": [
-            "A0"
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should reject a value that is not written in a documented form"
-        },
-        {
-          "args": [
-            "A00-0"
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should reject a value that is not written in a documented form"
-        },
-        {
-          "args": [
-            "A00.00"
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should reject a value that is not written in a documented form"
-        },
-        {
-          "args": [
-            "A00.0 Cólera"
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should reject a value that is not written in a documented form"
-        },
-        {
-          "args": [
-            "constructor"
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should reject the keys of Object.prototype"
-        },
-        {
-          "args": [
-            100
-          ],
-          "returns": false,
-          "note": "JavaScript's own test: should reject a value that is not a string"
-        }
+        { "args": ["I10.0"], "returns": false, "note": "from the maintainer briefing, #568" },
+        { "args": ["A00.0"], "returns": true, "note": "JavaScript's own test: should validate a subcategory written with the dot" },
+        { "args": ["A00.9"], "returns": true, "note": "JavaScript's own test: should validate a subcategory written with the dot" },
+        { "args": ["A000"], "returns": true, "note": "JavaScript's own test: should validate a subcategory written without the dot" },
+        { "args": ["F322"], "returns": true, "note": "JavaScript's own test: should validate a subcategory written without the dot" },
+        { "args": ["A00"], "returns": true, "note": "JavaScript's own test: should validate a category, subdivided or not" },
+        { "args": ["I10"], "returns": true, "note": "JavaScript's own test: should validate a category, subdivided or not" },
+        { "args": ["Z99.9"], "returns": true, "note": "JavaScript's own test: should validate the first and the last code of the table" },
+        { "args": ["m54.5"], "returns": true, "note": "JavaScript's own test: should ignore the letter case and surrounding whitespace" },
+        { "args": [" M545 "], "returns": true, "note": "JavaScript's own test: should ignore the letter case and surrounding whitespace" },
+        { "args": ["A00.2"], "returns": false, "note": "JavaScript's own test: should reject a subcategory its category does not have" },
+        { "args": ["A00.5"], "returns": false, "note": "JavaScript's own test: should reject a subcategory its category does not have" },
+        { "args": ["I109"], "returns": false, "note": "JavaScript's own test: should reject any subcategory of a category that is not subdivided" },
+        { "args": ["U07"], "returns": true, "note": "JavaScript's own test: should accept the U07 codes the SIM table adds to the V2008 files" },
+        { "args": ["U07.1"], "returns": true, "note": "JavaScript's own test: should accept the U07 codes the SIM table adds to the V2008 files" },
+        { "args": ["u072"], "returns": true, "note": "JavaScript's own test: should accept the U07 codes the SIM table adds to the V2008 files" },
+        { "args": ["U07.3"], "returns": false, "note": "JavaScript's own test: should accept the U07 codes the SIM table adds to the V2008 files" },
+        { "args": ["A10"], "returns": false, "note": "JavaScript's own test: should reject a category the table does not have" },
+        { "args": ["U09.9"], "returns": false, "note": "JavaScript's own test: should reject a category the table does not have" },
+        { "name": "empty", "args": [""], "returns": false, "note": "JavaScript's own test: should reject a value that is not written in a documented form" },
+        { "name": "whitespace", "args": ["   "], "returns": false, "note": "JavaScript's own test: should reject a value that is not written in a documented form" },
+        { "args": ["A0"], "returns": false, "note": "JavaScript's own test: should reject a value that is not written in a documented form" },
+        { "args": ["A00-0"], "returns": false, "note": "JavaScript's own test: should reject a value that is not written in a documented form" },
+        { "args": ["A00.00"], "returns": false, "note": "JavaScript's own test: should reject a value that is not written in a documented form" },
+        { "args": ["A00.0 Cólera"], "returns": false, "note": "JavaScript's own test: should reject a value that is not written in a documented form" },
+        { "args": ["constructor"], "returns": false, "note": "JavaScript's own test: should reject the keys of Object.prototype" },
+        { "args": [100], "returns": false, "note": "JavaScript's own test: should reject a value that is not a string" }
       ]
     },
     "parse": {
@@ -677,110 +189,23 @@
           "- Um valor que não é string retorna string vazia."
         ]
       },
-      "references": [
-        "http://www2.datasus.gov.br/cid10/V2008/descrcsv.htm"
-      ],
-      "params": [
-        {
-          "name": "value",
-          "type": "string"
-        }
-      ],
+      "references": ["http://www2.datasus.gov.br/cid10/V2008/descrcsv.htm"],
+      "params": [{ "name": "value", "type": "string" }],
       "returns": "string",
       "tests": [
-        {
-          "args": [
-            "A00.0"
-          ],
-          "returns": "A000",
-          "note": "from the maintainer briefing, #568"
-        },
-        {
-          "args": [
-            "A000"
-          ],
-          "returns": "A000",
-          "note": "JavaScript's own test: should keep a code that has no dot"
-        },
-        {
-          "args": [
-            "A00"
-          ],
-          "returns": "A00",
-          "note": "JavaScript's own test: should keep a code that has no dot"
-        },
-        {
-          "args": [
-            "f32.2"
-          ],
-          "returns": "F322",
-          "note": "JavaScript's own test: should upper case the letter"
-        },
-        {
-          "args": [
-            " A-0/0.0 "
-          ],
-          "returns": "A000",
-          "note": "JavaScript's own test: should drop every character that is not a letter or a digit"
-        },
-        {
-          "args": [
-            "A"
-          ],
-          "returns": "A",
-          "note": "JavaScript's own test: should pass a partial value through"
-        },
-        {
-          "name": "partial",
-          "args": [
-            "A00."
-          ],
-          "returns": "A00",
-          "note": "JavaScript's own test: should pass a partial value through"
-        },
-        {
-          "args": [
-            "A00.01"
-          ],
-          "returns": "A000",
-          "note": "JavaScript's own test: should cap the result at the 4 characters of a subcategory"
-        },
-        {
-          "args": [
-            "A00012345"
-          ],
-          "returns": "A000",
-          "note": "JavaScript's own test: should cap the result at the 4 characters of a subcategory"
-        },
-        {
-          "args": [
-            "0A.9Z"
-          ],
-          "returns": "0A9Z",
-          "note": "JavaScript's own test: should not validate whether the code exists in the official table"
-        },
-        {
-          "name": "empty",
-          "args": [
-            ""
-          ],
-          "returns": "",
-          "note": "JavaScript's own test: should return an empty string for an empty value"
-        },
-        {
-          "args": [
-            " . "
-          ],
-          "returns": "",
-          "note": "JavaScript's own test: should return an empty string for an empty value"
-        },
-        {
-          "args": [
-            1000
-          ],
-          "returns": "",
-          "note": "JavaScript's own test: should return an empty string for a value that is not a string"
-        }
+        { "args": ["A00.0"], "returns": "A000", "note": "from the maintainer briefing, #568" },
+        { "args": ["A000"], "returns": "A000", "note": "JavaScript's own test: should keep a code that has no dot" },
+        { "args": ["A00"], "returns": "A00", "note": "JavaScript's own test: should keep a code that has no dot" },
+        { "args": ["f32.2"], "returns": "F322", "note": "JavaScript's own test: should upper case the letter" },
+        { "args": [" A-0/0.0 "], "returns": "A000", "note": "JavaScript's own test: should drop every character that is not a letter or a digit" },
+        { "args": ["A"], "returns": "A", "note": "JavaScript's own test: should pass a partial value through" },
+        { "name": "partial", "args": ["A00."], "returns": "A00", "note": "JavaScript's own test: should pass a partial value through" },
+        { "args": ["A00.01"], "returns": "A000", "note": "JavaScript's own test: should cap the result at the 4 characters of a subcategory" },
+        { "args": ["A00012345"], "returns": "A000", "note": "JavaScript's own test: should cap the result at the 4 characters of a subcategory" },
+        { "args": ["0A.9Z"], "returns": "0A9Z", "note": "JavaScript's own test: should not validate whether the code exists in the official table" },
+        { "name": "empty", "args": [""], "returns": "", "note": "JavaScript's own test: should return an empty string for an empty value" },
+        { "args": [" . "], "returns": "", "note": "JavaScript's own test: should return an empty string for an empty value" },
+        { "args": [1000], "returns": "", "note": "JavaScript's own test: should return an empty string for a value that is not a string" }
       ]
     }
   }

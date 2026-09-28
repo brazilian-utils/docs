@@ -155,14 +155,16 @@
           "",
           "- The function removes separators first and ignores case.",
           "- Returns null when the value is not 7 letters and digits in one of the two formats.",
-          "- Pending decision (findings §1): Erlang returns named formats instead of the patterns."
+          "- Pending decision (findings §1): Erlang returns named formats instead of the patterns.",
+          "- It returns null exactly when `licensePlate.isValid` returns false."
         ],
         "pt-BR": [
           "Detecta o formato de uma placa: `LLLNNNN` para o formato antigo, `LLLNLNN` para Mercosul.",
           "",
           "- A função remove os separadores primeiro e ignora maiúsculas e minúsculas.",
           "- Retorna null quando o valor não tem 7 letras e dígitos em um dos dois formatos.",
-          "- Decisão pendente (findings §1): Erlang retorna formatos com nome em vez dos padrões."
+          "- Decisão pendente (findings §1): Erlang retorna formatos com nome em vez dos padrões.",
+          "- Retorna null exatamente quando `licensePlate.isValid` retorna false."
         ]
       },
       "references": [

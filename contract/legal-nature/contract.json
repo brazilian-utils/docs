@@ -16,12 +16,14 @@
         "en": [
           "Formats a legal nature code as `NNN-N`. Use `legalNature.isValid` to check the code.",
           "",
-          "- The mask is applied as far as the digits go. `options.pad` first left-pads with zeros to 4 digits."
+          "- The mask is applied as far as the digits go. `options.pad` first left-pads with zeros to 4 digits.",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
         ],
         "pt-BR": [
           "Formata um código de natureza jurídica como `NNN-N`. Use `legalNature.isValid` para verificar o código.",
           "",
-          "- A máscara é aplicada até onde os dígitos vão. `options.pad` primeiro completa com zeros à esquerda até 4 dígitos."
+          "- A máscara é aplicada até onde os dígitos vão. `options.pad` primeiro completa com zeros à esquerda até 4 dígitos.",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
         ]
       },
       "references": [
@@ -45,7 +47,12 @@
         { "args": ["62", { "pad": true }], "returns": "006-2", "note": "JavaScript's own test: should left pad with zeros to 4 digits when pad is true" },
         { "args": [62, { "pad": true }], "returns": "006-2", "note": "JavaScript's own test: should left pad with zeros to 4 digits when pad is true" },
         { "args": ["2062", { "pad": true }], "returns": "206-2", "note": "JavaScript's own test: should left pad with zeros to 4 digits when pad is true" },
-        { "args": ["62", { "pad": false }], "returns": "62", "note": "JavaScript's own test: should left pad with zeros to 4 digits when pad is true" }
+        { "args": ["62", { "pad": false }], "returns": "62", "note": "JavaScript's own test: should left pad with zeros to 4 digits when pad is true" },
+        { "args": [206.2], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [-1], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [1.5], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [206.2, { "pad": true }], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" }
       ]
     },
     "generate": {
@@ -81,13 +88,15 @@
           "Looks up a legal nature code in the IBGE/CONCLA Natureza Jurídica 2021 table. Returns null for an unknown code.",
           "",
           "- The entry has the code, its description and its CONCLA category (given by the first digit).",
-          "- A code that a past revision retired comes back flagged as legacy. The entry also gives the code it corresponds to today, or none when it has no successor."
+          "- A code that a past revision retired comes back flagged as legacy. The entry also gives the code it corresponds to today, or none when it has no successor.",
+          "- Hyphens, dots and whitespace are stripped from a string, so `\"206.2\"` finds 2062. A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number returns null. 2.4.0 stripped the sign and decimal point of a number too, so `206.2` found 2062."
         ],
         "pt-BR": [
           "Consulta um código de natureza jurídica na tabela Natureza Jurídica 2021 do IBGE/CONCLA. Retorna null para um código desconhecido.",
           "",
           "- A entrada tem o código, a descrição e a categoria CONCLA (dada pelo primeiro dígito).",
-          "- Um código que uma revisão anterior extinguiu volta marcado como legado. A entrada também informa o código correspondente atual, ou nenhum quando não há sucessor."
+          "- Um código que uma revisão anterior extinguiu volta marcado como legado. A entrada também informa o código correspondente atual, ou nenhum quando não há sucessor.",
+          "- Hífens, pontos e espaços são removidos de uma string, então `\"206.2\"` acha o 2062. Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna null. A 2.4.0 também removia o sinal e o ponto decimal de um número, então `206.2` achava o 2062."
         ]
       },
       "references": [
@@ -106,8 +115,10 @@
         { "args": ["2062a"], "returns": null, "note": "JavaScript's own test: should reject a code with letters attached, like isValidLegalNature does" },
         { "args": ["a2062"], "returns": null, "note": "JavaScript's own test: should reject a code with letters attached, like isValidLegalNature does" },
         { "args": [2062], "returns": { "code": "2062", "description": "Sociedade Empresária Limitada", "category": { "code": "2", "description": "Entidades Empresariais" }, "legacy": false }, "note": "JavaScript's own test: should return the legal nature entry for a known code as a number" },
-        { "args": [206.2], "returns": { "code": "2062", "description": "Sociedade Empresária Limitada", "category": { "code": "2", "description": "Entidades Empresariais" }, "legacy": false }, "note": "JavaScript's own test: should strip the mask of a number just like the mask of a string" },
-        { "args": ["2076"], "returns": { "code": "2076", "description": "Sociedade Empresária em Nome Coletivo", "category": { "code": "2", "description": "Entidades Empresariais" }, "legacy": true, "currentCode": "2070" }, "note": "JavaScript's own test: should tag a retired code as legacy, with the code it corresponds to today" }
+        { "args": [206.2], "returns": null, "note": "changed in 2.5.0 (#593): 206.2 is not a non-negative safe integer, so it is not read as a code; 2.4.0 stripped the decimal point like a mask character and found 2062. JavaScript's own test: should return null for a negative or fractional number" },
+        { "args": ["2076"], "returns": { "code": "2076", "description": "Sociedade Empresária em Nome Coletivo", "category": { "code": "2", "description": "Entidades Empresariais" }, "legacy": true, "currentCode": "2070" }, "note": "JavaScript's own test: should tag a retired code as legacy, with the code it corresponds to today" },
+        { "args": [-2062], "returns": null, "note": "JavaScript's own test: should return null for a negative or fractional number" },
+        { "args": ["206.2"], "returns": { "code": "2062", "description": "Sociedade Empresária Limitada", "category": { "code": "2", "description": "Entidades Empresariais" }, "legacy": false }, "note": "JavaScript's own test: should strip the mask of a string, the dot included" }
       ]
     },
     "getDescription": {
@@ -519,8 +530,16 @@
         "pt-BR": "Remove os caracteres de formatação de um código de natureza jurídica e retorna só os dígitos."
       },
       "description": {
-        "en": ["Removes legal nature formatting and keeps only digits, capped at 4 digits."],
-        "pt-BR": ["Remove a formatação da natureza jurídica e mantém somente os dígitos, limitados a 4 dígitos."]
+        "en": [
+          "Removes legal nature formatting and keeps only digits, capped at 4 digits.",
+          "",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
+        ],
+        "pt-BR": [
+          "Remove a formatação da natureza jurídica e mantém somente os dígitos, limitados a 4 dígitos.",
+          "",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
+        ]
       },
       "references": [
         "https://concla.ibge.gov.br/estrutura/natjur-estrutura/natureza-juridica-2021",
@@ -532,7 +551,10 @@
         { "name": "masked", "args": ["206-2"], "returns": "2062" },
         { "name": "unmasked", "args": ["2062"], "returns": "2062" },
         { "name": "caps-length", "args": ["206299"], "returns": "2062", "note": "reference truncates to 4 digits; asserted by the reference (JS) unit tests" },
-        { "name": "empty", "args": [""], "returns": "" }
+        { "name": "empty", "args": [""], "returns": "" },
+        { "args": [206.2], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [-1], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [1.5], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" }
       ]
     }
   }

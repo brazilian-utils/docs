@@ -17,15 +17,17 @@
           "Formats a CNAE subclass code with the mask `NNNN-N/NN`. Only the structure changes (use `cnae.isValid` to check the code).",
           "",
           "- The mask is applied as far as the digits go. `options.pad` first left-pads with zeros to 7 digits.",
-          "- Characters other than digits are dropped. A number is read as the string of its digits.",
-          "- Returns an empty string when there is no digit at all."
+          "- Characters other than digits are dropped.",
+          "- Returns an empty string when there is no digit at all.",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
         ],
         "pt-BR": [
           "Formata um código de subclasse CNAE com a máscara `NNNN-N/NN`. Só a estrutura muda (use `cnae.isValid` para verificar o código).",
           "",
           "- A máscara é aplicada até onde os dígitos vão. `options.pad` primeiro completa com zeros à esquerda até 7 dígitos.",
-          "- Caracteres que não são dígitos são descartados. Um número é lido como a string dos seus dígitos.",
-          "- Retorna uma string vazia quando não há nenhum dígito."
+          "- Caracteres que não são dígitos são descartados.",
+          "- Retorna uma string vazia quando não há nenhum dígito.",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
         ]
       },
       "references": ["https://servicodados.ibge.gov.br/api/v2/cnae/subclasses"],
@@ -60,8 +62,10 @@
         { "args": ["62", { "pad": false }], "returns": "62", "note": "JavaScript's own test: pad option should mask progressively for an explicit false" },
         { "args": ["abc6201501"], "returns": "6201-5/01", "note": "JavaScript's own test: should read only the digits of a value with other characters, like formatCpf" },
         { "args": ["62.01-5/01"], "returns": "6201-5/01", "note": "JavaScript's own test: should read only the digits of a value with other characters, like formatCpf" },
-        { "args": [-6201501], "returns": "6201-5/01", "note": "JavaScript's own test: should read a signed or fractional number as the string of its digits, like formatCpf" },
-        { "args": [620150.1], "returns": "6201-5/01", "note": "JavaScript's own test: should read a signed or fractional number as the string of its digits, like formatCpf" }
+        { "args": [-6201501], "returns": "", "note": "changed in 2.5.0 (#593): a negative or fractional number is not a non-negative safe integer, so it gives \"\"; 2.4.0 read the digits of its string. JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number" },
+        { "args": [620150.1], "returns": "", "note": "changed in 2.5.0 (#593): a negative or fractional number is not a non-negative safe integer, so it gives \"\"; 2.4.0 read the digits of its string. JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number" },
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (2 ** 53; 2.4.0 gave \"9007-1/99\")" },
+        { "args": [-6201501, { "pad": true }], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number, even with pad" }
       ]
     },
     "get": {
@@ -76,7 +80,8 @@
           "This table is the current subclass revision of CNAE 2.0.",
           "",
           "- Same input rules as `cbo.get`, with 7 digits and the `NNNN-N/NN` mask.",
-          "- Returns null for an unknown code or a value not in an accepted form."
+          "- Returns null for an unknown code or a value not in an accepted form.",
+          "- It returns null exactly when `cnae.isValid` returns false."
         ],
         "pt-BR": [
           "Consulta um código de subclasse CNAE na tabela CNAE-Subclasses 2.3 e retorna o código (7 dígitos sem máscara) e a descrição oficial.",
@@ -84,7 +89,8 @@
           "Essa tabela é a revisão atual das subclasses da CNAE 2.0.",
           "",
           "- Mesmas regras de entrada de `cbo.get`, com 7 dígitos e a máscara `NNNN-N/NN`.",
-          "- Retorna null para um código desconhecido ou para um valor fora das formas aceitas."
+          "- Retorna null para um código desconhecido ou para um valor fora das formas aceitas.",
+          "- Retorna null exatamente quando `cnae.isValid` retorna false."
         ]
       },
       "references": [
@@ -166,12 +172,14 @@
         "en": [
           "Removes CNAE formatting and keeps only digits, capped at 7 digits.",
           "",
-          "- It does not left-pad anything. A partial code stays as written."
+          "- It does not left-pad anything. A partial code stays as written.",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
         ],
         "pt-BR": [
           "Remove a formatação do CNAE e mantém somente os dígitos, limitados a 7 dígitos.",
           "",
-          "- Não completa nada com zeros à esquerda. Um código parcial fica como está escrito."
+          "- Não completa nada com zeros à esquerda. Um código parcial fica como está escrito.",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
         ]
       },
       "references": ["https://servicodados.ibge.gov.br/api/v2/cnae/subclasses"],
@@ -184,7 +192,10 @@
         { "name": "empty", "args": [""], "returns": "" },
         { "name": "caps-length", "args": ["6201501999"], "returns": "6201501", "note": "reference truncates to the 7 characters of the document; asserted by the reference (JS) unit tests" },
         { "args": [6201501], "returns": "6201501", "note": "JavaScript's own test: should read a number as the string of its digits" },
-        { "args": ["62"], "returns": "62", "note": "JavaScript's own test: should keep a partial code as written, without padding it" }
+        { "args": ["62"], "returns": "62", "note": "JavaScript's own test: should keep a partial code as written, without padding it" },
+        { "args": [-1], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [1.5], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" }
       ]
     }
   }

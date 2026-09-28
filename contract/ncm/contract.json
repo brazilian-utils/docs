@@ -15,12 +15,14 @@
         "en": [
           "Formats an NCM code with the mask `NNNN.NN.NN`. Only the structure changes (use `ncm.isValid` to check the code).",
           "",
-          "- Same rules as `cnae.format`. `options.pad` first left-pads the value with zeros to 8 digits."
+          "- Same rules as `cnae.format`. `options.pad` first left-pads the value with zeros to 8 digits.",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
         ],
         "pt-BR": [
           "Formata um código NCM com a máscara `NNNN.NN.NN`. Só a estrutura muda (use `ncm.isValid` para verificar o código).",
           "",
-          "- Mesmas regras de `cnae.format`. `options.pad` antes completa o valor com zeros à esquerda até 8 dígitos."
+          "- Mesmas regras de `cnae.format`. `options.pad` antes completa o valor com zeros à esquerda até 8 dígitos.",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
         ]
       },
       "references": ["https://portalunico.siscomex.gov.br/classif/api/publico/nomenclatura/download/json"],
@@ -55,8 +57,9 @@
         { "args": ["8471", { "pad": false }], "returns": "8471", "note": "JavaScript's own test: pad option should mask progressively for an explicit false" },
         { "args": ["abc8471"], "returns": "8471", "note": "JavaScript's own test: should read only the digits of a value with other characters, like formatCpf" },
         { "args": ["8471.30-12"], "returns": "8471.30.12", "note": "JavaScript's own test: should read only the digits of a value with other characters, like formatCpf" },
-        { "args": [-84713012], "returns": "8471.30.12", "note": "JavaScript's own test: should read a signed or fractional number as the string of its digits, like formatCpf" },
-        { "args": [8471301.2], "returns": "8471.30.12", "note": "JavaScript's own test: should read a signed or fractional number as the string of its digits, like formatCpf" }
+        { "args": [-84713012], "returns": "", "note": "changed in 2.5.0 (#593): a negative or fractional number is not a non-negative safe integer, so it gives \"\"; 2.4.0 read the digits of its string. JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number" },
+        { "args": [8471301.2], "returns": "", "note": "changed in 2.5.0 (#593): a negative or fractional number is not a non-negative safe integer, so it gives \"\"; 2.4.0 read the digits of its string. JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number" },
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (2 ** 53)" }
       ]
     },
     "isValid": {
@@ -110,12 +113,14 @@
         "en": [
           "Removes NCM formatting and keeps only digits, capped at 8 digits.",
           "",
-          "- The function does not left-pad the value. It keeps a partial code as written."
+          "- The function does not left-pad the value. It keeps a partial code as written.",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
         ],
         "pt-BR": [
           "Remove a formatação do NCM e mantém apenas os dígitos, limitados a 8.",
           "",
-          "- A função não completa o valor com zeros à esquerda. Ela mantém um código parcial como foi escrito."
+          "- A função não completa o valor com zeros à esquerda. Ela mantém um código parcial como foi escrito.",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
         ]
       },
       "references": ["https://portalunico.siscomex.gov.br/classif/api/publico/nomenclatura/download/json"],
@@ -128,7 +133,10 @@
         { "name": "empty", "args": [""], "returns": "" },
         { "name": "caps-length", "args": ["84713012999"], "returns": "84713012", "note": "reference truncates to the 8 characters of the document; asserted by the reference (JS) unit tests" },
         { "args": [84713012], "returns": "84713012", "note": "JavaScript's own test: should read a number as the string of its digits" },
-        { "args": ["8471"], "returns": "8471", "note": "JavaScript's own test: should keep a partial code as written, without padding it" }
+        { "args": ["8471"], "returns": "8471", "note": "JavaScript's own test: should keep a partial code as written, without padding it" },
+        { "args": [-1], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [1.5], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" }
       ]
     }
   }

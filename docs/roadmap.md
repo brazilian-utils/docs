@@ -77,7 +77,7 @@ and the badge is green everywhere.
 
 ## Phase 4: extended parity
 
-JS implements 136 of the 138 contract functions. The others implement far less: in the run of September 2026, each of them passed 16 to 21% of the functions. Take the extended
+With the PRs of its 2.5.0 release, JS implements 174 of the 176 contract functions. The others implement far less: in the run of September 2026, each of them passed 16 to 21% of the functions. Take the extended
 functions one domain at a time (fiscal: NF-e, CFOP, NCM, CST. Banking: IBAN, bank, pix. IBGE:
 state, municipality. Dates and holidays). For each domain, decide whether every library should
 have it, and move those functions to `core`. The briefs carry the most here: many functions,

@@ -84,14 +84,16 @@
           "",
           "- There is no check digit, so a well-formed number is not necessarily a real passport.",
           "- A number is never valid (it cannot start with the two letters).",
-          "- Pending decision (findings §1b, §2 #8): the reference (JS) is case-insensitive and ignores symbols (`ab123456`, `AB-123.456` are valid). Erlang and Python accept only the strict uppercase form."
+          "- Pending decision (findings §1b, §2 #8): the reference (JS) is case-insensitive and ignores symbols (`ab123456`, `AB-123.456` are valid). Erlang and Python accept only the strict uppercase form.",
+          "- The layout's only official source is the Polícia Federal FAQ (\"duas letras ... e por seis dígitos subsequentes\", example CS265436). Neither Decreto 5.978/2006 nor IN 173-DG/PF/2020 defines the number, and the FAQ forbids no letter, so none is rejected."
         ],
         "pt-BR": [
           "Valida um número de passaporte brasileiro: 2 letras seguidas de 6 dígitos, depois de remover os caracteres não alfanuméricos.",
           "",
           "- Não há dígito verificador, então um número bem formado não é necessariamente um passaporte real.",
           "- Um valor numérico nunca é válido (ele não pode começar com as duas letras).",
-          "- Decisão pendente (findings §1b, §2 #8): a referência (JS) não diferencia maiúsculas de minúsculas e ignora símbolos (`ab123456` e `AB-123.456` são válidos). Erlang e Python aceitam apenas a forma estrita em maiúsculas."
+          "- Decisão pendente (findings §1b, §2 #8): a referência (JS) não diferencia maiúsculas de minúsculas e ignora símbolos (`ab123456` e `AB-123.456` são válidos). Erlang e Python aceitam apenas a forma estrita em maiúsculas.",
+          "- A única fonte oficial do formato é a FAQ da Polícia Federal (\"duas letras ... e por seis dígitos subsequentes\", exemplo CS265436). Nem o Decreto 5.978/2006 nem a IN 173-DG/PF/2020 definem o número, e a FAQ não proíbe nenhuma letra, então nenhuma é rejeitada."
         ]
       },
       "references": [
@@ -108,7 +110,8 @@
         { "name": "dotted", "args": ["AB.123.456"], "returns": true },
         { "args": ["1"], "returns": false },
         { "args": ["1112223334-"], "returns": false },
-        { "name": "number", "args": [1], "returns": false, "note": "a number is accepted but never valid (see summary)" }
+        { "name": "number", "args": [1], "returns": false, "note": "a number is accepted but never valid (see summary)" },
+        { "args": ["CS265436"], "returns": true, "note": "the example of the Polícia Federal FAQ" }
       ]
     },
     "parse": {

@@ -127,7 +127,8 @@ Status:
 17. **State codes.** Every function that takes a state code (UF) ignores case and surrounding
     whitespace: `"sp"`, `" SP "` and `"Sp"` all mean `"SP"`. This covers the municipality,
     area code, state, holiday and business-day functions, and the generators that take a state
-    (`cpf.generate`, `voterId.generate`), and `registroProfissional.isValid`. Until 2.4.0,
+    (`cpf.generate`, `voterId.generate`), and `registroProfissional.isValid`. `ie.isValid` ignores
+    case but not surrounding whitespace (`" sp "` is rejected). Until 2.4.0,
     `municipality.list("sp")` returned an empty list and the holiday functions read `"sp"` as
     no state.
 

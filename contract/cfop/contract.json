@@ -18,12 +18,14 @@
         "en": [
           "Looks up a CFOP code in the official table and returns its code and description.",
           "",
-          "- Same input rules as `cfop.isValid`. Returns null for a heading, an unknown code or a value not in an accepted form."
+          "- Same input rules as `cfop.isValid`. Returns null for a heading, an unknown code or a value not in an accepted form.",
+          "- It returns null exactly when `cfop.isValid` returns false."
         ],
         "pt-BR": [
           "Consulta um código CFOP na tabela oficial e retorna o código e a descrição.",
           "",
-          "- Mesmas regras de entrada de `cfop.isValid`. Retorna null para um título de grupo, um código desconhecido ou um valor fora das formas aceitas."
+          "- Mesmas regras de entrada de `cfop.isValid`. Retorna null para um título de grupo, um código desconhecido ou um valor fora das formas aceitas.",
+          "- Retorna null exatamente quando `cfop.isValid` retorna false."
         ]
       },
       "references": [
@@ -126,12 +128,14 @@
         "en": [
           "Removes CFOP formatting and keeps only digits, capped at 4 digits.",
           "",
-          "- The function does not pad the result."
+          "- The function does not pad the result.",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
         ],
         "pt-BR": [
           "Remove a formatação do CFOP e mantém apenas os dígitos, limitados a 4.",
           "",
-          "- A função não completa o resultado com zeros."
+          "- A função não completa o resultado com zeros.",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
         ]
       },
       "references": ["https://www.confaz.fazenda.gov.br/legislacao/ajustes/sinief/cfop_cvsn_1-6.24"],
@@ -143,7 +147,10 @@
         { "name": "strips-non-digits", "args": ["5?ABC.102abc"], "returns": "5102" },
         { "name": "empty", "args": [""], "returns": "" },
         { "name": "caps-length", "args": ["5102999"], "returns": "5102", "note": "reference truncates to the 4 characters of the document; asserted by the reference (JS) unit tests" },
-        { "args": [5102], "returns": "5102", "note": "JavaScript's own test: should read a number as the string of its digits" }
+        { "args": [5102], "returns": "5102", "note": "JavaScript's own test: should read a number as the string of its digits" },
+        { "args": [51.02], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [-1], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" }
       ]
     }
   }

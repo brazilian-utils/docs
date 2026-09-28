@@ -18,7 +18,11 @@
           "",
           "- `params` carries `bankCode` (3 digits), `agency` (1 to 5 digits), `account` (1 to 13 digits) and `digit` (1 or 2 characters, or `X` for Banco do Brasil and `P` for Bradesco), all strings.",
           "- `bankCode` must be a Banco Central STR participant (the list that `bank.getByCode` uses). The function rejects any other code.",
-          "- For banks with a published check-digit algorithm, the function uses that algorithm: Banco do Brasil (001), Santander (033), Banrisul (041), Caixa (104), Bradesco (237), Nubank (260, Verhoeff), Itaú (341), HSBC/Kirton (399) and Citibank (745), each with its own agency/account lengths.",
+          "- Nine banks are checked with a check-digit rule, each with its own agency/account lengths: Banco do Brasil (001), Santander (033), Banrisul (041), Caixa (104), Bradesco (237), Nubank (260, Verhoeff), Itaú (341), HSBC/Kirton (399) and Citibank (745).",
+          "- No act of the Banco Central, of another government body or of FEBRABAN sets these rules. The FEBRABAN CNAB 240 layout (v11.0, notes G009 to G012) calls each check digit a \"código adotado pelo Banco\" and gives no algorithm.",
+          "- Official source (the bank's own layout manual): Caixa (both digits, CNAB 400 notes NE051/NE052 and CNAB 240 note G011), Santander (the account digit, Débito Automático 150 positions v08, April 2026) and Banco do Brasil (the agency digit, Doc5175 Anexo XI; the manual only calls the account digit \"módulo 11\", which matches the rule here). The rules here match their worked examples.",
+          "- Third-party compendium: the other rules (Banrisul, Bradesco, Itaú, HSBC/Kirton, Citibank and the Caixa 11-digit form) follow the Icatu Seguros compendium \"Regras de Validação de dígito verificador de agência e conta corrente\", a private compilation. Nubank publishes no rule; its Verhoeff digit comes from open-source validators that derived it from real accounts.",
+          "- Caixa (104): the agency has 4 digits and the digit is 1 character. A 12-digit account (the \"sem operação\" form of the Caixa layouts) accepts either of the two Caixa digits: the account digit over the 12 digits (official example: 000000109990 gives 6) or the agency/account digit (0161 + 000000109990 gives 5). Both are modulus 11 with weights 2 to 9 from the right, a result above 9 giving 0. The older 11-digit form, operação (3 digits) + conta (8 digits), keeps the compendium's agency/account rule. 2.4.0 rejected a 12-digit Caixa account.",
           "- The function checks some banks (Inter, C6, PicPay, Sicoob, Sicredi and others) by structure only: a single numeric `digit` is enough.",
           "- Every other listed bank uses a generic fallback: `digit` must match mod 10 or mod 11 over the account (a 2-character digit chains mod 10 then mod 11)."
         ],
@@ -27,12 +31,23 @@
           "",
           "- `params` traz `bankCode` (3 dígitos), `agency` (1 a 5 dígitos), `account` (1 a 13 dígitos) e `digit` (1 ou 2 caracteres, ou `X` para o Banco do Brasil e `P` para o Bradesco), todos como strings.",
           "- `bankCode` deve ser um participante do STR do Banco Central (a lista que `bank.getByCode` usa). A função rejeita qualquer outro código.",
-          "- Para os bancos com algoritmo de dígito verificador publicado, a função usa esse algoritmo: Banco do Brasil (001), Santander (033), Banrisul (041), Caixa (104), Bradesco (237), Nubank (260, Verhoeff), Itaú (341), HSBC/Kirton (399) e Citibank (745), cada um com seus próprios tamanhos de agência e conta.",
+          "- Nove bancos são verificados com uma regra de dígito verificador, cada um com seus tamanhos de agência e conta: Banco do Brasil (001), Santander (033), Banrisul (041), Caixa (104), Bradesco (237), Nubank (260, Verhoeff), Itaú (341), HSBC/Kirton (399) e Citibank (745).",
+          "- Nenhum ato do Banco Central, de outro órgão do governo ou da FEBRABAN define essas regras. O leiaute CNAB 240 da FEBRABAN (v11.0, notas G009 a G012) chama cada dígito verificador de \"código adotado pelo Banco\" e não traz algoritmo.",
+          "- Fonte oficial (o manual de leiaute do próprio banco): Caixa (os dois dígitos, notas NE051/NE052 do CNAB 400 e nota G011 do CNAB 240), Santander (o dígito da conta, Débito Automático 150 posições v08, abril/2026) e Banco do Brasil (o dígito da agência, Doc5175 Anexo XI; o manual só chama o dígito da conta de \"módulo 11\", o que confere com a regra daqui). As regras daqui conferem com os exemplos resolvidos deles.",
+          "- Compêndio de terceiros: as demais regras (Banrisul, Bradesco, Itaú, HSBC/Kirton, Citibank e a forma de 11 dígitos da Caixa) seguem o compêndio \"Regras de Validação de dígito verificador de agência e conta corrente\" da Icatu Seguros, uma compilação privada. O Nubank não publica regra; o dígito Verhoeff vem de validadores de código aberto que o deduziram de contas reais.",
+          "- Caixa (104): a agência tem 4 dígitos e o dígito tem 1 caractere. Uma conta de 12 dígitos (a forma \"sem operação\" dos leiautes da Caixa) aceita qualquer um dos dois dígitos da Caixa: o dígito da conta sobre os 12 dígitos (exemplo oficial: 000000109990 dá 6) ou o dígito agência+conta (0161 + 000000109990 dá 5). Os dois são módulo 11 com pesos de 2 a 9 da direita para a esquerda, e resultado acima de 9 vira 0. A forma antiga de 11 dígitos, operação (3 dígitos) + conta (8 dígitos), mantém a regra agência+conta do compêndio. A 2.4.0 rejeitava conta Caixa de 12 dígitos.",
           "- A função verifica alguns bancos (Inter, C6, PicPay, Sicoob, Sicredi e outros) só pela estrutura: basta um único `digit` numérico.",
           "- Todos os outros bancos da lista usam uma verificação genérica: `digit` deve conferir com mod 10 ou mod 11 sobre a conta (um dígito de 2 caracteres encadeia mod 10 e depois mod 11)."
         ]
       },
-      "references": ["https://www.bcb.gov.br/content/estabilidadefinanceira/str1/ParticipantesSTR.csv"],
+      "references": [
+        "https://www.bcb.gov.br/content/estabilidadefinanceira/str1/ParticipantesSTR.csv",
+        "https://www.caixa.gov.br/Downloads/cobranca-caixa/Manual_de_Leiaute_de_Arquivo_Eletronico_CNAB_400.pdf",
+        "https://www.caixa.gov.br/Downloads/cobranca-caixa/Manual_de_Leiaute_de_Arquivo_Eletronico_CNAB_240.pdf",
+        "https://www.santander.com.br/layout-de-arquivos",
+        "https://www.bb.com.br/docs/pub/emp/empl/dwn/Doc5175Bloqueto.pdf",
+        "https://cmsarquivos.febraban.org.br/Arquivos/documentos/PDF/Layout%20padrao%20CNAB240%20V%2011_0%20-%202026_09_11.pdf"
+      ],
       "params": [{ "name": "params", "type": "IsValidBankAccountParams" }],
       "returns": "boolean",
       "tests": [
@@ -66,7 +81,7 @@
         { "args": [{ "bankCode": "033", "agency": "1234", "account": "1234567", "digit": "5" }], "returns": false, "note": "JavaScript's own test: should return false Santander (033) when account length is not 8" },
         { "args": [{ "bankCode": "033", "agency": "1234", "account": "12345678", "digit": "12" }], "returns": false, "note": "JavaScript's own test: should return false Santander (033) when digit length is not 1" },
         { "args": [{ "bankCode": "104", "agency": "123", "account": "00123456789", "digit": "0" }], "returns": false, "note": "JavaScript's own test: should return false Caixa (104) when agency length is not 4" },
-        { "args": [{ "bankCode": "104", "agency": "1234", "account": "1234567890", "digit": "0" }], "returns": false, "note": "JavaScript's own test: should return false Caixa (104) when account length is not 11" },
+        { "args": [{ "bankCode": "104", "agency": "1234", "account": "1234567890", "digit": "0" }], "returns": false, "note": "JavaScript's own test: should return false Caixa (104) when account length is not 11 or 12" },
         { "args": [{ "bankCode": "104", "agency": "1234", "account": "00123456789", "digit": "12" }], "returns": false, "note": "JavaScript's own test: should return false Caixa (104) when digit length is not 1" },
         { "args": [{ "bankCode": "246", "agency": "1234", "account": "123456", "digit": "6" }], "returns": true, "note": "JavaScript's own test: should return true for valid inputs with generic validation when the digit matches mod10 (mod10(\"123456\") = 6)" },
         { "args": [{ "bankCode": "246", "agency": "1234", "account": "123456", "digit": "1" }], "returns": true, "note": "JavaScript's own test: should return true for valid inputs with generic validation when the digit matches mod11 (mod11(\"123456\") = 1)" },
@@ -162,7 +177,16 @@
         { "args": [{ "bankCode": "246", "agency": "1234", "account": "123456", "digit": "9" }], "returns": false, "note": "JavaScript's own test: type coercion and structural edge cases should return false for generic validation when the digit matches neither mod10 nor either mod11 variant (123456 gives 6, 1 and 0)" },
         { "args": [{ "bankCode": "246", "agency": "1234", "account": "123457", "digit": "41" }], "returns": true, "note": "JavaScript's own test: type coercion and structural edge cases should return true for the two digit generic check when the second digit is a plain digit, not 0 or 10 (mod10('123457') = 4, mod11 bank variant over '1234574' = 1)" },
         { "args": [{ "bankCode": "030", "agency": "1234", "account": "123456", "digit": "6" }], "returns": false, "note": "JavaScript's own test: COMPE_CODES should reject 030, which only appears as a misaligned substring of the concatenated codes" },
-        { "args": [{ "bankCode": "003", "agency": "1234", "account": "123456", "digit": "6" }], "returns": true, "note": "JavaScript's own test: COMPE_CODES should accept 003, which is a listed code at an aligned position" }
+        { "args": [{ "bankCode": "003", "agency": "1234", "account": "123456", "digit": "6" }], "returns": true, "note": "JavaScript's own test: COMPE_CODES should accept 003, which is a listed code at an aligned position" },
+        { "args": [{ "bankCode": "104", "agency": "0161", "account": "000000109990", "digit": "6" }], "returns": true, "note": "from the maintainer briefing, #598. changed in 2.5.0: 2.4.0 rejected a 12-digit Caixa account. JavaScript's own test: Caixa (104) should return true when a 12 digit account carries its own digit, the Caixa CNAB 400 note NE051 example (000000109990, digit 6)" },
+        { "args": [{ "bankCode": "104", "agency": "0161", "account": "000000109990", "digit": "5" }], "returns": true, "note": "from the maintainer briefing, #598. changed in 2.5.0: 2.4.0 rejected a 12-digit Caixa account. JavaScript's own test: Caixa (104) should return true when a 12 digit account carries the agency/account digit, the Caixa CNAB 400 note NE052 example (0161 + 000000109990, digit 5)" },
+        { "args": [{ "bankCode": "104", "agency": "0161", "account": "000000109990", "digit": "0" }], "returns": false, "note": "JavaScript's own test: Caixa (104) should return false when a 12 digit account carries neither digit" },
+        { "args": [{ "bankCode": "104", "agency": "0161", "account": "000000109990", "digit": "1" }], "returns": false, "note": "JavaScript's own test: Caixa (104) should return false when a 12 digit account carries neither digit" },
+        { "args": [{ "bankCode": "104", "agency": "0161", "account": "000000109990", "digit": "4" }], "returns": false, "note": "JavaScript's own test: Caixa (104) should return false when a 12 digit account carries neither digit" },
+        { "args": [{ "bankCode": "104", "agency": "0161", "account": "000000109990", "digit": "7" }], "returns": false, "note": "JavaScript's own test: Caixa (104) should return false when a 12 digit account carries neither digit" },
+        { "args": [{ "bankCode": "104", "agency": "0000", "account": "000000000006", "digit": "0" }], "returns": true, "note": "JavaScript's own test: Caixa (104) should return true when a 12 digit account's digit comes out above 9 it is 0 (account 000000000006: sum 12, remainder 1, 11 - 1 = 10)" },
+        { "args": [{ "bankCode": "104", "agency": "0161", "account": "0000001099900", "digit": "6" }], "returns": false, "note": "Caixa (104): 13 digits is longer than the 12-digit account" },
+        { "args": [{ "bankCode": "033", "agency": "2001", "account": "01038237", "digit": "7" }], "returns": true, "note": "#598: the Santander Débito Automático 150 v08 (April 2026) worked example: agency 2001, account 01038237, digit 7" }
       ]
     }
   }

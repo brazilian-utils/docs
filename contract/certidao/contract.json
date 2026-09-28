@@ -19,13 +19,15 @@
           "Formats the matrícula of a certidão de registro civil into the printed mask of art. 473 of the Código Nacional de Normas. The mask groups the 32 digits as 6 2 2 4 1 5 3 7 2, separated by spaces.",
           "",
           "- The function applies the mask as far as the digits go. `options.pad` left-pads with zeros to 32 digits first.",
-          "- A full 32-digit matrícula does not fit an integer, so you must give it as a string."
+          "- A full 32-digit matrícula does not fit an integer, so you must give it as a string.",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
         ],
         "pt-BR": [
           "Formata a matrícula de uma certidão de registro civil na máscara impressa do art. 473 do Código Nacional de Normas. A máscara agrupa os 32 dígitos como 6 2 2 4 1 5 3 7 2, separados por espaços.",
           "",
           "- A função aplica a máscara até onde os dígitos vão. `options.pad` primeiro completa com zeros à esquerda até 32 dígitos.",
-          "- Uma matrícula completa de 32 dígitos não cabe em um inteiro, então você deve passá-la como string."
+          "- Uma matrícula completa de 32 dígitos não cabe em um inteiro, então você deve passá-la como string.",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
         ]
       },
       "references": [
@@ -46,7 +48,10 @@
         { "args": ["09430001552010100020112000012087"], "returns": "094300 01 55 2010 1 00020 112 0000120 87", "note": "JavaScript's own test: should return the matrícula in the printed mask for 094300 01 55 2010 1 00020 112 0000120-87 (klawdyo/validation-br certidao.spec.ts)" },
         { "args": ["1045390155201310001202100001232199"], "returns": "104539 01 55 2013 1 00012 021 0000123 21", "note": "JavaScript's own test: should return a partial mask when the value has more than 32 digits, dropping the excess" },
         { "args": ["1552010100020112000012087", { "pad": true }], "returns": "000000 01 55 2010 1 00020 112 0000120 87", "note": "JavaScript's own test: should left pad the value when options.pad is true" },
-        { "args": [104539015520], "returns": "104539 01 55 20", "note": "JavaScript's own test: should read a number as the string of its digits, like formatCpf masking it as far as it goes; a full 32 digit matrícula still has to be a string" }
+        { "args": [104539015520], "returns": "104539 01 55 20", "note": "JavaScript's own test: should read a number as the string of its digits, like formatCpf masking it as far as it goes; a full 32 digit matrícula still has to be a string" },
+        { "args": [1045390155.2], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [-1], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" }
       ]
     },
     "getInfo": {
@@ -59,13 +64,13 @@
           "Parses the matrícula of a certidão de registro civil into its fields. Returns null when it is not valid (same rules as `certidao.isValid`).",
           "",
           "- Fields: CNS of the serventia (6 digits), acervo, service (always `55`), year, book type (birth, marriage, religious marriage, death, stillbirth, banns, other, emancipation, interdiction) and its raw code 1 to 9, book, page, term and the 2 check digits.",
-          "- Art. 473 V lists only book codes 1 to 7. The function also accepts codes 8 (emancipação) and 9 (interdição)."
+          "- Art. 473 V of the Código Nacional de Normas lists book codes 1 to 7. Codes 8 (emancipação) and 9 (interdição) come from Provimento CNJ 3/2009, art. 7º V. That provimento was revoked by Provimento CNJ 63/2017, but certidões issued under it from 2010 carry those codes and are still valid, so both are read, as in 2.4.0."
         ],
         "pt-BR": [
           "Decompõe a matrícula de uma certidão de registro civil em seus campos. Retorna null quando ela não é válida (mesmas regras de `certidao.isValid`).",
           "",
           "- Campos: CNS da serventia (6 dígitos), acervo, serviço (sempre `55`), ano, tipo do livro (nascimento, casamento, casamento religioso, óbito, natimorto, proclamas, outros, emancipação, interdição) e seu código bruto de 1 a 9, livro, folha, termo e os 2 dígitos verificadores.",
-          "- O art. 473 V lista apenas os códigos de livro 1 a 7. A função também aceita os códigos 8 (emancipação) e 9 (interdição)."
+          "- O art. 473 V do Código Nacional de Normas lista os códigos de livro de 1 a 7. Os códigos 8 (emancipação) e 9 (interdição) vêm do Provimento CNJ 3/2009, art. 7º V. Esse provimento foi revogado pelo Provimento CNJ 63/2017, mas as certidões emitidas sob ele a partir de 2010 trazem esses códigos e continuam válidas, então os dois são lidos, como na 2.4.0."
         ]
       },
       "references": [
@@ -99,7 +104,9 @@
             "checkDigits": "18"
           },
           "note": "JavaScript's own test: should return the parsed matrícula for a matrícula whose first modulus 11 remainder is 10 (826683 01 55 2015 2 09245 842 9990114 18)"
-        }
+        },
+        { "args": ["10453901552013800012021000012343"], "returns": { "registryCns": "104539", "acervo": "01", "service": "55", "year": 2013, "type": "emancipation", "typeCode": 8, "book": "00012", "page": "021", "term": "0000123", "checkDigits": "43" }, "note": "JavaScript's own test: should return the fields for an emancipation act, book code 8 of the revoked Provimento CNJ nº 3/2009" },
+        { "args": ["10453901552013900012021000012398"], "returns": { "registryCns": "104539", "acervo": "01", "service": "55", "year": 2013, "type": "interdiction", "typeCode": 9, "book": "00012", "page": "021", "term": "0000123", "checkDigits": "98" }, "note": "JavaScript's own test: should return the fields for an interdiction act, book code 9 of the revoked Provimento CNJ nº 3/2009" }
       ]
     },
     "isValid": {
@@ -112,17 +119,19 @@
           "Validates the 32-digit matrícula of a certidão de registro civil (art. 473 of the Código Nacional de Normas da Corregedoria Nacional de Justiça).",
           "",
           "- Layout: CNS da serventia (6), acervo (2), serviço (2, always `55`), ano (4), tipo do livro (1), livro (5), folha (3), termo (7) and 2 modulus 11 check digits.",
-          "- The serviço must be `55`. The book type must be one of the nine books (the function rejects `0`).",
+          "- The serviço must be `55`. The book type must be 1 to 7 (art. 473 V) or 8 and 9 (emancipação and interdição, from the revoked Provimento CNJ 3/2009, art. 7º V, still on certidões issued from 2010). The function rejects `0`, whatever the check digits.",
           "- `options.accept` limits the valid book types to the listed ones (default: every type).",
-          "- Accepts the value masked or not, with whitespace between and around the groups."
+          "- Accepts the value masked or not, with whitespace between and around the groups.",
+          "- No official source publishes the check-digit algorithm. Art. 473 IX only names the check digits (positions 31 and 32). Provimento CNJ 3/2009 had them generated by a program the CNJ gave to the registrars. The modulus 11 weights and remainder rule follow community reference implementations."
         ],
         "pt-BR": [
           "Valida a matrícula de 32 dígitos de uma certidão de registro civil (art. 473 do Código Nacional de Normas da Corregedoria Nacional de Justiça).",
           "",
           "- Estrutura: CNS da serventia (6), acervo (2), serviço (2, sempre `55`), ano (4), tipo do livro (1), livro (5), folha (3), termo (7) e 2 dígitos verificadores por módulo 11.",
-          "- O serviço tem de ser `55`. O tipo do livro tem de ser um dos nove livros (a função rejeita `0`).",
+          "- O serviço precisa ser `55`. O tipo do livro precisa ser de 1 a 7 (art. 473 V) ou 8 e 9 (emancipação e interdição, do Provimento CNJ 3/2009 revogado, art. 7º V, ainda presentes em certidões emitidas desde 2010). A função rejeita `0`, sejam quais forem os dígitos verificadores.",
           "- `options.accept` restringe os tipos de livro válidos aos listados (padrão: todos os tipos).",
-          "- Aceita o valor com ou sem máscara, com espaços em branco entre os grupos e antes e depois deles."
+          "- Aceita o valor com ou sem máscara, com espaços em branco entre os grupos e antes e depois deles.",
+          "- Nenhuma fonte oficial publica o algoritmo do dígito verificador. O art. 473 IX só nomeia os dígitos verificadores (posições 31 e 32). O Provimento CNJ 3/2009 os fazia gerar por um programa que a CNJ distribuiu aos cartórios. Os pesos do módulo 11 e a regra do resto seguem implementações de referência da comunidade."
         ]
       },
       "references": [
@@ -166,7 +175,12 @@
         { "args": ["104539 01 55 2013 1 00012 021 0000123 21", { "accept": [] }], "returns": false, "note": "JavaScript's own test: options.accept should return false when the accepted list is empty" },
         { "args": ["10453901552013900012021000012398", { "accept": ["interdiction"] }], "returns": true, "note": "JavaScript's own test: options.accept should return true for an interdiction act (book code 9) when accepted" },
         { "args": ["10453901552013000012021000012387", { "accept": ["birth"] }], "returns": false, "note": "JavaScript's own test: options.accept should return false when the book code is 0, outside the nine books of the Provimento, and accept is given" },
-        { "args": ["123456", { "accept": ["birth"] }], "returns": false, "note": "JavaScript's own test: options.accept should return false when the matrícula itself is invalid, regardless of accept" }
+        { "args": ["123456", { "accept": ["birth"] }], "returns": false, "note": "JavaScript's own test: options.accept should return false when the matrícula itself is invalid, regardless of accept" },
+        { "args": ["10453901552013700012021000012315"], "returns": true, "note": "JavaScript's own test: should return true for the book codes 7, 8 and 9: art. 473, V, and the revoked Provimento CNJ nº 3/2009, art. 7º, V" },
+        { "args": ["10453901552013800012021000012343"], "returns": true, "note": "from the maintainer briefing, #593 (book codes 8 and 9 back to the 2.4.0 behaviour). JavaScript's own test: should return true for the book codes 7, 8 and 9: art. 473, V, and the revoked Provimento CNJ nº 3/2009, art. 7º, V" },
+        { "args": ["10453901552013900012021000012398"], "returns": true, "note": "from the maintainer briefing, #593 (book codes 8 and 9 back to the 2.4.0 behaviour). JavaScript's own test: should return true for the book codes 7, 8 and 9: art. 473, V, and the revoked Provimento CNJ nº 3/2009, art. 7º, V" },
+        { "args": ["10453901552013800012021000012343", { "accept": ["emancipation"] }], "returns": true, "note": "JavaScript's own test: options.accept should accept the book codes 8 and 9 of the Provimento CNJ nº 3/2009 when their types are accepted" },
+        { "args": ["10453901552013800012021000012343", { "accept": ["other"] }], "returns": false, "note": "JavaScript's own test: options.accept should accept the book codes 8 and 9 of the Provimento CNJ nº 3/2009 when their types are accepted" }
       ]
     },
     "parse": {
@@ -175,9 +189,15 @@
         "pt-BR": "Remove os caracteres de formatação da matrícula de uma certidão de registro civil e retorna só os dígitos."
       },
       "description": {
-        "en": ["Removes the formatting of a certidão matrícula and keeps only digits, capped at 32 digits."],
+        "en": [
+          "Removes the formatting of a certidão matrícula and keeps only digits, capped at 32 digits.",
+          "",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
+        ],
         "pt-BR": [
-          "Remove a formatação da matrícula de uma certidão e mantém apenas os dígitos, com no máximo 32 dígitos."
+          "Remove a formatação da matrícula de uma certidão e mantém apenas os dígitos, com no máximo 32 dígitos.",
+          "",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
         ]
       },
       "references": ["https://atos.cnj.jus.br/atos/detalhar/5243", "https://atos.cnj.jus.br/atos/detalhar/1310"],
@@ -188,7 +208,10 @@
         { "name": "strips-non-digits", "args": ["104539.01.55.2013.1.00012.021.0000123-21abc"], "returns": "10453901552013100012021000012321" },
         { "name": "caps-length", "args": ["10453901552013100012021000012321999"], "returns": "10453901552013100012021000012321", "note": "reference truncates to 32 digits; asserted by the reference (JS) unit tests" },
         { "name": "empty", "args": [""], "returns": "" },
-        { "args": ["104539 01"], "returns": "10453901", "note": "JavaScript's own test: should keep a partial matrícula as written" }
+        { "args": ["104539 01"], "returns": "10453901", "note": "JavaScript's own test: should keep a partial matrícula as written" },
+        { "args": [-1], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [1.5], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" }
       ]
     }
   }

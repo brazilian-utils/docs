@@ -3,8 +3,8 @@
   "domain": "cbo",
   "title": { "en": "CBO", "pt-BR": "CBO" },
   "summary": {
-    "en": "Classificação Brasileira de Ocupações: the occupation codes of the official CBO 2002 table.",
-    "pt-BR": "Códigos de ocupação da Classificação Brasileira de Ocupações (CBO 2002)."
+    "en": "Classificação Brasileira de Ocupações: the occupation codes of the current CBO 2002 release of the MTE.",
+    "pt-BR": "Códigos de ocupação da Classificação Brasileira de Ocupações (CBO 2002), na release vigente do MTE."
   },
   "category": "companies",
   "order": 5,
@@ -19,21 +19,23 @@
           "Looks up a CBO code in the CBO 2002 occupation table and returns its code and official title.",
           "",
           "- Same input rules as `cbo.isValid`. The returned code is the 6 bare digits.",
-          "- Returns null for an unknown code or a value not written in one of the accepted forms."
+          "- Returns null for an unknown code or a value not written in one of the accepted forms.",
+          "- It returns null exactly when `cbo.isValid` returns false. The table and its titles follow the current MTE release (10/07/2026). 106 titles changed from 2.4.0, and codes the MTE retired return null."
         ],
         "pt-BR": [
           "Consulta um código CBO na tabela de ocupações CBO 2002 e retorna o código e o título oficial.",
           "",
           "- Mesmas regras de entrada de `cbo.isValid`. O código retornado tem os 6 dígitos sem máscara.",
-          "- Retorna null para um código desconhecido ou para um valor que não está escrito em uma das formas aceitas."
+          "- Retorna null para um código desconhecido ou para um valor que não está escrito em uma das formas aceitas.",
+          "- Retorna null exatamente quando `cbo.isValid` retorna false. A tabela e os títulos seguem a release vigente do MTE (10/07/2026). 106 títulos mudaram em relação à 2.4.0, e códigos que o MTE retirou retornam null."
         ]
       },
-      "references": ["https://www.gov.br/trabalho-e-emprego/pt-br/assuntos/cbo/servicos/downloads/cbo2002-ocupacao.csv"],
+      "references": ["https://cbo.mte.gov.br/cbosite/pages/downloads.jsf"],
       "params": [{ "name": "value", "type": "string | number" }],
       "returns": "Cbo?",
       "tests": [
         { "args": ["212405"], "returns": { "code": "212405", "description": "Analista de desenvolvimento de sistemas" } },
-        { "name": "masked", "args": ["2124-05"], "returns": { "code": "212405", "description": "Analista de desenvolvimento de sistemas" } },
+        { "name": "masked", "args": ["2124-05"], "returns": { "code": "212405", "description": "Analista de desenvolvimento de sistemas" }, "note": "from the maintainer briefing, #599" },
         { "name": "leading-zero", "args": ["0102-05"], "returns": { "code": "010205", "description": "Oficial da aeronáutica" } },
         { "name": "nonexistent", "args": ["223150"], "returns": null },
         { "args": ["000000"], "returns": null },
@@ -49,7 +51,19 @@
         { "args": ["2124abc05"], "returns": null, "note": "JavaScript's own test: should return null for a string that is not written in a documented form" },
         { "args": ["21-2405"], "returns": null, "note": "JavaScript's own test: should return null for a string that is not written in a documented form" },
         { "args": [-212405], "returns": null, "note": "JavaScript's own test: should return null for a number that is not a non-negative safe integer" },
-        { "args": [2124.05], "returns": null, "note": "JavaScript's own test: should return null for a number that is not a non-negative safe integer" }
+        { "args": [2124.05], "returns": null, "note": "JavaScript's own test: should return null for a number that is not a non-negative safe integer" },
+        { "args": ["782325"], "returns": { "code": "782325", "description": "Motorista de transporte por aplicativos" }, "note": "added in the MTE release of 10/07/2026 (#599)" },
+        { "args": ["142360"], "returns": { "code": "142360", "description": "Analista de sucesso do cliente - customer success" }, "note": "added in the MTE release of 10/07/2026 (#599)" },
+        { "args": ["225157"], "returns": { "code": "225157", "description": "Médico emergencista" }, "note": "added in the MTE release of 10/07/2026 (#599)" },
+        { "args": ["322705"], "returns": { "code": "322705", "description": "Técnico em acupuntura" }, "note": "#599: Técnico em acupuntura moved to this code" },
+        { "args": ["121010"], "returns": { "code": "121010", "description": "Diretor geral de empresa e organizações (exceto do terceiro setor)" }, "note": "changed in 2.5.0 (#599): title renamed in the MTE release of 10/07/2026 (2.4.0: \"… (exceto de interesse público)\")" },
+        { "args": ["214535"], "returns": { "code": "214535", "description": "Tecnólogo em produção sucroalcooleira" }, "note": "changed in 2.5.0 (#599): title renamed in the MTE release of 10/07/2026 (2.4.0: \"Tecnólogo em produção sulcroalcooleira\")" },
+        { "args": ["225142"], "returns": null, "note": "changed in 2.5.0 (#599): the MTE dropped this code from the current CBO release (10/07/2026); 2.4.0 returned its entry" },
+        { "args": ["322105"], "returns": null, "note": "changed in 2.5.0 (#599): the MTE dropped this code from the current CBO release (10/07/2026); 2.4.0 returned its entry" },
+        { "args": ["322115"], "returns": null, "note": "changed in 2.5.0 (#599): the MTE dropped this code from the current CBO release (10/07/2026); 2.4.0 returned its entry" },
+        { "args": ["322120"], "returns": null, "note": "changed in 2.5.0 (#599): the MTE dropped this code from the current CBO release (10/07/2026); 2.4.0 returned its entry" },
+        { "args": ["322125"], "returns": null, "note": "changed in 2.5.0 (#599): the MTE dropped this code from the current CBO release (10/07/2026); 2.4.0 returned its entry" },
+        { "args": ["782820"], "returns": null, "note": "changed in 2.5.0 (#599): the MTE dropped this code from the current CBO release (10/07/2026); 2.4.0 returned its entry" }
       ]
     },
     "isValid": {
@@ -63,17 +77,25 @@
           "",
           "- Accepts the 6 digits, the `NNNN-NN` mask or a non-negative integer. The mask has a single separator between the groups: space, `.`, `-` or `/`.",
           "- Bare digits (string or number) are left-padded with zeros to 6. A masked value is read as written.",
-          "- Any other string is rejected. The function does not pick out its digits."
+          "- Any other string is rejected. The function does not pick out its digits.",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number is invalid.",
+          "- The table follows the current release of the MTE, the \"Estrutura CBO (CSV)\" files of 10/07/2026 with 2,725 occupations. 2.4.0 used the older gov.br CSV of 06/06/2025 (2,694 occupations).",
+          "- A code the MTE retired is no longer valid. 225142, 322105, 322115, 322120, 322125 and 782820 were valid in 2.4.0 and are invalid now. Some moved to new codes: Técnico em acupuntura is now 322705.",
+          "- 37 occupations were added, among them 782325 (Motorista de transporte por aplicativos), 142360 and 225157."
         ],
         "pt-BR": [
           "Verifica se um código CBO existe na tabela oficial de ocupações CBO 2002.",
           "",
           "- Aceita os 6 dígitos, a máscara `NNNN-NN` ou um inteiro não negativo. A máscara tem um único separador entre os grupos: espaço, `.`, `-` ou `/`.",
           "- Dígitos sem máscara (string ou número) são completados com zeros à esquerda até 6. Um valor com máscara é lido como está escrito.",
-          "- Qualquer outra string é rejeitada. A função não extrai os dígitos dela."
+          "- Qualquer outra string é rejeitada. A função não extrai os dígitos dela.",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro é inválido.",
+          "- A tabela segue a release vigente do MTE, os arquivos \"Estrutura CBO (CSV)\" de 10/07/2026, com 2.725 ocupações. A 2.4.0 usava o CSV mais antigo do gov.br, de 06/06/2025 (2.694 ocupações).",
+          "- Um código que o MTE retirou deixa de ser válido. 225142, 322105, 322115, 322120, 322125 e 782820 eram válidos na 2.4.0 e agora são inválidos. Alguns foram para códigos novos: Técnico em acupuntura agora é 322705.",
+          "- Entraram 37 ocupações, entre elas 782325 (Motorista de transporte por aplicativos), 142360 e 225157."
         ]
       },
-      "references": ["https://www.gov.br/trabalho-e-emprego/pt-br/assuntos/cbo/servicos/downloads/cbo2002-ocupacao.csv"],
+      "references": ["https://cbo.mte.gov.br/cbosite/pages/downloads.jsf"],
       "params": [{ "name": "value", "type": "string | number" }],
       "returns": "boolean",
       "tests": [
@@ -102,7 +124,18 @@
         { "args": ["21-2405"], "returns": false, "note": "JavaScript's own test: should return false for a string that is not written in a documented form" },
         { "args": ["+212405"], "returns": false, "note": "JavaScript's own test: should return false for a string that is not written in a documented form" },
         { "args": [-212405], "returns": false, "note": "JavaScript's own test: should return false for a number that is not a non-negative safe integer" },
-        { "args": [2124.05], "returns": false, "note": "JavaScript's own test: should return false for a number that is not a non-negative safe integer" }
+        { "args": [2124.05], "returns": false, "note": "JavaScript's own test: should return false for a number that is not a non-negative safe integer" },
+        { "args": ["782325"], "returns": true, "note": "from the maintainer briefing, #599. JavaScript's own test: should accept an occupation the MTE added after the older gov.br release (782325, Motorista de transporte por aplicativos)" },
+        { "args": ["142360"], "returns": true, "note": "JavaScript's own test: should accept an occupation the MTE added after the older gov.br release (142360)" },
+        { "args": ["225157"], "returns": true, "note": "added in the MTE release of 10/07/2026 (#599): Médico emergencista" },
+        { "args": ["322705"], "returns": true, "note": "#599: Técnico em acupuntura, the new code of an occupation that was 3221xx" },
+        { "args": ["322105"], "returns": false, "note": "from the maintainer briefing, #599. changed in 2.5.0 (#599): the MTE dropped this code from the current CBO release (10/07/2026); 2.4.0 accepted it. JavaScript's own test: should reject an occupation the MTE has dropped (322105 and 782820)" },
+        { "args": ["782820"], "returns": false, "note": "changed in 2.5.0 (#599): the MTE dropped this code from the current CBO release (10/07/2026); 2.4.0 accepted it. JavaScript's own test: should reject an occupation the MTE has dropped (322105 and 782820)" },
+        { "args": ["225142"], "returns": false, "note": "changed in 2.5.0 (#599): the MTE dropped this code from the current CBO release (10/07/2026); 2.4.0 accepted it" },
+        { "args": ["322115"], "returns": false, "note": "changed in 2.5.0 (#599): the MTE dropped this code from the current CBO release (10/07/2026); 2.4.0 accepted it" },
+        { "args": ["322120"], "returns": false, "note": "changed in 2.5.0 (#599): the MTE dropped this code from the current CBO release (10/07/2026); 2.4.0 accepted it" },
+        { "args": ["322125"], "returns": false, "note": "changed in 2.5.0 (#599): the MTE dropped this code from the current CBO release (10/07/2026); 2.4.0 accepted it" },
+        { "args": [9007199254740992], "returns": false, "note": "JavaScript's own test: should return false for a number that is not a non-negative safe integer (2 ** 53)" }
       ]
     },
     "parse": {
@@ -114,15 +147,17 @@
         "en": [
           "Removes CBO formatting and keeps only digits, capped at 6 digits.",
           "",
-          "- It does not left-pad anything. A leading zero must be written out."
+          "- It does not left-pad anything. A leading zero must be written out.",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
         ],
         "pt-BR": [
           "Remove a formatação do CBO e mantém somente os dígitos, limitados a 6 dígitos.",
           "",
-          "- Não completa nada com zeros à esquerda. Um zero à esquerda precisa estar escrito."
+          "- Não completa nada com zeros à esquerda. Um zero à esquerda precisa estar escrito.",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
         ]
       },
-      "references": ["https://www.gov.br/trabalho-e-emprego/pt-br/assuntos/cbo/servicos/downloads/cbo2002-ocupacao.csv"],
+      "references": ["https://cbo.mte.gov.br/cbosite/pages/downloads.jsf"],
       "params": [{ "name": "value", "type": "string | number" }],
       "returns": "string",
       "tests": [
@@ -132,7 +167,10 @@
         { "name": "empty", "args": [""], "returns": "" },
         { "name": "caps-length", "args": ["212405999"], "returns": "212405", "note": "reference truncates to the 6 characters of the document; asserted by the reference (JS) unit tests" },
         { "args": [212405], "returns": "212405", "note": "JavaScript's own test: should read a number as the string of its digits" },
-        { "args": ["10205"], "returns": "10205", "note": "JavaScript's own test: should keep a partial code as written, without padding it" }
+        { "args": ["10205"], "returns": "10205", "note": "JavaScript's own test: should keep a partial code as written, without padding it" },
+        { "args": [-1], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [1.5], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" }
       ]
     }
   }
