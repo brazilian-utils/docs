@@ -6,6 +6,10 @@
   "repo": "https://github.com/brazilian-utils/javascript",
   "entry": "src/index.ts",
   "ignore": ["toStandardSchema"],
+  "waivers": {
+    "legalNature.getDescription": "getLegalNature(code)?.description gives the same text",
+    "phone.removeInternationalDialingCode": "parsePhone removes a leading +55, 0055 or 55 when a 10- or 11-digit national number is left"
+  },
   "site": {
     "label": "JavaScript",
     "order": 1,
