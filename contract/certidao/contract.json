@@ -69,7 +69,7 @@
         "en": [
           "Parses the matrícula of a certidão de registro civil into its fields. Returns null when it is not valid (same rules as `certidao.isValid`).",
           "",
-          "- Fields: CNS of the serventia (6 digits), acervo, service (always `55`), year, book type (birth, marriage, religious marriage, death, stillbirth, banns, other, emancipation, interdiction) and its raw code 1 to 9, book, page, term and the 2 check digits.",
+          "- `type` is the English name of the book (`birth`, `marriage`, `religious-marriage`, `death`, `stillbirth`, `banns`, `other`, `emancipation`, `interdiction`). Fields: CNS of the serventia (6 digits), acervo, service (always `55`), year, book type (birth, marriage, religious marriage, death, stillbirth, banns, other, emancipation, interdiction) and its raw code 1 to 9, book, page, term and the 2 check digits.",
           "- `year` and `typeCode` are numbers. `registryCns`, `acervo`, `service`, `book`, `page`, `term` and `checkDigits` are strings that keep their leading zeros. The input is read like `certidao.isValid` reads it, so a masked value works and a non-string returns null.",
           "- Art. 473 V of the Código Nacional de Normas lists book codes 1 to 7. Codes 8 (emancipação) and 9 (interdição) come from Provimento CNJ 3/2009, art. 7º V. That provimento was revoked by Provimento CNJ 63/2017, but certidões issued under it from 2010 carry those codes and are still valid, so both are read, as in 2.4.0.",
           "- `acervo` is `01` for the serventia's own acervo and `02` and up for each acervo it absorbed. Art. 473, §§ 3º to 5º split the absorbed ones by the date the origin serventia was extinguished or deactivated. Up to 31/12/2009 the CNS is the incorporating unit's and the acervo code runs from `02`, one per incorporation. From 01/01/2010 the CNS is the incorporated unit's own and the code is `01`, counted as that unit's own acervo. An acervo split between two or more successor serventias gets each successor's CNS with the code `02`."
@@ -77,7 +77,7 @@
         "pt-BR": [
           "Decompõe a matrícula de uma certidão de registro civil em seus campos. Retorna null quando ela não é válida (mesmas regras de `certidao.isValid`).",
           "",
-          "- Campos: CNS da serventia (6 dígitos), acervo, serviço (sempre `55`), ano, tipo do livro (nascimento, casamento, casamento religioso, óbito, natimorto, proclamas, outros, emancipação, interdição) e seu código bruto de 1 a 9, livro, folha, termo e os 2 dígitos verificadores.",
+          "- `type` é o nome do livro em inglês (`birth`, `marriage`, `religious-marriage`, `death`, `stillbirth`, `banns`, `other`, `emancipation`, `interdiction`). Campos: CNS da serventia (6 dígitos), acervo, serviço (sempre `55`), ano, tipo do livro (nascimento, casamento, casamento religioso, óbito, natimorto, proclamas, outros, emancipação, interdição) e seu código bruto de 1 a 9, livro, folha, termo e os 2 dígitos verificadores.",
           "- `year` e `typeCode` são números. `registryCns`, `acervo`, `service`, `book`, `page`, `term` e `checkDigits` são strings que mantêm os zeros à esquerda. A entrada é lida como `certidao.isValid` a lê, então um valor com máscara funciona e um valor que não é string retorna null.",
           "- O art. 473 V do Código Nacional de Normas lista os códigos de livro de 1 a 7. Os códigos 8 (emancipação) e 9 (interdição) vêm do Provimento CNJ 3/2009, art. 7º V. Esse provimento foi revogado pelo Provimento CNJ 63/2017, mas as certidões emitidas sob ele a partir de 2010 trazem esses códigos e continuam válidas, então os dois são lidos, como na 2.4.0.",
           "- `acervo` é `01` para o acervo próprio da serventia e `02` em diante para cada acervo que ela absorveu. O art. 473, §§ 3º a 5º, separa os absorvidos pela data em que a serventia de origem foi extinta ou desativada. Até 31/12/2009 o CNS é o da unidade incorporadora e o código do acervo começa em `02`, um por incorporação. A partir de 01/01/2010 o CNS é o da própria unidade incorporada e o código é `01`, contado como acervo próprio dela. Um acervo dividido entre duas ou mais serventias sucessoras recebe o CNS de cada sucessora com o código `02`."
@@ -207,11 +207,13 @@
         "en": [
           "Removes the formatting of a certidão matrícula and keeps only digits, capped at 32 digits.",
           "",
+          "- A value shorter than 32 digits passes through as far as it goes, so the mask of an input still being typed can be stripped. Nothing is padded.",
           "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
         ],
         "pt-BR": [
           "Remove a formatação da matrícula de uma certidão e mantém apenas os dígitos, com no máximo 32 dígitos.",
           "",
+          "- Um valor com menos de 32 dígitos passa até onde vai, então dá para tirar a máscara de um campo ainda em digitação. Nada é completado com zeros.",
           "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
         ]
       },

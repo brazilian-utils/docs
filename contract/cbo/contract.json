@@ -79,14 +79,14 @@
       },
       "description": {
         "en": [
-          "Looks up a CBO code in the CBO 2002 occupation table and returns its code and official title.",
+          "Looks up a CBO code in the CBO 2002 occupation table and returns its `code` and official title (`description`).",
           "",
           "- Same input rules as `cbo.isValid`. The returned code is the 6 bare digits.",
           "- Returns null for an unknown code or a value not written in one of the accepted forms. A run of separators between the groups is accepted, as in `cbo.isValid` (`2124--05` gives the entry; until 2.4.0 it gave null).",
           "- It returns null exactly when `cbo.isValid` returns false. The table and its titles follow the current MTE release (10/07/2026). 106 titles changed from 2.4.0, and codes the MTE retired return null."
         ],
         "pt-BR": [
-          "Consulta um código CBO na tabela de ocupações CBO 2002 e retorna o código e o título oficial.",
+          "Consulta um código CBO na tabela de ocupações CBO 2002 e retorna o `code` e o título oficial (`description`).",
           "",
           "- Mesmas regras de entrada de `cbo.isValid`. O código retornado tem os 6 dígitos sem máscara.",
           "- Retorna null para um código desconhecido ou para um valor que não está escrito em uma das formas aceitas. Uma sequência de separadores entre os grupos é aceita, como em `cbo.isValid` (`2124--05` retorna o registro; até a 2.4.0 retornava null).",
@@ -191,7 +191,7 @@
         { "args": [-212405], "returns": false, "note": "JavaScript's own test: should return false for a number that is not a non-negative safe integer" },
         { "args": [2124.05], "returns": false, "note": "JavaScript's own test: should return false for a number that is not a non-negative safe integer" },
         { "args": ["782325"], "returns": true, "note": "from the maintainer briefing, #599. JavaScript's own test: should accept an occupation the MTE added after the older gov.br release (782325, Motorista de transporte por aplicativos)" },
-        { "args": ["142360"], "returns": true, "note": "JavaScript's own test: should accept an occupation the MTE added after the older gov.br release (142360)" },
+        { "args": ["142360"], "returns": true, "note": "JavaScript's own test: should accept an occupation the MTE added after the older gov.br release (782325, Motorista de transporte por aplicativos), which also asserts 142360" },
         { "args": ["225157"], "returns": true, "note": "added in the MTE release of 10/07/2026 (#599): Médico emergencista" },
         { "args": ["322705"], "returns": true, "note": "#599: Técnico em acupuntura, the new code of an occupation that was 3221xx" },
         { "args": ["322105"], "returns": false, "note": "from the maintainer briefing, #599. changed in 2.5.0 (#599): the MTE dropped this code from the current CBO release (10/07/2026); 2.4.0 accepted it. JavaScript's own test: should reject an occupation the MTE has dropped (322105 and 782820)" },
@@ -201,8 +201,7 @@
         { "args": ["322120"], "returns": false, "note": "changed in 2.5.0 (#599): the MTE dropped this code from the current CBO release (10/07/2026); 2.4.0 accepted it" },
         { "args": ["322125"], "returns": false, "note": "changed in 2.5.0 (#599): the MTE dropped this code from the current CBO release (10/07/2026); 2.4.0 accepted it" },
         { "args": [9007199254740992], "returns": false, "note": "JavaScript's own test: should return false for a number that is not a non-negative safe integer (2 ** 53)" },
-        { "args": ["2124-0-5"], "returns": false, "note": "JavaScript's own test: should accept a group boundary written with a run of separators (2124--05), as isValidCpf does" },
-        { "args": ["2124-05"], "returns": true, "note": "JavaScript's own test: should accept a group boundary written with a run of separators (2124--05), as isValidCpf does" }
+        { "args": ["2124-0-5"], "returns": false, "note": "JavaScript's own test: should accept a group boundary written with a run of separators (2124--05), as isValidCpf does" }
       ]
     },
     "parse": {

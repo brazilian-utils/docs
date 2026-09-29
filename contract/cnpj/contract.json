@@ -24,6 +24,7 @@
           "- `options.obfuscate` (default `false`, read for truthiness like `pad`) hides the first 2 characters and the 2 check digits with `*`, after padding. This is a convention of the library, with no official source: no law or Receita Federal act sets a masking rule for the CNPJ, whose data are public. It follows the rule the Leis de Diretrizes Orçamentárias set for the CPF.",
           "- A number is read only when it is a non-negative safe integer. A negative, fractional, not finite or unsafe number returns an empty string. 2.4.0 read the digits of any number.",
           "- A value with no characters the version keeps (empty, or only symbols) returns an empty string even with `options.pad`. Until 2.4.0 `pad` returned the full zero mask (`00.000.000/0000-00`).",
+          "- The value is read up to 14 characters: characters past the 14th are dropped, also with `options.pad`.",
           "- Since July 2026 new CNPJs may be alphanumeric. The default `version: 1` drops their letters, so pass `version: 2` to keep them. A number loses its leading zeros: pass a string, or use `options.pad`, for a CNPJ that starts with `0`.",
           "- Pending decision (findings §2 #2, #3): the reference (JS) formats only the characters an incomplete value has and returns an empty string for empty or invalid input. Other libraries return null."
         ],
@@ -35,6 +36,7 @@
           "- `options.obfuscate` (padrão `false`, lido como verdadeiro ou falso, como `pad`) oculta os 2 primeiros caracteres e os 2 dígitos verificadores com `*`, depois do preenchimento. É uma convenção da biblioteca, sem fonte oficial: nenhuma lei ou ato da Receita Federal fixa regra de mascaramento para o CNPJ, cujos dados são públicos. Ela segue a regra que as Leis de Diretrizes Orçamentárias fixam para o CPF.",
           "- Um número só é lido quando é um inteiro seguro não negativo. Um número negativo, fracionário, não finito ou inseguro retorna uma string vazia. A 2.4.0 lia os dígitos de qualquer número.",
           "- Um valor sem nenhum caractere que a versão mantém (vazio, ou só símbolos) retorna uma string vazia mesmo com `options.pad`. Até a 2.4.0, `pad` retornava a máscara inteira de zeros (`00.000.000/0000-00`).",
+          "- O valor é lido até 14 caracteres: os caracteres depois do 14º são descartados, também com `options.pad`.",
           "- Desde julho de 2026 os novos CNPJs podem ser alfanuméricos. A `version: 1` padrão descarta as letras deles; passe `version: 2` para mantê-las. Um número perde os zeros à esquerda: passe uma string, ou use `options.pad`, para um CNPJ que começa com `0`.",
           "- Decisão pendente (findings §2 #2, #3): a referência (JS) formata só os caracteres que um valor incompleto tem e retorna uma string vazia para entrada vazia ou inválida. Outras bibliotecas retornam null."
         ]
@@ -158,7 +160,7 @@
         "en": [
           "Generates a valid random CNPJ, unformatted.",
           "",
-          "- `versionOrParams` picks the version: `1` (default, numeric) or `2` (alphanumeric). It can also set the branch (número de ordem), an integer from 1 to 9999. The branch is random by default, and an invalid branch is ignored.",
+          "- `versionOrParams` picks the version: `1` (default, numeric) or `2` (alphanumeric). It can also be an object `{ version, branch }`, where `branch` sets the branch (número de ordem), an integer from 1 to 9999. The branch is random by default, and an invalid branch is ignored.",
           "- A branch given in `branch` is written as 4 digits in both versions (`3` gives `0003`). A random branch under version 2 can carry letters, like the root.",
           "- A random branch is never `0000`: the establishments of a root are numbered from `0001`, the headquarters (matriz). 2.4.0 could return `0000`, about once in 10,000 numeric CNPJs.",
           "- Invalid `branch` values (0, above 9999, fractional, not a number) are ignored and a random branch is used. A number `versionOrParams` other than `2` (or a value that is neither `2` nor an object) generates a numeric CNPJ."
@@ -166,7 +168,7 @@
         "pt-BR": [
           "Gera um CNPJ aleatório e válido, sem formatação.",
           "",
-          "- `versionOrParams` escolhe a versão: `1` (padrão, numérico) ou `2` (alfanumérico). Também pode definir a filial (número de ordem), um inteiro de 1 a 9999. A filial é aleatória por padrão, e uma filial inválida é ignorada.",
+          "- `versionOrParams` escolhe a versão: `1` (padrão, numérico) ou `2` (alfanumérico). Também pode ser um objeto `{ version, branch }`, em que `branch` define a filial (número de ordem), um inteiro de 1 a 9999. A filial é aleatória por padrão, e uma filial inválida é ignorada.",
           "- Uma filial dada em `branch` é escrita com 4 dígitos nas duas versões (`3` dá `0003`). Uma filial sorteada na versão 2 pode ter letras, como a raiz.",
           "- Uma filial sorteada nunca é `0000`: os estabelecimentos de uma raiz são numerados a partir de `0001`, a matriz. A 2.4.0 podia retornar `0000`, cerca de uma vez a cada 10.000 CNPJs numéricos.",
           "- Um valor inválido de `branch` (0, acima de 9999, fracionário, não numérico) é ignorado e uma filial aleatória é usada. Um `versionOrParams` que não seja `2` nem um objeto gera um CNPJ numérico."
@@ -179,7 +181,9 @@
         "https://www.gov.br/receitafederal/pt-br/centrais-de-conteudo/publicacoes/perguntas-e-respostas/cnpj/cnpj-alfanumerico.pdf"
       ],
       "level": "core",
-      "params": [{ "name": "versionOrParams", "type": "1 | 2 | GenerateCnpjParams", "optional": true }],
+      "params": [
+        { "name": "versionOrParams", "type": "1 | 2 | GenerateCnpjParams", "optional": true, "fields": [{ "name": "version", "type": "1 | 2", "optional": true }, { "name": "branch", "type": "number", "optional": true }] }
+      ],
       "returns": "string",
       "tests": [
         { "name": "generated-is-valid", "args": [], "satisfies": "cnpj.isValid", "repeat": 5, "note": "every generated value must pass the lib's own validator" },

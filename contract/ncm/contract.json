@@ -74,12 +74,14 @@
         "en": [
           "Checks whether an NCM code exists in the current table that Siscomex publishes.",
           "",
+          "- A value written as bare digits, as a string or as a number, is left-padded with zeros to 8: `1012100`, `\"1012100\"` and `\"01012100\"` are the same code. A masked value is read as written (`101.21.00` is invalid).",
           "- Same input rules as `cbo.isValid`, with 8 digits and the `NNNN.NN.NN` mask, including a run of separators between the groups: `2203..00.00` is valid. Until 2.4.0 a single separator was accepted and `2203..00.00` was rejected.",
           "- The table is the file \"Vigente em 26/09/2026\" of the Portal Único Siscomex (Resolução Gecex nº 926/2026), with 10,515 codes."
         ],
         "pt-BR": [
           "Verifica se um código NCM existe na tabela vigente publicada pelo Siscomex.",
           "",
+          "- Um valor escrito só com dígitos, como string ou como número, é completado com zeros à esquerda até 8: `1012100`, `\"1012100\"` e `\"01012100\"` são o mesmo código. Um valor com máscara é lido como foi escrito (`101.21.00` é inválido).",
           "- Mesmas regras de entrada de `cbo.isValid`, com 8 dígitos e a máscara `NNNN.NN.NN`, inclusive uma sequência de separadores entre os grupos: `2203..00.00` é válido. Até a 2.4.0 um único separador era aceito e `2203..00.00` era rejeitado.",
           "- A tabela é o arquivo \"Vigente em 26/09/2026\" do Portal Único Siscomex (Resolução Gecex nº 926/2026), com 10.515 códigos."
         ]

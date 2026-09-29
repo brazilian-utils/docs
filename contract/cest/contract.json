@@ -136,6 +136,7 @@
         "en": [
           "Checks whether a CEST is listed in the annexes of Convênio ICMS 142/18 (Anexos II to XXVI of the consolidated text, last amended by Convênio ICMS 180/24).",
           "",
+          "- A CEST has 7 digits: the first two are the segment, the third to the fifth the item of the segment and the last two the specification of the item (cláusula sexta, IV of the Convênio).",
           "- Accepted string forms: 7 digits, or `NN.NNN.NN` with any run of separators (space, `.`, `-` or `/`) between the groups, or none, and optional surrounding whitespace. Any other string is invalid: its digits are not picked out.",
           "- Bare digits are left-padded with zeros to 7, as a string or as a number, because segments 01 to 09 start with zero: `100100`, `\"100100\"` and `\"0100100\"` are the same code. A masked value is read as written.",
           "- A number is read only when it is a non-negative safe integer. A negative, fractional, not finite or unsafe number is invalid.",
@@ -147,6 +148,7 @@
         "pt-BR": [
           "Verifica se um CEST consta dos anexos do Convênio ICMS 142/18 (Anexos II a XXVI do texto consolidado, alterado até o Convênio ICMS 180/24).",
           "",
+          "- Um CEST tem 7 dígitos: os dois primeiros são o segmento, do terceiro ao quinto o item do segmento e os dois últimos a especificação do item (cláusula sexta, IV do Convênio).",
           "- Formas aceitas em string: 7 dígitos, ou `NN.NNN.NN` com qualquer sequência de separadores (espaço, `.`, `-` ou `/`) entre os grupos, ou nenhum, e espaços opcionais em volta. Qualquer outra string é inválida: a função não extrai os dígitos dela.",
           "- Dígitos sem máscara são completados com zeros à esquerda até 7, em string ou em número, porque os segmentos 01 a 09 começam com zero: `100100`, `\"100100\"` e `\"0100100\"` são o mesmo código. Um valor com máscara é lido como foi escrito.",
           "- Um número só é lido quando é um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro é inválido.",

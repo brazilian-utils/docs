@@ -67,21 +67,21 @@
       "summary": { "en": "Checks whether a CAEPF number is valid.", "pt-BR": "Verifica se um número CAEPF é válido." },
       "description": {
         "en": [
-          "Validates a CAEPF: 14 digits, the 9-digit CPF base of the holder, a 3-digit sequence and 2 check digits.",
+          "Validates a CAEPF: 14 digits, the 9-digit CPF base of the holder, a 3-digit sequence and 2 check digits. The CAEPF replaced the CEI for individuals who hire employees, such as rural producers.",
           "",
           "- Both check digits follow the CNPJ modulus 11. Then the resulting pair is shifted by 12, wrapping around 100.",
           "- A value whose 12-digit base (the CPF base and the sequence) has all digits the same is rejected.",
-          "- The value may be a number or a string, unmasked or split into the printed groups (3, 3, 3, 3 and 2 digits) by any run of whitespace, `.`, `-` or `/` between two groups. Whitespace around the value is ignored. Anything else, such as another separator, a letter or a different grouping, is rejected.",
+          "- The value may be a number or a string of 14 digits. Between the printed groups (3, 3, 3, 3 and 2 digits) there may be any run of whitespace, `.`, `-` or `/`, and any of those runs may be left out, so `293118.610/00184` is valid. Whitespace around the value is ignored. Anything else, such as another separator, a letter or a separator inside a group, is rejected.",
           "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number is invalid.",
           "- No official source publishes the check digit rule. Only the 14 positions and the 9-digit CPF base are official (SERPRO's documentation of the Receita Federal cadastro). The IN RFB 1.828/2018 has no check digit, and the eSocial only checks that the number exists in the Receita Federal base. The 3 + 2 split of the last 5 digits and the rule come from third-party reference implementations. They accept SERPRO's example `00000002500171`.",
           "- A number loses its leading zeros, so a value that starts with `0` is only accepted as a string."
         ],
         "pt-BR": [
-          "Valida um CAEPF: 14 dígitos, com a base de 9 dígitos do CPF do titular, uma sequência de 3 dígitos e 2 dígitos verificadores.",
+          "Valida um CAEPF: 14 dígitos, com a base de 9 dígitos do CPF do titular, uma sequência de 3 dígitos e 2 dígitos verificadores. O CAEPF substituiu o CEI para pessoas físicas que contratam empregados, como os produtores rurais.",
           "",
           "- Os dois dígitos verificadores seguem o módulo 11 do CNPJ. Depois, o par resultante é deslocado em 12, com volta ao chegar a 100.",
           "- Um valor cuja base de 12 dígitos (a base do CPF e o número de ordem) tem todos os dígitos iguais é rejeitado.",
-          "- O valor pode ser um número ou uma string, sem máscara ou dividido nos grupos impressos (3, 3, 3, 3 e 2 dígitos) por qualquer sequência de espaços, `.`, `-` ou `/` entre dois grupos. Os espaços em volta do valor são ignorados. Qualquer outra forma, como outro separador, uma letra ou um agrupamento diferente, é rejeitada.",
+          "- O valor pode ser um número ou uma string de 14 dígitos. Entre os grupos impressos (3, 3, 3, 3 e 2 dígitos) pode haver qualquer sequência de espaços, `.`, `-` ou `/`, e qualquer uma dessas sequências pode faltar, então `293118.610/00184` é válido. Os espaços em volta do valor são ignorados. Qualquer outra forma, como outro separador, uma letra ou um separador dentro de um grupo, é rejeitada.",
           "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro é inválido.",
           "- Nenhuma fonte oficial publica a regra do dígito verificador. Só as 14 posições e a base de 9 dígitos do CPF são oficiais (documentação do SERPRO do cadastro da Receita Federal). A IN RFB 1.828/2018 não traz dígito verificador, e o eSocial só verifica se o número existe na base da Receita. A divisão 3 + 2 dos últimos 5 dígitos e a regra vêm de implementações de referência de terceiros. Elas aceitam o exemplo do SERPRO, `00000002500171`.",
           "- Um número perde os zeros à esquerda, então um valor que começa com `0` só é aceito como string."
@@ -121,7 +121,8 @@
         { "args": [-29311861000184], "returns": false, "note": "JavaScript's own test: should return false when it is a negative or fractional number (#593 number rule)" },
         { "args": [293118610001.84], "returns": false, "note": "JavaScript's own test: should return false when it is a negative or fractional number (#593 number rule)" },
         { "args": ["00000002500171"], "returns": true, "note": "JavaScript's own test: should return true for 00000002500171, the example of SERPRO's documentation of the Receita Federal's CAEPF cadastro" },
-        { "args": [2500171], "returns": false, "note": "a number loses its leading zeros, so the 14 digits are not there" }
+        { "args": [2500171], "returns": false, "note": "a number loses its leading zeros, so the 14 digits are not there" },
+        { "args": ["293118.610/00184"], "returns": true, "note": "a separator may be left out between two groups; run against the JavaScript library" }
       ]
     },
     "parse": {

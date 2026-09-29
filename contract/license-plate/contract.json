@@ -21,7 +21,7 @@
           "",
           "The conversion follows the table of Anexo II of Resolução CONTRAN nº 969/2022. Every other character stays as it is.",
           "",
-          "- The plate is read like `licensePlate.isValid` reads it: any case, the hyphen mask (`ABC-1234`) accepted, whitespace around it ignored, and a mask character or any other character in another position makes it invalid. Until 2.4.0 such characters were stripped, so `A-BC1234` was converted.",
+          "- The plate is read like `licensePlate.isValid` reads it: any case, the mask (`ABC-1234`, `ABC 1234`) accepted, whitespace around it ignored, and a mask character or any other character in another position makes it invalid. Until 2.4.0 such characters were stripped, so `A-BC1234` was converted.",
           "- It returns an empty string, not null, when the value is not a valid old-format plate: a plate that is already Mercosul (`ABC1D23`), the withdrawn `LLLNNLN` sequence, a wrong length or an invalid value.",
           "- Pending decision (findings §1b): the reference (JS) also accepts the hyphen mask (`ABC-1234`). Other libraries reject it.",
           "- Pending decision (findings §2 #5): for a plate that is already Mercosul or is not a valid old-format plate, the reference (JS) returns an empty string. Most libraries return null."
@@ -31,7 +31,7 @@
           "",
           "A conversão segue a tabela do Anexo II da Resolução CONTRAN nº 969/2022. Todos os outros caracteres ficam como estão.",
           "",
-          "- A placa é lida como `licensePlate.isValid` a lê: qualquer caixa, a máscara com hífen (`ABC-1234`) aceita, espaços em volta ignorados, e um caractere de máscara ou qualquer outro caractere em outra posição a torna inválida. Até a 2.4.0 esses caracteres eram removidos, então `A-BC1234` era convertida.",
+          "- A placa é lida como `licensePlate.isValid` a lê: qualquer caixa, a máscara (`ABC-1234`, `ABC 1234`) aceita, espaços em volta ignorados, e um caractere de máscara ou qualquer outro caractere em outra posição a torna inválida. Até a 2.4.0 esses caracteres eram removidos, então `A-BC1234` era convertida.",
           "- Retorna uma string vazia, não null, quando o valor não é uma placa válida no formato antigo: uma placa que já é Mercosul (`ABC1D23`), a sequência extinta `LLLNNLN`, um tamanho errado ou um valor inválido.",
           "- Decisão pendente (findings §1b): a referência (JS) também aceita a máscara com hífen (`ABC-1234`). As outras bibliotecas a rejeitam.",
           "- Decisão pendente (findings §2 #5): para uma placa que já é Mercosul ou que não é uma placa válida no formato antigo, a referência (JS) retorna uma string vazia. A maioria das bibliotecas retorna null."
@@ -76,14 +76,16 @@
           "",
           "- A partial value is formatted as far as it goes, so the function works as an input mask: the hyphen shows up as soon as the fourth character is a digit (`abc1` gives `ABC-1`), and a fifth character that is a letter keeps the Mercosul form (`abc1d` gives `ABC1D`).",
           "- Any character that is not an ASCII letter or digit is dropped first, and only the first 7 remain. Unlike `licensePlate.isValid`, the mask may sit anywhere.",
-          "- Returns an empty string when the value cannot start a valid plate (`1234567`, `abc12d3`, `abc1da2`)."
+          "- Returns an empty string when the value cannot start a valid plate (`1234567`, `abc12d3`, `abc1da2`).",
+          "- A value that is not a string gives an empty string."
         ],
         "pt-BR": [
           "Formata uma placa em maiúsculas. Placas no formato antigo (`LLLNNNN`) ganham um hífen (`ABC-1234`). Placas Mercosul (`LLLNLNN`) não têm separador.",
           "",
           "- Um valor parcial é formatado até onde vai, então a função serve como máscara de entrada: o hífen aparece assim que o quarto caractere é um dígito (`abc1` dá `ABC-1`), e um quinto caractere que é letra mantém a forma Mercosul (`abc1d` dá `ABC1D`).",
           "- Todo caractere que não seja letra ASCII ou dígito é descartado antes, e só os 7 primeiros ficam. Diferente de `licensePlate.isValid`, a máscara pode estar em qualquer posição.",
-          "- Retorna uma string vazia quando o valor não pode ser o início de uma placa válida (`1234567`, `abc12d3`, `abc1da2`)."
+          "- Retorna uma string vazia quando o valor não pode ser o início de uma placa válida (`1234567`, `abc12d3`, `abc1da2`).",
+          "- Um valor que não é string dá uma string vazia."
         ]
       },
       "references": [

@@ -248,7 +248,8 @@
           "",
           "- `type`: `mobile` (DDD + 9 digits starting with 9, valid under both numbering versions of `phone.isValidMobile`), `landline` (DDD + 8 digits starting with 2 to 5) or `service` (no DDD: a Código Não Geográfico such as `0800` + 7 digits, or an abbreviated `300X`/`400X` number). When `type` is omitted, the function picks a mobile or a landline at random, never a service number.",
           "- A landline never starts with 6 after the DDD: the 2 to 5 range stays valid after Resolução Anatel nº 777/2025 narrows it on 1 March 2027. Until 2.4.0 a 6 could be drawn.",
-          "- `phone.isValid` accepts a mobile or a landline result, and `phone.isValidService` a service one."
+          "- `phone.isValid` accepts a mobile or a landline result, and `phone.isValidService` a service one.",
+          "- It uses `Math.random()`, so the result is not cryptographically secure: do not use it for security purposes."
         ],
         "pt-BR": [
           "Gera um número de telefone brasileiro aleatório, sem máscara.",
@@ -257,7 +258,8 @@
           "",
           "- `type`: `mobile` (DDD + 9 dígitos começando com 9, válido nas duas versões de numeração de `phone.isValidMobile`), `landline` (DDD + 8 dígitos começando com 2 a 5) ou `service` (sem DDD: um Código Não Geográfico como `0800` + 7 dígitos, ou um número abreviado `300X`/`400X`). Sem `type`, a função escolhe um celular ou um fixo ao acaso, nunca um número de serviço.",
           "- Um fixo nunca começa com 6 depois do DDD: a faixa de 2 a 5 continua válida depois que a Resolução Anatel nº 777/2025 a estreita, em 1º de março de 2027. Até a 2.4.0 um 6 podia ser sorteado.",
-          "- `phone.isValid` aceita o resultado de celular ou fixo, e `phone.isValidService` o de serviço."
+          "- `phone.isValid` aceita o resultado de celular ou fixo, e `phone.isValidService` o de serviço.",
+          "- Usa `Math.random()`, então o resultado não é criptograficamente seguro: não use para fins de segurança."
         ]
       },
       "references": ["https://informacoes.anatel.gov.br/legislacao/resolucoes/2022/1641-resolucao-749"],
@@ -503,9 +505,9 @@
         "en": [
           "Validates a Brazilian service number, dialed without a DDD. The function checks only the structure: the number does not have to be assigned to anyone.",
           "",
-          "- A country code (`+55`, `0055` or a bare `55`) is accepted and removed first, as in `phone.isValid` with `accept: [\"service\"]`: `+55 0800 123 4567` is valid. Until 2.4.0 it was rejected. A bare `55` is removed only when what is left is a service number (`55190` and `5540041234` are not).",
+          "- A country code (`+55`, `0055` or a bare `55`) is accepted and removed first, as in `phone.isValid` with `accept: [\"service\"]`: `+55 0800 123 4567` is valid. Until 2.4.0 it was rejected. A bare `55` is removed only when 11 digits that form a service number are left (`5508001234567` is valid; `55190` and `5540041234` are not).",
           "- Any character other than digits, whitespace and `()+.-/` (a letter, for instance) makes the value invalid. Until 2.4.0 such characters were dropped, so `abc190` was valid.",
-          "- Códigos Não Geográficos `0300`, `0303`, `0500`, `0800` and `0900` followed by 7 digits.",
+          "- Códigos Não Geográficos `0300`, `0303`, `0500`, `0800` and `0900` followed by 7 digits (11 in total; the old 6-digit form, such as `0800 123456`, is rejected). The rule of `0500` that encodes a donation amount in the last two digits is not enforced.",
           "- The abbreviated `300X`/`400X` numbers (8 digits). Other carrier prefixes are rejected.",
           "- The 3-digit public utility codes designated by Anatel (such as `190` and `192`), from Anatel's current SUP list and the Anexo of Ato nº 43.151/2004. `112` is accepted: the current SUP list has it (2.4.0 rejected it).",
           "- `911` stays rejected. The SUP list names it next to `112`, but Resolução Anatel nº 749/2022, art. 13, gives public utility services only the `1N₂N₁` range. The two official texts conflict, so the 2.4.0 answer stays."
@@ -513,9 +515,9 @@
         "pt-BR": [
           "Valida um número de serviço brasileiro, discado sem DDD. A função verifica só a estrutura: o número não precisa estar atribuído a ninguém.",
           "",
-          "- Um código de país (`+55`, `0055` ou só `55`) é aceito e removido primeiro, como em `phone.isValid` com `accept: [\"service\"]`: `+55 0800 123 4567` é válido. Até a 2.4.0 era rejeitado. Um `55` sem marca só é removido quando o que sobra é um número de serviço (`55190` e `5540041234` não são).",
+          "- Um código de país (`+55`, `0055` ou só `55`) é aceito e removido primeiro, como em `phone.isValid` com `accept: [\"service\"]`: `+55 0800 123 4567` é válido. Até a 2.4.0 era rejeitado. Um `55` sem marca só é removido quando sobram 11 dígitos que formam um número de serviço (`5508001234567` é válido; `55190` e `5540041234` não são).",
           "- Qualquer caractere que não seja dígito, espaço em branco ou `()+.-/` (uma letra, por exemplo) torna o valor inválido. Até a 2.4.0 esses caracteres eram descartados, então `abc190` era válido.",
-          "- Códigos Não Geográficos `0300`, `0303`, `0500`, `0800` e `0900` seguidos de 7 dígitos.",
+          "- Códigos Não Geográficos `0300`, `0303`, `0500`, `0800` e `0900` seguidos de 7 dígitos (11 no total; a forma antiga de 6 dígitos, como `0800 123456`, é rejeitada). A regra do `0500` que codifica um valor de doação nos dois últimos dígitos não é aplicada.",
           "- Os números abreviados `300X`/`400X` (8 dígitos). Outros prefixos de operadora são rejeitados.",
           "- Os códigos de utilidade pública de 3 dígitos designados pela Anatel (por exemplo `190` e `192`), da lista SUP atual da Anatel e do Anexo do Ato nº 43.151/2004. `112` é aceito: a lista SUP atual o traz (a 2.4.0 o rejeitava).",
           "- `911` continua rejeitado. A lista SUP o cita ao lado do `112`, mas a Resolução Anatel nº 749/2022, art. 13, destina aos serviços de utilidade pública só a faixa `1N₂N₁`. Os dois textos oficiais conflitam, então a resposta da 2.4.0 é mantida."

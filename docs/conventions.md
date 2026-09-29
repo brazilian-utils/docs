@@ -101,7 +101,7 @@ Status:
 
 11. **Reserved numbers.** A CPF or CNPJ whose digits are all the same is invalid, also when
     its check digits match. Every library agrees. For PIS, the reference (JS) also rejects
-    such numbers, and the other six libraries accept them (findings §1).
+    such numbers, and the other libraries accept them (findings §1).
 
 12. **Lookups return fresh values.** Every object or list a function returns is a new copy. A
     change to it never affects the next call or the library's own tables. In languages with

@@ -298,7 +298,7 @@
       "returns": "State?",
       "tests": [
         { "args": ["01310-100"], "returns": { "code": "SP", "name": "São Paulo", "regionCode": "SE", "regionName": "Sudeste", "ibgeCode": 35 }, "note": "from the maintainer briefing, #562" },
-        { "name": "df-block-goias", "args": ["72800-000"], "returns": { "code": "GO", "name": "Goiás", "regionCode": "CO", "regionName": "Centro-Oeste", "ibgeCode": 52 }, "note": "from the maintainer briefing, #562: inside the DF block, the range belongs to GO" },
+        { "name": "df-block-goias", "args": ["72800-000"], "returns": { "code": "GO", "name": "Goiás", "regionCode": "CO", "regionName": "Centro-Oeste", "ibgeCode": 52 }, "note": "from the maintainer briefing, #562: between the two DF blocks, the range belongs to GO" },
         { "name": "gap-after-mt", "args": ["78900-000"], "returns": null, "note": "from the maintainer briefing, #562: MT ends at 78899-999" },
         { "name": "number", "args": [20040020], "returns": { "code": "RJ", "name": "Rio de Janeiro", "regionCode": "SE", "regionName": "Sudeste", "ibgeCode": 33 }, "note": "JavaScript's own test: should accept a number" },
         { "args": ["92.500-000"], "returns": { "code": "RS", "name": "Rio Grande do Sul", "regionCode": "S", "regionName": "Sul", "ibgeCode": 43 }, "note": "JavaScript's own test: should ignore spaces, dots and hyphens" },

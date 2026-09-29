@@ -166,7 +166,7 @@
           "- The function ignores whitespace and the characters `.`, `-`, `/`, `(`, `)`, `,` and `*`, in any number and position. Any other character makes the value invalid. Exactly 11 digits are required once they are removed, and the check digit must match.",
           "- The check-digit weights are 3, 2, 9, 8, 7, 6, 5, 4, 3 and 2 over the first 10 digits, with modulus 11.",
           "- Only a string is read. Any other type returns false.",
-          "- Pending decision (findings §1): the reference (JS) rejects a value whose digits are all the same as a reserved number. Six libraries accept them when the check digit matches.",
+          "- Pending decision (findings §1): the reference (JS) rejects a value whose digits are all the same as a reserved number. The other libraries accept them when the check digit matches.",
           "- Pending decision (findings §2 #1): the reference (JS) ignores those formatting characters and whitespace. Other libraries accept digits only."
         ],
         "pt-BR": [
@@ -176,7 +176,7 @@
           "- A função ignora espaços em branco e os caracteres `.`, `-`, `/`, `(`, `)`, `,` e `*`, em qualquer quantidade e posição. Qualquer outro caractere torna o valor inválido. São exigidos exatamente 11 dígitos depois de removidos, e o dígito verificador precisa conferir.",
           "- Os pesos do dígito verificador são 3, 2, 9, 8, 7, 6, 5, 4, 3 e 2 sobre os 10 primeiros dígitos, com módulo 11.",
           "- Só uma string é lida. Qualquer outro tipo retorna false.",
-          "- Decisão pendente (findings §1): a referência (JS) rejeita como número reservado um valor com todos os dígitos iguais. Seis bibliotecas aceitam esses valores quando o dígito verificador confere.",
+          "- Decisão pendente (findings §1): a referência (JS) rejeita como número reservado um valor com todos os dígitos iguais. As outras bibliotecas aceitam esses valores quando o dígito verificador confere.",
           "- Decisão pendente (findings §2 #1): a referência (JS) ignora esses caracteres de formatação e os espaços em branco. Outras bibliotecas aceitam apenas dígitos."
         ]
       },

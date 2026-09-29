@@ -204,8 +204,8 @@
         { "args": ["35503082212ABC34501DE36000000000001226091357924689"], "returns": null, "note": "JavaScript's own test: should return null when an alphanumeric CNPJ has wrong check digits of its own, even with a matching key check digit" },
         { "args": ["355030 82258716523000119000000000001226011357924683"], "returns": null, "note": "JavaScript's own test: when a separator sits inside a field or between the NFS prefix and the key" },
         { "args": ["NFS 35503082258716523000119000000000001226011357924683"], "returns": null, "note": "JavaScript's own test: when a separator sits inside a field or between the NFS prefix and the key" },
-        { "args": [null], "returns": null, "note": "JavaScript's own test: when it is not a string" },
-        { "args": [123], "returns": null, "note": "JavaScript's own test: when it is not a string" }
+        { "args": [null], "returns": null, "note": "from the JS docs and code" },
+        { "args": [123], "returns": null, "note": "from the JS docs and code" }
       ]
     },
     "isValid": {
@@ -287,7 +287,7 @@
         { "args": ["35503082258716523000119000000000001226011357924 683"], "returns": false, "note": "JavaScript's own test: when a separator sits inside a field" },
         { "args": ["3550308--2//2 . 58716523000119 0000000000012 2601 135792468 3"], "returns": true, "note": "a run of separators is accepted between two fields" },
         { "args": ["NFS 35503082258716523000119000000000001226011357924683"], "returns": false, "note": "a separator between the NFS prefix and the key is not accepted" },
-        { "args": [3.550308225871652e+49], "returns": false, "note": "JavaScript's own test: only a string is read" },
+        { "args": [3.550308225871652e+49], "returns": false, "note": "only a string is read" },
         { "args": [null], "returns": false, "note": "only a string is read" }
       ]
     },

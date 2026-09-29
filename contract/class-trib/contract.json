@@ -104,8 +104,8 @@
         "en": [
           "Checks whether a cClassTrib code (Código de Classificação Tributária of the IBS and the CBS) exists in the official table. This is the check behind NF-e rejection 1023.",
           "",
-          "- Accepts a string of bare digits, with optional surrounding whitespace, or a non-negative integer. A value shorter than 6 digits is left-padded with zeros: `1` and `\"1\"` are the code `000001`.",
-          "- Any other string is rejected (`\"c200001\"`, `\"200.001\"`). A negative or fractional number is invalid.",
+          "- Accepts a string of bare digits, with optional surrounding whitespace, or a non-negative safe integer. A value shorter than 6 digits is left-padded with zeros: `1` and `\"1\"` are the code `000001`.",
+          "- Any other string is rejected (`\"c200001\"`, `\"200.001\"`). A negative, fractional or unsafe number is invalid.",
           "- The first 3 digits of a cClassTrib are its CST-IBS/CBS. `options.cst` checks the pair, as NF-e rejection 1024 does. It is read like `cstIbsCbs.isValid` reads a code. A `cst` that is given and does not match makes the result false, whatever its value.",
           "- `options.cst` is optional. An `undefined` or omitted `cst` checks the cClassTrib alone. A `cst` that is `null`, empty or not written as a code (`\"\"`, `\"200001\"`, `-200`) makes the result false. It is padded to 3 digits (`0` and `\"000\"` are the same CST).",
           "- A null or non-object `options` is read as no options, so the cClassTrib is checked alone.",
@@ -115,8 +115,8 @@
         "pt-BR": [
           "Verifica se um cClassTrib (Código de Classificação Tributária do IBS e da CBS) existe na tabela oficial. É a verificação da rejeição 1023 da NF-e.",
           "",
-          "- Aceita uma string só de dígitos, com espaços opcionais nas extremidades, ou um inteiro não negativo. Um valor com menos de 6 dígitos é completado com zeros à esquerda: `1` e `\"1\"` são o código `000001`.",
-          "- Qualquer outra string é rejeitada (`\"c200001\"`, `\"200.001\"`). Um número negativo ou fracionário é inválido.",
+          "- Aceita uma string só de dígitos, com espaços opcionais nas extremidades, ou um inteiro seguro não negativo. Um valor com menos de 6 dígitos é completado com zeros à esquerda: `1` e `\"1\"` são o código `000001`.",
+          "- Qualquer outra string é rejeitada (`\"c200001\"`, `\"200.001\"`). Um número negativo, fracionário ou inseguro é inválido.",
           "- Os 3 primeiros dígitos do cClassTrib são o seu CST-IBS/CBS. `options.cst` verifica o par, como a rejeição 1024 da NF-e. Ele é lido como `cstIbsCbs.isValid` lê um código. Um `cst` informado que não bate torna o resultado false, qualquer que seja o valor.",
           "- `options.cst` é opcional. Um `cst` `undefined` ou omitido verifica só o cClassTrib. Um `cst` `null`, vazio ou que não esteja escrito como código (`\"\"`, `\"200001\"`, `-200`) torna o resultado false. Ele é completado com zeros até 3 dígitos (`0` e `\"000\"` são o mesmo CST).",
           "- Um `options` nulo ou que não seja objeto é lido como sem opções, então só o cClassTrib é verificado.",

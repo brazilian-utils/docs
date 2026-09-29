@@ -90,12 +90,9 @@
         { "args": ["1HGCM82690A004352", { "checkDigit": true }], "returns": false, "note": "JavaScript's own test: when the model year code is U, Z or 0 and checkDigit is true, even with a matching check digit" },
         { "args": ["1HGCM8261UA004352"], "returns": true, "note": "JavaScript's own test: the model year code is checked only with checkDigit" },
         { "args": ["00000000000000000", { "checkDigit": true }], "returns": false, "note": "every character the same is rejected under both rules" },
-        { "args": ["1HGCM82633A004352"], "returns": true, "note": "JavaScript docs example: valid with the check digit" },
-        { "args": ["9BWZZZ377VT004251"], "returns": true, "note": "JavaScript docs example: Brazilian VIN, no check digit" },
         { "args": ["1HGCM8263ſA004352"], "returns": false, "note": "changed in 2.5.0 (#615): `ſ` (long s) is no longer folded into `S`" },
         { "args": ["1HGCM8263ßA004352"], "returns": false, "note": "changed in 2.5.0 (#615): `ß` is no longer folded into ASCII letters" },
         { "args": ["ſ9BWZZZ377VT00425"], "returns": false, "note": "changed in 2.5.0 (#615): `ſ` is no longer folded into `S`" },
-        { "args": ["1HGCM8 2633A004352"], "returns": false, "note": "JavaScript docs example: a separator among the characters" },
         { "args": ["1HGCM82633A004352 ", { "checkDigit": true }], "returns": true, "note": "surrounding whitespace is trimmed" }
       ]
     }

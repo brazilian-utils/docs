@@ -12,8 +12,8 @@
   "functions": {
     "format": {
       "summary": {
-        "en": "Formats a DF-e (Documento Fiscal eletrônico) access key (chave de acesso) into groups of 4 digits separated by spaces.",
-        "pt-BR": "Formata uma chave de acesso de DF-e (Documento Fiscal eletrônico) em grupos de 4 dígitos separados por espaços."
+        "en": "Formats a DF-e (Documento Fiscal eletrônico) access key (chave de acesso) into groups of 4 characters separated by spaces.",
+        "pt-BR": "Formata uma chave de acesso de DF-e (Documento Fiscal eletrônico) em grupos de 4 caracteres separados por espaços."
       },
       "description": {
         "en": [
@@ -221,7 +221,7 @@
           "- The cUF must be a state and the month (`AAMM`) must be 01 to 12. The model must be one of the above. The emission type (`tpEmis`) must be one that the MOC of that model assigns: 1 to 7 and 9 for NF-e and NFC-e; 1, 3, 4, 5, 7 and 8 for CT-e; 1, 5, 7 and 8 for CT-e OS; 1, 2, 7 and 8 for GTV-e; 1, 2 and 3 for MDF-e; 1 and 2 for BP-e, NF3e and NFCom.",
           "- The key is `cUF(2) AAMM(4) CNPJ/CPF(14) mod(2) serie(3) nNF(9) tpEmis(1) cNF(8) cDV(1)`. NFCom and NF3e spend position 36 on `nSiteAutoriz` and leave 7 digits for `cNF`.",
           "- For NF-e and NFC-e, the numeric code (`cNF`) must pass rule B03-10 of the MOC (no repeated or sequential values from the list of 20 the rule gives, and not equal to the document number). The rule applies to the documents sent after NT 2019.001, and NF-e software commonly used a `cNF` equal to the document number before it, so a key authorised earlier can be rejected.",
-          "- The function rejects a document number of all zeros. The check digit is a modulus 11 over the first 43 digits.",
+          "- The function rejects a document number of all zeros. The check digit is a modulus 11 over the first 43 characters, with weights 2 to 9 cycling from the right; a remainder of 0 or 1 gives check digit 0.",
           "- The 44 characters may be grouped in 4 by whitespace, `.`, `-` or `/`, alone or in a run (`\"3517 - 0458 ...\"`). A separator inside a group of 4, or any other character, makes the key invalid. The function first strips the XML `Id` prefixes (`NFe`, `CTe`, `MDFe`, `BPe`, `NF3e`, `NFCom`, in any letter case), with any whitespace between the prefix and the first group.",
           "- Positions 7 to 18 (the root and order of the issuer's CNPJ) may hold the letters of an alphanumeric CNPJ. The current schemas type the key as `[0-9]{6}[0-9A-Z]{12}[0-9]{26}` (NT Conjunta 2025.001, NF-e package PL_010), where older ones had 44 digits. A letter anywhere else, including the CNPJ check digits in positions 19 and 20, is rejected. Lower case is read as upper case, but a non-ASCII letter that upper-cases into an ASCII one (`ſ`, `ß`) is rejected. A CPF issuer is always 11 digits left-padded with zeros, so a letter there always belongs to an alphanumeric CNPJ. 2.4.0 accepted digits only.",
           "- In the check digit, each character counts as its ASCII code minus 48: the digit itself for `0` to `9`, and 17 to 42 for `A` to `Z`, as in the alphanumeric CNPJ.",
@@ -234,7 +234,7 @@
           "- O cUF deve ser uma UF e o mês (`AAMM`) deve ser de 01 a 12. O modelo deve ser um dos acima. O tipo de emissão (`tpEmis`) deve ser um dos que o MOC desse modelo atribui: 1 a 7 e 9 para NF-e e NFC-e; 1, 3, 4, 5, 7 e 8 para CT-e; 1, 5, 7 e 8 para CT-e OS; 1, 2, 7 e 8 para GTV-e; 1, 2 e 3 para MDF-e; 1 e 2 para BP-e, NF3e e NFCom.",
           "- A chave é `cUF(2) AAMM(4) CNPJ/CPF(14) mod(2) serie(3) nNF(9) tpEmis(1) cNF(8) cDV(1)`. A NFCom e a NF3e usam a posição 36 para o `nSiteAutoriz` e deixam 7 dígitos para o `cNF`.",
           "- Na NF-e e na NFC-e, o código numérico (`cNF`) deve passar na regra B03-10 do MOC (sem valores repetidos ou sequenciais da lista de 20 que a regra traz, e diferente do número do documento). A regra vale para os documentos enviados depois da NT 2019.001, e os programas de NF-e costumavam usar um `cNF` igual ao número do documento antes dela, então uma chave autorizada antes pode ser rejeitada.",
-          "- A função rejeita um número de documento com todos os dígitos zero. O dígito verificador é um módulo 11 sobre os primeiros 43 dígitos.",
+          "- A função rejeita um número de documento com todos os dígitos zero. O dígito verificador é um módulo 11 sobre os primeiros 43 caracteres, com pesos de 2 a 9 repetidos da direita para a esquerda; um resto 0 ou 1 dá dígito verificador 0.",
           "- Os 44 caracteres podem vir agrupados de 4 em 4 por espaço em branco, `.`, `-` ou `/`, sozinhos ou em sequência (`\"3517 - 0458 ...\"`). Um separador dentro de um grupo de 4, ou qualquer outro caractere, torna a chave inválida. A função primeiro remove os prefixos `Id` do XML (`NFe`, `CTe`, `MDFe`, `BPe`, `NF3e`, `NFCom`, em qualquer caixa), com os espaços entre o prefixo e o primeiro grupo.",
           "- As posições 7 a 18 (raiz e ordem do CNPJ do emitente) podem ter as letras de um CNPJ alfanumérico. Os schemas atuais tipam a chave como `[0-9]{6}[0-9A-Z]{12}[0-9]{26}` (NT Conjunta 2025.001, pacote PL_010 da NF-e), onde os antigos tinham 44 dígitos. Uma letra em qualquer outra posição, inclusive nos dígitos verificadores do CNPJ nas posições 19 e 20, é rejeitada. Minúsculas são lidas como maiúsculas, mas uma letra não ASCII que vira uma letra ASCII em maiúsculas (`ſ`, `ß`) é rejeitada. Um emitente CPF tem sempre 11 dígitos completados com zeros à esquerda, então uma letra ali sempre pertence a um CNPJ alfanumérico. A 2.4.0 só aceitava dígitos.",
           "- No dígito verificador, cada caractere vale o seu código ASCII menos 48: o próprio dígito de `0` a `9`, e de 17 a 42 de `A` a `Z`, como no CNPJ alfanumérico.",
@@ -322,8 +322,8 @@
     },
     "parse": {
       "summary": {
-        "en": "Removes the formatting characters of a DF-e (Documento Fiscal eletrônico) access key (chave de acesso) and returns only the digits.",
-        "pt-BR": "Remove os caracteres de formatação de uma chave de acesso de DF-e (Documento Fiscal eletrônico) e retorna só os dígitos."
+        "en": "Removes the formatting characters of a DF-e (Documento Fiscal eletrônico) access key (chave de acesso) and returns the characters of the key.",
+        "pt-BR": "Remove os caracteres de formatação de uma chave de acesso de DF-e (Documento Fiscal eletrônico) e retorna os caracteres da chave."
       },
       "description": {
         "en": [

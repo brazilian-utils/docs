@@ -20,7 +20,7 @@
           "Formats an Inscrição SUFRAMA with the mask `00.0000.000`. Only the structure changes (use `suframa.isValid` to check the number).",
           "",
           "- The mask is progressive: a partial value is masked as far as it goes. Characters that are not digits are dropped, and digits after the 9th are ignored.",
-          "- `options.pad` first left-pads the value with zeros to 9 digits.",
+          "- `options.pad` first left-pads the value with zeros to 9 digits. A value without digits (empty, or only letters and symbols) gives an empty string, even with `pad`.",
           "- An 8-digit value is a number whose sector lost its leading zero. Without `pad`, the mask groups it one position early (`10001018` gives `10.0010.18`). Use `{ pad: true }` to get the correct mask (`01.0001.018`).",
           "- A number is read only when it is a non-negative safe integer. A negative, fractional, not finite or unsafe number returns an empty string."
         ],
@@ -28,7 +28,7 @@
           "Formata uma Inscrição SUFRAMA com a máscara `00.0000.000`. Só a estrutura muda (use `suframa.isValid` para verificar o número).",
           "",
           "- A máscara é progressiva: um valor parcial é formatado até onde vai. Caracteres que não são dígitos são descartados, e dígitos depois do 9º são ignorados.",
-          "- `options.pad` primeiro completa o valor com zeros à esquerda até 9 dígitos.",
+          "- `options.pad` primeiro completa o valor com zeros à esquerda até 9 dígitos. Um valor sem dígitos (vazio, ou só letras e símbolos) retorna uma string vazia, mesmo com `pad`.",
           "- Um valor de 8 dígitos é um número cujo setor perdeu o zero à esquerda. Sem `pad`, a máscara agrupa uma posição antes (`10001018` dá `10.0010.18`). Use `{ pad: true }` para obter a máscara correta (`01.0001.018`).",
           "- Um número só é lido quando é um inteiro seguro não negativo. Um número negativo, fracionário, não finito ou inseguro retorna uma string vazia."
         ]

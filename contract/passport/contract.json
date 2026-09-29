@@ -85,7 +85,7 @@
           "Validates a Brazilian passport number: 2 letters followed by 6 digits, after removing non-alphanumeric characters.",
           "",
           "- There is no check digit, so a well-formed number is not necessarily a real passport.",
-          "- A number is never valid (it cannot start with the two letters).",
+          "- A numeric value is never valid, since it cannot start with the two letters.",
           "- Pending decision (findings §1b, §2 #8): the reference (JS) is case-insensitive and ignores symbols (`ab123456`, `AB-123.456` are valid). Erlang and Python accept only the strict uppercase form.",
           "- The layout's only official source is the Polícia Federal FAQ (\"duas letras ... e por seis dígitos subsequentes\", example CS265436). Neither Decreto 5.978/2006 nor IN 173-DG/PF/2020 defines the number, and the FAQ forbids no letter, so none is rejected."
         ],
@@ -107,12 +107,12 @@
       "tests": [
         { "args": ["AA111111"], "returns": true },
         { "args": ["CL125167"], "returns": true },
-        { "name": "lowercase", "args": ["ab123456"], "returns": true, "note": "case-insensitive per the contract summary; asserted by the reference (JS) unit tests" },
+        { "name": "lowercase", "args": ["ab123456"], "returns": true, "note": "case-insensitive in the reference (see the description); asserted by the reference (JS) unit tests" },
         { "name": "masked", "args": ["AB-123456"], "returns": true },
         { "name": "dotted", "args": ["AB.123.456"], "returns": true },
         { "args": ["1"], "returns": false },
         { "args": ["1112223334-"], "returns": false },
-        { "name": "number", "args": [1], "returns": false, "note": "a number is accepted but never valid (see summary)" },
+        { "name": "number", "args": [1], "returns": false, "note": "a number is accepted but never valid (see the description)" },
         { "args": ["CS265436"], "returns": true, "note": "the example of the Polícia Federal FAQ" },
         { "args": ["DC-221345extra"], "returns": false, "note": "JavaScript docs example: trailing letters make the sanitized value longer than 2 letters and 6 digits" },
         { "args": ["AB-123.456"], "returns": true, "note": "JavaScript docs example (symbols are ignored)" },

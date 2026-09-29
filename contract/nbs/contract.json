@@ -60,7 +60,7 @@
         { "args": ["1", { "pad": true }], "returns": "0.0000.00.01", "note": "JavaScript's own test: should left pad a short code with zeros up to the full NBS length" },
         { "args": ["10101", { "pad": true }], "returns": "0.0001.01.01", "note": "JavaScript's own test: should left pad a short code with zeros up to the full NBS length" },
         { "args": ["101011100", { "pad": true }], "returns": "1.0101.11.00", "note": "JavaScript's own test: should left pad a short code with zeros up to the full NBS length" },
-        { "args": ["", { "pad": true }], "returns": "", "note": "JavaScript's own test: should left pad a short code with zeros up to the full NBS length (no digit gives an empty string)" },
+        { "args": ["", { "pad": true }], "returns": "", "note": "JavaScript's own test: should left pad a short code with zeros up to the full NBS length" },
         { "args": ["abc", { "pad": true }], "returns": "", "note": "no digit gives an empty string even with pad (#615)" },
         { "args": [1, { "pad": true }], "returns": "0.0000.00.01", "note": "JavaScript's own test: should left pad a number the same way as its digits" },
         { "args": ["10", { "pad": false }], "returns": "1.0", "note": "JavaScript's own test: should mask progressively for an explicit false" },
@@ -168,7 +168,7 @@
         { "args": ["1.9999.99.99"], "returns": false, "note": "JavaScript's own test: should reject a well formed code the table does not carry" },
         { "args": ["1.0101.11.01"], "returns": false, "note": "JavaScript's own test: should reject a well formed code the table does not carry" },
         { "args": ["1.0101abc11.00"], "returns": false, "note": "JavaScript's own test: should reject a malformed value" },
-        { "args": ["1..0101.11.00"], "returns": true, "note": "any run of separators between the groups is accepted. JavaScript's own test: should read a group boundary written with a run of separators" },
+        { "args": ["1..0101.11.00"], "returns": true, "note": "any run of separators between the groups is accepted, from the JS docs and code" },
         { "name": "empty", "args": [""], "returns": false, "note": "JavaScript's own test: should reject a malformed value" },
         { "args": [-101011100], "returns": false, "note": "JavaScript's own test: should reject null, undefined and non lookup values" },
         { "args": ["constructor"], "returns": false, "note": "JavaScript's own test: should reject the keys of Object.prototype" },
@@ -178,7 +178,7 @@
         { "args": ["1.0904.40.00"], "returns": true, "note": "the NBS 2.0 code the ANEXO B of the NFS-e leaves out; valid here (maintainer briefing, #569)" },
         { "args": ["9.9999.99.99"], "returns": false, "note": "the ANEXO B placeholder is not accepted (maintainer briefing, #569)" },
         { "name": "fractional", "args": [101011100.5], "returns": false },
-        { "args": ["1.0101 - 11/.00"], "returns": true, "note": "JavaScript's own test: should read a group boundary written with a run of separators" },
+        { "args": ["1.0101 - 11/.00"], "returns": true, "note": "from the JS docs and code" },
         { "args": ["10..101.11.00"], "returns": false, "note": "JavaScript's own test: should reject a malformed value" }
       ]
     },

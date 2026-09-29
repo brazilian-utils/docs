@@ -127,7 +127,7 @@
           "",
           "- `state` (a state code such as `SP`) sets the 9th digit, the fiscal region, to the region of that state (see `cpf.getInfo`). The code is read ignoring letter case and surrounding whitespace, so `\"sp\"` and `\" SP \"` are `SP`. 2.4.0 read only the upper-case code and gave a random digit for `\"sp\"`.",
           "- Without `state`, or with an unknown code, the digit is random.",
-          "- A number whose 11 digits are all the same is never returned."
+          "- A CPF whose 11 digits are all the same is never returned."
         ],
         "pt-BR": [
           "Gera um CPF aleatório e válido: 11 dígitos, sem máscara.",

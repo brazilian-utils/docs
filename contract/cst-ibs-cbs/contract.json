@@ -72,16 +72,16 @@
       },
       "description": {
         "en": [
-          "Checks whether a CST-IBS/CBS code (Código de Situação Tributária of the IBS and the CBS) exists in the official table. This is the check behind NF-e rejection 1020.",
-          "",
+          "Checks whether a CST-IBS/CBS code (Código de Situação Tributária of the IBS and the CBS) exists in the official table. It is the code the `CST` field of the `IBSCBS` group carries in the electronic fiscal documents of the tax reform (NF-e, NFC-e, CT-e, NFS-e and others), and the check behind NF-e rejection 1020.",
+          "- Accepts a string of bare digits, with optional surrounding whitespace, or a non-negative safe integer. A value shorter than 3 digits is left-padded with zeros, as a string or as a number, since the codes start with zeros a numeric field drops: `0`, `\"0\"` and `\"000\"` are all the code `000`, and `10` and `\"10\"` are `010`.",
           "- Accepts a string of bare digits, with optional surrounding whitespace, or a non-negative integer. A value shorter than 3 digits is left-padded with zeros: `10` and `\"10\"` are the code `010`.",
           "- Any other string is rejected (`\"cst200\"`, `\"2.00\"`). The function does not pick out its digits. A negative or fractional number is invalid.",
           "- The table published on 2026-06-23 has 18 codes: 000, 010, 011, 200, 220, 221, 222, 400, 410, 510, 515, 550, 620, 800, 810, 811, 820 and 830. CST 220 stays valid, although its classifications were excluded (see `classTrib.isValid`).",
           "- The IBS and the CBS share this table. It is separate from `cst.isValid` because its 3-digit codes collide with the ICMS CST, and `cst.isValid` without a `tax` accepts a code of any table, so adding these codes would change what that default accepts."
         ],
         "pt-BR": [
-          "Verifica se um CST-IBS/CBS (Código de Situação Tributária do IBS e da CBS) existe na tabela oficial. É a verificação da rejeição 1020 da NF-e.",
-          "",
+          "Verifica se um CST-IBS/CBS (Código de Situação Tributária do IBS e da CBS) existe na tabela oficial. É o código que o campo `CST` do grupo `IBSCBS` traz nos documentos fiscais eletrônicos da reforma tributária (NF-e, NFC-e, CT-e, NFS-e e outros), e a verificação da rejeição 1020 da NF-e.",
+          "- Aceita uma string só de dígitos, com espaços opcionais nas extremidades, ou um inteiro seguro não negativo. Um valor com menos de 3 dígitos é completado com zeros à esquerda, como string ou como número, porque os códigos começam com zeros que um campo numérico perde: `0`, `\"0\"` e `\"000\"` são todos o código `000`, e `10` e `\"10\"` são `010`.",
           "- Aceita uma string só de dígitos, com espaços opcionais nas extremidades, ou um inteiro não negativo. Um valor com menos de 3 dígitos é completado com zeros à esquerda: `10` e `\"10\"` são o código `010`.",
           "- Qualquer outra string é rejeitada (`\"cst200\"`, `\"2.00\"`). A função não extrai os dígitos dela. Um número negativo ou fracionário é inválido.",
           "- A tabela publicada em 23/06/2026 tem 18 códigos: 000, 010, 011, 200, 220, 221, 222, 400, 410, 510, 515, 550, 620, 800, 810, 811, 820 e 830. O CST 220 continua válido, embora as suas classificações tenham sido excluídas (veja `classTrib.isValid`).",
