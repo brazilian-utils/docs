@@ -1,8 +1,110 @@
 {
   "library": "brazilian-utils-rust",
   "language": "rust",
-  "revision": "a60585f7ae517adfb7389d3398da74916dd123f3",
+  "revision": "cbb7dfb49beaa73e6534458c725561b8802de4de",
   "symbols": [
+    {
+      "name": "area_code.get_info",
+      "params": [
+        {
+          "name": "area_code",
+          "type": "u32"
+        }
+      ],
+      "returns": "Option<AreaCodeInfo>",
+      "location": {
+        "file": "src/area_code.rs",
+        "line": 90
+      }
+    },
+    {
+      "name": "area_code.list_by_state",
+      "params": [
+        {
+          "name": "state_code",
+          "type": "&str"
+        }
+      ],
+      "returns": "Vec<u32>",
+      "location": {
+        "file": "src/area_code.rs",
+        "line": 124
+      }
+    },
+    {
+      "name": "bank_account.is_valid",
+      "params": [
+        {
+          "name": "params",
+          "type": "&IsValidBankAccountParams"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "src/bank_account.rs",
+        "line": 91
+      }
+    },
+    {
+      "name": "bank.get_by_code",
+      "params": [
+        {
+          "name": "code",
+          "type": "&str"
+        }
+      ],
+      "returns": "Option<Bank>",
+      "location": {
+        "file": "src/bank.rs",
+        "line": 64
+      }
+    },
+    {
+      "name": "bank.get_by_ispb",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "Option<Bank>",
+      "location": {
+        "file": "src/bank.rs",
+        "line": 92
+      }
+    },
+    {
+      "name": "bank.list",
+      "params": [],
+      "returns": "Vec<Bank>",
+      "location": {
+        "file": "src/bank.rs",
+        "line": 111
+      }
+    },
+    {
+      "name": "boleto.format",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/boleto.rs",
+        "line": 290
+      }
+    },
+    {
+      "name": "boleto.generate",
+      "params": [],
+      "returns": "String",
+      "location": {
+        "file": "src/boleto.rs",
+        "line": 320
+      }
+    },
     {
       "name": "boleto.is_valid",
       "params": [
@@ -14,7 +116,21 @@
       "returns": "bool",
       "location": {
         "file": "src/boleto.rs",
-        "line": 255
+        "line": 380
+      }
+    },
+    {
+      "name": "boleto.parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/boleto.rs",
+        "line": 265
       }
     },
     {
@@ -28,7 +144,133 @@
       "returns": "bool",
       "location": {
         "file": "src/boleto.rs",
-        "line": 287
+        "line": 412
+      }
+    },
+    {
+      "name": "caepf.format",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/caepf.rs",
+        "line": 72
+      }
+    },
+    {
+      "name": "caepf.is_valid",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "src/caepf.rs",
+        "line": 91
+      }
+    },
+    {
+      "name": "caepf.parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/caepf.rs",
+        "line": 122
+      }
+    },
+    {
+      "name": "cbo.get",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "Option<Cbo>",
+      "location": {
+        "file": "src/cbo.rs",
+        "line": 121
+      }
+    },
+    {
+      "name": "cbo.is_valid",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "src/cbo.rs",
+        "line": 96
+      }
+    },
+    {
+      "name": "cbo.parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/cbo.rs",
+        "line": 80
+      }
+    },
+    {
+      "name": "cei.format",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/cei.rs",
+        "line": 75
+      }
+    },
+    {
+      "name": "cei.is_valid",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "src/cei.rs",
+        "line": 101
+      }
+    },
+    {
+      "name": "cei.parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/cei.rs",
+        "line": 139
       }
     },
     {
@@ -42,7 +284,7 @@
       "returns": "Option<String>",
       "location": {
         "file": "src/cep.rs",
-        "line": 102
+        "line": 128
       }
     },
     {
@@ -51,7 +293,7 @@
       "returns": "String",
       "location": {
         "file": "src/cep.rs",
-        "line": 159
+        "line": 185
       }
     },
     {
@@ -62,40 +304,28 @@
           "type": "&str"
         },
         {
-          "name": "raise_exceptions",
-          "type": "bool"
+          "name": "options",
+          "type": "Option<GetAddressInfoByCepOptions>"
         }
       ],
       "returns": "Result<Option<Address>, Box<dyn Error>>",
       "location": {
         "file": "src/cep.rs",
-        "line": 199
+        "line": 232
       }
     },
     {
       "name": "cep.get_cep_information_from_address",
       "params": [
         {
-          "name": "federal_unit",
-          "type": "&str"
-        },
-        {
-          "name": "city",
-          "type": "&str"
-        },
-        {
-          "name": "street",
-          "type": "&str"
-        },
-        {
-          "name": "raise_exceptions",
-          "type": "bool"
+          "name": "params",
+          "type": "GetCepInfoByAddressParams"
         }
       ],
       "returns": "Result<Option<Vec<Address>>, Box<dyn Error>>",
       "location": {
         "file": "src/cep.rs",
-        "line": 284
+        "line": 335
       }
     },
     {
@@ -109,7 +339,21 @@
       "returns": "bool",
       "location": {
         "file": "src/cep.rs",
-        "line": 140
+        "line": 166
+      }
+    },
+    {
+      "name": "cep.parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/cep.rs",
+        "line": 99
       }
     },
     {
@@ -127,6 +371,183 @@
       }
     },
     {
+      "name": "certidao.format",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/certidao.rs",
+        "line": 66
+      }
+    },
+    {
+      "name": "certidao.get_info",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "Option<CertidaoInfo>",
+      "location": {
+        "file": "src/certidao.rs",
+        "line": 160
+      }
+    },
+    {
+      "name": "certidao.is_valid",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "src/certidao.rs",
+        "line": 144
+      }
+    },
+    {
+      "name": "certidao.parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/certidao.rs",
+        "line": 193
+      }
+    },
+    {
+      "name": "cfop.get",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "Option<Cfop>",
+      "location": {
+        "file": "src/cfop.rs",
+        "line": 112
+      }
+    },
+    {
+      "name": "cfop.is_valid",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "src/cfop.rs",
+        "line": 87
+      }
+    },
+    {
+      "name": "cfop.parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/cfop.rs",
+        "line": 67
+      }
+    },
+    {
+      "name": "cnae.format",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/cnae.rs",
+        "line": 104
+      }
+    },
+    {
+      "name": "cnae.get",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "Option<Cnae>",
+      "location": {
+        "file": "src/cnae.rs",
+        "line": 160
+      }
+    },
+    {
+      "name": "cnae.is_valid",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "src/cnae.rs",
+        "line": 135
+      }
+    },
+    {
+      "name": "cnae.parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/cnae.rs",
+        "line": 119
+      }
+    },
+    {
+      "name": "cnh.format",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/cnh.rs",
+        "line": 40
+      }
+    },
+    {
+      "name": "cnh.generate",
+      "params": [],
+      "returns": "String",
+      "location": {
+        "file": "src/cnh.rs",
+        "line": 73
+      }
+    },
+    {
       "name": "cnh.is_valid_cnh",
       "params": [
         {
@@ -137,7 +558,63 @@
       "returns": "bool",
       "location": {
         "file": "src/cnh.rs",
-        "line": 26
+        "line": 132
+      }
+    },
+    {
+      "name": "cnh.parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/cnh.rs",
+        "line": 54
+      }
+    },
+    {
+      "name": "cno.format",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/cno.rs",
+        "line": 43
+      }
+    },
+    {
+      "name": "cno.is_valid",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "src/cno.rs",
+        "line": 61
+      }
+    },
+    {
+      "name": "cno.parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/cno.rs",
+        "line": 91
       }
     },
     {
@@ -151,7 +628,7 @@
       "returns": "String",
       "location": {
         "file": "src/cnpj.rs",
-        "line": 246
+        "line": 396
       }
     },
     {
@@ -174,12 +651,16 @@
         {
           "name": "branch",
           "type": "Option<u32>"
+        },
+        {
+          "name": "version",
+          "type": "Option<u8>"
         }
       ],
       "returns": "String",
       "location": {
         "file": "src/cnpj.rs",
-        "line": 165
+        "line": 325
       }
     },
     {
@@ -197,7 +678,7 @@
       "returns": "usize",
       "location": {
         "file": "src/cnpj.rs",
-        "line": 203
+        "line": 353
       }
     },
     {
@@ -206,12 +687,30 @@
         {
           "name": "cnpj",
           "type": "&str"
+        },
+        {
+          "name": "version",
+          "type": "Option<u8>"
         }
       ],
       "returns": "bool",
       "location": {
         "file": "src/cnpj.rs",
-        "line": 138
+        "line": 235
+      }
+    },
+    {
+      "name": "cnpj.parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/cnpj.rs",
+        "line": 91
       }
     },
     {
@@ -239,7 +738,49 @@
       "returns": "bool",
       "location": {
         "file": "src/cnpj.rs",
-        "line": 98
+        "line": 125
+      }
+    },
+    {
+      "name": "cns.format",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/cns.rs",
+        "line": 41
+      }
+    },
+    {
+      "name": "cns.is_valid",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "src/cns.rs",
+        "line": 64
+      }
+    },
+    {
+      "name": "cns.parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/cns.rs",
+        "line": 97
       }
     },
     {
@@ -253,7 +794,7 @@
       "returns": "String",
       "location": {
         "file": "src/cpf.rs",
-        "line": 234
+        "line": 260
       }
     },
     {
@@ -276,7 +817,7 @@
       "returns": "String",
       "location": {
         "file": "src/cpf.rs",
-        "line": 163
+        "line": 189
       }
     },
     {
@@ -294,7 +835,7 @@
       "returns": "usize",
       "location": {
         "file": "src/cpf.rs",
-        "line": 193
+        "line": 219
       }
     },
     {
@@ -308,7 +849,21 @@
       "returns": "bool",
       "location": {
         "file": "src/cpf.rs",
-        "line": 144
+        "line": 170
+      }
+    },
+    {
+      "name": "cpf.parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/cpf.rs",
+        "line": 102
       }
     },
     {
@@ -336,7 +891,53 @@
       "returns": "bool",
       "location": {
         "file": "src/cpf.rs",
-        "line": 109
+        "line": 135
+      }
+    },
+    {
+      "name": "credit_card.is_valid",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "src/credit_card.rs",
+        "line": 29
+      }
+    },
+    {
+      "name": "csosn.is_valid",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "src/csosn.rs",
+        "line": 33
+      }
+    },
+    {
+      "name": "cst.is_valid",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        },
+        {
+          "name": "options",
+          "type": "Option<IsValidCstOptions>"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "src/cst.rs",
+        "line": 93
       }
     },
     {
@@ -350,7 +951,7 @@
       "returns": "String",
       "location": {
         "file": "src/currency.rs",
-        "line": 371
+        "line": 461
       }
     },
     {
@@ -382,6 +983,42 @@
       }
     },
     {
+      "name": "currency.parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "f64",
+      "location": {
+        "file": "src/currency.rs",
+        "line": 355
+      }
+    },
+    {
+      "name": "date_utils.add_business_days",
+      "params": [
+        {
+          "name": "date",
+          "type": "chrono::NaiveDate"
+        },
+        {
+          "name": "amount",
+          "type": "i64"
+        },
+        {
+          "name": "options",
+          "type": "Option<BusinessDayOptions>"
+        }
+      ],
+      "returns": "Option<chrono::NaiveDate>",
+      "location": {
+        "file": "src/date_utils.rs",
+        "line": 667
+      }
+    },
+    {
       "name": "date_utils.convert_date_to_text",
       "params": [
         {
@@ -396,21 +1033,107 @@
       }
     },
     {
-      "name": "date_utils.is_holiday",
+      "name": "date_utils.convert_to_words",
       "params": [
         {
-          "name": "target_date",
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/date_utils.rs",
+        "line": 795
+      }
+    },
+    {
+      "name": "date_utils.difference_in_business_days",
+      "params": [
+        {
+          "name": "later_date",
           "type": "chrono::NaiveDate"
         },
         {
-          "name": "uf",
-          "type": "Option<&str>"
+          "name": "earlier_date",
+          "type": "chrono::NaiveDate"
+        },
+        {
+          "name": "options",
+          "type": "Option<BusinessDayOptions>"
+        }
+      ],
+      "returns": "Option<i64>",
+      "location": {
+        "file": "src/date_utils.rs",
+        "line": 736
+      }
+    },
+    {
+      "name": "date_utils.get_holidays",
+      "params": [
+        {
+          "name": "year",
+          "type": "i32"
+        }
+      ],
+      "returns": "Vec<Holiday>",
+      "location": {
+        "file": "src/date_utils.rs",
+        "line": 493
+      }
+    },
+    {
+      "name": "date_utils.is_business_day",
+      "params": [
+        {
+          "name": "value",
+          "type": "chrono::NaiveDate"
+        },
+        {
+          "name": "options",
+          "type": "Option<BusinessDayOptions>"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "src/date_utils.rs",
+        "line": 638
+      }
+    },
+    {
+      "name": "date_utils.is_holiday",
+      "params": [
+        {
+          "name": "options",
+          "type": "Option<IsHolidayParams>"
         }
       ],
       "returns": "Option<bool>",
       "location": {
         "file": "src/date_utils.rs",
-        "line": 158
+        "line": 181
+      }
+    },
+    {
+      "name": "date_utils.sub_business_days",
+      "params": [
+        {
+          "name": "date",
+          "type": "chrono::NaiveDate"
+        },
+        {
+          "name": "amount",
+          "type": "i64"
+        },
+        {
+          "name": "options",
+          "type": "Option<BusinessDayOptions>"
+        }
+      ],
+      "returns": "Option<chrono::NaiveDate>",
+      "location": {
+        "file": "src/date_utils.rs",
+        "line": 712
       }
     },
     {
@@ -428,6 +1151,117 @@
       }
     },
     {
+      "name": "iban.format",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/iban.rs",
+        "line": 36
+      }
+    },
+    {
+      "name": "iban.get_info",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "Option<IbanInfo>",
+      "location": {
+        "file": "src/iban.rs",
+        "line": 156
+      }
+    },
+    {
+      "name": "iban.is_valid",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "src/iban.rs",
+        "line": 119
+      }
+    },
+    {
+      "name": "iban.parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/iban.rs",
+        "line": 15
+      }
+    },
+    {
+      "name": "ie.is_valid",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        },
+        {
+          "name": "state",
+          "type": "&str"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "src/ie.rs",
+        "line": 77
+      }
+    },
+    {
+      "name": "legal_nature.format",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/legal_nature.rs",
+        "line": 274
+      }
+    },
+    {
+      "name": "legal_nature.generate",
+      "params": [],
+      "returns": "String",
+      "location": {
+        "file": "src/legal_nature.rs",
+        "line": 295
+      }
+    },
+    {
+      "name": "legal_nature.get",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "Option<LegalNature>",
+      "location": {
+        "file": "src/legal_nature.rs",
+        "line": 161
+      }
+    },
+    {
       "name": "legal_nature.get_description",
       "params": [
         {
@@ -438,7 +1272,7 @@
       "returns": "Option<&'static str>",
       "location": {
         "file": "src/legal_nature.rs",
-        "line": 237
+        "line": 136
       }
     },
     {
@@ -452,16 +1286,53 @@
       "returns": "bool",
       "location": {
         "file": "src/legal_nature.rs",
-        "line": 207
+        "line": 119
       }
     },
     {
       "name": "legal_nature.list_all",
-      "params": [],
+      "params": [
+        {
+          "name": "params",
+          "type": "Option<GetLegalNaturesParams>"
+        }
+      ],
       "returns": "std::collections::HashMap<String, String>",
       "location": {
         "file": "src/legal_nature.rs",
-        "line": 263
+        "line": 188
+      }
+    },
+    {
+      "name": "legal_nature.list_by_category",
+      "params": [
+        {
+          "name": "category",
+          "type": "&str"
+        },
+        {
+          "name": "options",
+          "type": "Option<GetLegalNaturesByCategoryOptions>"
+        }
+      ],
+      "returns": "Vec<LegalNature>",
+      "location": {
+        "file": "src/legal_nature.rs",
+        "line": 230
+      }
+    },
+    {
+      "name": "legal_nature.parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/legal_nature.rs",
+        "line": 312
       }
     },
     {
@@ -475,25 +1346,21 @@
       "returns": "Option<String>",
       "location": {
         "file": "src/legal_process.rs",
-        "line": 73
+        "line": 98
       }
     },
     {
       "name": "legal_process.generate",
       "params": [
         {
-          "name": "year",
-          "type": "Option<i32>"
-        },
-        {
-          "name": "orgao",
-          "type": "Option<u32>"
+          "name": "options",
+          "type": "Option<GenerateProcessoJuridicoParams>"
         }
       ],
       "returns": "Option<String>",
       "location": {
         "file": "src/legal_process.rs",
-        "line": 215
+        "line": 249
       }
     },
     {
@@ -507,7 +1374,21 @@
       "returns": "bool",
       "location": {
         "file": "src/legal_process.rs",
-        "line": 132
+        "line": 157
+      }
+    },
+    {
+      "name": "legal_process.parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/legal_process.rs",
+        "line": 62
       }
     },
     {
@@ -532,10 +1413,10 @@
           "type": "&str"
         }
       ],
-      "returns": "Option<String>",
+      "returns": "String",
       "location": {
         "file": "src/license_plate.rs",
-        "line": 226
+        "line": 247
       }
     },
     {
@@ -563,7 +1444,7 @@
       "returns": "Option<String>",
       "location": {
         "file": "src/license_plate.rs",
-        "line": 273
+        "line": 326
       }
     },
     {
@@ -577,11 +1458,25 @@
       "returns": "Option<String>",
       "location": {
         "file": "src/license_plate.rs",
-        "line": 191
+        "line": 212
       }
     },
     {
       "name": "license_plate.is_valid",
+      "params": [
+        {
+          "name": "license_plate",
+          "type": "&str"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "src/license_plate.rs",
+        "line": 159
+      }
+    },
+    {
+      "name": "license_plate.is_valid_for_format",
       "params": [
         {
           "name": "license_plate",
@@ -595,7 +1490,21 @@
       "returns": "bool",
       "location": {
         "file": "src/license_plate.rs",
-        "line": 163
+        "line": 184
+      }
+    },
+    {
+      "name": "license_plate.parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/license_plate.rs",
+        "line": 287
       }
     },
     {
@@ -613,6 +1522,215 @@
       }
     },
     {
+      "name": "municipality.get_by_code",
+      "params": [
+        {
+          "name": "code",
+          "type": "&str"
+        }
+      ],
+      "returns": "Option<Municipality>",
+      "location": {
+        "file": "src/municipality.rs",
+        "line": 70
+      }
+    },
+    {
+      "name": "municipality.list",
+      "params": [
+        {
+          "name": "state_code",
+          "type": "Option<&str>"
+        }
+      ],
+      "returns": "Vec<Municipality>",
+      "location": {
+        "file": "src/municipality.rs",
+        "line": 95
+      }
+    },
+    {
+      "name": "ncm.format",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/ncm.rs",
+        "line": 105
+      }
+    },
+    {
+      "name": "ncm.is_valid",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "src/ncm.rs",
+        "line": 136
+      }
+    },
+    {
+      "name": "ncm.parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/ncm.rs",
+        "line": 120
+      }
+    },
+    {
+      "name": "nfe_key.format",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/nfe_key.rs",
+        "line": 113
+      }
+    },
+    {
+      "name": "nfe_key.get_info",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "Option<NfeKeyInfo>",
+      "location": {
+        "file": "src/nfe_key.rs",
+        "line": 251
+      }
+    },
+    {
+      "name": "nfe_key.is_valid",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "src/nfe_key.rs",
+        "line": 179
+      }
+    },
+    {
+      "name": "nfe_key.parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/nfe_key.rs",
+        "line": 90
+      }
+    },
+    {
+      "name": "number.convert_to_words",
+      "params": [
+        {
+          "name": "value",
+          "type": "f64"
+        },
+        {
+          "name": "options",
+          "type": "Option<ConvertNumberToWordsOptions>"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/number.rs",
+        "line": 55
+      }
+    },
+    {
+      "name": "passport.format",
+      "params": [
+        {
+          "name": "passport",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/passport.rs",
+        "line": 36
+      }
+    },
+    {
+      "name": "passport.generate",
+      "params": [],
+      "returns": "String",
+      "location": {
+        "file": "src/passport.rs",
+        "line": 78
+      }
+    },
+    {
+      "name": "passport.is_valid",
+      "params": [
+        {
+          "name": "passport",
+          "type": "&str"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "src/passport.rs",
+        "line": 56
+      }
+    },
+    {
+      "name": "passport.parse",
+      "params": [
+        {
+          "name": "passport",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/passport.rs",
+        "line": 16
+      }
+    },
+    {
+      "name": "passport.remove_symbols",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/passport.rs",
+        "line": 95
+      }
+    },
+    {
       "name": "phone.format_phone",
       "params": [
         {
@@ -620,10 +1738,10 @@
           "type": "&str"
         }
       ],
-      "returns": "Option<String>",
+      "returns": "String",
       "location": {
         "file": "src/phone.rs",
-        "line": 214
+        "line": 364
       }
     },
     {
@@ -637,7 +1755,7 @@
       "returns": "String",
       "location": {
         "file": "src/phone.rs",
-        "line": 296
+        "line": 449
       }
     },
     {
@@ -648,14 +1766,74 @@
           "type": "&str"
         },
         {
-          "name": "phone_type",
-          "type": "Option<&str>"
+          "name": "options",
+          "type": "Option<IsValidPhoneOptions>"
         }
       ],
       "returns": "bool",
       "location": {
         "file": "src/phone.rs",
-        "line": 182
+        "line": 233
+      }
+    },
+    {
+      "name": "phone.is_valid_landline",
+      "params": [
+        {
+          "name": "phone_number",
+          "type": "&str"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "src/phone.rs",
+        "line": 289
+      }
+    },
+    {
+      "name": "phone.is_valid_mobile",
+      "params": [
+        {
+          "name": "phone_number",
+          "type": "&str"
+        },
+        {
+          "name": "version",
+          "type": "Option<u8>"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "src/phone.rs",
+        "line": 271
+      }
+    },
+    {
+      "name": "phone.is_valid_service",
+      "params": [
+        {
+          "name": "phone_number",
+          "type": "&str"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "src/phone.rs",
+        "line": 312
+      }
+    },
+    {
+      "name": "phone.parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/phone.rs",
+        "line": 92
       }
     },
     {
@@ -669,7 +1847,7 @@
       "returns": "String",
       "location": {
         "file": "src/phone.rs",
-        "line": 330
+        "line": 483
       }
     },
     {
@@ -711,7 +1889,7 @@
       "returns": "Option<String>",
       "location": {
         "file": "src/pis.rs",
-        "line": 122
+        "line": 128
       }
     },
     {
@@ -720,7 +1898,7 @@
       "returns": "String",
       "location": {
         "file": "src/pis.rs",
-        "line": 155
+        "line": 161
       }
     },
     {
@@ -738,6 +1916,20 @@
       }
     },
     {
+      "name": "pis.parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/pis.rs",
+        "line": 187
+      }
+    },
+    {
       "name": "pis.remove_symbols",
       "params": [
         {
@@ -749,6 +1941,94 @@
       "location": {
         "file": "src/pis.rs",
         "line": 29
+      }
+    },
+    {
+      "name": "pix_key.get_info",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "Option<PixKeyInfo>",
+      "location": {
+        "file": "src/pix_key.rs",
+        "line": 59
+      }
+    },
+    {
+      "name": "pix_key.is_valid",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        },
+        {
+          "name": "options",
+          "type": "Option<IsValidPixKeyOptions>"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "src/pix_key.rs",
+        "line": 133
+      }
+    },
+    {
+      "name": "pix_payload.generate",
+      "params": [
+        {
+          "name": "params",
+          "type": "GeneratePixPayloadParams"
+        }
+      ],
+      "returns": "Option<String>",
+      "location": {
+        "file": "src/pix_payload.rs",
+        "line": 282
+      }
+    },
+    {
+      "name": "pix_payload.get_info",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "Option<PixPayloadInfo>",
+      "location": {
+        "file": "src/pix_payload.rs",
+        "line": 203
+      }
+    },
+    {
+      "name": "pix_payload.is_valid",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "src/pix_payload.rs",
+        "line": 108
+      }
+    },
+    {
+      "name": "registro_profissional.is_valid",
+      "params": [
+        {
+          "name": "params",
+          "type": "&IsValidRegistroProfissionalParams"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "src/registro_profissional.rs",
+        "line": 97
       }
     },
     {
@@ -789,6 +2069,117 @@
       }
     },
     {
+      "name": "state.get_by_ibge_code",
+      "params": [
+        {
+          "name": "code",
+          "type": "u32"
+        }
+      ],
+      "returns": "Option<State>",
+      "location": {
+        "file": "src/state.rs",
+        "line": 65
+      }
+    },
+    {
+      "name": "state.get_code_by_name",
+      "params": [
+        {
+          "name": "name",
+          "type": "&str"
+        }
+      ],
+      "returns": "Option<String>",
+      "location": {
+        "file": "src/state.rs",
+        "line": 83
+      }
+    },
+    {
+      "name": "state.get_name_by_code",
+      "params": [
+        {
+          "name": "code",
+          "type": "&str"
+        }
+      ],
+      "returns": "Option<String>",
+      "location": {
+        "file": "src/state.rs",
+        "line": 103
+      }
+    },
+    {
+      "name": "state.get_timezone",
+      "params": [
+        {
+          "name": "state_code",
+          "type": "&str"
+        }
+      ],
+      "returns": "Option<String>",
+      "location": {
+        "file": "src/state.rs",
+        "line": 125
+      }
+    },
+    {
+      "name": "state.list",
+      "params": [],
+      "returns": "Vec<State>",
+      "location": {
+        "file": "src/state.rs",
+        "line": 145
+      }
+    },
+    {
+      "name": "text.capitalize",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        },
+        {
+          "name": "options",
+          "type": "Option<CapitalizeOptions>"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/text.rs",
+        "line": 134
+      }
+    },
+    {
+      "name": "text.remove_accents",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/text.rs",
+        "line": 26
+      }
+    },
+    {
+      "name": "vin.is_valid",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "src/vin.rs",
+        "line": 64
+      }
+    },
+    {
       "name": "voter_id.calculate_vd1",
       "params": [
         {
@@ -803,7 +2194,7 @@
       "returns": "u8",
       "location": {
         "file": "src/voter_id.rs",
-        "line": 206
+        "line": 248
       }
     },
     {
@@ -821,7 +2212,7 @@
       "returns": "u8",
       "location": {
         "file": "src/voter_id.rs",
-        "line": 243
+        "line": 285
       }
     },
     {
@@ -835,7 +2226,7 @@
       "returns": "Option<String>",
       "location": {
         "file": "src/voter_id.rs",
-        "line": 100
+        "line": 142
       }
     },
     {
@@ -849,7 +2240,7 @@
       "returns": "Option<String>",
       "location": {
         "file": "src/voter_id.rs",
-        "line": 136
+        "line": 178
       }
     },
     {
@@ -864,6 +2255,34 @@
       "location": {
         "file": "src/voter_id.rs",
         "line": 34
+      }
+    },
+    {
+      "name": "voter_id.parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/voter_id.rs",
+        "line": 93
+      }
+    },
+    {
+      "name": "voter_id.remove_symbols",
+      "params": [
+        {
+          "name": "value",
+          "type": "&str"
+        }
+      ],
+      "returns": "String",
+      "location": {
+        "file": "src/voter_id.rs",
+        "line": 119
       }
     }
   ],

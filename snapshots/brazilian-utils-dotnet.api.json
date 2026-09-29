@@ -1,7 +1,7 @@
 {
   "library": "brazilian-utils-dotnet",
   "language": "dotnet",
-  "revision": "1c6e9d56a74f39fabdc5e69a539888b7729a8a06",
+  "revision": "4f27bed812fdf9c749ef341f2a6ee212762279f6",
   "symbols": [
     {
       "name": "AreaCode.GetInfo",

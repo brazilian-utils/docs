@@ -1,7 +1,7 @@
 {
   "library": "brazilian-utils-ruby",
   "language": "ruby",
-  "revision": "4a6fd1e954efbf4a9ea399a002168cb681c02487",
+  "revision": "d8f99b6725eaaf110891a49d0d330a6771a9afd1",
   "symbols": [
     {
       "name": "AreaCodeUtils.get_info",

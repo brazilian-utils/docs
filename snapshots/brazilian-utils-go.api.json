@@ -1,7 +1,7 @@
 {
   "library": "brazilian-utils-go",
   "language": "go",
-  "revision": "879097ea6667da6a956735b2b2ba8001bbff297f",
+  "revision": "8a7bbce6f4cf30a874757f1b060c2c82c1df631f",
   "symbols": [
     {
       "name": "areacode.GetInfo",

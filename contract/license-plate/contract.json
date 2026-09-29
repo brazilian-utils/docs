@@ -159,9 +159,9 @@
       "tests": [
         { "name": "generated-is-valid", "args": [], "satisfies": "licensePlate.isValid", "repeat": 5, "note": "every generated value must pass the lib's own validator" },
         { "name": "mercosul-fifth-char-k-to-z", "args": [], "matches": "^[A-Z]{3}[0-9][K-Z][0-9]{2}$", "repeat": 30, "note": "changed in 2.5.0 (#615): the fifth character of a new Mercosul plate is K to Z" },
-        { "name": "explicit-mercosul", "args": ["LLLNLNN"], "matches": "^[A-Z]{3}[0-9][K-Z][0-9]{2}$", "repeat": 10, "note": "JavaScript's own test: the Mercosul format draws the fifth character from K to Z" },
+        { "name": "explicit-mercosul", "args": ["LLLNLNN"], "matches": "^[A-Z]{3}[0-9][K-Z][0-9]{2}$", "repeat": 30, "note": "JavaScript's own test: the Mercosul format draws the fifth character from K to Z" },
         { "name": "old-format", "args": ["LLLNNNN"], "matches": "^[A-Z]{3}[0-9]{4}$", "repeat": 10, "note": "JavaScript docs example: generateLicensePlate(\"LLLNNNN\")" },
-        { "name": "unknown-format-falls-back", "args": ["LLLNNLN"], "matches": "^[A-Z]{3}[0-9][K-Z][0-9]{2}$", "repeat": 5, "note": "an unknown format falls back to the Mercosul default (the withdrawn motorcycle sequence is not generated)" },
+        { "name": "unknown-format-falls-back", "args": ["LLLNNLN"], "matches": "^[A-Z]{3}[0-9][K-Z][0-9]{2}$", "repeat": 30, "note": "an unknown format falls back to the Mercosul default (the withdrawn motorcycle sequence is not generated)" },
         { "name": "bogus-format-falls-back", "args": ["bogus"], "satisfies": "licensePlate.isValid", "repeat": 5, "note": "an unknown format falls back to the default" }
       ]
     },
