@@ -6,7 +6,8 @@
   "cep.format": [
     "dotnet | erlang,python,ruby,rust | go | javascript",
     "dotnet,go,javascript | erlang,python,ruby,rust",
-    "dotnet,javascript | erlang,python,ruby,rust | go"
+    "dotnet,javascript | erlang,python,ruby,rust | go",
+    "erlang | javascript | python,ruby"
   ],
   "cep.isValid": [
     "dotnet | erlang,go,javascript,python,ruby,rust",
@@ -49,6 +50,7 @@
     "dotnet,go,python | javascript,rust | ruby",
     "dotnet,go,python,ruby | javascript | rust",
     "dotnet,go,python,ruby | javascript,rust",
+    "dotnet,python | go | javascript | ruby | rust",
     "dotnet,python,ruby | go | javascript | rust"
   ],
   "currency.format": [
@@ -66,6 +68,7 @@
   ],
   "email.isValid": [
     "go,python | javascript,ruby,rust",
+    "go,python,ruby,rust | javascript",
     "go,python,rust | javascript,ruby"
   ],
   "legalNature.getDescription": [
@@ -86,9 +89,17 @@
     "dotnet,python,ruby,rust | go,javascript",
     "javascript | python | ruby"
   ],
+  "legalProcess.generate": [
+    "dotnet,javascript | python,ruby",
+    "dotnet,javascript,rust | python,ruby",
+    "javascript | python | ruby",
+    "javascript | python,ruby"
+  ],
   "legalProcess.isValid": [
     "dotnet,go,javascript,ruby,rust | python",
-    "dotnet,go,python,ruby,rust | javascript"
+    "dotnet,go,python,ruby,rust | javascript",
+    "dotnet,go,ruby,rust | javascript | python",
+    "dotnet,javascript,ruby | python"
   ],
   "licensePlate.convertToMercosul": [
     "dotnet | erlang,go,javascript | python | ruby | rust",
@@ -110,6 +121,8 @@
   ],
   "licensePlate.isValid": [
     "dotnet,go,javascript,python,ruby,rust | erlang",
+    "dotnet,go,python,ruby,rust | erlang | javascript",
+    "dotnet,go,python,rust | erlang | javascript,ruby",
     "erlang | javascript,python,ruby",
     "erlang,python | javascript,ruby",
     "erlang,python,ruby | javascript"
@@ -129,6 +142,7 @@
     "erlang,python,ruby,rust | go,javascript"
   ],
   "phone.isValid": [
+    "dotnet | erlang,javascript",
     "dotnet,erlang | javascript",
     "dotnet,javascript | erlang",
     "erlang | javascript"
@@ -156,10 +170,11 @@
   "voterId.format": [
     "dotnet,erlang,python,ruby,rust | go | javascript",
     "dotnet,erlang,python,ruby,rust | go,javascript",
-    "dotnet,javascript,ruby | erlang | go,python,rust",
+    "dotnet,ruby | erlang | go,javascript,python,rust",
     "erlang | javascript | python,ruby"
   ],
   "voterId.isValid": [
+    "dotnet,erlang,go,python,ruby,rust | javascript",
     "dotnet,erlang,javascript,python,ruby,rust | go",
     "dotnet,erlang,python,ruby,rust | go,javascript"
   ]

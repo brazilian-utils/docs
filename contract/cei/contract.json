@@ -22,7 +22,8 @@
           "The reference implementations of the check digit agree on this mask (the Receita Federal does not print it).",
           "",
           "- The mask is applied as far as the digits go. `options.pad` first left-pads with zeros to 12 digits.",
-          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped).",
+          "- `options.pad` on a value with no digits (`\"\"`, `\"---\"`, `null`) still gives an empty string. Until 2.4.0 it gave the whole zero mask. Changed in 2.5.0 (#615)."
         ],
         "pt-BR": [
           "Formata um CEI com a máscara usual `00.000.00000/00`.",
@@ -30,13 +31,14 @@
           "As implementações de referência do dígito verificador concordam com essa máscara (a Receita Federal não a imprime).",
           "",
           "- A máscara é aplicada até onde os dígitos vão. `options.pad` primeiro completa com zeros à esquerda até 12 dígitos.",
-          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal).",
+          "- `options.pad` num valor sem dígitos (`\"\"`, `\"---\"`, `null`) continua retornando uma string vazia. Até a 2.4.0 retornava a máscara inteira de zeros. Mudou na 2.5.0 (#615)."
         ]
       },
       "references": ["https://www.gov.br/receitafederal/pt-br/assuntos/orientacao-tributaria/cadastros/cno"],
       "params": [
         { "name": "value", "type": "string | number" },
-        { "name": "options", "type": "FormatCeiOptions", "optional": true }
+        { "name": "options", "type": "FormatCeiOptions", "optional": true, "fields": [{ "name": "pad", "type": "boolean", "optional": true }] }
       ],
       "returns": "string",
       "tests": [
@@ -54,7 +56,12 @@
         { "args": ["249", { "pad": true }], "returns": "00.000.00002/49", "note": "JavaScript's own test: should pad the value with leading zeros when options.pad is true" },
         { "args": [-1], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
         { "args": [1.5], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
-        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" }
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": ["", { "pad": true }], "returns": "", "note": "changed in 2.5.0 (#615): should return an empty string for a value without digits even when padding; 2.4.0 returned the zero mask" },
+        { "args": ["---", { "pad": true }], "returns": "", "note": "changed in 2.5.0 (#615): a value with no digits gives an empty string even with pad" },
+        { "args": [null, { "pad": true }], "returns": "", "note": "changed in 2.5.0 (#615): nullish input gives an empty string even with pad" },
+        { "args": [-249859674386], "returns": "", "note": "JavaScript docs example: not a non-negative safe integer" },
+        { "args": ["249"], "returns": "24.9", "note": "JavaScript docs example: no padding by default" }
       ]
     },
     "isValid": {
@@ -67,7 +74,8 @@
           "- A value whose digits are all the same is rejected.",
           "- Accepts a number or a string, bare or split into the printed groups (2, 3, 5 and 2 digits) by whitespace or the usual formatting characters. Anything else is rejected.",
           "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number is invalid.",
-          "- No official source publishes the check digit rule. Only the 12 positions and the CNO keeping the CEI number (Manual de Orientação do eSocial S-1.3, item 9.1) are official. The IN RFB 2.061/2021 has no check digit, and the eSocial only checks that the number exists in the Receita Federal base. The rule comes from third-party reference implementations, cross-checked against the CNO open data and SERPRO's example `000000336854`."
+          "- No official source publishes the check digit rule. Only the 12 positions and the CNO keeping the CEI number (Manual de Orientação do eSocial S-1.3, item 9.1) are official. The IN RFB 2.061/2021 has no check digit, and the eSocial only checks that the number exists in the Receita Federal base. The rule comes from third-party reference implementations, cross-checked against the CNO open data and SERPRO's example `000000336854`.",
+          "- A number loses its leading zeros, so a value that starts with `0` is only accepted as a string: `\"000000336854\"` is valid and `336854` is not."
         ],
         "pt-BR": [
           "Valida um CEI: 12 dígitos, sendo 11 dígitos de base e um dígito verificador.",
@@ -76,7 +84,8 @@
           "- Um valor com todos os dígitos iguais é rejeitado.",
           "- Aceita um número ou uma string, sem separadores ou dividida nos grupos impressos (2, 3, 5 e 2 dígitos) por espaços em branco ou pelos caracteres de formatação usuais. Qualquer outra forma é rejeitada.",
           "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro é inválido.",
-          "- Nenhuma fonte oficial publica a regra do dígito verificador. Só as 12 posições e a manutenção do número do CEI no CNO (Manual de Orientação do eSocial S-1.3, item 9.1) são oficiais. A IN RFB 2.061/2021 não traz dígito verificador, e o eSocial só verifica se o número existe na base da Receita. A regra vem de implementações de referência de terceiros, conferidas com os dados abertos do CNO e com o exemplo do SERPRO, `000000336854`."
+          "- Nenhuma fonte oficial publica a regra do dígito verificador. Só as 12 posições e a manutenção do número do CEI no CNO (Manual de Orientação do eSocial S-1.3, item 9.1) são oficiais. A IN RFB 2.061/2021 não traz dígito verificador, e o eSocial só verifica se o número existe na base da Receita. A regra vem de implementações de referência de terceiros, conferidas com os dados abertos do CNO e com o exemplo do SERPRO, `000000336854`.",
+          "- Um número perde os zeros à esquerda, então um valor que começa com `0` só é aceito como string: `\"000000336854\"` é válido e `336854` não é."
         ]
       },
       "references": [
@@ -112,7 +121,9 @@
         { "args": [" 11 583 00249 85 "], "returns": true, "note": "JavaScript's own test: should return true for a whitespace mask and surrounding whitespace" },
         { "args": [-277297118187], "returns": false, "note": "JavaScript's own test: should return false when it is a negative or fractional number (#593 number rule)" },
         { "args": [2772971181.87], "returns": false, "note": "JavaScript's own test: should return false when it is a negative or fractional number (#593 number rule)" },
-        { "args": ["000000336854"], "returns": true, "note": "SERPRO's example of the CNO cadastro, which keeps the CEI numbering" }
+        { "args": ["000000336854"], "returns": true, "note": "SERPRO's example of the CNO cadastro, which keeps the CEI numbering" },
+        { "args": [336854], "returns": false, "note": "JavaScript docs example: a number loses its leading zeros" },
+        { "args": [-249859674386], "returns": false, "note": "JavaScript docs example: not a non-negative safe integer" }
       ]
     },
     "parse": {

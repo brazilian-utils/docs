@@ -55,7 +55,9 @@ Status:
    input. It masks an incomplete value as far as it goes (`"123"` gives `"123"`). Go and .NET
    do the same. Python, Ruby, Rust and Erlang return null for anything that is not a complete,
    valid value. For this reason, `format` returns `string?` in those libraries and `string` in
-   the contract. The vote does not cover some functions yet: `currency.format` and
+   the contract. With `pad`, a value that has no digits at all still gives `""` (until 2.4.0
+   the reference returned the full zero mask, `formatCpf("", { pad: true })` gave
+   `000.000.000-00`). The vote does not cover some functions yet: `currency.format` and
    `date.convertToWords` (§2 #9), `licensePlate.convertToMercosul` (§2 #5), and `phone.format`
    and `passport.format` on empty input.
 
@@ -74,7 +76,10 @@ Status:
 
 6. **Masked input to validators.** The reference ignores the usual mask characters (`.`, `-`,
    `/`) and whitespace around and between groups. So the caller does not have to remove them
-   first. JS, Go and .NET accept `821.785.374-64`. Python, Ruby, Rust and Erlang accept digits
+   first. Since 2.5.0 the classification codes (CBO, CFOP, CNAE, NCM, CEST, NBS, service
+   item) accept any run of separators (space, `.`, `-`, `/`) between two groups (`2124--05`,
+   `5..102`), and any other character makes the value invalid instead of being skipped.
+   JS, Go and .NET accept `821.785.374-64`. Python, Ruby, Rust and Erlang accept digits
    only. The rule applies to `cpf`, `cnpj`, `cep`, `pis` and `voterId`. The description of each
    function lists the separators it accepts (for example, `voterId.isValid` rejects hyphens).
 
@@ -130,8 +135,7 @@ Status:
 17. **State codes.** Every function that takes a state code (UF) ignores case and surrounding
     whitespace: `"sp"`, `" SP "` and `"Sp"` all mean `"SP"`. This covers the municipality,
     area code, state, holiday and business-day functions, and the generators that take a state
-    (`cpf.generate`, `voterId.generate`), and `registroProfissional.isValid`. `ie.isValid` ignores
-    case but not surrounding whitespace (`" sp "` is rejected). Until 2.4.0,
+    (`cpf.generate`, `voterId.generate`), `registroProfissional.isValid` and `ie.isValid`. Until 2.4.0,
     `municipality.list("sp")` returned an empty list and the holiday functions read `"sp"` as
     no state.
 

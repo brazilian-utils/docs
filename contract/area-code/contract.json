@@ -111,7 +111,8 @@
         { "args": [-11], "returns": null, "note": "JavaScript's own test: should return null for a negative number, not read it as the DDD 11" },
         { "args": [1.1], "returns": null, "note": "JavaScript's own test: should return null for a fractional number, not read it as the DDD 11" },
         { "args": ["(0xx11)"], "returns": { "areaCode": 11, "stateCode": "SP", "stateName": "São Paulo", "regionCode": "SE", "regionName": "Sudeste", "stateCodes": ["SP"] }, "note": "from the maintainer briefing, #596: every non-digit is removed from a string, as in 2.4.0" },
-        { "args": [" 11 "], "returns": { "areaCode": 11, "stateCode": "SP", "stateName": "São Paulo", "regionCode": "SE", "regionName": "Sudeste", "stateCodes": ["SP"] }, "note": "from the maintainer briefing, #596: every non-digit is removed from a string, as in 2.4.0" }
+        { "args": [" 11 "], "returns": { "areaCode": 11, "stateCode": "SP", "stateName": "São Paulo", "regionCode": "SE", "regionName": "Sudeste", "stateCodes": ["SP"] }, "note": "from the maintainer briefing, #596: every non-digit is removed from a string, as in 2.4.0" },
+        { "args": ["DDD 11"], "returns": { "areaCode": 11, "stateCode": "SP", "stateName": "São Paulo", "regionCode": "SE", "regionName": "Sudeste", "stateCodes": ["SP"] }, "note": "JavaScript docs example: non-digit characters are stripped" }
       ]
     },
     "listByState": {
@@ -155,7 +156,8 @@
         { "args": ["GO"], "returns": [61, 62, 64], "note": "JavaScript's own test: should list DDD 61 for Goiás, which the Entorno do Distrito Federal shares with the DF" },
         { "args": ["DF"], "returns": [61], "note": "JavaScript's own test: should list only DDD 61 for the Distrito Federal" },
         { "args": ["PR"], "returns": [41, 42, 43, 44, 45, 46, 47, 49], "note": "JavaScript's own test: should list the border DDDs 42, 47 and 49 under both of their states" },
-        { "args": ["   "], "returns": [], "note": "JavaScript's own test: should return an empty array when it is a blank string" }
+        { "args": ["   "], "returns": [], "note": "JavaScript's own test: should return an empty array when it is a blank string" },
+        { "args": ["ac"], "returns": [68], "note": "JavaScript docs example" }
       ]
     }
   }

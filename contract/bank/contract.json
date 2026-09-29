@@ -128,12 +128,14 @@
         "en": [
           "Returns every bank with a COMPE code from the Banco Central do Brasil STR participants list.",
           "",
+          "- Each call returns a fresh array of fresh objects, in a fixed table order, so mutating the result never affects the data or a later call.",
           "- Each entry carries the COMPE `code` (3 digits), the `ispb` (8 digits) and the `name`.",
           "- The table is regenerated from the STR participants list of 25/09/2026. Names follow that list (for example, 516 is now PLACARPAY and 692 is ZYDI)."
         ],
         "pt-BR": [
           "Retorna todos os bancos com código COMPE da lista de participantes do STR do Banco Central do Brasil.",
           "",
+          "- Cada chamada retorna um array novo de objetos novos, em uma ordem fixa da tabela, então alterar o resultado nunca afeta os dados nem uma chamada posterior.",
           "- Cada item traz o `code` COMPE (3 dígitos), o `ispb` (8 dígitos) e o `name`.",
           "- A tabela é regenerada da lista de participantes do STR de 25/09/2026. Os nomes seguem essa lista (por exemplo, o 516 agora é PLACARPAY e o 692 é ZYDI)."
         ]

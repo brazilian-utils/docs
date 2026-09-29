@@ -18,12 +18,14 @@
         "en": [
           "Formats a passport number: upper-cased, without symbols, capped at 8 characters (the same operation as `passport.parse`).",
           "",
-          "- Pending decision (findings §1b, §2 #8): the reference (JS) upper-cases lowercase and masked input. Erlang and Python accept only the strict uppercase form."
+          "- Pending decision (findings §1b, §2 #8): the reference (JS) upper-cases lowercase and masked input. Erlang and Python accept only the strict uppercase form.",
+          "- It is an alias of `passport.parse`: it does not check the number, so a partial value (`AB12`) is formatted as it is."
         ],
         "pt-BR": [
           "Formata um número de passaporte: em maiúsculas, sem símbolos, com no máximo 8 caracteres (a mesma operação de `passport.parse`).",
           "",
-          "- Decisão pendente (findings §1b, §2 #8): a referência (JS) converte para maiúsculas a entrada em minúsculas e com máscara. Erlang e Python aceitam apenas a forma estrita em maiúsculas."
+          "- Decisão pendente (findings §1b, §2 #8): a referência (JS) converte para maiúsculas a entrada em minúsculas e com máscara. Erlang e Python aceitam apenas a forma estrita em maiúsculas.",
+          "- É um apelido de `passport.parse`: não confere o número, então um valor incompleto (`AB12`) é formatado como está."
         ]
       },
       "references": [
@@ -111,7 +113,10 @@
         { "args": ["1"], "returns": false },
         { "args": ["1112223334-"], "returns": false },
         { "name": "number", "args": [1], "returns": false, "note": "a number is accepted but never valid (see summary)" },
-        { "args": ["CS265436"], "returns": true, "note": "the example of the Polícia Federal FAQ" }
+        { "args": ["CS265436"], "returns": true, "note": "the example of the Polícia Federal FAQ" },
+        { "args": ["DC-221345extra"], "returns": false, "note": "JavaScript docs example: trailing letters make the sanitized value longer than 2 letters and 6 digits" },
+        { "args": ["AB-123.456"], "returns": true, "note": "JavaScript docs example (symbols are ignored)" },
+        { "args": ["12345678"], "returns": false, "note": "JavaScript docs example" }
       ]
     },
     "parse": {
@@ -140,7 +145,8 @@
         { "name": "caps-length", "args": ["AB123456789"], "returns": "AB123456" },
         { "name": "empty", "args": [""], "returns": "" },
         { "args": [".AB.1.23.456."], "returns": "AB123456", "note": "JavaScript's own test: should return the string without symbols when there are dots" },
-        { "args": [".A B.1.2-3.45 -. 6."], "returns": "AB123456", "note": "JavaScript's own test: should return the string without symbols when there are multiple symbols" }
+        { "args": [".A B.1.2-3.45 -. 6."], "returns": "AB123456", "note": "JavaScript's own test: should return the string without symbols when there are multiple symbols" },
+        { "args": ["AB-123.456"], "returns": "AB123456", "note": "JavaScript docs example" }
       ]
     }
   }

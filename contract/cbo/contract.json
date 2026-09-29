@@ -9,6 +9,69 @@
   "category": "companies",
   "order": 5,
   "functions": {
+    "format": {
+      "summary": {
+        "en": "Formats a CBO code with the mask `NNNN-NN`.",
+        "pt-BR": "Formata um código CBO com a máscara `NNNN-NN`."
+      },
+      "description": {
+        "en": [
+          "Formats a CBO code with the mask `NNNN-NN`. Only the structure changes (use `cbo.isValid` to check the code against the table).",
+          "",
+          "- The mask is applied as far as the digits go, which is what an input being typed into needs.",
+          "- `options.pad` (default false) first left-pads the value with zeros to 6 digits. A number is treated as the string of its digits, so it is padded only with `pad`.",
+          "- A string is read for its digits: other characters are dropped and digits after the last one of the mask are ignored.",
+          "- Returns an empty string when there is no digit at all, also with `pad`. null and undefined give an empty string too.",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string.",
+          "- New in 2.5.0 (#615), so every masked classification code has its formatter."
+        ],
+        "pt-BR": [
+          "Formata um código CBO com a máscara `NNNN-NN`. Só a estrutura muda (use `cbo.isValid` para verificar o código na tabela).",
+          "",
+          "- A máscara é aplicada até onde os dígitos vão, o que serve a um campo em digitação.",
+          "- `options.pad` (padrão false) primeiro completa o valor com zeros à esquerda até 6 dígitos. Um número é tratado como a string dos seus dígitos, então só é completado com `pad`.",
+          "- Uma string é lida pelos seus dígitos: os outros caracteres são descartados e dígitos depois do último da máscara são ignorados.",
+          "- Retorna uma string vazia quando não há nenhum dígito, também com `pad`. null e undefined também dão string vazia.",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia.",
+          "- Nova na 2.5.0 (#615), para que todo código com máscara tenha o seu formatador."
+        ]
+      },
+      "references": ["https://cbo.mte.gov.br/cbosite/pages/downloads.jsf"],
+      "flatName": "formatCbo",
+      "params": [
+        { "name": "value", "type": "string | number" },
+        { "name": "options", "type": "FormatCboOptions", "optional": true, "fields": [{ "name": "pad", "type": "boolean", "optional": true }] }
+      ],
+      "returns": "string",
+      "tests": [
+        { "args": ["212405"], "returns": "2124-05", "note": "JavaScript's own test: should format a CBO code given as digits" },
+        { "args": [212405], "returns": "2124-05", "note": "JavaScript's own test: should format a CBO code given as a number" },
+        { "args": ["2124-05"], "returns": "2124-05", "note": "JavaScript's own test: should format a CBO code that already has the mask" },
+        { "args": ["999999"], "returns": "9999-99", "note": "JavaScript's own test: should not validate whether the code exists in the official table" },
+        { "args": [""], "returns": "", "note": "JavaScript's own test: should return an empty string for an empty value" },
+        { "args": ["2"], "returns": "2", "note": "JavaScript's own test: should mask a partial value progressively by default" },
+        { "args": ["2124"], "returns": "2124", "note": "JavaScript's own test: should mask a partial value progressively by default" },
+        { "args": ["21240"], "returns": "2124-0", "note": "JavaScript's own test: should mask a partial value progressively by default" },
+        { "args": [21], "returns": "21", "note": "JavaScript's own test: should mask a partial number progressively by default" },
+        { "args": [10205], "returns": "1020-5", "note": "JavaScript's own test: should mask a partial number progressively by default" },
+        { "args": ["2124059999"], "returns": "2124-05", "note": "JavaScript's own test: should not add digits after the CBO length" },
+        { "args": ["", { "pad": true }], "returns": "", "note": "JavaScript's own test: pad option should left pad a short code with zeros up to the full CBO length" },
+        { "args": ["5", { "pad": true }], "returns": "0000-05", "note": "JavaScript's own test: pad option should left pad a short code with zeros up to the full CBO length" },
+        { "args": ["10205", { "pad": true }], "returns": "0102-05", "note": "JavaScript's own test: pad option should left pad a short code with zeros up to the full CBO length" },
+        { "args": ["212405", { "pad": true }], "returns": "2124-05", "note": "JavaScript's own test: pad option should left pad a short code with zeros up to the full CBO length" },
+        { "args": [5, { "pad": true }], "returns": "0000-05", "note": "JavaScript's own test: pad option should left pad a number the same way as its digits" },
+        { "args": [10205, { "pad": true }], "returns": "0102-05", "note": "JavaScript's own test: pad option should left pad a number the same way as its digits" },
+        { "args": ["10205", { "pad": false }], "returns": "1020-5", "note": "JavaScript's own test: pad option should mask progressively for an explicit false" },
+        { "args": [null], "returns": "", "note": "JavaScript's own test: should return an empty string for null and undefined, even under pad" },
+        { "args": [null, { "pad": true }], "returns": "", "note": "JavaScript's own test: should return an empty string for null and undefined, even under pad" },
+        { "args": ["abc212405"], "returns": "2124-05", "note": "JavaScript's own test: should read only the digits of a value with other characters, like formatCpf" },
+        { "args": ["21.24/05"], "returns": "2124-05", "note": "JavaScript's own test: should read only the digits of a value with other characters, like formatCpf" },
+        { "args": [-212405], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": [2124.05], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": [-212405, { "pad": true }], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" }
+      ]
+    },
     "get": {
       "summary": {
         "en": "Looks up a CBO code in the official CBO 2002 table.",
@@ -19,14 +82,14 @@
           "Looks up a CBO code in the CBO 2002 occupation table and returns its code and official title.",
           "",
           "- Same input rules as `cbo.isValid`. The returned code is the 6 bare digits.",
-          "- Returns null for an unknown code or a value not written in one of the accepted forms.",
+          "- Returns null for an unknown code or a value not written in one of the accepted forms. A run of separators between the groups is accepted, as in `cbo.isValid` (`2124--05` gives the entry; until 2.4.0 it gave null).",
           "- It returns null exactly when `cbo.isValid` returns false. The table and its titles follow the current MTE release (10/07/2026). 106 titles changed from 2.4.0, and codes the MTE retired return null."
         ],
         "pt-BR": [
           "Consulta um código CBO na tabela de ocupações CBO 2002 e retorna o código e o título oficial.",
           "",
           "- Mesmas regras de entrada de `cbo.isValid`. O código retornado tem os 6 dígitos sem máscara.",
-          "- Retorna null para um código desconhecido ou para um valor que não está escrito em uma das formas aceitas.",
+          "- Retorna null para um código desconhecido ou para um valor que não está escrito em uma das formas aceitas. Uma sequência de separadores entre os grupos é aceita, como em `cbo.isValid` (`2124--05` retorna o registro; até a 2.4.0 retornava null).",
           "- Retorna null exatamente quando `cbo.isValid` retorna false. A tabela e os títulos seguem a release vigente do MTE (10/07/2026). 106 títulos mudaram em relação à 2.4.0, e códigos que o MTE retirou retornam null."
         ]
       },
@@ -43,8 +106,8 @@
         { "args": [212405], "returns": { "code": "212405", "description": "Analista de desenvolvimento de sistemas" }, "note": "JavaScript's own test: should return the occupation for a code given as a number" },
         { "args": ["102-05"], "returns": null, "note": "JavaScript's own test: should not pad a masked value, which already carries its separators" },
         { "args": ["142135"], "returns": { "code": "142135", "description": "Oficial de proteção de dados pessoais (dpo)" }, "note": "JavaScript's own test: should resolve a code the official CSV carries and the community mirror did not (142135)" },
-        { "args": ["2124--05"], "returns": null, "note": "JavaScript's own test: should reject a group boundary written with more than one separator (2124--05)" },
-        { "args": ["2124 05"], "returns": { "code": "212405", "description": "Analista de desenvolvimento de sistemas" }, "note": "JavaScript's own test: should reject a group boundary written with more than one separator (2124--05)" },
+        { "args": ["2124--05"], "returns": { "code": "212405", "description": "Analista de desenvolvimento de sistemas" }, "note": "changed in 2.5.0 (#615): a run of separators between the groups is accepted (2.4.0 gave null). JavaScript's own test: should accept a group boundary written with a run of separators (2124--05), as isValidCpf does" },
+        { "args": ["2124 05"], "returns": { "code": "212405", "description": "Analista de desenvolvimento de sistemas" }, "note": "JavaScript's own test: should accept a group boundary written with a run of separators (2124--05), as isValidCpf does" },
         { "args": ["21240"], "returns": null, "note": "JavaScript's own test: should return null for a padded short value no occupation carries and for a wider value" },
         { "args": ["2124055"], "returns": null, "note": "JavaScript's own test: should return null for a padded short value no occupation carries and for a wider value" },
         { "args": ["      "], "returns": null, "note": "JavaScript's own test: should return null for whitespace only" },
@@ -75,7 +138,8 @@
         "en": [
           "Checks whether a CBO code exists in the official CBO 2002 occupation table.",
           "",
-          "- Accepts the 6 digits, the `NNNN-NN` mask or a non-negative integer. The mask has a single separator between the groups: space, `.`, `-` or `/`.",
+          "- Accepts the 6 digits, the `NNNN-NN` mask or a non-negative integer. A masked string may have any run of separators (space, `.`, `-` or `/`) between the groups: `2124--05` is valid. Until 2.4.0 the mask had a single separator and `2124--05` was rejected.",
+          "- Separators are accepted only at the boundary between the groups: `2124-0-5` and `21-2405` are invalid. Surrounding whitespace is ignored.",
           "- Bare digits (string or number) are left-padded with zeros to 6. A masked value is read as written.",
           "- Any other string is rejected. The function does not pick out its digits.",
           "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number is invalid.",
@@ -86,7 +150,8 @@
         "pt-BR": [
           "Verifica se um código CBO existe na tabela oficial de ocupações CBO 2002.",
           "",
-          "- Aceita os 6 dígitos, a máscara `NNNN-NN` ou um inteiro não negativo. A máscara tem um único separador entre os grupos: espaço, `.`, `-` ou `/`.",
+          "- Aceita os 6 dígitos, a máscara `NNNN-NN` ou um inteiro não negativo. Uma string com máscara pode ter qualquer sequência de separadores (espaço, `.`, `-` ou `/`) entre os grupos: `2124--05` é válido. Até a 2.4.0 a máscara tinha um único separador e `2124--05` era rejeitado.",
+          "- Separadores só são aceitos na fronteira entre os grupos: `2124-0-5` e `21-2405` são inválidos. Espaços nas pontas são ignorados.",
           "- Dígitos sem máscara (string ou número) são completados com zeros à esquerda até 6. Um valor com máscara é lido como está escrito.",
           "- Qualquer outra string é rejeitada. A função não extrai os dígitos dela.",
           "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro é inválido.",
@@ -114,8 +179,8 @@
         { "args": ["0102-05"], "returns": true, "note": "JavaScript's own test: should not pad a masked value, which already carries its separators" },
         { "args": [" 212405 "], "returns": true, "note": "JavaScript's own test: should validate a CBO code with surrounding whitespace" },
         { "args": ["142135"], "returns": true, "note": "JavaScript's own test: should accept a code the official CSV carries and the community mirror did not (142135)" },
-        { "args": ["2124--05"], "returns": false, "note": "JavaScript's own test: should reject a group boundary written with more than one separator (2124--05)" },
-        { "args": ["2124 05"], "returns": true, "note": "JavaScript's own test: should reject a group boundary written with more than one separator (2124--05)" },
+        { "args": ["2124--05"], "returns": true, "note": "changed in 2.5.0 (#615): a run of separators between the groups is accepted (2.4.0 rejected it). JavaScript's own test: should accept a group boundary written with a run of separators (2124--05), as isValidCpf does" },
+        { "args": ["2124 05"], "returns": true, "note": "JavaScript's own test: should accept a group boundary written with a run of separators (2124--05), as isValidCpf does" },
         { "args": ["2124055"], "returns": false, "note": "JavaScript's own test: should return false for a padded short value no occupation carries and for a wider value" },
         { "args": ["      "], "returns": false, "note": "JavaScript's own test: should return false for whitespace only" },
         { "args": ["2124.05"], "returns": true, "note": "JavaScript's own test: should accept the separators the mask uses between the two groups" },
@@ -135,7 +200,9 @@
         { "args": ["322115"], "returns": false, "note": "changed in 2.5.0 (#599): the MTE dropped this code from the current CBO release (10/07/2026); 2.4.0 accepted it" },
         { "args": ["322120"], "returns": false, "note": "changed in 2.5.0 (#599): the MTE dropped this code from the current CBO release (10/07/2026); 2.4.0 accepted it" },
         { "args": ["322125"], "returns": false, "note": "changed in 2.5.0 (#599): the MTE dropped this code from the current CBO release (10/07/2026); 2.4.0 accepted it" },
-        { "args": [9007199254740992], "returns": false, "note": "JavaScript's own test: should return false for a number that is not a non-negative safe integer (2 ** 53)" }
+        { "args": [9007199254740992], "returns": false, "note": "JavaScript's own test: should return false for a number that is not a non-negative safe integer (2 ** 53)" },
+        { "args": ["2124-0-5"], "returns": false, "note": "JavaScript's own test: should accept a group boundary written with a run of separators (2124--05), as isValidCpf does" },
+        { "args": ["2124-05"], "returns": true, "note": "JavaScript's own test: should accept a group boundary written with a run of separators (2124--05), as isValidCpf does" }
       ]
     },
     "parse": {

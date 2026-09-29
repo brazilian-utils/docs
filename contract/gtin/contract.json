@@ -90,7 +90,7 @@
           "Validates a GTIN: 8, 12, 13 or 14 digits and the GS1 modulus 10 check digit.",
           "",
           "- Check digit: the other digits weighted 3 and 1 alternately from the right. The check digit brings the sum to the next multiple of 10. This is what NF-e rules I03-10 and I12-10 check in the `cEAN` and `cEANTrib` fields.",
-          "- Only a string of digits is read, without surrounding whitespace. A mask, a space inside the value and a letter are rejected. A number is also rejected, because the leading zeros define the length.",
+          "- Only a string of digits is read; whitespace around the value is ignored. A mask, a space inside the value and a letter are rejected. A number is also rejected, because the leading zeros define the length.",
           "- A value of zeros only is rejected at any length, although its check digit is valid. This is a rule of the library: zeros are the usual placeholder for a missing GTIN.",
           "- `SEM GTIN`, the text the NF-e uses for a product without a GTIN, is rejected.",
           "- `options.lengths` limits the accepted lengths, for example `{ lengths: [13] }`. An empty list accepts nothing. When it is missing or is not a list, the four lengths are accepted.",
@@ -101,7 +101,7 @@
           "Valida um GTIN: 8, 12, 13 ou 14 dígitos e o dígito verificador GS1 por módulo 10.",
           "",
           "- Dígito verificador: os outros dígitos com pesos 3 e 1 alternados a partir da direita. O dígito verificador leva a soma ao próximo múltiplo de 10. É o que as regras I03-10 e I12-10 da NF-e verificam nos campos `cEAN` e `cEANTrib`.",
-          "- Só uma string de dígitos é lida, sem os espaços em volta. Máscara, espaço no meio e letra são rejeitados. Número também é rejeitado, porque os zeros à esquerda definem o comprimento.",
+          "- Só uma string de dígitos é lida; espaços em volta do valor são ignorados. Máscara, espaço no meio e letra são rejeitados. Número também é rejeitado, porque os zeros à esquerda definem o comprimento.",
           "- Um valor só de zeros é rejeitado em qualquer comprimento, apesar de o dígito verificador ser válido. É uma regra da biblioteca: zeros são o preenchimento comum de um GTIN ausente.",
           "- `SEM GTIN`, o texto que a NF-e usa para produto sem GTIN, é rejeitado.",
           "- `options.lengths` limita os comprimentos aceitos, por exemplo `{ lengths: [13] }`. Uma lista vazia não aceita nada. Quando ausente ou quando não é uma lista, os quatro comprimentos são aceitos.",
@@ -116,7 +116,7 @@
       ],
       "params": [
         { "name": "value", "type": "string" },
-        { "name": "options", "type": "IsValidGtinOptions", "optional": true }
+        { "name": "options", "type": "IsValidGtinOptions", "optional": true, "fields": [{ "name": "lengths", "type": "GtinLength[]", "optional": true }] }
       ],
       "returns": "boolean",
       "tests": [
@@ -153,7 +153,9 @@
         { "args": ["78912342", {}], "returns": true, "note": "JavaScript's own test: should accept the four lengths when it is left out or is not a list" },
         { "args": ["0000000000000"], "returns": false, "note": "JavaScript's own test: should reject a value of zeros only, a rule of this library that no NF-e rejection states" },
         { "args": ["00000000"], "returns": false, "note": "JavaScript's own test: should reject a value of zeros only, a rule of this library that no NF-e rejection states" },
-        { "args": ["00000000000000"], "returns": false, "note": "JavaScript's own test: should reject a value of zeros only, a rule of this library that no NF-e rejection states" }
+        { "args": ["00000000000000"], "returns": false, "note": "JavaScript's own test: should reject a value of zeros only, a rule of this library that no NF-e rejection states" },
+        { "args": [7890000000017], "returns": false, "note": "JavaScript's own test: a number is never accepted, because leading zeros count" },
+        { "args": [null], "returns": false, "note": "only a string is read" }
       ]
     }
   }

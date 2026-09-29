@@ -35,6 +35,7 @@ The Correios assign each state one or more blocks of CEPs. `cep.getState` reads 
 - Two blocks belong to no state: `00000-000` to `00999-999` and `78900-000` to `78999-999`. MT ends at `78899-999`.
 - AM, DF and GO have two blocks each. `72800-000` to `72999-999`, inside the DF block, belongs to GO.
 - The full table is in the description of `cep.getState`.
+- `cep.generate` draws only inside these blocks, so the CEP it generates always belongs to a state.
 
 ## Examples
 

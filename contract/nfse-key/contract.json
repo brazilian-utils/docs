@@ -19,6 +19,7 @@
         "en": [
           "Parses a national NFS-e access key into its fields. It accepts the same input as `nfseKey.isValid` and returns null exactly when that function returns false.",
           "",
+          "- The separators between fields are accepted as in `nfseKey.isValid`. The `NFS` prefix must touch the key. Only a string is read: any other type returns null.",
           "- Fields: municipality code (7 digits), state (from the first 2 digits of the municipality code), generator environment (1 municipality, 2 Sistema Nacional NFS-e), tax id type (`cpf` or `cnpj`), tax id, NFS-e number, year, month, numeric code and check digit.",
           "- The tax id is the 11-digit CPF without the `000` padding of the key, or the 14-character CNPJ, numeric or alphanumeric, in upper case.",
           "- The year is 2000 plus the 2 digits of the key. The numeric code keeps its 9 digits, leading zeros included."
@@ -26,6 +27,7 @@
         "pt-BR": [
           "Decompõe a chave de acesso de uma NFS-e nacional em seus campos. Aceita a mesma entrada que `nfseKey.isValid` e retorna null exatamente quando essa função retorna false.",
           "",
+          "- Os separadores entre campos são aceitos como em `nfseKey.isValid`. O prefixo `NFS` deve encostar na chave. Só uma string é lida: qualquer outro tipo retorna null.",
           "- Campos: código do município (7 dígitos), UF (a partir dos 2 primeiros dígitos do código do município), ambiente gerador (1 prefeitura, 2 Sistema Nacional NFS-e), tipo de inscrição (`cpf` ou `cnpj`), inscrição federal, número da NFS-e, ano, mês, código numérico e dígito verificador.",
           "- A inscrição é o CPF de 11 dígitos, sem o preenchimento `000` da chave, ou o CNPJ de 14 caracteres, numérico ou alfanumérico, em maiúsculas.",
           "- O ano é 2000 mais os 2 dígitos da chave. O código numérico mantém os seus 9 dígitos, com os zeros à esquerda."
@@ -174,7 +176,22 @@
         { "name": "empty", "args": [""], "returns": null, "note": "JavaScript's own test: should return null when it is an empty string" },
         { "args": ["not-a-key"], "returns": null, "note": "JavaScript's own test: should return null when it is otherwise not a key" },
         { "args": ["NFSe35503082258716523000119000000000001226011357924683"], "returns": null, "note": "JavaScript's own test: should return null when there is anything before or after the 50 digits" },
-        { "args": ["3550308 2 2 58716523000119 0000000000012 2601 135792468 3"], "returns": null, "note": "JavaScript's own test: should return null when it is split by separators, since the key has no mask" },
+        {
+          "args": ["3550308 2 2 58716523000119 0000000000012 2601 135792468 3"],
+          "returns": {
+            "municipalityCode": "3550308",
+            "stateCode": "SP",
+            "generatorEnvironment": 2,
+            "taxIdType": "cnpj",
+            "taxId": "58716523000119",
+            "number": 12,
+            "year": 2026,
+            "month": 1,
+            "code": "135792468",
+            "checkDigit": 3
+          },
+          "note": "changed in 2.5.0 (#615): a mask between the fields is accepted (2.4.0: null). JavaScript's own test: should read a key split at the boundaries of its fields, as isValidNfseKey does"
+        },
         { "args": ["35503082258716523000119000000000001226011357924684"], "returns": null, "note": "JavaScript's own test: should return null when the check digit does not match" },
         { "args": ["99503082258716523000119000000000001226011357924680"], "returns": null, "note": "JavaScript's own test: should return null when the municipality code does not start with an IBGE UF code, even with a matching check digit" },
         { "args": ["35503083258716523000119000000000001226011357924680"], "returns": null, "note": "JavaScript's own test: should return null when ambGer is 0 or 3, even with a matching check digit" },
@@ -184,7 +201,11 @@
         { "args": ["43149021100040364478820000000000105725120484407258"], "returns": null, "note": "JavaScript's own test: should return null when the check digits of the CPF or of the CNPJ do not match, even with a matching key check digit" },
         { "args": ["35503082258716523000119000000000000026011357924683"], "returns": null, "note": "JavaScript's own test: should return null when nNFSe is all zeros, even with a matching check digit" },
         { "args": ["35503082258716523000119000000000001226001357924686"], "returns": null, "note": "JavaScript's own test: should return null when the month is 00 or 13, even with a matching check digit" },
-        { "args": ["35503082212ABC34501DE36000000000001226091357924689"], "returns": null, "note": "JavaScript's own test: should return null when an alphanumeric CNPJ has wrong check digits of its own, even with a matching key check digit" }
+        { "args": ["35503082212ABC34501DE36000000000001226091357924689"], "returns": null, "note": "JavaScript's own test: should return null when an alphanumeric CNPJ has wrong check digits of its own, even with a matching key check digit" },
+        { "args": ["355030 82258716523000119000000000001226011357924683"], "returns": null, "note": "JavaScript's own test: when a separator sits inside a field or between the NFS prefix and the key" },
+        { "args": ["NFS 35503082258716523000119000000000001226011357924683"], "returns": null, "note": "JavaScript's own test: when a separator sits inside a field or between the NFS prefix and the key" },
+        { "args": [null], "returns": null, "note": "JavaScript's own test: when it is not a string" },
+        { "args": [123], "returns": null, "note": "JavaScript's own test: when it is not a string" }
       ]
     },
     "isValid": {
@@ -197,7 +218,8 @@
           "Validates the 50-digit access key of a national NFS-e: municipality code (7), generator environment `ambGer` (1), tax id type (1), tax id (14), NFS-e number `nNFSe` (13), year and month `AAMM` (4), numeric code (9) and check digit (1).",
           "",
           "- The key may start with `NFS`, the prefix of the XML `Id` attribute, in any case. Surrounding whitespace is ignored.",
-          "- The key has no mask: the DANFSe prints it as a single block. A separator anywhere inside the key makes it invalid. There is no `nfseKey.format` for the same reason.",
+          "- The DANFSe prints the key as a single block, so it has no printed mask (there is no `nfseKey.format`). The 8 fields (municipality code, `ambGer`, tax id type, tax id, `nNFSe`, `AAMM`, numeric code and check digit) may be written apart: any run of whitespace, `.`, `-` or `/` is accepted between two fields, as `cpf.isValid` reads its mask. A separator inside a field, or between the `NFS` prefix and the key, makes the value invalid. Until 2.4.0 any separator made the key invalid.",
+          "- Only a string is read. Any other type returns false.",
           "- The municipality code must start with an IBGE state code. The function checks only that prefix and does not look the municipality up.",
           "- `ambGer` must be 1 (municipality system) or 2 (Sistema Nacional NFS-e).",
           "- Tax id type 1 is a CPF, left-padded with `000`. Type 2 is a CNPJ. The CPF or CNPJ must have valid check digits of its own.",
@@ -212,7 +234,8 @@
           "Valida a chave de acesso de 50 dígitos de uma NFS-e nacional: código do município (7), ambiente gerador `ambGer` (1), tipo de inscrição (1), inscrição federal (14), número da NFS-e `nNFSe` (13), ano e mês `AAMM` (4), código numérico (9) e dígito verificador (1).",
           "",
           "- A chave pode começar com `NFS`, o prefixo do atributo `Id` do XML, em qualquer caixa. Espaços nas extremidades são ignorados.",
-          "- A chave não tem máscara: o DANFSe a imprime num bloco único. Um separador em qualquer ponto da chave a torna inválida. Pelo mesmo motivo não existe `nfseKey.format`.",
+          "- O DANFSe imprime a chave em um único bloco, então ela não tem máscara impressa (não existe `nfseKey.format`). Os 8 campos (código do município, `ambGer`, tipo de inscrição, inscrição federal, `nNFSe`, `AAMM`, código numérico e dígito verificador) podem ser escritos separados: qualquer sequência de espaço, `.`, `-` ou `/` é aceita entre dois campos, como `cpf.isValid` lê sua máscara. Um separador dentro de um campo, ou entre o prefixo `NFS` e a chave, torna o valor inválido. Até a 2.4.0 qualquer separador invalidava a chave.",
+          "- Só uma string é lida. Qualquer outro tipo retorna false.",
           "- O código do município deve começar com um código de UF do IBGE. A função confere só esse prefixo e não consulta o município.",
           "- O `ambGer` deve ser 1 (sistema da prefeitura) ou 2 (Sistema Nacional NFS-e).",
           "- Tipo de inscrição 1 é um CPF, completado com `000` à esquerda. Tipo 2 é um CNPJ. O CPF ou o CNPJ precisa ter os próprios dígitos verificadores válidos.",
@@ -247,8 +270,8 @@
         { "args": ["35503082258716523000119000000000001226011357924684"], "returns": false, "note": "JavaScript's own test: should return false when the check digit does not match" },
         { "args": ["3550308225871652300011900000000000122601135792468"], "returns": false, "note": "JavaScript's own test: should return false when it does not have 50 digits" },
         { "args": ["355030822587165230001190000000000012260113579246833"], "returns": false, "note": "JavaScript's own test: should return false when it does not have 50 digits" },
-        { "args": ["3550308 2 2 58716523000119 0000000000012 2601 135792468 3"], "returns": false, "note": "JavaScript's own test: should return false when it is split by separators, since the key has no mask" },
-        { "args": ["3550308.2.2.58716523000119.0000000000012.2601.135792468-3"], "returns": false, "note": "JavaScript's own test: should return false when it is split by separators, since the key has no mask" },
+        { "args": ["3550308 2 2 58716523000119 0000000000012 2601 135792468 3"], "returns": true, "note": "changed in 2.5.0 (#615): a mask between the fields is accepted (2.4.0: false). JavaScript's own test: should accept the mask characters isValidCpf reads at the boundaries of its fields" },
+        { "args": ["3550308.2.2.58716523000119.0000000000012.2601.135792468-3"], "returns": true, "note": "changed in 2.5.0 (#615): a mask between the fields is accepted (2.4.0: false). JavaScript's own test: should accept the mask characters isValidCpf reads at the boundaries of its fields" },
         { "args": ["35170458716523000119550010000000121000123458"], "returns": false, "note": "JavaScript's own test: should return false for the 44 digit key of an NF-e" },
         { "name": "guia-do-emissor-example", "args": ["31062001251235800000112230000000173023019580208160"], "returns": false, "note": "JavaScript's own test: should return false for the example of the Guia do Emissor Público Nacional Web v1.2, item 9.1, an illustrative key whose check digit does not match and whose issuer CNPJ 51235800000112 is not valid either" },
         { "args": ["35503082258716523000119000000000001226131357924684"], "returns": false, "note": "JavaScript's own test: should return false when the month is 13, even with a matching check digit" },
@@ -257,7 +280,13 @@
         { "args": ["35503082112ABC34501DE35000000000001226091357924684"], "returns": false, "note": "JavaScript's own test: should return false when the registration type says CPF and the registration carries letters, even with a matching key check digit" },
         { "args": ["35503082212ABC34501DE3500000000000A226091357924686"], "returns": false, "note": "JavaScript's own test: should return false when a letter stands outside the registration, even with a matching key check digit" },
         { "args": ["355030A2258716523000119000000000001226011357924680"], "returns": false, "note": "JavaScript's own test: should return false when a letter stands outside the registration, even with a matching key check digit" },
-        { "name": "number-all-zeros", "args": ["35503082258716523000119000000000000026011357924683"], "returns": false, "note": "JavaScript's own test (getNfseKeyInfo): should return null when nNFSe is all zeros, even with a matching check digit" }
+        { "name": "number-all-zeros", "args": ["35503082258716523000119000000000000026011357924683"], "returns": false, "note": "JavaScript's own test (getNfseKeyInfo): should return null when nNFSe is all zeros, even with a matching check digit" },
+        { "args": ["355030 82258716523000119000000000001226011357924683"], "returns": false, "note": "JavaScript's own test: when a separator sits inside a field" },
+        { "args": ["35503082258716523000119000000000001226011357924 683"], "returns": false, "note": "JavaScript's own test: when a separator sits inside a field" },
+        { "args": ["3550308--2//2 . 58716523000119 0000000000012 2601 135792468 3"], "returns": true, "note": "a run of separators is accepted between two fields" },
+        { "args": ["NFS 35503082258716523000119000000000001226011357924683"], "returns": false, "note": "a separator between the NFS prefix and the key is not accepted" },
+        { "args": [3.550308225871652e+49], "returns": false, "note": "JavaScript's own test: only a string is read" },
+        { "args": [null], "returns": false, "note": "only a string is read" }
       ]
     },
     "parse": {

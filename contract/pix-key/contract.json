@@ -21,6 +21,9 @@
           "",
           "- The result has the key type (CPF, CNPJ, email, phone or EVP) and the canonical value: digits for a CPF or CNPJ (letters upper-cased), a lowercase email, an E.164 phone or a lowercase UUID.",
           "- An 11-digit value valid as both CPF and mobile phone is a CPF, unless written as a phone (`+55` prefix or DDD in parentheses).",
+          "- A CPF key is recognized by the way it is written: the bare 11 digits, or the groups 3-3-3-2 split by whitespace, `.`, `-` or `/`, alone or in a run, as `cpf.isValid` reads its mask. So `123.456.789-09`, `123/456/789/09` and `123 - 456.789 09` are the CPF key `12345678909`. Until 2.4.0 a `/` (or a run of separators) between the groups made it not a key. A separator outside those positions (`1234/56789/09`, `1.2.3.4.5.6.7.8.9.0.9`) is not a CPF.",
+          "- A phone key holds only digits, spaces and the `+`, `-`, `(`, `)` and `.` of the usual masks, with or without the `+55`. Text around the value is not stripped: `abc123.456.789-09`, `CPF 123.456.789-09` and `tel: (11) 98765-4321` are not keys. A value with a valid CNPJ check digit is a CNPJ, even when it starts with `0055`. The E.164 value has at most 14 characters.",
+          "- A CNPJ key is written with 14 characters (digits, or letters for the alphanumeric CNPJ, upper-cased). A random EVP key is a UUID with its punctuation (8-4-4-4-12 hexadecimal digits), returned in lowercase. The version and variant digits of the UUID are not checked. A value that is not a string gives null.",
           "- Landlines are not Pix keys. A phone key follows `phone.isValidMobile`, so a first subscriber digit of 6 is rejected (2.4.0 accepted it).",
           "- An email key is lowercased and checked against the pattern of the DICT API 2.12.1 and its limit of 77 characters, not against `email.isValid`. The local part may carry any of ``.!#$'*+/=?^_`{|}~-``, with dots anywhere, and the domain may be a single label. So `fulano@example`, `a@localhost` and `a{b}@example.com` are keys; 2.4.0 checked the key with `email.isValid` and rejected them.",
           "- The `&` is not allowed in an email key: DICT API 2.6.0 removed it from the pattern. `a&b@example.com` is not a key.",
@@ -31,6 +34,9 @@
           "",
           "- O resultado traz o tipo de chave (CPF, CNPJ, e-mail, telefone ou EVP) e o valor canônico: dígitos para CPF ou CNPJ (letras em maiúsculas), e-mail em minúsculas, telefone em E.164 ou UUID em minúsculas.",
           "- Um valor de 11 dígitos válido tanto como CPF quanto como celular é um CPF, a não ser que esteja escrito como telefone (prefixo `+55` ou DDD entre parênteses).",
+          "- Uma chave CPF é reconhecida pela forma como é escrita: os 11 dígitos sem máscara, ou os grupos 3-3-3-2 separados por espaço em branco, `.`, `-` ou `/`, sozinhos ou em sequência, como `cpf.isValid` lê a máscara. Então `123.456.789-09`, `123/456/789/09` e `123 - 456.789 09` são a chave CPF `12345678909`. Até a 2.4.0 uma `/` (ou uma sequência de separadores) entre os grupos fazia o valor não ser uma chave. Um separador fora dessas posições (`1234/56789/09`, `1.2.3.4.5.6.7.8.9.0.9`) não é um CPF.",
+          "- Uma chave de telefone tem apenas dígitos, espaços e os `+`, `-`, `(`, `)` e `.` das máscaras usuais, com ou sem o `+55`. O texto em volta do valor não é removido: `abc123.456.789-09`, `CPF 123.456.789-09` e `tel: (11) 98765-4321` não são chaves. Um valor com dígito verificador de CNPJ válido é um CNPJ, mesmo que comece com `0055`. O valor E.164 tem no máximo 14 caracteres.",
+          "- Uma chave CNPJ é escrita com 14 caracteres (dígitos, ou letras no CNPJ alfanumérico, em maiúsculas). Uma chave aleatória EVP é um UUID com a sua pontuação (8-4-4-4-12 dígitos hexadecimais), devolvido em minúsculas. Os dígitos de versão e de variante do UUID não são conferidos. Um valor que não é string dá null.",
           "- Telefones fixos não são chaves Pix. Uma chave de telefone segue `phone.isValidMobile`, então um primeiro dígito do assinante 6 é rejeitado (a 2.4.0 o aceitava).",
           "- Uma chave de e-mail é convertida para minúsculas e verificada contra o padrão da API do DICT 2.12.1 e seu limite de 77 caracteres, não contra `email.isValid`. A parte local pode ter qualquer um de ``.!#$'*+/=?^_`{|}~-``, com pontos em qualquer posição, e o domínio pode ter um só rótulo. Então `fulano@example`, `a@localhost` e `a{b}@example.com` são chaves; a 2.4.0 verificava a chave com `email.isValid` e as rejeitava.",
           "- O `&` não é permitido em uma chave de e-mail: a API do DICT 2.6.0 o removeu do padrão. `a&b@example.com` não é uma chave.",
@@ -73,7 +79,7 @@
         { "args": ["abc123.456.789-09"], "returns": null, "note": "JavaScript's own test: should return null when a CPF is buried in surrounding text" },
         { "args": ["CPF 123.456.789-09"], "returns": null, "note": "JavaScript's own test: should return null when a CPF is buried in surrounding text" },
         { "args": ["1.2.3.4.5.6.7.8.9.0.9"], "returns": null, "note": "JavaScript's own test: should return null when a CPF is written with separators outside the documented positions" },
-        { "args": ["123/456/789/09"], "returns": null, "note": "JavaScript's own test: should return null when a CPF is written with separators outside the documented positions" },
+        { "args": ["123/456/789/09"], "returns": { "type": "cpf", "value": "12345678909" }, "note": "changed in 2.5.0 (#615): the CPF mask characters (whitespace, . - /) split the groups, as cpf.isValid reads them. JavaScript's own test: should return a CPF when its groups are split by any of the mask characters isValidCpf reads" },
         { "args": ["40364478829"], "returns": { "type": "cpf", "value": "40364478829" }, "note": "JavaScript's own test: should return a CPF when it is unmasked" },
         { "args": ["  40364478829  "], "returns": { "type": "cpf", "value": "40364478829" }, "note": "JavaScript's own test: should return a CPF when surrounded by whitespace" },
         { "args": ["00038166000105"], "returns": { "type": "cnpj", "value": "00038166000105" }, "note": "JavaScript's own test: should return a CNPJ when it is unmasked" },
@@ -106,7 +112,14 @@
         { "args": ["fulano@exa_mple.com"], "returns": null, "note": "JavaScript's own test: should return null when it is an invalid e-mail" },
         { "args": ["ful%ano@example.com"], "returns": null, "note": "JavaScript's own test: should return null when it is an invalid e-mail" },
         { "args": ["\"fulano\"@example.com"], "returns": null, "note": "JavaScript's own test: should return null when it is an invalid e-mail" },
-        { "args": ["+5511612345678"], "returns": null, "note": "changed in 2.5.0 (#593): a first subscriber digit of 6 is not a mobile (Resolução Anatel nº 749/2022, art. 12). 2.4.0 returned a phone key" }
+        { "args": ["+5511612345678"], "returns": null, "note": "changed in 2.5.0 (#593): a first subscriber digit of 6 is not a mobile (Resolução Anatel nº 749/2022, art. 12). 2.4.0 returned a phone key" },
+        { "args": ["123 - 456.789 09"], "returns": { "type": "cpf", "value": "12345678909" }, "note": "JavaScript's own test: should return a CPF when its groups are split by any of the mask characters isValidCpf reads" },
+        { "args": ["1234/56789/09"], "returns": null, "note": "JavaScript's own test: when a CPF is written with separators outside the documented positions" },
+        { "args": [null], "returns": null, "note": "JavaScript's own test: when it is null" },
+        { "args": ["Fulano@Example.COM "], "returns": { "type": "email", "value": "fulano@example.com" }, "note": "JavaScript docs example" },
+        { "args": ["+5551998259765"], "returns": { "type": "phone", "value": "+5551998259765" }, "note": "JavaScript docs example: a +55 prefix reads the value as a phone, not a CPF" },
+        { "args": ["(51) 99825-9765"], "returns": { "type": "phone", "value": "+5551998259765" }, "note": "JavaScript's own test: preferring the phone when the DDD is written between parentheses" },
+        { "args": ["005511987654321"], "returns": { "type": "phone", "value": "+5511987654321" }, "note": "JavaScript's own test: should resolve the CNPJ and phone ambiguity: a 0055 prefixed mobile number is a phone" }
       ]
     },
     "isValid": {
@@ -119,13 +132,15 @@
           "Checks whether a value is a valid Pix key: a CPF, a CNPJ, an email, a Brazilian mobile phone or a random EVP key, per the DICT key formats.",
           "",
           "- Same recognition rules as `pixKey.getInfo`.",
-          "- `options` can restrict the accepted key types. An empty list rejects everything."
+          "- `options` can restrict the accepted key types. An empty list rejects everything.",
+          "- `options.accept` is a list of the key types that count as valid (`cpf`, `cnpj`, `email`, `phone`, `evp`). When it is missing, or not a list, every type is accepted. A value that is not a string is not a key."
         ],
         "pt-BR": [
           "Verifica se um valor é uma chave Pix válida: CPF, CNPJ, e-mail, celular brasileiro ou chave aleatória EVP, conforme os formatos de chave do DICT.",
           "",
           "- Mesmas regras de reconhecimento de `pixKey.getInfo`.",
-          "- `options` pode restringir os tipos de chave aceitos. Uma lista vazia rejeita tudo."
+          "- `options` pode restringir os tipos de chave aceitos. Uma lista vazia rejeita tudo.",
+          "- `options.accept` é uma lista dos tipos de chave que valem como válidos (`cpf`, `cnpj`, `email`, `phone`, `evp`). Quando ela falta, ou não é uma lista, todos os tipos são aceitos. Um valor que não é string não é uma chave."
         ]
       },
       "references": [
@@ -136,7 +151,7 @@
       ],
       "params": [
         { "name": "value", "type": "string" },
-        { "name": "options", "type": "IsValidPixKeyOptions", "optional": true }
+        { "name": "options", "type": "IsValidPixKeyOptions", "optional": true, "fields": [{ "name": "accept", "type": "(\"cpf\" | \"cnpj\" | \"email\" | \"phone\" | \"evp\")[]", "optional": true }] }
       ],
       "returns": "boolean",
       "tests": [
@@ -168,7 +183,16 @@
         { "args": ["a@localhost"], "returns": true, "note": "JavaScript's own test: for an e-mail that only matches the DICT pattern, not isValidEmail (changed in 2.5.0, #593)" },
         { "args": ["fulano@"], "returns": false, "note": "JavaScript's own test: when it is not a key of any accepted kind" },
         { "args": ["+5511612345678"], "returns": false, "note": "changed in 2.5.0 (#593): a first subscriber digit of 6 is not a mobile. 2.4.0 returned true" },
-        { "args": ["a{b}@example.com", { "accept": ["evp", "cpf"] }], "returns": false, "note": "options.accept restricts the key types" }
+        { "args": ["a{b}@example.com", { "accept": ["evp", "cpf"] }], "returns": false, "note": "options.accept restricts the key types" },
+        { "args": ["123/456/789/09"], "returns": true, "note": "changed in 2.5.0 (#615): the CPF mask characters split the groups, as cpf.isValid reads them" },
+        { "args": ["123 - 456.789 09"], "returns": true, "note": "JavaScript's own test: should return a CPF when its groups are split by any of the mask characters isValidCpf reads" },
+        { "args": ["1234/56789/09"], "returns": false, "note": "JavaScript's own test: when a CPF is written with separators outside the documented positions" },
+        { "args": ["123.456.789-09"], "returns": true, "note": "JavaScript docs example" },
+        { "args": ["71c7d9be-4b85-4e43-9f1c-1f3b8b4e9a2d"], "returns": true, "note": "JavaScript docs example" },
+        { "args": ["fulano@example.com"], "returns": true, "note": "JavaScript docs example" },
+        { "args": [null], "returns": false, "note": "JavaScript's own test: when it is null" },
+        { "args": ["123.456.789-09", null], "returns": true, "note": "JavaScript's own test: accepting every kind when the option is absent or not a list" },
+        { "args": ["fulano@example.com", { "accept": ["cpf"] }], "returns": false, "note": "a key of a type outside options.accept is not valid" }
       ]
     }
   }

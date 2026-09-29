@@ -15,20 +15,20 @@
         "en": [
           "Formats an NCM code with the mask `NNNN.NN.NN`. Only the structure changes (use `ncm.isValid` to check the code).",
           "",
-          "- Same rules as `cnae.format`. `options.pad` first left-pads the value with zeros to 8 digits.",
+          "- Same rules as `cnae.format`. `options.pad` first left-pads the value with zeros to 8 digits. A value without digits, and null or undefined, gives an empty string even with `pad`; until 2.4.0 `pad` turned an empty value into the zero mask (`0000.00.00`).",
           "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
         ],
         "pt-BR": [
           "Formata um código NCM com a máscara `NNNN.NN.NN`. Só a estrutura muda (use `ncm.isValid` para verificar o código).",
           "",
-          "- Mesmas regras de `cnae.format`. `options.pad` antes completa o valor com zeros à esquerda até 8 dígitos.",
+          "- Mesmas regras de `cnae.format`. `options.pad` antes completa o valor com zeros à esquerda até 8 dígitos. Um valor sem dígitos, e null ou undefined, dá string vazia também com `pad`; até a 2.4.0 o `pad` transformava um valor vazio na máscara de zeros (`0000.00.00`).",
           "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
         ]
       },
       "references": ["https://portalunico.siscomex.gov.br/classif/api/publico/nomenclatura/download/json"],
       "params": [
         { "name": "value", "type": "string | number" },
-        { "name": "options", "type": "FormatNcmOptions", "optional": true }
+        { "name": "options", "type": "FormatNcmOptions", "optional": true, "fields": [{ "name": "pad", "type": "boolean", "optional": true }] }
       ],
       "returns": "string",
       "tests": [
@@ -47,7 +47,7 @@
         { "args": [847130], "returns": "8471.30", "note": "JavaScript's own test: should mask a partial number progressively by default" },
         { "args": ["00000000"], "returns": "0000.00.00", "note": "JavaScript's own test: should not validate whether the code exists in the official table" },
         { "args": ["847130120000"], "returns": "8471.30.12", "note": "JavaScript's own test: should not add digits after the NCM length" },
-        { "args": ["", { "pad": true }], "returns": "0000.00.00", "note": "JavaScript's own test: pad option should left pad a short code with zeros up to the full NCM length" },
+        { "args": ["", { "pad": true }], "returns": "", "note": "changed in 2.5.0 (#615): a value without digits gives an empty string even with pad (2.4.0: \"0000.00.00\"). JavaScript's own test: pad option should left pad a short code with zeros up to the full NCM length" },
         { "args": ["1", { "pad": true }], "returns": "0000.00.01", "note": "JavaScript's own test: pad option should left pad a short code with zeros up to the full NCM length" },
         { "args": ["8471", { "pad": true }], "returns": "0000.84.71", "note": "JavaScript's own test: pad option should left pad a short code with zeros up to the full NCM length" },
         { "args": ["847130", { "pad": true }], "returns": "0084.71.30", "note": "JavaScript's own test: pad option should left pad a short code with zeros up to the full NCM length" },
@@ -59,7 +59,10 @@
         { "args": ["8471.30-12"], "returns": "8471.30.12", "note": "JavaScript's own test: should read only the digits of a value with other characters, like formatCpf" },
         { "args": [-84713012], "returns": "", "note": "changed in 2.5.0 (#593): a negative or fractional number is not a non-negative safe integer, so it gives \"\"; 2.4.0 read the digits of its string. JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number" },
         { "args": [8471301.2], "returns": "", "note": "changed in 2.5.0 (#593): a negative or fractional number is not a non-negative safe integer, so it gives \"\"; 2.4.0 read the digits of its string. JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number" },
-        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (2 ** 53)" }
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (2 ** 53)" },
+        { "args": [null], "returns": "", "note": "JavaScript's own test: should return an empty string for null and undefined" },
+        { "args": [null, { "pad": true }], "returns": "", "note": "JavaScript's own test: should return an empty string for null and undefined even under pad, instead of a zero-filled code" },
+        { "args": ["abc", { "pad": true }], "returns": "", "note": "an input with no digit stays empty under pad" }
       ]
     },
     "isValid": {
@@ -71,12 +74,12 @@
         "en": [
           "Checks whether an NCM code exists in the current table that Siscomex publishes.",
           "",
-          "- Same input rules as `cbo.isValid`, with 8 digits and the `NNNN.NN.NN` mask."
+          "- Same input rules as `cbo.isValid`, with 8 digits and the `NNNN.NN.NN` mask, including a run of separators between the groups: `2203..00.00` is valid. Until 2.4.0 a single separator was accepted and `2203..00.00` was rejected."
         ],
         "pt-BR": [
           "Verifica se um código NCM existe na tabela vigente publicada pelo Siscomex.",
           "",
-          "- Mesmas regras de entrada de `cbo.isValid`, com 8 dígitos e a máscara `NNNN.NN.NN`."
+          "- Mesmas regras de entrada de `cbo.isValid`, com 8 dígitos e a máscara `NNNN.NN.NN`, inclusive uma sequência de separadores entre os grupos: `2203..00.00` é válido. Até a 2.4.0 um único separador era aceito e `2203..00.00` era rejeitado."
         ]
       },
       "references": ["https://portalunico.siscomex.gov.br/classif/api/publico/nomenclatura/download/json"],
@@ -99,7 +102,7 @@
         { "args": ["220300000"], "returns": false, "note": "JavaScript's own test: should return false for a padded short value no code carries and for a wider value" },
         { "args": ["        "], "returns": false, "note": "JavaScript's own test: should return false for whitespace only" },
         { "args": ["abc01012100"], "returns": false, "note": "JavaScript's own test: should return false for a string that is not a documented form" },
-        { "args": ["2203..00.00"], "returns": false, "note": "JavaScript's own test: should return false for a string that is not a documented form" },
+        { "args": ["2203..00.00"], "returns": true, "note": "changed in 2.5.0 (#615): a run of separators between the groups is accepted (2.4.0 rejected it). JavaScript's own test: should accept a group boundary written with a run of separators" },
         { "args": [-22030000], "returns": false, "note": "JavaScript's own test: should return false for a number that is not a non-negative safe integer" },
         { "args": [2203000.01], "returns": false, "note": "JavaScript's own test: should return false for a number that is not a non-negative safe integer" }
       ]

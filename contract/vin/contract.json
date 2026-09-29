@@ -23,7 +23,9 @@
           "- `options.checkDigit: true` adds the North American rules of 49 CFR 565.15: the 9th character must be the weighted modulus 11 check digit (`0` to `9` or `X`), and the 10th (model year) cannot be `U`, `Z` or `0`. Use it for a vehicle built for the United States or Canada, or to keep the 2.4.0 result.",
           "- The `I`, `O` and `Q` exclusion comes from ISO 3779:2009, not from the resolution.",
           "- A VIN has no printed grouping, so a space, `.`, `-` or `/` inside it makes the value invalid.",
-          "- A VIN whose characters are all the same is rejected."
+          "- A VIN whose characters are all the same is rejected.",
+          "- Only the ASCII letters and digits count. A non-ASCII letter that upper-cases into an ASCII one (`ß`, `ſ`) is rejected. Until 2.4.0 these characters were folded into ASCII letters.",
+          "- `options.checkDigit` defaults to false."
         ],
         "pt-BR": [
           "Valida um chassi (VIN): 17 caracteres nas três seções da Resolução CONTRAN nº 968/2022, art. 3º (WMI, VDS e VIS), cada um um dígito ou uma letra que não seja `I`, `O` ou `Q`. A validação ignora maiúsculas e minúsculas e os espaços em volta.",
@@ -32,7 +34,9 @@
           "- `options.checkDigit: true` acrescenta as regras norte-americanas do 49 CFR 565.15: o 9º caractere precisa ser o dígito verificador por módulo 11 ponderado (`0` a `9` ou `X`), e o 10º (ano-modelo) não pode ser `U`, `Z` nem `0`. Use para um veículo fabricado para os Estados Unidos ou o Canadá, ou para manter o resultado da 2.4.0.",
           "- A exclusão de `I`, `O` e `Q` vem da ISO 3779:2009, não da resolução.",
           "- Um VIN não tem agrupamento impresso, então um espaço, `.`, `-` ou `/` no meio dele torna o valor inválido.",
-          "- Um VIN com todos os caracteres iguais é rejeitado."
+          "- Um VIN com todos os caracteres iguais é rejeitado.",
+          "- Só contam as letras ASCII e os dígitos. Uma letra não ASCII que vira letra ASCII ao ser passada para maiúscula (`ß`, `ſ`) é rejeitada. Até a 2.4.0 esses caracteres eram convertidos em letras ASCII.",
+          "- `options.checkDigit` é false por padrão."
         ]
       },
       "references": [
@@ -43,7 +47,7 @@
       ],
       "params": [
         { "name": "value", "type": "string" },
-        { "name": "options", "type": "IsValidVinOptions", "optional": true }
+        { "name": "options", "type": "IsValidVinOptions", "optional": true, "fields": [{ "name": "checkDigit", "type": "boolean", "optional": true }] }
       ],
       "returns": "boolean",
       "tests": [
@@ -85,7 +89,14 @@
         { "args": ["1HGCM8262ZA004352", { "checkDigit": true }], "returns": false, "note": "JavaScript's own test: when the model year code is U, Z or 0 and checkDigit is true, even with a matching check digit" },
         { "args": ["1HGCM82690A004352", { "checkDigit": true }], "returns": false, "note": "JavaScript's own test: when the model year code is U, Z or 0 and checkDigit is true, even with a matching check digit" },
         { "args": ["1HGCM8261UA004352"], "returns": true, "note": "JavaScript's own test: the model year code is checked only with checkDigit" },
-        { "args": ["00000000000000000", { "checkDigit": true }], "returns": false, "note": "every character the same is rejected under both rules" }
+        { "args": ["00000000000000000", { "checkDigit": true }], "returns": false, "note": "every character the same is rejected under both rules" },
+        { "args": ["1HGCM82633A004352"], "returns": true, "note": "JavaScript docs example: valid with the check digit" },
+        { "args": ["9BWZZZ377VT004251"], "returns": true, "note": "JavaScript docs example: Brazilian VIN, no check digit" },
+        { "args": ["1HGCM8263ſA004352"], "returns": false, "note": "changed in 2.5.0 (#615): `ſ` (long s) is no longer folded into `S`" },
+        { "args": ["1HGCM8263ßA004352"], "returns": false, "note": "changed in 2.5.0 (#615): `ß` is no longer folded into ASCII letters" },
+        { "args": ["ſ9BWZZZ377VT00425"], "returns": false, "note": "changed in 2.5.0 (#615): `ſ` is no longer folded into `S`" },
+        { "args": ["1HGCM8 2633A004352"], "returns": false, "note": "JavaScript docs example: a separator among the characters" },
+        { "args": ["1HGCM82633A004352 ", { "checkDigit": true }], "returns": true, "note": "surrounding whitespace is trimmed" }
       ]
     }
   }

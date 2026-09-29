@@ -20,9 +20,10 @@
           "",
           "For example, `\"jose da silva\"` becomes `\"Jose da Silva\"`, `\"empresa ltda\"` becomes `\"Empresa LTDA\"` and `\"santana/rs\"` becomes `\"Santana/RS\"`.",
           "",
-          "- Prepositions and articles (`de`, `da`, `do`, `e`, …) stay lower case between two words. Company designations and abbreviations (`LTDA`, `S.A.`, `ME`, `CNPJ`) and roman numerals are upper-cased. `options` can replace either list.",
+          "- `options.lowerCaseWords` lists the words kept in lower case between two words. The default is the prepositions and the conjunction `e`: `a`, `ao`, `aos`, `à`, `às`, `ante`, `após`, `até`, `com`, `da`, `das`, `de`, `do`, `dos`, `e`, `em`, `na`, `nas`, `no`, `nos`, `num`, `numa`, `o`, `para`, `pela`, `pelas`, `pelo`, `pelos`, `perante`, `por`, `sem`, `sob`, `sobre`, plus the particles `del`, `della`, `den`, `der`, `di`, `du`, `van` and `von`. The articles are only `a` and `o`. Until 2.4.0 `ao`, `aos`, `à`, `às`, `para`, `pela(s)`, `pelo(s)`, `sob`, `sobre`, `até`, `num`, `numa`, `ante`, `após` and `perante` were capitalized.",
+          "- `options.upperCaseWords` lists the words always in upper case. The default is the company designations (`CIA`, `EIRELI`, `EPP`, `LTDA`, `ME`, `MEI`, `S.A`, `S.A.`, `S.S.`, `S/A`, `S/S`, `SCP`), the document abbreviations (`CEP`, `CNPJ`, `CPF`, `RG`, `UF`) and the roman numerals. The match ignores case. A list given replaces its default, so `{ upperCaseWords: [] }` turns `\"empresa ltda\"` into `\"Empresa Ltda\"`. A state code after a `/`, or ending the value after a spaced hyphen, a spaced en dash or a comma, stays upper case even with `upperCaseWords` given.",
           "- Words split at whitespace, `-`, `/`, apostrophes and adjoining punctuation. Runs of whitespace collapse into one space.",
-          "- A lower-case word keeps its capital when it is first, last or followed by punctuation. `ME` is upper-cased only as a designation. `SA` without dots is left alone (the surname Sá).",
+          "- A lower-case word keeps its capital when it is first, last or followed by punctuation. `ME` is upper-cased only as a designation (last word, or before another designation). `S.A` typed without the final dot is a designation too (`\"empresa s.a\"` becomes `\"Empresa S.A\"`; until 2.4.0 it was `\"Empresa S.a\"`). `SA` without dots is left alone (the surname Sá).",
           "- Roman numerals from `II` to `XXXIX` are upper-cased (`\"rua xxiv de maio\"` becomes `\"Rua XXIV de Maio\"`). `VI` is left out because it is also the verb form \"vi\", and numerals from `XL` on are left out because letters such as L, C and D spell ordinary words. Upper-casing numerals is Correios addressing practice; no norm fixes it. 2.4.0 stopped at `XXIII`.",
           "- A state code (UF) is upper-cased after a `/` (`\"santana/rs\"` becomes `\"Santana/RS\"`). As the last word, it is also upper-cased after a spaced hyphen, a spaced en dash or a comma, the \"Cidade - UF\" form of the Correios addressing guide: `\"brasília - df\"` becomes `\"Brasília - DF\"`. Anywhere else, or after an unspaced hyphen (`\"brasília-df\"`), the two letters are an ordinary word. 2.4.0 upper-cased a state code only after `/`."
         ],
@@ -31,9 +32,10 @@
           "",
           "Por exemplo, `\"jose da silva\"` vira `\"Jose da Silva\"`, `\"empresa ltda\"` vira `\"Empresa LTDA\"` e `\"santana/rs\"` vira `\"Santana/RS\"`.",
           "",
-          "- Preposições e artigos (`de`, `da`, `do`, `e`, …) ficam em minúsculas entre duas palavras. Designações de empresa e abreviações (`LTDA`, `S.A.`, `ME`, `CNPJ`) e numerais romanos ficam em maiúsculas. `options` pode substituir qualquer uma das listas.",
+          "- `options.lowerCaseWords` lista as palavras que ficam em minúsculas entre duas palavras. O padrão são as preposições e a conjunção `e`: `a`, `ao`, `aos`, `à`, `às`, `ante`, `após`, `até`, `com`, `da`, `das`, `de`, `do`, `dos`, `e`, `em`, `na`, `nas`, `no`, `nos`, `num`, `numa`, `o`, `para`, `pela`, `pelas`, `pelo`, `pelos`, `perante`, `por`, `sem`, `sob`, `sobre`, mais as partículas `del`, `della`, `den`, `der`, `di`, `du`, `van` e `von`. Os artigos são só `a` e `o`. Até a 2.4.0 `ao`, `aos`, `à`, `às`, `para`, `pela(s)`, `pelo(s)`, `sob`, `sobre`, `até`, `num`, `numa`, `ante`, `após` e `perante` recebiam inicial maiúscula.",
+          "- `options.upperCaseWords` lista as palavras sempre em maiúsculas. O padrão são as designações de empresa (`CIA`, `EIRELI`, `EPP`, `LTDA`, `ME`, `MEI`, `S.A`, `S.A.`, `S.S.`, `S/A`, `S/S`, `SCP`), as abreviações de documento (`CEP`, `CNPJ`, `CPF`, `RG`, `UF`) e os numerais romanos. A comparação ignora maiúsculas e minúsculas. Uma lista informada substitui o padrão, então `{ upperCaseWords: [] }` transforma `\"empresa ltda\"` em `\"Empresa Ltda\"`. A sigla de um estado depois de `/`, ou que termina o valor depois de hífen com espaços, travessão com espaços ou vírgula, continua em maiúsculas mesmo com `upperCaseWords` informado.",
           "- As palavras são separadas por espaços, `-`, `/`, apóstrofos e pontuação vizinha. Sequências de espaços viram um só espaço.",
-          "- Uma palavra minúscula mantém a inicial maiúscula quando é a primeira, a última ou vem seguida de pontuação. `ME` fica em maiúsculas só como designação. `SA` sem pontos fica como está (o sobrenome Sá).",
+          "- Uma palavra minúscula mantém a inicial maiúscula quando é a primeira, a última ou vem seguida de pontuação. `ME` fica em maiúsculas só como designação (última palavra, ou antes de outra designação). `S.A` escrito sem o ponto final também é uma designação (`\"empresa s.a\"` vira `\"Empresa S.A\"`; até a 2.4.0 virava `\"Empresa S.a\"`). `SA` sem pontos fica como está (o sobrenome Sá).",
           "- Numerais romanos de `II` a `XXXIX` ficam em maiúsculas (`\"rua xxiv de maio\"` vira `\"Rua XXIV de Maio\"`). `VI` fica de fora porque também é a forma verbal \"vi\", e os numerais a partir de `XL` ficam de fora porque letras como L, C e D formam palavras comuns. Numeral romano em maiúsculas é prática de endereçamento dos Correios; nenhuma norma fixa isso. A 2.4.0 parava em `XXIII`.",
           "- A sigla de um estado (UF) fica em maiúsculas depois de `/` (`\"santana/rs\"` vira `\"Santana/RS\"`). Como última palavra, ela também fica em maiúsculas depois de hífen com espaços, travessão (en dash) com espaços ou vírgula, a forma \"Cidade - UF\" do guia de endereçamento dos Correios: `\"brasília - df\"` vira `\"Brasília - DF\"`. Em qualquer outra posição, ou depois de hífen sem espaços (`\"brasília-df\"`), as duas letras são uma palavra comum. A 2.4.0 só colocava a sigla em maiúsculas depois de `/`."
         ]
@@ -52,7 +54,7 @@
       "flatName": "capitalize",
       "params": [
         { "name": "value", "type": "string" },
-        { "name": "options", "type": "CapitalizeOptions", "optional": true }
+        { "name": "options", "type": "CapitalizeOptions", "optional": true, "fields": [{ "name": "lowerCaseWords", "type": "string[]", "optional": true }, { "name": "upperCaseWords", "type": "string[]", "optional": true }] }
       ],
       "returns": "string",
       "tests": [
@@ -199,7 +201,25 @@
         { "args": ["capítulo xxxix"], "returns": "Capítulo XXXIX", "note": "JavaScript's own test: when the value carries a roman numeral" },
         { "args": ["rua xxiii"], "returns": "Rua XXIII" },
         { "args": ["capítulo xl"], "returns": "Capítulo Xl", "note": "JavaScript's own test: when a roman numeral is past XXXIX, uses a letter other than I, V and X, or is VI, it is an ordinary word" },
-        { "args": ["eu li o livro"], "returns": "Eu Li o Livro", "note": "JavaScript's own test: when a roman numeral is past XXXIX, uses a letter other than I, V and X, or is VI, it is an ordinary word" }
+        { "args": ["eu li o livro"], "returns": "Eu Li o Livro", "note": "JavaScript's own test: when a roman numeral is past XXXIX, uses a letter other than I, V and X, or is VI, it is an ordinary word" },
+        { "args": ["casa para todos"], "returns": "Casa para Todos", "note": "JavaScript's own test: should capitalize when the value does contain the contracted and the other prepositions; changed in 2.5.0 (#615): para stays lower case" },
+        { "args": ["ASSOCIAÇÃO AO LADO"], "returns": "Associação ao Lado", "note": "JavaScript's own test: should capitalize when the value does contain the contracted and the other prepositions; changed in 2.5.0 (#615): ao stays lower case" },
+        { "args": ["banco às margens"], "returns": "Banco às Margens", "note": "JavaScript's own test: should capitalize when the value does contain the contracted and the other prepositions; changed in 2.5.0 (#615): às stays lower case" },
+        { "args": ["carta pelo correio"], "returns": "Carta pelo Correio", "note": "JavaScript's own test: should capitalize when the value does contain the contracted and the other prepositions; changed in 2.5.0 (#615): pelo stays lower case" },
+        { "args": ["vista sobre o mar"], "returns": "Vista sobre o Mar", "note": "JavaScript's own test: should capitalize when the value does contain the contracted and the other prepositions; changed in 2.5.0 (#615): sobre stays lower case" },
+        { "args": ["ponte sob a chuva"], "returns": "Ponte sob a Chuva", "note": "JavaScript's own test: should capitalize when the value does contain the contracted and the other prepositions; changed in 2.5.0 (#615): sob stays lower case" },
+        { "args": ["dias até a festa"], "returns": "Dias até a Festa", "note": "JavaScript's own test: should capitalize when the value does contain the contracted and the other prepositions; changed in 2.5.0 (#615): até stays lower case" },
+        { "args": ["mora num sítio"], "returns": "Mora num Sítio", "note": "JavaScript's own test: should capitalize when the value does contain the contracted and the other prepositions; changed in 2.5.0 (#615): num stays lower case" },
+        { "args": ["perante o juiz"], "returns": "Perante o Juiz", "note": "JavaScript's own test: should capitalize when the value does contain the contracted and the other prepositions; changed in 2.5.0 (#615): perante stays lower case" },
+        { "args": ["sobre a mesa"], "returns": "Sobre a Mesa", "note": "JavaScript's own test: when a preposition is the first word, the last word or is followed by punctuation" },
+        { "args": ["até"], "returns": "Até", "note": "JavaScript's own test: when a preposition is the first word, the last word or is followed by punctuation" },
+        { "args": ["rua para, 10"], "returns": "Rua Para, 10", "note": "JavaScript's own test: when a preposition is the first word, the last word or is followed by punctuation" },
+        { "args": ["desterro de entre rios"], "returns": "Desterro de Entre Rios", "note": "JavaScript's own test: when the name is a municipality that holds a word of the preposition list" },
+        { "args": ["ENTRE RIOS DE MINAS"], "returns": "Entre Rios de Minas", "note": "JavaScript's own test: when the name is a municipality that holds a word of the preposition list" },
+        { "args": ["empresa s.a"], "returns": "Empresa S.A", "note": "JavaScript's own test: when the company designation is written S.A with or without the final dot; changed in 2.5.0 (#615): S.A without the final dot is upper case" },
+        { "args": ["empresa s.a."], "returns": "Empresa S.A.", "note": "JavaScript's own test: when the company designation is written S.A with or without the final dot" },
+        { "args": ["empresa sa"], "returns": "Empresa Sa", "note": "JavaScript's own test: when the company designation is written S.A with or without the final dot" },
+        { "args": ["  josé   maria  "], "returns": "José Maria", "note": "JavaScript docs example: every run of whitespace collapses into one space" }
       ]
     },
     "removeAccents": {

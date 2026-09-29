@@ -60,13 +60,15 @@
           "Looks up a CID-10 category or subcategory in the DATASUS tables and returns its code and official Portuguese description.",
           "",
           "- Same input rules as `cid10.isValid`. Returns null exactly when that function returns false.",
-          "- The returned code is upper case and without the dot (`A000`)."
+          "- The returned code is upper case and without the dot (`A000`).",
+          "- Same table as `cid10.isValid`: the DATASUS V2008 tables plus the U07 codes of the SIM table (`U07.1` is `{ code: \"U071\", description: \"Infecção pelo novo Coronavírus (COVID-19)\" }`). U09.9 and U10.9 are not found. Until 2.4.0 the U07 codes were not found."
         ],
         "pt-BR": [
           "Consulta uma categoria ou subcategoria da CID-10 nas tabelas do DATASUS e retorna o código e a descrição oficial em português.",
           "",
           "- Mesmas regras de entrada de `cid10.isValid`. Retorna null exatamente quando essa função retorna false.",
-          "- O código retornado está em maiúsculas e sem ponto (`A000`)."
+          "- O código retornado está em maiúsculas e sem ponto (`A000`).",
+          "- Mesma tabela de `cid10.isValid`: as tabelas V2008 do DATASUS mais os códigos U07 da tabela do SIM (`U07.1` é `{ code: \"U071\", description: \"Infecção pelo novo Coronavírus (COVID-19)\" }`). U09.9 e U10.9 não são encontrados. Até a 2.4.0 os códigos U07 não eram encontrados."
         ]
       },
       "references": [
@@ -118,7 +120,7 @@
           "- Accepts a category (3 characters, `A00`) or a subcategory (4 characters), with the dot (`A00.0`) or without it (`A000`). Letter case and surrounding whitespace are ignored.",
           "- Other separators (`A00-0`), a fifth character, a dagger or asterisk suffix and a value that is not a string are rejected.",
           "- A subcategory is valid only when the table lists it under its category. `I10.0` is invalid because I10 has no subcategories; `I10` is valid as a category.",
-          "- Data: CID-10 V2008 of DATASUS, 2045 categories and 12188 subcategories, plus U07, U07.0, U07.1 and U07.2 from the SIM table of DATASUS (COVID-19 codes among them). Codes the WHO added later, such as U09.9 and U10.9, are invalid.",
+          "- Data: CID-10 V2008 of DATASUS, 2045 categories and 12188 subcategories, plus U07, U07.0, U07.1 and U07.2 from the SIM table of DATASUS (COVID-19 codes among them). Codes the WHO added later, such as U09.9 and U10.9, are invalid. Until 2.4.0 the U07 codes were not found either.",
           "- The `codCID` layout of eSocial event S-2230 was not checked against this function."
         ],
         "pt-BR": [
@@ -127,7 +129,7 @@
           "- Aceita uma categoria (3 caracteres, `A00`) ou uma subcategoria (4 caracteres), com ponto (`A00.0`) ou sem ponto (`A000`). Caixa e espaços nas extremidades são ignorados.",
           "- Outros separadores (`A00-0`), um 5º caractere, um sufixo de adaga ou asterisco e um valor que não é string são rejeitados.",
           "- Uma subcategoria só é válida quando a tabela a lista na sua categoria. `I10.0` é inválido porque I10 não tem subcategorias; `I10` é válido como categoria.",
-          "- Dados: CID-10 V2008 do DATASUS, 2045 categorias e 12188 subcategorias, mais U07, U07.0, U07.1 e U07.2 da tabela do SIM do DATASUS (entre eles os códigos da COVID-19). Códigos que a OMS acrescentou depois, como U09.9 e U10.9, são inválidos.",
+          "- Dados: CID-10 V2008 do DATASUS, 2045 categorias e 12188 subcategorias, mais U07, U07.0, U07.1 e U07.2 da tabela do SIM do DATASUS (entre eles os códigos da COVID-19). Códigos que a OMS acrescentou depois, como U09.9 e U10.9, são inválidos. Até a 2.4.0 os códigos U07 também não eram encontrados.",
           "- O layout `codCID` do evento S-2230 do eSocial não foi verificado com esta função."
         ]
       },

@@ -17,13 +17,17 @@
           "Formats a CEP as `00000-000`.",
           "",
           "- `options.pad` left-pads the value with zeros to 8 digits first. Otherwise, a CEP that starts with `0` and comes as a number loses that zero.",
-          "- Pending decision (findings §2 #2, #3): the reference (JS) formats only the characters an incomplete value has. It returns an empty string for empty or invalid input. Other libraries return null."
+          "- Pending decision (findings §2 #2, #3): the reference (JS) formats only the characters an incomplete value has. It returns an empty string for empty or invalid input. Other libraries return null.",
+          "- An empty value, or one without digits, returns an empty string even with `pad`. Until 2.4.0 `pad` returned the whole zero mask (`00000-000`).",
+          "- A number is only read when it is a non-negative safe integer. Any other number (negative, fractional, not finite) returns an empty string, with or without `pad`."
         ],
         "pt-BR": [
           "Formata um CEP como `00000-000`.",
           "",
           "- `options.pad` primeiro completa o valor com zeros à esquerda até 8 dígitos. Sem isso, um CEP que começa com `0` e chega como número perde esse zero.",
-          "- Decisão pendente (findings §2 #2, #3): a referência (JS) formata só os caracteres que um valor incompleto tem. Ela retorna uma string vazia para entrada vazia ou inválida. As outras bibliotecas retornam null."
+          "- Decisão pendente (findings §2 #2, #3): a referência (JS) formata só os caracteres que um valor incompleto tem. Ela retorna uma string vazia para entrada vazia ou inválida. As outras bibliotecas retornam null.",
+          "- Um valor vazio, ou sem dígitos, retorna string vazia mesmo com `pad`. Até a 2.4.0 o `pad` retornava a máscara toda de zeros (`00000-000`).",
+          "- Um número só é lido quando é um inteiro seguro não negativo. Qualquer outro número (negativo, fracionário, não finito) retorna string vazia, com ou sem `pad`."
         ]
       },
       "references": [
@@ -33,7 +37,7 @@
       "level": "core",
       "params": [
         { "name": "value", "type": "string | number" },
-        { "name": "options", "type": "FormatCepOptions", "optional": true }
+        { "name": "options", "type": "FormatCepOptions", "optional": true, "fields": [{ "name": "pad", "type": "boolean", "optional": true }] }
       ],
       "returns": "string",
       "tests": [
@@ -54,7 +58,16 @@
         { "args": ["0100100"], "returns": "01001-00", "note": "JavaScript's own test: should format CEP with mask" },
         { "args": ["01001000"], "returns": "01001-000", "note": "JavaScript's own test: should format CEP with mask" },
         { "args": ["01001000000000"], "returns": "01001-000", "note": "JavaScript's own test" },
-        { "args": ["a0.10cr01?00#ab0"], "returns": "01001-000", "note": "JavaScript's own test: should remove all non numeric characters" }
+        { "args": ["a0.10cr01?00#ab0"], "returns": "01001-000", "note": "JavaScript's own test: should remove all non numeric characters" },
+        { "name": "empty-with-pad", "args": ["", { "pad": true }], "returns": "", "note": "changed in 2.5.0 (#615): a value with no digits gives an empty string even with pad; JavaScript's own test: should return an empty string for a value without digits even when padding" },
+        { "name": "no-digits-with-pad", "args": ["abc", { "pad": true }], "returns": "", "note": "JavaScript's own test: should return an empty string for a value without digits even when padding" },
+        { "name": "pad", "args": ["9250000", { "pad": true }], "returns": "09250-000", "note": "JavaScript docs example" },
+        { "name": "number-pad", "args": [1310100, { "pad": true }], "returns": "01310-100", "note": "JavaScript docs example: pad left-pads a number" },
+        { "args": ["92500000"], "returns": "92500-000", "note": "JavaScript docs example" },
+        { "name": "negative-number", "args": [-92500000], "returns": "", "note": "JavaScript docs example: not a non-negative safe integer" },
+        { "name": "negative-number-pad", "args": [-20040020, { "pad": true }], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "name": "fractional-number", "args": [1.5], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "name": "unsafe-number", "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" }
       ]
     },
     "generate": {
@@ -63,12 +76,18 @@
         "en": [
           "Generates a random CEP: 8 digits, unformatted.",
           "",
-          "- A CEP has no check digit, so every 8-digit string is structurally valid."
+          "- A CEP has no check digit, so every 8-digit string is structurally valid.",
+          "- The CEP is drawn inside the ranges the Correios assign to the states, each CEP with the same chance. It always belongs to a state, so `cep.getState` never returns null for it.",
+          "- `00000-000` to `00999-999` and `78900-000` to `78999-999`, which no state owns, are never generated. Until 2.4.0 any 8-digit string could come out, about 1 in 80 of them in one of those two ranges.",
+          "- A range is the block a state owns, not a promise that every CEP in it is in use, so the CEP generated may not be the CEP of a real address."
         ],
         "pt-BR": [
           "Gera um CEP aleatório: 8 dígitos, sem máscara.",
           "",
-          "- O CEP não tem dígito verificador, então toda string de 8 dígitos é estruturalmente válida."
+          "- O CEP não tem dígito verificador, então toda string de 8 dígitos é estruturalmente válida.",
+          "- O CEP é sorteado dentro das faixas que os Correios atribuem aos estados, cada CEP com a mesma chance. Ele sempre pertence a um estado, então `cep.getState` nunca retorna null para ele.",
+          "- `00000-000` a `00999-999` e `78900-000` a `78999-999`, que nenhum estado possui, nunca são gerados. Até a 2.4.0 qualquer string de 8 dígitos podia sair, cerca de 1 em 80 numa dessas duas faixas.",
+          "- A faixa é o bloco que um estado possui, não uma garantia de que todo CEP dentro dela esteja em uso, então o CEP gerado pode não ser o CEP de um endereço real."
         ]
       },
       "references": [
@@ -79,7 +98,8 @@
       "params": [],
       "returns": "string",
       "tests": [
-        { "name": "generated-is-valid", "args": [], "satisfies": "cep.isValid", "repeat": 5, "note": "every generated value must pass the lib's own validator" }
+        { "name": "generated-is-valid", "args": [], "satisfies": "cep.isValid", "repeat": 5, "note": "every generated value must pass the lib's own validator" },
+        { "name": "generated-inside-a-state-range", "args": [], "matches": "^(0[1-9]|[1-9]\\d)\\d{6}$", "repeat": 20, "note": "changed in 2.5.0 (#615): the CEP is drawn inside the state ranges, so it never starts with 00; the 789xxxxx gap is checked by getState in JavaScript's own test" }
       ]
     },
     "getAddressInfo": {
@@ -98,7 +118,10 @@
           "- `options.timeoutMs` limits the whole lookup, retries included. When it runs out, the call fails with a service error. It must be a positive finite number.",
           "- `options.signal` (an `AbortSignal` in JavaScript) cancels the lookup, and the call fails with the signal's reason, as `fetch` does. A signal that is already aborted fails before any request. Without these options the lookup has no time limit.",
           "- Fails with an error. The error tells apart an invalid CEP or option, a CEP that no provider knows, and a service failure.",
-          "- A provider being down is not \"not found\". BrasilAPI answers 404 both for an unknown CEP and when its own backends fail. Its 404 counts as not found only when no other provider failed with a network error. Next to a network failure, the call fails with a service error. A lone BrasilAPI 404, or a BrasilAPI 404 together with ViaCEP's `erro: true`, is still not found. 2.4.0 let the 404 win, so an outage could be reported as an unknown CEP."
+          "- A provider being down is not \"not found\". BrasilAPI answers 404 both for an unknown CEP and when its own backends fail. Its 404 counts as not found only when no other provider failed with a network error. Next to a network failure, the call fails with a service error. A lone BrasilAPI 404, or a BrasilAPI 404 together with ViaCEP's `erro: true`, is still not found. 2.4.0 let the 404 win, so an outage could be reported as an unknown CEP.",
+          "- An address is only accepted when it agrees with the CEP asked for: its 8 digits must be the CEP, and its state, when it names one, must be the state that owns the CEP range (see `cep.getState`). Otherwise that provider counts as not knowing the CEP. BrasilAPI, for instance, answered `99999-999`, a Rio Grande do Sul CEP, with a city of Paraná. Until 2.4.0 such an answer was returned.",
+          "- Once the lookup settles, the requests of the providers that lost the race are aborted.",
+          "- `options.providers` accepts `viacep`, `brasilapi` and `widenet`, raced in the order given (default `[\"viacep\", \"brasilapi\"]`). A name that is not a known provider is ignored. A list with no known provider is an invalid option. `widenet` is deprecated and left out of the default list: its endpoint now redirects to `ws.apicep.com`, which is usually unavailable, so it only adds a failing provider to the race."
         ],
         "pt-BR": [
           "Busca o endereço de um CEP em vários provedores ao mesmo tempo e retorna a primeira resposta com sucesso (chamada de rede).",
@@ -110,7 +133,10 @@
           "- `options.timeoutMs` limita a busca inteira, retries incluídos. Quando o tempo acaba, a chamada falha com erro de serviço. Precisa ser um número finito positivo.",
           "- `options.signal` (um `AbortSignal` no JavaScript) cancela a busca, e a chamada falha com o motivo do signal, como no `fetch`. Um signal já abortado falha antes de qualquer requisição. Sem essas opções, a busca não tem limite de tempo.",
           "- Falha com um erro. O erro distingue um CEP ou uma opção inválida, um CEP que nenhum provedor conhece e uma falha do serviço.",
-          "- Provedor fora do ar não é \"não encontrado\". A BrasilAPI responde 404 tanto para um CEP desconhecido quanto quando os serviços por trás dela falham. O 404 dela só conta como não encontrado se nenhum outro provedor falhou por erro de rede. Junto de uma falha de rede, a chamada falha com erro de serviço. Um 404 isolado da BrasilAPI, ou um 404 dela junto com `erro: true` da ViaCEP, continua sendo não encontrado. A 2.4.0 deixava o 404 vencer, então uma indisponibilidade podia aparecer como CEP desconhecido."
+          "- Provedor fora do ar não é \"não encontrado\". A BrasilAPI responde 404 tanto para um CEP desconhecido quanto quando os serviços por trás dela falham. O 404 dela só conta como não encontrado se nenhum outro provedor falhou por erro de rede. Junto de uma falha de rede, a chamada falha com erro de serviço. Um 404 isolado da BrasilAPI, ou um 404 dela junto com `erro: true` da ViaCEP, continua sendo não encontrado. A 2.4.0 deixava o 404 vencer, então uma indisponibilidade podia aparecer como CEP desconhecido.",
+          "- Um endereço só é aceito quando concorda com o CEP pedido: seus 8 dígitos precisam ser o CEP e o estado, quando ele traz um, precisa ser o estado dono da faixa do CEP (veja `cep.getState`). Caso contrário, esse provedor conta como se não conhecesse o CEP. A BrasilAPI, por exemplo, respondeu `99999-999`, um CEP do Rio Grande do Sul, com uma cidade do Paraná. Até a 2.4.0 essa resposta era devolvida.",
+          "- Quando a busca termina, as requisições dos provedores que perderam a corrida são abortadas.",
+          "- `options.providers` aceita `viacep`, `brasilapi` e `widenet`, disputados na ordem dada (padrão `[\"viacep\", \"brasilapi\"]`). Um nome que não é provedor conhecido é ignorado. Uma lista sem nenhum provedor conhecido é uma opção inválida. `widenet` está obsoleto e fora da lista padrão: o endpoint dele agora redireciona para `ws.apicep.com`, que costuma estar indisponível, então só acrescenta um provedor que falha à corrida."
         ]
       },
       "references": [
@@ -124,7 +150,7 @@
       "network": true,
       "params": [
         { "name": "cep", "type": "string | number" },
-        { "name": "options", "type": "GetAddressInfoByCepOptions", "optional": true }
+        { "name": "options", "type": "GetAddressInfoByCepOptions", "optional": true, "fields": [{ "name": "providers", "type": "CepProvider[]", "optional": true }, { "name": "signal", "type": "AbortSignal", "optional": true }, { "name": "timeoutMs", "type": "number", "optional": true }] }
       ],
       "returns": "AddressInfo"
     },
@@ -140,7 +166,11 @@
           "- `params` carries the state (federative unit, read ignoring case and surrounding whitespace), the city and the street. Before the query, the function trims the city and the street and removes their accents.",
           "- Each result is the ViaCEP record unchanged.",
           "- The function retries transient network failures.",
-          "- Fails with an error. The error tells apart a missing or invalid state/city/street, an address with no match, and an HTTP error from the service."
+          "- Fails with an error. The error tells apart a missing or invalid state/city/street, an address with no match, and an HTTP error from the service.",
+          "- `params.federalUnit` is the two-letter state code, for example `SP`. It must be a string and a known UF. `params.city` and `params.street` are the city and the street name (or part of it).",
+          "- `city` and `street` must be strings with at least 3 characters once trimmed and stripped of accents, the minimum ViaCEP accepts. A blank value, a value that is not a string, or one under 3 characters fails with the validation error before any request.",
+          "- A `params` that is not an object (omitted, null, a string) and a `federalUnit` that is not a string fail with the validation error too.",
+          "- ViaCEP caps the list at 50 addresses, so a short street name that matches more streets returns only the first 50."
         ],
         "pt-BR": [
           "Consulta todos os CEPs de um logradouro no serviço ViaCEP (chamada de rede).",
@@ -148,7 +178,11 @@
           "- `params` traz a UF (lida sem diferenciar maiúsculas de minúsculas e sem os espaços das pontas), o município e o logradouro. Antes da consulta, a função remove os espaços das pontas do município e do logradouro e tira os acentos deles.",
           "- Cada resultado é o registro do ViaCEP sem alteração.",
           "- A função tenta de novo as falhas transitórias de rede.",
-          "- Falha com um erro. O erro distingue UF/município/logradouro ausente ou inválido, um endereço sem resultado e um erro HTTP do serviço."
+          "- Falha com um erro. O erro distingue UF/município/logradouro ausente ou inválido, um endereço sem resultado e um erro HTTP do serviço.",
+          "- `params.federalUnit` é o código de duas letras da UF, por exemplo `SP`. Precisa ser string e uma UF conhecida. `params.city` e `params.street` são o município e o nome do logradouro (ou parte dele).",
+          "- `city` e `street` precisam ser strings com pelo menos 3 caracteres depois de tirar os espaços das pontas e os acentos, o mínimo que o ViaCEP aceita. Um valor em branco, que não é string ou com menos de 3 caracteres falha com o erro de validação antes de qualquer requisição.",
+          "- Um `params` que não é objeto (omitido, null, string) e um `federalUnit` que não é string também falham com o erro de validação.",
+          "- O ViaCEP limita a lista a 50 endereços, então um nome de rua curto que casa com mais ruas retorna só os 50 primeiros."
         ]
       },
       "references": ["https://www.correios.com.br/enviar/precisa-de-ajuda/tudo-sobre-cep"],
@@ -156,7 +190,9 @@
       "aliases": ["cep.getCepInformationFromAddress", "cep.getCepFromAddress"],
       "level": "core",
       "network": true,
-      "params": [{ "name": "params", "type": "GetCepInfoByAddressParams" }],
+      "params": [
+        { "name": "params", "type": "GetCepInfoByAddressParams", "fields": [{ "name": "federalUnit", "type": "string" }, { "name": "city", "type": "string" }, { "name": "street", "type": "string" }] }
+      ],
       "returns": "CepAddressInfo[]"
     },
     "getState": {
@@ -168,7 +204,7 @@
         "en": [
           "Returns the state that owns the CEP range a CEP falls in. It runs offline: the answer comes from a table of ranges, not from a network call.",
           "",
-          "- `value` is read as `cep.isValid` reads it: 8 digits, as a string or a number, with spaces, dots and hyphens ignored.",
+          "- `value` is read as `cep.isValid` reads it: 8 digits, as a string or a number, with spaces, dots, hyphens and slashes ignored.",
           "- A number must be a non-negative integer: `-20040020` and `2004002.5` return null. A CEP that starts with `0` must be passed as a string.",
           "- The result is the same object as `state.getByIbgeCode` and `state.list` return (a new copy each call).",
           "- Returns null for an invalid CEP, a value that is neither a string nor a number, and a CEP outside every range.",
@@ -209,7 +245,7 @@
         "pt-BR": [
           "Retorna o estado dono da faixa de CEP em que o CEP cai. Funciona offline: a resposta vem de uma tabela de faixas, não de uma chamada de rede.",
           "",
-          "- `value` é lido como em `cep.isValid`: 8 dígitos, como string ou número, com espaços, pontos e hífens ignorados.",
+          "- `value` é lido como em `cep.isValid`: 8 dígitos, como string ou número, com espaços, pontos, hífens e barras ignorados.",
           "- Um número precisa ser um inteiro não negativo: `-20040020` e `2004002.5` retornam null. CEP que começa com `0` deve ser passado como string.",
           "- O resultado é o mesmo objeto que `state.getByIbgeCode` e `state.list` retornam (uma cópia nova a cada chamada).",
           "- Retorna null para um CEP inválido, um valor que não é string nem número e um CEP fora de qualquer faixa.",
@@ -306,14 +342,18 @@
           "",
           "- `cep` may be a string or a number. A CEP that starts with `0` must be a string.",
           "- Letters or other characters make the value invalid.",
-          "- Pending decision (findings §2 #1): the reference (JS) ignores spaces, dots and hyphens (`01310-200` is valid). Other libraries accept digits only."
+          "- Pending decision (findings §2 #1): the reference (JS) ignores spaces, dots and hyphens (`01310-200` is valid). Other libraries accept digits only.",
+          "- Spaces, dots, hyphens and slashes are ignored, wherever they appear. Any other character makes the value invalid.",
+          "- A number is only read when it is a non-negative safe integer: `-20040020` and `2004002.1` are invalid. `isValid` and `getState` read the number `1310100` as 7 digits and reject it, while `getAddressInfo` and `format` with `pad` left-pad it."
         ],
         "pt-BR": [
           "Valida um CEP: exatamente 8 dígitos.",
           "",
           "- `cep` pode ser uma string ou um número. Um CEP que começa com `0` precisa ser uma string.",
           "- Letras ou outros caracteres tornam o valor inválido.",
-          "- Decisão pendente (findings §2 #1): a referência (JS) ignora espaços, pontos e hífens (`01310-200` é válido). As outras bibliotecas aceitam só dígitos."
+          "- Decisão pendente (findings §2 #1): a referência (JS) ignora espaços, pontos e hífens (`01310-200` é válido). As outras bibliotecas aceitam só dígitos.",
+          "- Espaços, pontos, hífens e barras são ignorados, onde quer que apareçam. Qualquer outro caractere torna o valor inválido.",
+          "- Um número só é lido quando é um inteiro seguro não negativo: `-20040020` e `2004002.1` são inválidos. `isValid` e `getState` leem o número `1310100` como 7 dígitos e o rejeitam, enquanto `getAddress` e `format` com `pad` o completam com zeros."
         ]
       },
       "references": [
@@ -344,7 +384,16 @@
         { "args": [" 01310-100 "], "returns": true, "note": "JavaScript's own test: should return true when is a CEP valid with leading/trailing whitespace" },
         { "args": ["92.500-000"], "returns": true, "note": "JavaScript's own test: should return true when is a CEP valid with any punctuation the published version accepted" },
         { "args": ["013 10 100"], "returns": true, "note": "JavaScript's own test: should return true when is a CEP valid with any punctuation the published version accepted" },
-        { "args": ["01310.100"], "returns": true, "note": "JavaScript's own test: should return true when is a CEP valid with any punctuation the published version accepted" }
+        { "args": ["01310.100"], "returns": true, "note": "JavaScript's own test: should return true when is a CEP valid with any punctuation the published version accepted" },
+        { "args": ["01310/100"], "returns": true, "note": "JavaScript's own test: when the mask uses a slash, one of the mask characters isValidCpf reads" },
+        { "args": ["0131/0100"], "returns": true, "note": "JavaScript's own test: when is a CEP valid with slashes, which the mask characters include" },
+        { "args": ["--0131 0100"], "returns": true, "note": "JavaScript's own test: when is a CEP valid with slashes, which the mask characters include" },
+        { "args": ["01310/100/"], "returns": true, "note": "JavaScript's own test: when is a CEP valid with slashes, which the mask characters include" },
+        { "args": [-20040020], "returns": false, "note": "JavaScript's own test: when it is a negative or fractional number" },
+        { "args": [2004002.1], "returns": false, "note": "JavaScript's own test: when it is a negative or fractional number" },
+        { "name": "seven-digit-number", "args": [1310100], "returns": false, "note": "JavaScript docs: a 7-digit number is rejected, the leading zero is lost" },
+        { "args": ["9250000A"], "returns": false, "note": "JavaScript docs example" },
+        { "args": [null], "returns": false, "note": "JavaScript's own test: when it is null" }
       ]
     },
     "parse": {
@@ -353,8 +402,16 @@
         "pt-BR": "Remove os caracteres de formatação de um CEP e retorna só os dígitos."
       },
       "description": {
-        "en": ["Removes CEP formatting and keeps only digits, capped at 8 digits."],
-        "pt-BR": ["Remove a formatação do CEP e mantém só os dígitos, limitados a 8."]
+        "en": [
+          "Removes CEP formatting and keeps only digits, capped at 8 digits.",
+          "- Non-digit characters are removed, and the result is capped at 8 digits.",
+          "- A number is only read when it is a non-negative safe integer. Any other number (negative, fractional, not finite, past the safe range) returns an empty string. Null and other values that are neither a string nor a number return an empty string."
+        ],
+        "pt-BR": [
+          "Remove a formatação do CEP e mantém só os dígitos, limitados a 8.",
+          "- Os caracteres que não são dígitos são removidos, e o resultado é limitado a 8 dígitos.",
+          "- Um número só é lido quando é um inteiro seguro não negativo. Qualquer outro número (negativo, fracionário, não finito, fora da faixa segura) retorna string vazia. Null e outros valores que não são string nem número retornam string vazia."
+        ]
       },
       "references": [
         "https://www.correios.com.br/enviar/precisa-de-ajuda/tudo-sobre-cep",
@@ -377,7 +434,12 @@
         { "args": ["41790071"], "returns": "41790071", "note": "consensus of 3 libs (python, ruby, rust)" },
         { "args": ["91906-292"], "returns": "91906292", "note": "consensus of 3 libs (python, ruby, rust)" },
         { "args": ["21749-676"], "returns": "21749676", "note": "consensus of 3 libs (python, ruby, rust)" },
-        { "args": ["41790-070"], "returns": "41790070", "note": "consensus of 3 libs (python, ruby, rust)" }
+        { "args": ["41790-070"], "returns": "41790070", "note": "consensus of 3 libs (python, ruby, rust)" },
+        { "name": "negative-number", "args": [-20040020], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "name": "fractional-number", "args": [1.5], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "name": "unsafe-number", "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "name": "null", "args": [null], "returns": "", "note": "JavaScript's own test: should return an empty string for null" },
+        { "name": "number", "args": [20040020], "returns": "20040020", "note": "number input" }
       ]
     }
   }

@@ -20,13 +20,15 @@
           "Formats a CAEPF with the mask `000.000.000/000-00`.",
           "",
           "- The mask is applied as far as the digits go. `options.pad` first left-pads with zeros to 14 digits.",
-          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped).",
+          "- `options.pad` on a value with no digits (`\"\"`, `\"---\"`, `null`) still gives an empty string. Until 2.4.0 it gave the whole zero mask. Changed in 2.5.0 (#615)."
         ],
         "pt-BR": [
           "Formata um CAEPF com a máscara `000.000.000/000-00`.",
           "",
           "- A máscara é aplicada até onde os dígitos vão. `options.pad` primeiro completa com zeros à esquerda até 14 dígitos.",
-          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal).",
+          "- `options.pad` num valor sem dígitos (`\"\"`, `\"---\"`, `null`) continua retornando uma string vazia. Até a 2.4.0 retornava a máscara inteira de zeros. Mudou na 2.5.0 (#615)."
         ]
       },
       "references": [
@@ -35,7 +37,7 @@
       ],
       "params": [
         { "name": "value", "type": "string | number" },
-        { "name": "options", "type": "FormatCaepfOptions", "optional": true }
+        { "name": "options", "type": "FormatCaepfOptions", "optional": true, "fields": [{ "name": "pad", "type": "boolean", "optional": true }] }
       ],
       "returns": "string",
       "tests": [
@@ -54,7 +56,11 @@
         { "args": ["184"], "returns": "184", "note": "JavaScript's own test: should not pad the value when options.pad is not given" },
         { "args": [-1], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
         { "args": [1.5], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
-        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" }
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": ["", { "pad": true }], "returns": "", "note": "changed in 2.5.0 (#615): should return an empty string for a value without digits even when padding; 2.4.0 returned the zero mask" },
+        { "args": ["---", { "pad": true }], "returns": "", "note": "changed in 2.5.0 (#615): a value with no digits gives an empty string even with pad" },
+        { "args": [null, { "pad": true }], "returns": "", "note": "changed in 2.5.0 (#615): nullish input gives an empty string even with pad" },
+        { "args": [-249859674386], "returns": "", "note": "JavaScript docs example: not a non-negative safe integer" }
       ]
     },
     "isValid": {
@@ -67,7 +73,8 @@
           "- A base whose digits are all the same is rejected.",
           "- The value may be a number or a string, masked as `000.000.000/000-00` or not.",
           "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number is invalid.",
-          "- No official source publishes the check digit rule. Only the 14 positions and the 9-digit CPF base are official (SERPRO's documentation of the Receita Federal cadastro). The IN RFB 1.828/2018 has no check digit, and the eSocial only checks that the number exists in the Receita Federal base. The 3 + 2 split of the last 5 digits and the rule come from third-party reference implementations. They accept SERPRO's example `00000002500171`."
+          "- No official source publishes the check digit rule. Only the 14 positions and the 9-digit CPF base are official (SERPRO's documentation of the Receita Federal cadastro). The IN RFB 1.828/2018 has no check digit, and the eSocial only checks that the number exists in the Receita Federal base. The 3 + 2 split of the last 5 digits and the rule come from third-party reference implementations. They accept SERPRO's example `00000002500171`.",
+          "- A number loses its leading zeros, so a value that starts with `0` is only accepted as a string."
         ],
         "pt-BR": [
           "Valida um CAEPF: 14 dígitos, com a base de 9 dígitos do CPF do titular, uma sequência de 3 dígitos e 2 dígitos verificadores.",
@@ -76,7 +83,8 @@
           "- Uma base com todos os dígitos iguais é rejeitada.",
           "- O valor pode ser um número ou uma string, com a máscara `000.000.000/000-00` ou sem ela.",
           "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro é inválido.",
-          "- Nenhuma fonte oficial publica a regra do dígito verificador. Só as 14 posições e a base de 9 dígitos do CPF são oficiais (documentação do SERPRO do cadastro da Receita Federal). A IN RFB 1.828/2018 não traz dígito verificador, e o eSocial só verifica se o número existe na base da Receita. A divisão 3 + 2 dos últimos 5 dígitos e a regra vêm de implementações de referência de terceiros. Elas aceitam o exemplo do SERPRO, `00000002500171`."
+          "- Nenhuma fonte oficial publica a regra do dígito verificador. Só as 14 posições e a base de 9 dígitos do CPF são oficiais (documentação do SERPRO do cadastro da Receita Federal). A IN RFB 1.828/2018 não traz dígito verificador, e o eSocial só verifica se o número existe na base da Receita. A divisão 3 + 2 dos últimos 5 dígitos e a regra vêm de implementações de referência de terceiros. Elas aceitam o exemplo do SERPRO, `00000002500171`.",
+          "- Um número perde os zeros à esquerda, então um valor que começa com `0` só é aceito como string."
         ]
       },
       "references": [
@@ -112,7 +120,8 @@
         { "args": [" 293 118 610 001 84 "], "returns": true, "note": "JavaScript's own test: should return true for a whitespace mask and surrounding whitespace" },
         { "args": [-29311861000184], "returns": false, "note": "JavaScript's own test: should return false when it is a negative or fractional number (#593 number rule)" },
         { "args": [293118610001.84], "returns": false, "note": "JavaScript's own test: should return false when it is a negative or fractional number (#593 number rule)" },
-        { "args": ["00000002500171"], "returns": true, "note": "JavaScript's own test: should return true for 00000002500171, the example of SERPRO's documentation of the Receita Federal's CAEPF cadastro" }
+        { "args": ["00000002500171"], "returns": true, "note": "JavaScript's own test: should return true for 00000002500171, the example of SERPRO's documentation of the Receita Federal's CAEPF cadastro" },
+        { "args": [2500171], "returns": false, "note": "a number loses its leading zeros, so the 14 digits are not there" }
       ]
     },
     "parse": {

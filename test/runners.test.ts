@@ -90,8 +90,8 @@ describe("runners (same protocol, every language)", () => {
   });
   it("erlang (erlc + escript)", { skip: !which("erlc") && "no erlang" }, async () => {
     assert.deepEqual(
-      await run("erlang", "src", [["demo.is_valid", ["12345678901"]], ["demo.is_valid", ["1"]], ["demo.format", ["x"]], ["demo.generate", []], ["demo.is_valid", ["a", "b"]], ["demo.codes", []], ["demo.is_valid", [0.5]]]),
-      [true, false, "x", "00000000000", "<unsupported>", [61, 62], false]
+      await run("erlang", "src", [["demo.is_valid", ["12345678901"]], ["demo.is_valid", ["1"]], ["demo.format", ["x"]], ["demo.generate", []], ["demo.is_valid", ["a", "b"]], ["demo.codes", []], ["demo.is_valid", [0.5]], ["demo.format", ["São 😀"]]]),
+      [true, false, "x", "00000000000", "<unsupported>", [61, 62], false, "São 😀"]
     );
   });
   it(".NET (generated F# project)", { skip: !which("dotnet") && "no dotnet", timeout: 300_000 }, async () => {

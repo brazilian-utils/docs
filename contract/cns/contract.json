@@ -20,13 +20,17 @@
           "Formats a CNS number into groups of 3-4-4-4 digits separated by spaces.",
           "",
           "- `options.pad` left-pads with zeros to 15 digits first.",
-          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped).",
+          "- A value with no digits (empty, or only letters and symbols) returns an empty string, even with `pad`. Until 2.4.0 `pad` returned the full zero mask (`000 0000 0000 0000`) for it.",
+          "- Digits after the 15th are dropped. Every non-digit character is ignored."
         ],
         "pt-BR": [
           "Formata um número do CNS em grupos de 3-4-4-4 dígitos separados por espaços.",
           "",
           "- `options.pad` primeiro completa com zeros à esquerda até 15 dígitos.",
-          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal).",
+          "- Um valor sem dígitos (vazio, ou só letras e símbolos) retorna uma string vazia, mesmo com `pad`. Até a 2.4.0, `pad` retornava a máscara inteira de zeros (`000 0000 0000 0000`) para ele.",
+          "- Os dígitos depois do 15º são descartados. Todo caractere que não é dígito é ignorado."
         ]
       },
       "references": [
@@ -35,7 +39,7 @@
       ],
       "params": [
         { "name": "value", "type": "string | number" },
-        { "name": "options", "type": "FormatCnsOptions", "optional": true }
+        { "name": "options", "type": "FormatCnsOptions", "optional": true, "fields": [{ "name": "pad", "type": "boolean", "optional": true }] }
       ],
       "returns": "string",
       "tests": [
@@ -48,13 +52,16 @@
         { "args": ["123"], "returns": "123", "note": "JavaScript's own test: should format a CNS with the 3-4-4-4 space mask" },
         { "args": ["898000000043208"], "returns": "898 0000 0004 3208", "note": "JavaScript's own test: should round trip 898 0000 0004 3208, the only concrete CNS the ANVISA page prints" },
         { "args": [123456789010001], "returns": "123 4567 8901 0001", "note": "JavaScript's own test: should format a number CNS with the space mask" },
-        { "args": ["", { "pad": true }], "returns": "000 0000 0000 0000", "note": "JavaScript's own test: should pad the value with leading zeros when pad is true" },
+        { "args": ["", { "pad": true }], "returns": "", "note": "changed in 2.5.0 (#615): a value with no digits gives an empty string even with pad. 2.4.0 returned 000 0000 0000 0000. JavaScript's own test: should return an empty string for a value without digits even when padding" },
         { "args": ["89010001", { "pad": true }], "returns": "000 0000 8901 0001", "note": "JavaScript's own test: should pad the value with leading zeros when pad is true" },
         { "args": ["123456789010001999"], "returns": "123 4567 8901 0001", "note": "JavaScript's own test: should not add digits after the CNS length (15)" },
         { "args": ["123.456.789-01/0001"], "returns": "123 4567 8901 0001", "note": "JavaScript's own test: should remove all non numeric characters" },
         { "args": [-1], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
         { "args": [1.5], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
-        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" }
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": ["abc", { "pad": true }], "returns": "", "note": "a value with letters only has no digits" },
+        { "args": ["123456789010000"], "returns": "123 4567 8901 0000", "note": "JavaScript docs example" },
+        { "args": [123456789010000], "returns": "123 4567 8901 0000", "note": "JavaScript docs example" }
       ]
     },
     "isValid": {
@@ -70,7 +77,8 @@
           "- Rejects a number that starts with 5, following ANVISA.",
           "- Accepts the bare digits or the printed 3-4-4-4 groups split by whitespace, `.`, `-` or `/`. Rejects anything else.",
           "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number is invalid.",
-          "- No official source publishes the check digit rule as a norm. The rule follows the DATASUS \"Rotina de validação de CNS e Número Provisório\", published on the old Cartão Nacional de Saúde site (archived copy linked), and the ANVISA page. Neither names a first digit other than 1, 2, 7, 8 or 9, so a number starting with 5 is rejected even when its weighted sum checks out."
+          "- No official source publishes the check digit rule as a norm. The rule follows the DATASUS \"Rotina de validação de CNS e Número Provisório\", published on the old Cartão Nacional de Saúde site (archived copy linked), and the ANVISA page. Neither names a first digit other than 1, 2, 7, 8 or 9, so a number starting with 5 is rejected even when its weighted sum checks out.",
+          "- Docs examples: `100000000060018` (definitive, raw check digit 10, suffix 001) and `700000000000005` (provisional) are valid; `123456789010001` (wrong check digit) and `12345678901` (wrong length) are not."
         ],
         "pt-BR": [
           "Valida um número do CNS: 15 dígitos.",
@@ -79,7 +87,8 @@
           "- Rejeita um número que começa com 5, conforme a ANVISA.",
           "- Aceita os dígitos puros ou os grupos impressos 3-4-4-4 separados por espaço em branco, `.`, `-` ou `/`. Rejeita qualquer outra coisa.",
           "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro é inválido.",
-          "- Nenhuma fonte oficial publica a regra do dígito verificador como norma. A regra segue a \"Rotina de validação de CNS e Número Provisório\" do DATASUS, publicada no antigo site do Cartão Nacional de Saúde (link para a cópia arquivada), e a página da ANVISA. Nenhuma das duas cita primeiro dígito fora de 1, 2, 7, 8 ou 9, então um número que começa com 5 é rejeitado mesmo quando a soma ponderada confere."
+          "- Nenhuma fonte oficial publica a regra do dígito verificador como norma. A regra segue a \"Rotina de validação de CNS e Número Provisório\" do DATASUS, publicada no antigo site do Cartão Nacional de Saúde (link para a cópia arquivada), e a página da ANVISA. Nenhuma das duas cita primeiro dígito fora de 1, 2, 7, 8 ou 9, então um número que começa com 5 é rejeitado mesmo quando a soma ponderada confere.",
+          "- Exemplos da documentação: `100000000060018` (definitivo, dígito verificador bruto 10, sufixo 001) e `700000000000005` (provisório) são válidos; `123456789010001` (dígito verificador errado) e `12345678901` (tamanho errado) não são."
         ]
       },
       "references": [
@@ -124,7 +133,8 @@
         { "args": ["900000000000008"], "returns": true, "note": "JavaScript's own test: should return true for a provisional CNS starting with 9" },
         { "args": ["712345678901236"], "returns": true, "note": "JavaScript's own test: should return true for a provisional CNS whose base 11 digits would NOT be a valid definitive checksum" },
         { "args": [-139457218230006], "returns": false, "note": "JavaScript's own test: should return false when it is a negative or fractional number (#593 number rule)" },
-        { "args": [13945721823.0006], "returns": false, "note": "JavaScript's own test: should return false when it is a negative or fractional number (#593 number rule)" }
+        { "args": [13945721823.0006], "returns": false, "note": "JavaScript's own test: should return false when it is a negative or fractional number (#593 number rule)" },
+        { "args": [-123456789010000], "returns": false, "note": "JavaScript docs example (not a non-negative safe integer)" }
       ]
     },
     "parse": {

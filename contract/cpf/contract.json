@@ -19,6 +19,8 @@
           "- `options.pad` left-pads the value with zeros to 11 digits first.",
           "- `options.obfuscate` hides the first 3 digits and the 2 check digits with `*`, after padding. This is the rule the Leis de Diretrizes Orçamentárias set for publishing a CPF (Lei nº 14.194/2021, art. 149, and Lei nº 15.321/2025, art. 163).",
           "- A number is read only when it is a non-negative safe integer. A negative, fractional, not finite or unsafe number returns an empty string. 2.4.0 read the digits of any number (`-12345678909` gave `123.456.789-09`).",
+          "- A value with no digits (empty, or only letters and symbols) returns an empty string even with `options.pad`. Until 2.4.0 `pad` returned the full zero mask (`000.000.000-00`).",
+          "- A number loses its leading zeros, so pass a string, or use `options.pad`, for a CPF that starts with `0`.",
           "- Pending decision (findings §2 #2, #3): the reference (JS) formats only the characters an incomplete value has and returns an empty string for empty or invalid input. Other libraries return null."
         ],
         "pt-BR": [
@@ -27,6 +29,8 @@
           "- `options.pad` primeiro completa o valor com zeros à esquerda até 11 dígitos.",
           "- `options.obfuscate` oculta os 3 primeiros dígitos e os 2 dígitos verificadores com `*`, depois do preenchimento. É a regra que as Leis de Diretrizes Orçamentárias fixam para publicar um CPF (Lei nº 14.194/2021, art. 149, e Lei nº 15.321/2025, art. 163).",
           "- Um número só é lido quando é um inteiro seguro não negativo. Um número negativo, fracionário, não finito ou inseguro retorna uma string vazia. A 2.4.0 lia os dígitos de qualquer número (`-12345678909` dava `123.456.789-09`).",
+          "- Um valor sem dígitos (vazio, ou só letras e símbolos) retorna uma string vazia mesmo com `options.pad`. Até a 2.4.0, `pad` retornava a máscara inteira de zeros (`000.000.000-00`).",
+          "- Um número perde os zeros à esquerda; passe uma string, ou use `options.pad`, para um CPF que começa com `0`.",
           "- Decisão pendente (findings §2 #2, #3): a referência (JS) formata só os caracteres que um valor incompleto tem e retorna uma string vazia para entrada vazia ou inválida. Outras bibliotecas retornam null."
         ]
       },
@@ -38,7 +42,7 @@
       "level": "core",
       "params": [
         { "name": "value", "type": "string | number" },
-        { "name": "options", "type": "FormatCpfOptions", "optional": true }
+        { "name": "options", "type": "FormatCpfOptions", "optional": true, "fields": [{ "name": "pad", "type": "boolean", "optional": true }, { "name": "obfuscate", "type": "boolean", "optional": true }] }
       ],
       "returns": "string",
       "tests": [
@@ -70,7 +74,7 @@
         { "args": [943895751], "returns": "943.895.751", "note": "JavaScript's own test: should format number CPF with mask" },
         { "args": [9438957510], "returns": "943.895.751-0", "note": "JavaScript's own test: should format number CPF with mask" },
         { "args": [94389575104], "returns": "943.895.751-04", "note": "JavaScript's own test: should format number CPF with mask" },
-        { "args": ["", { "pad": true }], "returns": "000.000.000-00", "note": "JavaScript's own test: should format CPF with mask filling zeroes" },
+        { "args": ["", { "pad": true }], "returns": "", "note": "changed in 2.5.0 (#615): a value with no digits gives an empty string even with pad (2.4.0 gave 000.000.000-00)" },
         { "args": ["9", { "pad": true }], "returns": "000.000.000-09", "note": "JavaScript's own test: should format CPF with mask filling zeroes" },
         { "args": ["94", { "pad": true }], "returns": "000.000.000-94", "note": "JavaScript's own test: should format CPF with mask filling zeroes" },
         { "args": ["943", { "pad": true }], "returns": "000.000.009-43", "note": "JavaScript's own test: should format CPF with mask filling zeroes" },
@@ -106,7 +110,11 @@
         { "args": [-1], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number; changed in 2.5.0 (#593): a number is read only when it is a non-negative safe integer" },
         { "args": [1.5], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number; changed in 2.5.0 (#593): a number is read only when it is a non-negative safe integer" },
         { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number; changed in 2.5.0 (#593): a number is read only when it is a non-negative safe integer" },
-        { "args": [123456789.09, { "pad": true }], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number; changed in 2.5.0 (#593): a number is read only when it is a non-negative safe integer" }
+        { "args": [123456789.09, { "pad": true }], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number; changed in 2.5.0 (#593): a number is read only when it is a non-negative safe integer" },
+        { "args": ["abc", { "pad": true }], "returns": "", "note": "JavaScript's own test: should return an empty string for a value without digits even when padding" },
+        { "args": ["746506880", { "pad": true }], "returns": "007.465.068-80", "note": "JavaScript docs example" },
+        { "args": ["74650688000"], "returns": "746.506.880-00", "note": "JavaScript docs example" },
+        { "args": ["12345678909", { "obfuscate": true }], "returns": "***.456.789-**", "note": "JavaScript docs example" }
       ]
     },
     "generate": {

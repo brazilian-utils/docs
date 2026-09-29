@@ -11,13 +11,19 @@
 %%       holds one term per call: {Id :: binary(), Module, Function, Args :: list()}.
 -mode(compile).
 
-main(["extract", Ebin]) ->
+main(Args) ->
+    %% The JSON is UTF-8: on the default latin1 device, a character above 255 would print as
+    %% `\x{1F600}` and one from 128 to 255 as a single latin1 byte.
+    ok = io:setopts(standard_io, [{encoding, unicode}]),
+    main1(Args).
+
+main1(["extract", Ebin]) ->
     true = code:add_patha(Ebin),
     Beams = filelib:wildcard(filename:join(Ebin, "*.beam")),
     Modules = [extract(B) || B <- lists:sort(Beams)],
     io:put_chars([0, "JSON", 0, json_array(Modules)]),
     halt(0);
-main(["run", Ebin, CallsFile]) ->
+main1(["run", Ebin, CallsFile]) ->
     true = code:add_patha(Ebin),
     {ok, Calls} = file:consult(CallsFile),
     Results = [run(C) || C <- Calls],

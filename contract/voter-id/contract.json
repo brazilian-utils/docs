@@ -24,7 +24,9 @@
           "- No authority publishes a masking rule for the voter ID. The rule is an analogy with the one the Leis de Diretrizes Orçamentárias set for publishing a CPF (\"ocultar os três primeiros dígitos e os dois dígitos verificadores\", Lei nº 12.309/2010, art. 87, § 5º, repeated up to the LDO 2026, Lei nº 15.321/2025, art. 163), not a published norm.",
           "- The mask hides by position. A voter ID given as a number has lost its leading zeros, so pass `pad` together with `obfuscate` for it.",
           "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number).",
-          "- Pending decision (findings §2 #2, #3): the reference (JS) formats only the characters an incomplete value has and returns an empty string for empty or invalid input. Other libraries return null."
+          "- Pending decision (findings §2 #2, #3): the reference (JS) formats only the characters an incomplete value has and returns an empty string for empty or invalid input. Other libraries return null.",
+          "- A value with no digits (empty, or only letters and symbols) returns an empty string, even with `pad`. Until 2.4.0 `pad` returned the full zero mask (`0000 0000 00 00`) for it.",
+          "- `options.obfuscate` is read for truthiness: a non-boolean such as `1` hides the digits too, and `0` does not. `options.pad` and `options.obfuscate` can be combined (`123450159` gives `***1 2345 01 **`)."
         ],
         "pt-BR": [
           "Formata um título de eleitor com o agrupamento `0000 0000 00 00`.",
@@ -35,7 +37,9 @@
           "- Nenhuma autoridade publica uma regra de mascaramento para o título de eleitor. A regra é uma analogia com a que as Leis de Diretrizes Orçamentárias fixam para publicar um CPF (\"ocultar os três primeiros dígitos e os dois dígitos verificadores\", Lei nº 12.309/2010, art. 87, § 5º, repetida até a LDO 2026, Lei nº 15.321/2025, art. 163), não uma norma publicada.",
           "- A máscara oculta por posição. Um título passado como número perdeu os zeros à esquerda, então passe `pad` junto com `obfuscate` nesse caso.",
           "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número).",
-          "- Decisão pendente (findings §2 #2, #3): a referência (JS) formata só os caracteres que um valor incompleto tem e retorna uma string vazia para entrada vazia ou inválida. Outras bibliotecas retornam null."
+          "- Decisão pendente (findings §2 #2, #3): a referência (JS) formata só os caracteres que um valor incompleto tem e retorna uma string vazia para entrada vazia ou inválida. Outras bibliotecas retornam null.",
+          "- Um valor sem dígitos (vazio, ou só letras e símbolos) retorna uma string vazia, mesmo com `pad`. Até a 2.4.0, `pad` retornava a máscara inteira de zeros (`0000 0000 00 00`) para ele.",
+          "- `options.obfuscate` é lido como verdadeiro ou falso: um não booleano como `1` também oculta os dígitos, e `0` não oculta. `options.pad` e `options.obfuscate` podem ser combinados (`123450159` dá `***1 2345 01 **`)."
         ]
       },
       "references": [
@@ -46,7 +50,7 @@
       "level": "core",
       "params": [
         { "name": "value", "type": "string | number" },
-        { "name": "options", "type": "FormatVoterIdOptions", "optional": true }
+        { "name": "options", "type": "FormatVoterIdOptions", "optional": true, "fields": [{ "name": "pad", "type": "boolean", "optional": true }, { "name": "obfuscate", "type": "boolean", "optional": true }] }
       ],
       "returns": "string",
       "tests": [
@@ -91,7 +95,10 @@
         { "args": [123450159, { "obfuscate": true }], "returns": "***4 5015 9", "note": "the mask hides by position: without pad a number that lost its leading zeros shows the wrong digits (the #593 note asks for pad)" },
         { "args": [-123456780124], "returns": "", "note": "changed in 2.5.0 (#593): a negative number is not a safe non-negative integer. 2.4.0 returned \"1234 5678 01 24\". JavaScript's own test: when it is a negative, fractional or unsafe number" },
         { "args": [1.5], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" },
-        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number (2^53)" }
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number (2^53)" },
+        { "args": ["", { "pad": true }], "returns": "", "note": "changed in 2.5.0 (#615): a value with no digits gives an empty string even with pad. 2.4.0 returned 0000 0000 00 00. JavaScript's own test: should return an empty string for a value without digits even when padding" },
+        { "args": ["abc", { "pad": true }], "returns": "", "note": "JavaScript's own test: should return an empty string for a value without digits even when padding" },
+        { "args": ["123456780175"], "returns": "1234 5678 01 75", "note": "JavaScript docs example" }
       ]
     },
     "generate": {
@@ -133,7 +140,9 @@
           "- A 13-digit value is rejected. 2.4.0 accepted a 13-digit SP/MG form with a 9-digit sequential number.",
           "- The TSE drops the leading zeros of the sequential number when it issues the ID. A shorter value is left-padded with zeros to 12 digits before the check: `123450159` is checked as `000123450159`. At least one sequential digit is required, so the shortest accepted value has 5 digits. 2.4.0 rejected these shorter values.",
           "- No official source gives the weights of the check digits or the SP/MG rule that turns a remainder of 0 into 1. They follow community references.",
-          "- Pending decision (findings §2 #1): the reference (JS) accepts whitespace and dots around and between the groups (not hyphens), with a shortened sequential number grouped from the right (`123 4567 01 91`). Other libraries accept digits only."
+          "- Pending decision (findings §2 #1): the reference (JS) accepts whitespace, dots, hyphens and slashes around and between the groups, with a shortened sequential number grouped from the right (`123 4567 01 91`). Until 2.4.0 it accepted whitespace and dots only. Other libraries accept digits only.",
+          "- Mask characters: whitespace, `.`, `-` and `/`, alone or in a run, around and between the `0000 0000 00 00` groups (the same ones `cpf.isValid` reads). Any other character, a letter in particular, makes the value invalid. A separator inside a group is rejected, except between the digits of a sequential number written without its leading zeros, grouped from the right (`123 4567 01 91`).",
+          "- Only a string is read. Any other type returns false."
         ],
         "pt-BR": [
           "Valida um título de eleitor: um número sequencial de 8 dígitos, um código de UF de 2 dígitos (`01` a `28`) e 2 dígitos verificadores por módulo 11, com no máximo 12 dígitos (Resolução TSE nº 23.659/2021, art. 36).",
@@ -141,7 +150,9 @@
           "- Um valor de 13 dígitos é rejeitado. A 2.4.0 aceitava uma forma de 13 dígitos de SP/MG com número sequencial de 9 dígitos.",
           "- O TSE despreza os zeros à esquerda do número sequencial na emissão. Um valor mais curto é completado com zeros à esquerda até 12 dígitos antes da validação: `123450159` é validado como `000123450159`. É preciso ao menos um dígito sequencial, então o menor valor aceito tem 5 dígitos. A 2.4.0 rejeitava esses valores mais curtos.",
           "- Nenhuma fonte oficial dá os pesos dos dígitos verificadores nem a regra de SP/MG que transforma resto 0 em 1. Eles seguem referências da comunidade.",
-          "- Decisão pendente (findings §2 #1): a referência (JS) aceita espaços em branco e pontos antes, depois e entre os grupos (hífens não), com o número sequencial encurtado agrupado a partir da direita (`123 4567 01 91`). Outras bibliotecas aceitam apenas dígitos."
+          "- Decisão pendente (findings §2 #1): a referência (JS) aceita espaços, pontos, hífens e barras em volta e entre os grupos, com o número sequencial encurtado agrupado da direita (`123 4567 01 91`). Até a 2.4.0 aceitava só espaços e pontos. Outras bibliotecas aceitam só dígitos.",
+          "- Caracteres de máscara: espaço em branco, `.`, `-` e `/`, sozinhos ou em sequência, em volta e entre os grupos `0000 0000 00 00` (os mesmos que `cpf.isValid` lê). Qualquer outro caractere, em particular uma letra, torna o valor inválido. Um separador dentro de um grupo é rejeitado, exceto entre os dígitos de um número sequencial escrito sem os zeros à esquerda, agrupado da direita (`123 4567 01 91`).",
+          "- Só uma string é lida. Qualquer outro tipo retorna false."
         ]
       },
       "references": [
@@ -171,7 +182,7 @@
         { "args": ["1234567890345"], "returns": false, "note": "a 13-digit value: still false in 2.5.0, now because a voter ID has at most 12 digits (Resolução TSE nº 23.659/2021, art. 36)" },
         { "args": ["ab102385010671"], "returns": false, "note": "JavaScript's own test: should reject a value with a letter attached to the digits" },
         { "args": ["102385010671ab"], "returns": false, "note": "JavaScript's own test: should reject a value with a letter attached to the digits" },
-        { "args": ["1023-8501-06-71"], "returns": false, "note": "JavaScript's own test: should reject a mask that is not whitespace or a dot" },
+        { "args": ["1023-8501-06-71"], "returns": true, "note": "changed in 2.5.0 (#615): hyphens and slashes are mask characters, like in cpf.isValid. 2.4.0 returned false. JavaScript's own test: should accept the documented mask characters" },
         { "args": ["1023 8501 06 71"], "returns": true, "note": "JavaScript's own test: should accept the documented whitespace and dot masks" },
         { "args": ["1023.8501.06.71"], "returns": true, "note": "JavaScript's own test: should accept the documented whitespace and dot masks" },
         { "args": ["1234 5678 8 01 91"], "returns": false, "note": "changed in 2.5.0 (#593): a voter ID has at most 12 digits (Resolução TSE nº 23.659/2021, art. 36), so a 13-digit value is rejected. 2.4.0 returned true. JavaScript's own test: should reject a 13-digit value, since a voter id has at most 12 digits" },
@@ -198,7 +209,11 @@
         { "args": ["0001.2345.01.59"], "returns": true, "note": "JavaScript's own test: should accept the documented whitespace and dot masks" },
         { "args": ["123 4567 01 91"], "returns": true, "note": "JavaScript's own test: should only accept separators between the groups of a sequential number grouped from the right" },
         { "args": ["1234 567 01 91"], "returns": false, "note": "JavaScript's own test: should only accept separators between the groups of a sequential number grouped from the right" },
-        { "args": ["1234 5678 0 1 91"], "returns": false, "note": "JavaScript's own test: should only accept separators between the groups of a sequential number grouped from the right" }
+        { "args": ["1234 5678 0 1 91"], "returns": false, "note": "JavaScript's own test: should only accept separators between the groups of a sequential number grouped from the right" },
+        { "args": ["1023-8501/06-71"], "returns": true, "note": "JavaScript's own test: should accept the documented mask characters" },
+        { "args": [" 1023  8501 06 71 "], "returns": true, "note": "a run of whitespace around and between the groups is accepted" },
+        { "args": ["1023_8501_06_71"], "returns": false, "note": "an underscore is not a mask character" },
+        { "args": ["1023(8501)0671"], "returns": false, "note": "parentheses are not mask characters" }
       ]
     },
     "parse": {

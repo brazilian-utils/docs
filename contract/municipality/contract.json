@@ -23,7 +23,8 @@
           "- A string has every character that is not a digit removed first, as in 2.4.0: `\"355-030-8\"` and `\"3550308 SP\"` both find São Paulo.",
           "- A negative or fractional number is not read as a code and returns null.",
           "- The result has the code, the name and the state code.",
-          "- Returns null when the digits are not 7 or match no municipality."
+          "- Returns null when the digits are not 7 or match no municipality.",
+          "- JavaScript also keeps `getMunicipality({ code })`, deprecated, which returns a Promise of a `[name, stateCode]` pair (or null) instead of the object."
         ],
         "pt-BR": [
           "Busca um município pelo código IBGE de 7 dígitos.",
@@ -32,7 +33,8 @@
           "- De uma string, todo caractere que não é dígito é removido antes, como na 2.4.0: `\"355-030-8\"` e `\"3550308 SP\"` acham São Paulo.",
           "- Um número negativo ou fracionário não é lido como código e retorna null.",
           "- O resultado tem o código, o nome e a sigla da UF.",
-          "- Retorna null quando os dígitos não são 7 ou não correspondem a nenhum município."
+          "- Retorna null quando os dígitos não são 7 ou não correspondem a nenhum município.",
+          "- O JavaScript ainda mantém `getMunicipality({ code })`, obsoleta, que retorna uma Promise de um par `[name, stateCode]` (ou null) em vez do objeto."
         ]
       },
       "references": ["https://servicodados.ibge.gov.br/api/docs/localidades"],
@@ -66,7 +68,8 @@
           "- Each entry has the 7-digit IBGE code, the name and the state code.",
           "- `stateCode` is matched ignoring case and surrounding whitespace: `\"sp\"` and `\" SP \"` return the 645 municipalities of São Paulo, as `\"SP\"` does. 2.4.0 matched case-sensitively and returned an empty list for `\"sp\"`.",
           "- Only an omitted `stateCode` returns the full list. An empty or unknown code returns an empty list.",
-          "- Each call returns a new array of new objects."
+          "- Each call returns a new array of new objects.",
+          "- JavaScript also keeps `getCities(state)`, deprecated, which returns only the names. It reads any falsy argument as the full list, where `getMunicipalities` returns an empty list for null and an empty string."
         ],
         "pt-BR": [
           "Retorna os municípios publicados pelo IBGE, ordenados por nome (ordenação pt-BR). Retorna todos eles ou os de um estado.",
@@ -74,7 +77,8 @@
           "- Cada item tem o código IBGE de 7 dígitos, o nome e a sigla da UF.",
           "- A comparação de `stateCode` ignora maiúsculas e minúsculas e espaços nas pontas: `\"sp\"` e `\" SP \"` retornam os 645 municípios de São Paulo, como `\"SP\"`. A 2.4.0 diferenciava maiúsculas de minúsculas e retornava uma lista vazia para `\"sp\"`.",
           "- Só a omissão de `stateCode` retorna a lista completa. Um código vazio ou desconhecido retorna uma lista vazia.",
-          "- Cada chamada retorna um array novo com objetos novos."
+          "- Cada chamada retorna um array novo com objetos novos.",
+          "- O JavaScript ainda mantém `getCities(state)`, obsoleta, que retorna só os nomes. Ela lê qualquer argumento falso como a lista completa, enquanto `getMunicipalities` retorna lista vazia para null e string vazia."
         ]
       },
       "references": ["https://servicodados.ibge.gov.br/api/docs/localidades"],
@@ -245,6 +249,69 @@
         { "args": ["DDD"], "returns": [], "note": "JavaScript's own test: should return an empty array for a DDD not in use" },
         { "args": [-11], "returns": [], "note": "JavaScript's own test: should return an empty array for a DDD not in use" },
         { "args": [1.1], "returns": [] }
+      ]
+    },
+    "getCodeByName": {
+      "summary": {
+        "en": "Looks up the 7-digit IBGE code of a municipality by its name and state.",
+        "pt-BR": "Busca o código IBGE de 7 dígitos de um município pelo nome e pelo estado."
+      },
+      "description": {
+        "en": [
+          "Returns the 7-digit IBGE code of a municipality, given its name and the code of its state.",
+          "",
+          "- Takes one object with `municipalityName` and `stateCode`, both required. The same name can belong to municipalities of different states (`Bom Jesus` exists in PI, RS and other states), so the state is required.",
+          "- The name ignores accents, the cedilla and letter case (`ß` reads as `SS`). Runs of whitespace collapse into one space and the surrounding whitespace is trimmed, but a name written without a space the IBGE name has does not match (`saopaulo`). The hyphen of a name is kept.",
+          "- `stateCode` ignores letter case and surrounding whitespace, as every function that takes a state does.",
+          "- Returns the code as a string. Returns null when the state code is not a state, when no municipality of that state has that name, when the name is not a string or is empty, and when the parameters are missing or malformed.",
+          "- The JavaScript function is synchronous and offline: it reads the bundled table of 5,571 municipalities, the same as `municipality.getByCode`. The Python function of the same name (`get_code_by_municipality_name(municipality_name, uf)`) asks the IBGE API over the network.",
+          "- JavaScript also keeps `getMunicipality({ municipalityName, uf })`, deprecated, which answers the same way and returns a Promise."
+        ],
+        "pt-BR": [
+          "Retorna o código IBGE de 7 dígitos de um município, dados o nome e o código do estado.",
+          "",
+          "- Recebe um objeto com `municipalityName` e `stateCode`, os dois obrigatórios. O mesmo nome pode pertencer a municípios de estados diferentes (`Bom Jesus` existe em PI, RS e outros estados), então o estado é obrigatório.",
+          "- O nome ignora acentos, cedilha e diferença entre maiúsculas e minúsculas (`ß` é lido como `SS`). Sequências de espaços em branco viram um espaço e os espaços das pontas são removidos, mas um nome escrito sem um espaço que o nome do IBGE tem não casa (`saopaulo`). O hífen do nome é mantido.",
+          "- `stateCode` ignora maiúsculas e minúsculas e os espaços das pontas, como toda função que recebe um estado.",
+          "- Retorna o código como string. Retorna null quando o código do estado não é um estado, quando nenhum município desse estado tem esse nome, quando o nome não é string ou está vazio, e quando os parâmetros estão ausentes ou malformados.",
+          "- A função JavaScript é síncrona e offline: lê a tabela embutida de 5.571 municípios, a mesma de `municipality.getByCode`. A função Python de mesmo nome (`get_code_by_municipality_name(municipality_name, uf)`) consulta a API do IBGE pela rede.",
+          "- O JavaScript ainda mantém `getMunicipality({ municipalityName, uf })`, obsoleta, que responde igual e retorna uma Promise."
+        ]
+      },
+      "references": [
+        "https://servicodados.ibge.gov.br/api/docs/localidades",
+        "https://geoftp.ibge.gov.br/organizacao_do_territorio/estrutura_territorial/divisao_territorial/2025/DTB_2025.zip"
+      ],
+      "flatName": "getCodeByMunicipalityName",
+      "level": "core",
+      "params": [
+        { "name": "params", "type": "GetCodeByMunicipalityNameParams", "fields": [{ "name": "municipalityName", "type": "string" }, { "name": "stateCode", "type": "string" }] }
+      ],
+      "returns": "string?",
+      "tests": [
+        { "args": [{ "municipalityName": "Conceição do Coité", "stateCode": "Ba" }], "returns": "2908408", "note": "JavaScript docs example; JavaScript's own test: should return the code of Conceição do Coité, as the Python library's example does" },
+        { "args": [{ "municipalityName": "conceicao do coite", "stateCode": "BA" }], "returns": "2908408", "note": "JavaScript's own test: should ignore accents, the cedilla and casing in the name" },
+        { "args": [{ "municipalityName": "CONCEIÇÃO DO COITÉ", "stateCode": "BA" }], "returns": "2908408", "note": "JavaScript's own test: should ignore accents, the cedilla and casing in the name" },
+        { "args": [{ "municipalityName": "São Paulo", "stateCode": "SP" }], "returns": "3550308", "note": "JavaScript's own test: should ignore accents, the cedilla and casing in the name" },
+        { "args": [{ "municipalityName": "sao paulo", "stateCode": "sp" }], "returns": "3550308", "note": "JavaScript docs example" },
+        { "args": [{ "municipalityName": "  sao  paulo ", "stateCode": "SP" }], "returns": "3550308", "note": "JavaScript's own test: should collapse runs of whitespace and trim the name, but not join words" },
+        { "args": [{ "municipalityName": "sao\tpaulo", "stateCode": "SP" }], "returns": "3550308", "note": "JavaScript's own test: should collapse runs of whitespace and trim the name, but not join words" },
+        { "args": [{ "municipalityName": "saopaulo", "stateCode": "SP" }], "returns": null, "note": "JavaScript's own test: should collapse runs of whitespace and trim the name, but not join words" },
+        { "args": [{ "municipalityName": "Ceara-Mirim", "stateCode": "RN" }], "returns": "2402600", "note": "JavaScript's own test: should keep the hyphen of a name" },
+        { "args": [{ "municipalityName": "Paßos", "stateCode": "MG" }], "returns": "3147907", "note": "JavaScript's own test: should fold the casing to upper case, so ß reads as SS" },
+        { "args": [{ "municipalityName": "São Paulo", "stateCode": " Sp " }], "returns": "3550308", "note": "JavaScript's own test: should ignore casing and surrounding whitespace in the state code" },
+        { "args": [{ "municipalityName": "Bom Jesus", "stateCode": "PI" }], "returns": "2201903", "note": "JavaScript's own test: should tell apart municipalities of the same name in different states" },
+        { "args": [{ "municipalityName": "Bom Jesus", "stateCode": "RS" }], "returns": "4302303", "note": "JavaScript docs example; JavaScript's own test: should tell apart municipalities of the same name in different states" },
+        { "args": [{ "municipalityName": "São Paulo", "stateCode": "RJ" }], "returns": null, "note": "JavaScript docs example: no São Paulo in Rio de Janeiro" },
+        { "args": [{ "municipalityName": "Município Inexistente", "stateCode": "RS" }], "returns": null, "note": "JavaScript docs example" },
+        { "args": [{ "municipalityName": "São Paulo", "stateCode": "XX" }], "returns": null, "note": "JavaScript's own test: should return null for a state code that is not a state" },
+        { "args": [{ "municipalityName": "São Paulo", "stateCode": "" }], "returns": null, "note": "JavaScript's own test: should return null for a state code that is not a state" },
+        { "args": [{ "municipalityName": "São Paulo", "stateCode": "SPX" }], "returns": null, "note": "JavaScript's own test: should return null for a state code that is not a state" },
+        { "args": [{ "municipalityName": "", "stateCode": "SP" }], "returns": null, "note": "JavaScript's own test: should return null for an empty name" },
+        { "args": [{ "municipalityName": "   ", "stateCode": "SP" }], "returns": null, "note": "JavaScript's own test: should return null for an empty name" },
+        { "args": [{ "municipalityName": null, "stateCode": "SP" }], "returns": null, "note": "JavaScript's own test: should return null for arguments that are not strings" },
+        { "args": [{ "municipalityName": "São Paulo", "stateCode": null }], "returns": null, "note": "JavaScript's own test: should return null for arguments that are not strings" },
+        { "args": [{ "municipalityName": "São Paulo", "stateCode": 35 }], "returns": null, "note": "JavaScript's own test: should return null for arguments that are not strings" }
       ]
     }
   }

@@ -105,6 +105,8 @@
           "- Accepts a string of bare digits, with optional surrounding whitespace, or a non-negative integer. A value shorter than 6 digits is left-padded with zeros: `1` and `\"1\"` are the code `000001`.",
           "- Any other string is rejected (`\"c200001\"`, `\"200.001\"`). A negative or fractional number is invalid.",
           "- The first 3 digits of a cClassTrib are its CST-IBS/CBS. `options.cst` checks the pair, as NF-e rejection 1024 does. It is read like `cstIbsCbs.isValid` reads a code. A `cst` that is given and does not match makes the result false, whatever its value.",
+          "- `options.cst` is optional. An `undefined` or omitted `cst` checks the cClassTrib alone. A `cst` that is `null`, empty or not written as a code (`\"\"`, `\"200001\"`, `-200`) makes the result false. It is padded to 3 digits (`0` and `\"000\"` are the same CST).",
+          "- A null or non-object `options` is read as no options, so the cClassTrib is checked alone. Until 2.4.0 a null or non-object `options` made the result false.",
           "- Only classifications in force count (`dIniVig <= today <= dFimVig`). 220001, 220002 and 220003 were closed on 2026-01-01 and are invalid. CST 220 itself stays valid in `cstIbsCbs.isValid`.",
           "- The table published on 2026-06-23 has 164 classifications, 161 of them in force. It is updated every week, and a result can change without a new spreadsheet because the validity filter depends on the date."
         ],
@@ -114,6 +116,8 @@
           "- Aceita uma string só de dígitos, com espaços opcionais nas extremidades, ou um inteiro não negativo. Um valor com menos de 6 dígitos é completado com zeros à esquerda: `1` e `\"1\"` são o código `000001`.",
           "- Qualquer outra string é rejeitada (`\"c200001\"`, `\"200.001\"`). Um número negativo ou fracionário é inválido.",
           "- Os 3 primeiros dígitos do cClassTrib são o seu CST-IBS/CBS. `options.cst` verifica o par, como a rejeição 1024 da NF-e. Ele é lido como `cstIbsCbs.isValid` lê um código. Um `cst` informado que não bate torna o resultado false, qualquer que seja o valor.",
+          "- `options.cst` é opcional. Um `cst` `undefined` ou omitido verifica só o cClassTrib. Um `cst` `null`, vazio ou que não esteja escrito como código (`\"\"`, `\"200001\"`, `-200`) torna o resultado false. Ele é completado com zeros até 3 dígitos (`0` e `\"000\"` são o mesmo CST).",
+          "- Um `options` nulo ou que não seja objeto é lido como sem opções, então só o cClassTrib é verificado. Até a 2.4.0 um `options` nulo ou que não fosse objeto tornava o resultado false.",
           "- Só contam as classificações vigentes (`dIniVig <= hoje <= dFimVig`). 220001, 220002 e 220003 foram encerradas em 01/01/2026 e são inválidas. O CST 220 continua válido em `cstIbsCbs.isValid`.",
           "- A tabela publicada em 23/06/2026 tem 164 classificações, 161 delas vigentes. Ela é atualizada toda semana, e um resultado pode mudar sem nova planilha, porque o filtro de vigência depende da data."
         ]
@@ -127,7 +131,7 @@
       ],
       "params": [
         { "name": "value", "type": "string | number" },
-        { "name": "options", "type": "IsValidClassTribOptions", "optional": true }
+        { "name": "options", "type": "IsValidClassTribOptions", "optional": true, "fields": [{ "name": "cst", "type": "string | number", "optional": true }] }
       ],
       "returns": "boolean",
       "tests": [
@@ -163,7 +167,12 @@
         { "args": ["200001", { "cst": "200001" }], "returns": false, "note": "JavaScript's own test: should reject a CST that is not written as a code" },
         { "args": ["200001", { "cst": -200 }], "returns": false, "note": "JavaScript's own test: should reject a CST that is not written as a code" },
         { "args": ["200001", {}], "returns": true, "note": "JavaScript's own test: should check the cClassTrib alone when the CST is omitted" },
-        { "args": ["999999", {}], "returns": false, "note": "JavaScript's own test: should check the cClassTrib alone when the CST is omitted" }
+        { "args": ["999999", {}], "returns": false, "note": "JavaScript's own test: should check the cClassTrib alone when the CST is omitted" },
+        { "args": ["200001", null], "returns": true, "note": "changed in 2.5.0 (#615): a null options is read as none (2.4.0: false). JavaScript's own test: should read null or a non-object options value as none, checking the cClassTrib alone" },
+        { "args": ["999999", null], "returns": false, "note": "JavaScript's own test: should read null or a non-object options value as none, checking the cClassTrib alone" },
+        { "args": ["200001", "foo"], "returns": true, "note": "JavaScript's own test: should read null or a non-object options value as none, checking the cClassTrib alone" },
+        { "args": ["200001", { "cst": null }], "returns": false, "note": "JavaScript's own test: should reject a CST that is not a string or a number" },
+        { "args": ["200001", { "cst": "000" }], "returns": false, "note": "JavaScript docs example: the classification belongs to CST 200" }
       ]
     }
   }

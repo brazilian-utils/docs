@@ -24,7 +24,7 @@ Vehicle license plates are the front and rear plates fixed to a vehicle. A plate
 
 ## Algorithm
 
-1. Remove the whitespace at the start and at the end, and one hyphen or space between the letters and the digits.
+1. Remove the whitespace at the start and at the end, and the mask characters (whitespace, `.`, `-` or `/`, alone or in a run) between the third character and the last four. A mask character anywhere else, or any other character, makes the plate invalid.
 2. Check that 7 characters remain.
 3. Check that all characters are alphanumeric.
 4. Check that the input follows one of the valid patterns:
@@ -34,7 +34,7 @@ Vehicle license plates are the front and rear plates fixed to a vehicle. A plate
 
 ## Regex
 
-- Raw input: `^[A-Za-z0-9 -]{1,}$`
+- Raw input (the mask sits between the third character and the last four): `^[A-Za-z]{3}[\s.\-/]*[0-9A-Za-z]{4}$`
 - Characters only (pre-Mercosul or Mercosul pattern): `^(?:[A-Z]{3}[0-9]{4}|[A-Z]{3}[0-9][A-Z][0-9]{2})$`
 
 ## Examples

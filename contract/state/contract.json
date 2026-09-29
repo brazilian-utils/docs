@@ -237,17 +237,25 @@
         "en": [
           "Returns the IANA time zone (tzdata zone) of a state: the zone of its capital, such as `America/Sao_Paulo`.",
           "",
+          "- Some states straddle more than one zone, and the capital's zone says nothing about the rest. The west of Amazonas (`America/Eirunepe`, UTC-5) and the west of Pará (`America/Santarem`, UTC-3) are not represented, and Fernando de Noronha (`America/Noronha`, UTC-2), a district of Pernambuco, resolves as Recife (`America/Recife`, UTC-3).",
+          "- The offsets follow the capitals: Acre UTC-5; Amazonas, Roraima, Rondônia, Mato Grosso and Mato Grosso do Sul UTC-4; the other states UTC-3. One tzdata zone can serve several states (`America/Sao_Paulo` also covers DF, GO, MG, ES, RJ, PR, SC and RS).",
           "- The match ignores case and surrounding whitespace.",
           "- Returns null when no state matches."
         ],
         "pt-BR": [
           "Retorna o fuso horário IANA (zona tzdata) de um estado: a zona da capital, por exemplo `America/Sao_Paulo`.",
           "",
+          "- Alguns estados atravessam mais de um fuso, e o fuso da capital não diz nada sobre o resto. O oeste do Amazonas (`America/Eirunepe`, UTC-5) e o oeste do Pará (`America/Santarem`, UTC-3) não são representados, e Fernando de Noronha (`America/Noronha`, UTC-2), um distrito de Pernambuco, resolve como Recife (`America/Recife`, UTC-3).",
+          "- Os deslocamentos seguem as capitais: Acre UTC-5; Amazonas, Roraima, Rondônia, Mato Grosso e Mato Grosso do Sul UTC-4; os outros estados UTC-3. Um mesmo fuso do tzdata pode servir vários estados (`America/Sao_Paulo` também cobre DF, GO, MG, ES, RJ, PR, SC e RS).",
           "- A comparação ignora maiúsculas e minúsculas e espaços nas pontas.",
           "- Retorna null quando nenhum estado corresponde."
         ]
       },
-      "references": ["https://www.iana.org/time-zones"],
+      "references": [
+        "https://www.iana.org/time-zones",
+        "https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2013/lei/l12876.htm",
+        "https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2013/decreto/d8112.htm"
+      ],
       "flatName": "getTimezoneByState",
       "params": [{ "name": "stateCode", "type": "string" }],
       "returns": "string?",
@@ -285,7 +293,8 @@
         { "args": ["TO"], "returns": "America/Araguaina", "note": "JavaScript's own test: should return America/Araguaina for TO" },
         { "args": ["constructor"], "returns": null, "note": "JavaScript's own test: should return null for names inherited from Object.prototype" },
         { "args": ["toString"], "returns": null, "note": "JavaScript's own test: should return null for names inherited from Object.prototype" },
-        { "args": ["__proto__"], "returns": null, "note": "JavaScript's own test: should return null for names inherited from Object.prototype" }
+        { "args": ["__proto__"], "returns": null, "note": "JavaScript's own test: should return null for names inherited from Object.prototype" },
+        { "args": ["am"], "returns": "America/Manaus", "note": "JavaScript docs example" }
       ]
     },
     "list": {

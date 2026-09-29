@@ -23,6 +23,7 @@
           "- No authority publishes a masking rule for the PIS. The rule is an analogy with the one the Leis de Diretrizes Orçamentárias set for publishing a CPF (\"ocultar os três primeiros dígitos e os dois dígitos verificadores\", Lei nº 12.309/2010, art. 87, § 5º, repeated up to the LDO 2026, Lei nº 15.321/2025, art. 163), not a published norm.",
           "- `cns.format` and `passport.format` have no `obfuscate` option.",
           "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number).",
+          "- A value with no digits (empty, or only letters and symbols) returns an empty string even with `options.pad`. Until 2.4.0 `pad` returned the full zero mask (`000.00000.00-0`).",
           "- Pending decision (findings §2 #2, #3): the reference (JS) formats only the characters an incomplete value has and returns an empty string for empty or invalid input. Other libraries return null."
         ],
         "pt-BR": [
@@ -33,6 +34,7 @@
           "- Nenhuma autoridade publica uma regra de mascaramento para o PIS. A regra é uma analogia com a que as Leis de Diretrizes Orçamentárias fixam para publicar um CPF (\"ocultar os três primeiros dígitos e os dois dígitos verificadores\", Lei nº 12.309/2010, art. 87, § 5º, repetida até a LDO 2026, Lei nº 15.321/2025, art. 163), não uma norma publicada.",
           "- `cns.format` e `passport.format` não têm a opção `obfuscate`.",
           "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número).",
+          "- Um valor sem dígitos (vazio, ou só letras e símbolos) retorna uma string vazia mesmo com `options.pad`. Até a 2.4.0, `pad` retornava a máscara inteira de zeros (`000.00000.00-0`).",
           "- Decisão pendente (findings §2 #2, #3): a referência (JS) formata só os caracteres que um valor incompleto tem e retorna uma string vazia para entrada vazia ou inválida. Outras bibliotecas retornam null."
         ]
       },
@@ -46,7 +48,7 @@
       "level": "core",
       "params": [
         { "name": "value", "type": "string | number" },
-        { "name": "options", "type": "FormatPisOptions", "optional": true }
+        { "name": "options", "type": "FormatPisOptions", "optional": true, "fields": [{ "name": "pad", "type": "boolean", "optional": true }, { "name": "obfuscate", "type": "boolean", "optional": true }] }
       ],
       "returns": "string",
       "tests": [
@@ -115,7 +117,11 @@
         { "args": [-12345678901], "returns": "", "note": "changed in 2.5.0 (#593): a negative number is not a safe non-negative integer. 2.4.0 returned \"123.45678.90-1\"" },
         { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number (2^53)" },
         { "args": [100.1, { "pad": true }], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" },
-        { "args": [100.1, { "obfuscate": true }], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" }
+        { "args": [100.1, { "obfuscate": true }], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": ["", { "pad": true }], "returns": "", "note": "JavaScript's own test: should return an empty string for a value without digits even when padding" },
+        { "args": ["abc", { "pad": true }], "returns": "", "note": "JavaScript's own test: should return an empty string for a value without digits even when padding" },
+        { "args": ["12345678901"], "returns": "123.45678.90-1", "note": "JavaScript docs example" },
+        { "args": ["123456789", { "pad": true }], "returns": "001.23456.78-9", "note": "JavaScript docs example" }
       ]
     },
     "generate": {

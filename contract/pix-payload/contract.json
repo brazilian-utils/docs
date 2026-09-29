@@ -19,20 +19,26 @@
         "en": [
           "Generates a Pix BR Code payload. Give exactly one of a key (static) or a PSP URL (dynamic), otherwise the function returns null.",
           "",
-          "- `params` carries the key or URL, the merchant name and city, and optionally the amount, the txid and a description.",
+          "- `params` (`GeneratePixPayloadParams`): `key` or `url` (exactly one), `merchantName` and `merchantCity` (required), and the optional `amount`, `txid` and `description`. A value that is not an object gives null.",
+          "- `url` is the PSP location of a dynamic payload (field 26-25): host and path, no scheme (`pix.example.com/qr/v2/1234`), at most 77 characters, with a dot in the host and no whitespace. A URL with a scheme (`https://...`), an empty or non-string `url` gives null.",
+          "- `merchantName` and `merchantCity` are required: null when either is missing, blank or empty after folding. They are folded to printable ASCII (accents dropped), truncated to 25 and 15 characters, and trimmed after the truncation.",
           "- The function normalizes a key as `pixKey.getInfo` does. A URL makes the payload dynamic (Point of Initiation `12`) and cannot carry an amount or txid. The URL is host and path without scheme, at most 77 characters.",
           "- The amount has two decimal places. The function rejects a value with more, or one that rounds to 0.00. The txid is 1 to 25 alphanumerics (default `***`).",
           "- Merchant name, city and description lose their accents. The function truncates them to 25, 15 and what the template has left.",
-          "- Every payload the function returns is one `pixPayload.isValid` accepts: the key in its DICT form, the 62-05 txid always written, the name and city within their limits and an amount greater than zero. An email key follows the DICT pattern, so a key with `&` gives null."
+          "- Every payload the function returns is one `pixPayload.isValid` accepts: the key in its DICT form, the 62-05 txid always written, the name and city within their limits and an amount greater than zero. An email key follows the DICT pattern, so a key with `&` gives null.",
+          "- An `amount` that does not survive two decimal places (`0.005`, `123.456`), is zero, negative, not finite or longer than 13 characters once written (`9999999999.99` is the largest) gives null. A `txid` outside 1 to 25 letters and digits gives null. With `url`, an `amount` or a `txid` gives null. `description` is written in field 26-02, in whatever room is left of the 99 characters of the template, and dropped when nothing is left."
         ],
         "pt-BR": [
           "Gera o payload de um BR Code Pix. Informe exatamente um entre uma chave (estático) ou uma URL do PSP (dinâmico). Caso contrário, a função retorna null.",
           "",
-          "- `params` traz a chave ou a URL, o nome e a cidade do recebedor e, opcionalmente, o valor, o txid e uma descrição.",
+          "- `params` (`GeneratePixPayloadParams`): `key` ou `url` (exatamente um), `merchantName` e `merchantCity` (obrigatórios) e, opcionalmente, `amount`, `txid` e `description`. Um valor que não é objeto dá null.",
+          "- `url` é a location do PSP de um payload dinâmico (campo 26-25): host e caminho, sem esquema (`pix.example.com/qr/v2/1234`), com no máximo 77 caracteres, com um ponto no host e sem espaço em branco. Uma URL com esquema (`https://...`), ou uma `url` vazia ou que não é string, dá null.",
+          "- `merchantName` e `merchantCity` são obrigatórios: null quando um deles falta, está em branco ou fica vazio após a redução. Eles são reduzidos a ASCII imprimível (sem acentos), truncados em 25 e 15 caracteres e aparados depois do truncamento.",
           "- A função normaliza a chave como `pixKey.getInfo` faz. Uma URL torna o payload dinâmico (Point of Initiation `12`) e não pode trazer valor nem txid. A URL é host e caminho sem esquema, com no máximo 77 caracteres.",
           "- O valor tem duas casas decimais. A função rejeita um valor com mais casas ou que arredonde para 0.00. O txid tem de 1 a 25 caracteres alfanuméricos (padrão `***`).",
           "- Nome do recebedor, cidade e descrição perdem os acentos. A função os trunca em 25, 15 e o espaço que resta no template.",
-          "- Todo payload que a função retorna é aceito por `pixPayload.isValid`: a chave na forma do DICT, o txid 62-05 sempre escrito, nome e cidade dentro dos limites e um valor maior que zero. Uma chave de e-mail segue o padrão do DICT, então uma chave com `&` dá null."
+          "- Todo payload que a função retorna é aceito por `pixPayload.isValid`: a chave na forma do DICT, o txid 62-05 sempre escrito, nome e cidade dentro dos limites e um valor maior que zero. Uma chave de e-mail segue o padrão do DICT, então uma chave com `&` dá null.",
+          "- Um `amount` que não sobrevive a duas casas decimais (`0.005`, `123.456`), que é zero, negativo, não finito ou maior que 13 caracteres depois de escrito (`9999999999.99` é o maior) dá null. Um `txid` fora de 1 a 25 letras e dígitos dá null. Com `url`, um `amount` ou um `txid` dá null. A `description` é escrita no campo 26-02, no espaço que sobra dos 99 caracteres do template, e é descartada quando não sobra nada."
         ]
       },
       "references": [
@@ -42,7 +48,21 @@
         "https://www.bcb.gov.br/content/estabilidadefinanceira/pix/API-DICT.html",
         "https://www.emvco.com/terms-of-use/?u=/wp-content/uploads/documents/EMVCo-Merchant-Presented-QR-Specification-v1-1.pdf"
       ],
-      "params": [{ "name": "params", "type": "GeneratePixPayloadParams" }],
+      "params": [
+        {
+          "name": "params",
+          "type": "GeneratePixPayloadParams",
+          "fields": [
+            { "name": "key", "type": "string", "optional": true },
+            { "name": "url", "type": "string", "optional": true },
+            { "name": "merchantName", "type": "string" },
+            { "name": "merchantCity", "type": "string" },
+            { "name": "amount", "type": "number", "optional": true },
+            { "name": "txid", "type": "string", "optional": true },
+            { "name": "description", "type": "string", "optional": true }
+          ]
+        }
+      ],
       "returns": "string?",
       "tests": [
         { "args": [{ "key": "11257245286", "merchantName": "Fulano", "merchantCity": "Brasilia" }], "returns": null, "note": "JavaScript's own test: should return null when the key is invalid" },
@@ -58,7 +78,60 @@
         { "args": [{ "key": "123e4567-e12b-12d1-a456-426655440000", "merchantName": "Fulano de Tal", "merchantCity": "BRASILIA" }], "returns": "00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-4266554400005204000053039865802BR5913Fulano de Tal6008BRASILIA62070503***63041D3D", "note": "JavaScript's own test: should generate a valid payload matching the static example of the Bacen manual" },
         { "args": [{ "key": "a&b@example.com", "merchantName": "Fulano", "merchantCity": "Brasilia" }], "returns": null, "note": "from the maintainer briefing, #593: an e-mail key with & is not a key (DICT API 2.12.1)" },
         { "args": [{ "key": "a{b}@example.com", "merchantName": "Fulano", "merchantCity": "Brasilia" }], "returns": "00020126380014br.gov.bcb.pix0116a{b}@example.com5204000053039865802BR5906Fulano6008Brasilia62070503***63049AB3", "note": "changed in 2.5.0 (#593): an e-mail key only the DICT pattern accepts" },
-        { "name": "generated-is-valid", "args": [{ "key": "12345678909", "merchantName": "Fulano de Tal", "merchantCity": "BRASILIA", "amount": 10.5, "txid": "PEDIDO42" }], "satisfies": "pixPayload.isValid", "note": "every generated payload must pass the lib's own validator" }
+        { "name": "generated-is-valid", "args": [{ "key": "12345678909", "merchantName": "Fulano de Tal", "merchantCity": "BRASILIA", "amount": 10.5, "txid": "PEDIDO42" }], "satisfies": "pixPayload.isValid", "note": "every generated payload must pass the lib's own validator" },
+        { "args": [{ "key": "123.456.789-09", "merchantName": "Fulano de Tal", "merchantCity": "Brasília", "amount": 123.45 }], "returns": "00020126330014br.gov.bcb.pix0111123456789095204000053039865406123.455802BR5913Fulano de Tal6008Brasilia62070503***630479EE", "note": "JavaScript docs example" },
+        { "args": [{ "url": "pix.example.com/qr/v2/1234", "merchantName": "Fulano de Tal", "merchantCity": "Brasília" }], "returns": "00020101021226480014br.gov.bcb.pix2526pix.example.com/qr/v2/12345204000053039865802BR5913Fulano de Tal6008Brasilia62070503***6304FC66", "note": "JavaScript docs example" },
+        { "args": [{ "merchantName": "Fulano", "merchantCity": "Brasília" }], "returns": null, "note": "JavaScript docs example (neither key nor url)" },
+        { "args": [{ "key": "123.456.789-09", "url": "pix.example.com/qr/v2/1234", "merchantName": "Fulano", "merchantCity": "Brasília" }], "returns": null, "note": "JavaScript docs example (both key and url)" },
+        {
+          "args": [
+            {
+              "key": "71c7d9be-4b85-4e43-9f1c-1f3b8b4e9a2d",
+              "merchantName": "João da Silva Sauro Júnior Segundo",
+              "merchantCity": "São José dos Campos do Sul"
+            }
+          ],
+          "returns": "00020126580014br.gov.bcb.pix013671c7d9be-4b85-4e43-9f1c-1f3b8b4e9a2d5204000053039865802BR5925Joao da Silva Sauro Junio6015Sao Jose dos Ca62070503***63047E1C",
+          "note": "JavaScript's own test: truncating the merchant name to 25 characters and the city to 15, after folding the accents"
+        },
+        { "args": [{ "key": "71c7d9be-4b85-4e43-9f1c-1f3b8b4e9a2d", "merchantName": "Ação Ñandú", "merchantCity": "Brasília" }], "returns": "00020126580014br.gov.bcb.pix013671c7d9be-4b85-4e43-9f1c-1f3b8b4e9a2d5204000053039865802BR5910Acao Nandu6008Brasilia62070503***630495AE", "note": "JavaScript's own test: folding accents out of the merchant name and city" },
+        { "args": [{ "key": "71c7d9be-4b85-4e43-9f1c-1f3b8b4e9a2d", "merchantName": "Fulano", "merchantCity": "Brasília", "amount": 0.005 }], "returns": null, "note": "JavaScript's own test: when the amount rounds to 0.00" },
+        { "args": [{ "key": "71c7d9be-4b85-4e43-9f1c-1f3b8b4e9a2d", "merchantName": "Fulano", "merchantCity": "Brasília", "amount": 123.456 }], "returns": null, "note": "JavaScript's own test: when the amount has more than two decimal places, since writing it would change the sum asked for" },
+        { "args": [{ "key": "71c7d9be-4b85-4e43-9f1c-1f3b8b4e9a2d", "merchantName": "Fulano", "merchantCity": "Brasília", "amount": 0 }], "returns": null, "note": "JavaScript's own test: when the amount is not a positive finite number" },
+        { "args": [{ "key": "71c7d9be-4b85-4e43-9f1c-1f3b8b4e9a2d", "merchantName": "Fulano", "merchantCity": "Brasília", "amount": -5 }], "returns": null, "note": "JavaScript's own test: when the amount is not a positive finite number" },
+        { "args": [{ "key": "71c7d9be-4b85-4e43-9f1c-1f3b8b4e9a2d", "merchantName": "Fulano", "merchantCity": "Brasília", "amount": 10.5, "txid": "PEDIDO42" }], "returns": "00020126580014br.gov.bcb.pix013671c7d9be-4b85-4e43-9f1c-1f3b8b4e9a2d520400005303986540510.505802BR5906Fulano6008Brasilia62120508PEDIDO42630418B1", "note": "JavaScript's own test: with the txid when it is given" },
+        { "args": [{ "key": "71c7d9be-4b85-4e43-9f1c-1f3b8b4e9a2d", "merchantName": "Fulano", "merchantCity": "Brasília", "txid": "PED-42" }], "returns": null, "note": "JavaScript's own test: when the txid is not alphanumeric or is too long" },
+        { "args": [{ "key": "71c7d9be-4b85-4e43-9f1c-1f3b8b4e9a2d", "merchantName": "Fulano", "merchantCity": "Brasília", "txid": "AAAAAAAAAAAAAAAAAAAAAAAAAA" }], "returns": null, "note": "JavaScript's own test: when the txid is not alphanumeric or is too long" },
+        { "args": [{ "key": "71c7d9be-4b85-4e43-9f1c-1f3b8b4e9a2d", "merchantName": "Fulano", "merchantCity": "Brasília", "txid": "AAAAAAAAAAAAAAAAAAAAAAAAA" }], "returns": "00020126580014br.gov.bcb.pix013671c7d9be-4b85-4e43-9f1c-1f3b8b4e9a2d5204000053039865802BR5906Fulano6008Brasilia62290525AAAAAAAAAAAAAAAAAAAAAAAAA6304F4F8", "note": "a txid of exactly 25 characters is accepted" },
+        { "args": [{ "key": "71c7d9be-4b85-4e43-9f1c-1f3b8b4e9a2d", "merchantName": "Fulano", "merchantCity": "Brasília", "description": "Pagamento do pedido" }], "returns": "00020126810014br.gov.bcb.pix013671c7d9be-4b85-4e43-9f1c-1f3b8b4e9a2d0219Pagamento do pedido5204000053039865802BR5906Fulano6008Brasilia62070503***6304B302", "note": "the description goes in 26-02" },
+        {
+          "args": [
+            {
+              "key": "71c7d9be-4b85-4e43-9f1c-1f3b8b4e9a2d",
+              "merchantName": "Fulano",
+              "merchantCity": "Brasília",
+              "amount": 0.30000000000000004
+            }
+          ],
+          "returns": "00020126580014br.gov.bcb.pix013671c7d9be-4b85-4e43-9f1c-1f3b8b4e9a2d52040000530398654040.305802BR5906Fulano6008Brasilia62070503***6304964E",
+          "note": "JavaScript's own test: with an amount whose binary representation is not exact, as 0.1 + 0.2 is"
+        },
+        { "args": [{ "url": "pix.example.com/qr/v2/1234", "merchantName": "Fulano", "merchantCity": "Brasília", "amount": 1 }], "returns": null, "note": "JavaScript's own test: when a dynamic payload (url) also carries an amount or a txid" },
+        { "args": [{ "url": "https://pix.example.com/qr/v2/1234", "merchantName": "Fulano", "merchantCity": "Brasília" }], "returns": null, "note": "JavaScript's own test: when url is not a PSP location: scheme" },
+        {
+          "args": [
+            {
+              "url": "pix.example.com/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "merchantName": "Fulano",
+              "merchantCity": "Brasília"
+            }
+          ],
+          "returns": "00020101021226990014br.gov.bcb.pix2577pix.example.com/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa5204000053039865802BR5906Fulano6008Brasilia62070503***63041C95",
+          "note": "JavaScript's own test: accepting a url of exactly 77 characters"
+        },
+        { "args": [{ "url": "pix.example.com/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "merchantName": "Fulano", "merchantCity": "Brasília" }], "returns": null, "note": "JavaScript's own test: when url is longer than 77 characters" },
+        { "args": [{ "key": "71c7d9be-4b85-4e43-9f1c-1f3b8b4e9a2d", "merchantName": "Fulano", "merchantCity": "" }], "returns": null, "note": "JavaScript's own test: when the merchant city is missing or empty after folding" },
+        { "args": [{ "key": "71c7d9be-4b85-4e43-9f1c-1f3b8b4e9a2d", "merchantName": "Fulano", "merchantCity": "Brasília", "amount": 99999999999.99 }], "returns": null, "note": "JavaScript's own test: when the amount does not fit in 13 characters" }
       ]
     },
     "getInfo": {
@@ -73,7 +146,8 @@
           "- Fields: merchant name and city, point of initiation (dynamic when there is a PSP location or object `01` is `12`, static otherwise) and either the key (static) or the URL (dynamic).",
           "- Amount, txid, description and the withdrawal facilitator of a Pix Saque are present only when the payload carries them. The `***` txid marker means no txid.",
           "- With a PSP location, the function leaves out the amount and the txid, as §2.7 of the manual requires (\"Se preenchidos, seu conteúdo deve ser ignorado\").",
-          "- Every rule of `pixPayload.isValid` applies, so a payload without object `62`, with a static txid outside 1 to 25 letters and digits, or with a key not in its DICT form gives null. 2.4.0 parsed those payloads."
+          "- Every rule of `pixPayload.isValid` applies, so a payload without object `62`, with a static txid outside 1 to 25 letters and digits, or with a key not in its DICT form gives null. 2.4.0 parsed those payloads.",
+          "- A repeated object ID, a CRC that is not the last top-level object and every other rule of `pixPayload.isValid` give null, so the payload is never partly read. A value that is not a string gives null."
         ],
         "pt-BR": [
           "Decompõe o payload de um BR Code Pix em seus campos. Retorna null exatamente quando `pixPayload.isValid` retorna false, nunca um resultado parcial.",
@@ -81,7 +155,8 @@
           "- Campos: nome e cidade do recebedor, point of initiation (dinâmico quando há uma location do PSP ou o objeto `01` é `12`, estático nos outros casos) e a chave (estático) ou a URL (dinâmico).",
           "- Valor, txid, descrição e o facilitador de saque de um Pix Saque só aparecem quando o payload os traz. O marcador de txid `***` significa sem txid.",
           "- Com uma location do PSP, a função deixa de fora o valor e o txid, como o §2.7 do manual exige (\"Se preenchidos, seu conteúdo deve ser ignorado\").",
-          "- Todas as regras de `pixPayload.isValid` valem, então um payload sem o objeto `62`, com txid estático fora de 1 a 25 letras e dígitos ou com chave fora da forma do DICT dá null. A 2.4.0 decompunha esses payloads."
+          "- Todas as regras de `pixPayload.isValid` valem, então um payload sem o objeto `62`, com txid estático fora de 1 a 25 letras e dígitos ou com chave fora da forma do DICT dá null. A 2.4.0 decompunha esses payloads.",
+          "- Um ID de objeto repetido, um CRC que não é o último objeto de nível superior e toda outra regra de `pixPayload.isValid` dão null, então o payload nunca é lido em parte. Um valor que não é string dá null."
         ]
       },
       "references": [
@@ -264,7 +339,11 @@
         { "args": ["00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-4266554400005204000053039865802BR5913Fulano de Tal6008BRASILIA6304740C"], "returns": null, "note": "changed in 2.5.0 (#593): the manual has 62-05 \"sempre presente em um BR Code\" (§2.6, footnote 21), so a payload without object 62 is invalid. 2.4.0 parsed it" },
         { "args": ["00020126330014br.gov.bcb.pix0111123456789095204000053039865802BR5913Fulano de Tal6008BRASILIA62190515RP12345678-201963049060"], "returns": null, "note": "from the maintainer briefing, #593: in a static payload the '-' of RP12345678-2019 stays excluded" },
         { "args": ["00020126360014br.gov.bcb.pix0114123.456.789-095204000053039865802BR5913Fulano de Tal6008BRASILIA62070503***6304B354"], "returns": null, "note": "changed in 2.5.0 (#593): the key must be in its DICT form (§2.5.1)" },
-        { "args": ["00020126330014br.gov.bcb.pix0111123456789095204000053039865802BR5913Fulano de Tal6019Presidente Prudente62070503***63040E59"], "returns": null, "note": "changed in 2.5.0 (#593): EMV 60 allows up to 15 characters" }
+        { "args": ["00020126330014br.gov.bcb.pix0111123456789095204000053039865802BR5913Fulano de Tal6019Presidente Prudente62070503***63040E59"], "returns": null, "note": "changed in 2.5.0 (#593): EMV 60 allows up to 15 characters" },
+        { "args": ["00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-4266554400005204000053039865802BR5913Fulano de Tal6008BRASILIA62070503***5903abc63045B77"], "returns": null, "note": "a repeated object ID gives null, with a CRC that matches" },
+        { "args": ["00020126360014br.gov.bcb.pix0114+55119876543215204000053039865802BR5906Fulano6008BRASILIA62130509A6304872F"], "returns": null, "note": "a CRC that only looks like the last object gives null" },
+        { "args": ["00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-4266554400005204000053039865802BR5913Fulano de Tãl6008BRASILIA62070503***6304CC2B"], "returns": { "merchantName": "Fulano de Tãl", "merchantCity": "BRASILIA", "pointOfInitiation": "static", "key": "123e4567-e12b-12d1-a456-426655440000" }, "note": "the name is read as written, accents included" },
+        { "args": [null], "returns": null, "note": "JavaScript's own test: when it is null" }
       ]
     },
     "isValid": {
@@ -276,28 +355,32 @@
         "en": [
           "Validates a Pix BR Code payload against the Manual de Padrões para Iniciação do Pix v2.10.0 and, where the manual is silent, the EMV QRCPS-MPM it builds on. The function checks the form of the key, not whether the key is registered in the DICT.",
           "",
-          "- Structure: well-formed TLV with every length from `01` to `99`, the payload format indicator `000201` as the first object, and the CRC-16 (`63`) closing the payload and matching it. A CRC in lowercase hexadecimal is accepted, as in 2.4.0 (no official source fixes the case).",
-          "- Mandatory objects: merchant category code (`52`) of 4 digits, currency (`53`) `986`, country (`58`) `BR` in uppercase, merchant name (`59`) of at most 25 characters and merchant city (`60`) of at most 15.",
+          "- Structure: well-formed TLV with every length from `01` to `99`, the payload format indicator `000201` as the first object, and the CRC-16 (`63`) as the last top-level object, whole, matching the payload. Eight trailing characters that only look like `6304` and a checksum (inside another object, for example) do not count as the CRC. A CRC in lowercase hexadecimal is accepted, as in 2.4.0 (no official source fixes the case).",
+          "- An object ID may not repeat at the same level (EMV gives each object one ID per level), whatever the values are, even with a CRC that matches. Until 2.4.0 the last repeated ID won. Only crafted payloads repeat an ID.",
+          "- Mandatory objects: merchant category code (`52`) of 4 digits, currency (`53`) `986`, country (`58`) `BR` in uppercase, merchant name (`59`) of at most 25 characters and merchant city (`60`) of at most 15. Only the length is checked: neither Pix manual restricts the characters of the name and the city (EMV types them as `ans`), so a name with accents is accepted, though `pixPayload.generate` folds both to printable ASCII.",
           "- One Merchant Account Information template (IDs 26 to 51) carries the `br.gov.bcb.pix` GUI (case-insensitive) with exactly one of: a Pix key written in its DICT form, as `pixKey.getInfo` returns it (no mask, lowercase email or UUID, `+55` phone), optionally with the 8-digit ISPB of a Pix Saque facilitator (`fss`, 26-03); or a PSP location (26-25), host and path of at most 77 characters, never next to a `fss`.",
           "- Object `01` is optional. When present, it must be `11` or `12`.",
           "- The amount (`54`) is digits with an optional `.` decimal mark, at most 2 decimals and 13 characters. Zero is accepted only in a Pix Saque (with a `fss`) or next to a PSP location; a payload with a key alone needs an amount greater than zero.",
           "- The Additional Data Field Template (`62`) with the txid (62-05) is mandatory (\"sempre presente em um BR Code\", §2.6). The txid is `***` (no txid) or 1 to 25 letters and digits (§2.6.2). So in a static payload the `-` of the Manual do BR Code example `RP12345678-2019` is excluded.",
           "- Next to a PSP location, only the presence of 62-05 is checked. §2.7 says a filled txid or amount in a dynamic BR Code must be ignored, so a dynamic payload with a filled 62-05 stays valid.",
           "- Unreserved templates (IDs 80 to 99) are ignored. A composite Pix Automático QR Code that also carries a key or a payment location is read as an ordinary payload.",
-          "- 2.4.0 checked mostly the structure. It accepted a payload without `62`, a txid with `-`, `_` or spaces, a masked or uppercase key, a name or city over the limits, a lowercase country code and a merchant category code that is not 4 digits."
+          "- 2.4.0 checked mostly the structure. It accepted a payload without `62`, a txid with `-`, `_` or spaces, a masked or uppercase key, a name or city over the limits, a lowercase country code and a merchant category code that is not 4 digits.",
+          "- A value that is not a string is invalid. Whitespace around the payload is accepted."
         ],
         "pt-BR": [
           "Valida o payload de um BR Code Pix contra o Manual de Padrões para Iniciação do Pix v2.10.0 e, onde o manual é omisso, o EMV QRCPS-MPM em que ele se baseia. A função verifica a forma da chave, não se ela está registrada no DICT.",
           "",
-          "- Estrutura: TLV bem formado com todo tamanho de `01` a `99`, o indicador de formato `000201` como primeiro objeto e o CRC-16 (`63`) fechando o payload e conferindo. Um CRC em hexadecimal minúsculo é aceito, como na 2.4.0 (nenhuma fonte oficial fixa a caixa).",
-          "- Objetos obrigatórios: código de categoria (`52`) com 4 dígitos, moeda (`53`) `986`, país (`58`) `BR` em maiúsculas, nome do recebedor (`59`) com no máximo 25 caracteres e cidade (`60`) com no máximo 15.",
+          "- Estrutura: TLV bem formado com todo tamanho de `01` a `99`, o indicador de formato `000201` como primeiro objeto e o CRC-16 (`63`) como último objeto de nível superior, inteiro e conferindo com o payload. Oito caracteres finais que só parecem `6304` e um checksum (dentro de outro objeto, por exemplo) não contam como o CRC. Um CRC em hexadecimal minúsculo é aceito, como na 2.4.0 (nenhuma fonte oficial fixa a caixa).",
+          "- Um ID de objeto não pode se repetir no mesmo nível (o EMV dá a cada objeto um ID por nível), quaisquer que sejam os valores, mesmo com um CRC que confere. Até a 2.4.0 o último ID repetido prevalecia. Só payloads forjados repetem um ID.",
+          "- Objetos obrigatórios: código de categoria (`52`) com 4 dígitos, moeda (`53`) `986`, país (`58`) `BR` em maiúsculas, nome do recebedor (`59`) com no máximo 25 caracteres e cidade (`60`) com no máximo 15. Só o tamanho é verificado: nenhum dos manuais do Pix restringe os caracteres do nome e da cidade (o EMV os tipa como `ans`), então um nome com acentos é aceito, embora `pixPayload.generate` reduza ambos a ASCII imprimível.",
           "- Um template Merchant Account Information (IDs 26 a 51) traz o GUI `br.gov.bcb.pix` (sem distinção de caixa) com exatamente um entre: uma chave Pix na forma do DICT, como `pixKey.getInfo` a retorna (sem máscara, e-mail ou UUID em minúsculas, telefone com `+55`), opcionalmente com o ISPB de 8 dígitos de um facilitador de Pix Saque (`fss`, 26-03); ou uma location do PSP (26-25), host e caminho com no máximo 77 caracteres, nunca junto de um `fss`.",
           "- O objeto `01` é opcional. Quando presente, deve ser `11` ou `12`.",
           "- O valor (`54`) tem dígitos com um `.` decimal opcional, no máximo 2 casas e 13 caracteres. Zero só é aceito em um Pix Saque (com `fss`) ou junto de uma location do PSP; um payload só com chave precisa de valor maior que zero.",
           "- O Additional Data Field Template (`62`) com o txid (62-05) é obrigatório (\"sempre presente em um BR Code\", §2.6). O txid é `***` (sem txid) ou de 1 a 25 letras e dígitos (§2.6.2). Assim, num payload estático o `-` do exemplo do Manual do BR Code `RP12345678-2019` fica excluído.",
           "- Junto de uma location do PSP, só a presença do 62-05 é verificada. O §2.7 diz que txid ou valor preenchidos num BR Code dinâmico devem ser ignorados, então um payload dinâmico com 62-05 preenchido continua válido.",
           "- Templates não reservados (IDs 80 a 99) são ignorados. Um QR Code composto do Pix Automático que também traz uma chave ou uma location de pagamento é lido como um payload comum.",
-          "- A 2.4.0 verificava sobretudo a estrutura. Aceitava payload sem `62`, txid com `-`, `_` ou espaços, chave com máscara ou em maiúsculas, nome ou cidade acima dos limites, código de país em minúsculas e código de categoria que não tem 4 dígitos."
+          "- A 2.4.0 verificava sobretudo a estrutura. Aceitava payload sem `62`, txid com `-`, `_` ou espaços, chave com máscara ou em maiúsculas, nome ou cidade acima dos limites, código de país em minúsculas e código de categoria que não tem 4 dígitos.",
+          "- Um valor que não é string é inválido. Espaço em branco em volta do payload é aceito."
         ]
       },
       "references": [
@@ -401,7 +484,15 @@
         { "args": ["00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-4266554400005204000053039865802br5913Fulano de Tal6008BRASILIA62070503***63047792"], "returns": false, "note": "changed in 2.5.0 (#593): the ISO 3166-1 code is the uppercase BR. 2.4.0 returned true. JavaScript's own test: when the country code is not the uppercase BR of ISO 3166-1" },
         { "args": ["00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-4266554400005204000053039865802BR5913Fulano de Tal6008BRASILIA62070503***61006304A8F7"], "returns": false, "note": "changed in 2.5.0 (#593): EMV lengths go from 01 to 99. 2.4.0 returned true. JavaScript's own test: when an object declares the length 00" },
         { "args": ["00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-4266554400005204000053039865802BR5913Fulano de Tal6008BRASILIA62070503***000202630405AB"], "returns": false, "note": "JavaScript's own test: when the payload format indicator is repeated later with another value" },
-        { "args": ["00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-426655440000520358153039865802BR5913Fulano de Tal6008BRASILIA62070503***630430A6"], "returns": false, "note": "changed in 2.5.0 (#593): EMV 52 is 4 digits. 2.4.0 returned true. JavaScript's own test: when the merchant category code is not 4 digits" }
+        { "args": ["00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-426655440000520358153039865802BR5913Fulano de Tal6008BRASILIA62070503***630430A6"], "returns": false, "note": "changed in 2.5.0 (#593): EMV 52 is 4 digits. 2.4.0 returned true. JavaScript's own test: when the merchant category code is not 4 digits" },
+        { "args": ["00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-4266554400005204000053039865802BR5913Fulano de Tal6008BRASILIA62070503***5903abc63045B77"], "returns": false, "note": "JavaScript's own test: when an object ID appears twice, even with a CRC that matches (new in 2.5.0, #615)" },
+        { "args": ["00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-4266554400005204000053039865802BR5913Fulano de Tal6008BRASILIA62070503***5913Fulano de Tal6304B1C1"], "returns": false, "note": "JavaScript's own test: when an object ID appears twice, even with a CRC that matches (new in 2.5.0, #615)" },
+        { "args": ["00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-4266554400005204000053039865802BR5913Fulano de Tal6008BRASILIA62070503***6304AAAA63047C97"], "returns": false, "note": "JavaScript's own test: when an object ID appears twice, even with a CRC that matches (new in 2.5.0, #615)" },
+        { "args": ["00020126360014br.gov.bcb.pix0114+55119876543215204000053039865802BR5906Fulano6008BRASILIA62130509A6304872F"], "returns": false, "note": "JavaScript's own test: when the last 8 characters only look like a CRC object inside another object (new in 2.5.0, #615)" },
+        { "args": ["00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-4266554400005204000053039865802BR5913Fulano de Tal6008BRASILIA62070503***"], "returns": false, "note": "JavaScript's own test: when the payload does not end with the CRC object" },
+        { "args": ["00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-4266554400005204000053039865802BR5913Fulano de Tãl6008BRASILIA62070503***6304CC2B"], "returns": true, "note": "JavaScript's docs: the name and the city are only checked for their length, so a name with accents is accepted (the length here counts characters)" },
+        { "args": [null], "returns": false, "note": "JavaScript's own test: when it is null" },
+        { "args": ["  00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-4266554400005204000053039865802BR5913Fulano de Tal6008BRASILIA62070503***63041D3D  "], "returns": true, "note": "JavaScript's own test: when the payload is surrounded by whitespace" }
       ]
     }
   }

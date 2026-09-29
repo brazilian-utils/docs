@@ -23,6 +23,8 @@
           "- `options.version`: `1` (default) keeps digits only. `2` (alphanumeric CNPJ) keeps letters (upper-cased) and digits.",
           "- `options.obfuscate` hides the first 2 characters and the 2 check digits with `*`, after padding. This is a convention of the library, with no official source: no law or Receita Federal act sets a masking rule for the CNPJ, whose data are public. It follows the rule the Leis de Diretrizes Orçamentárias set for the CPF.",
           "- A number is read only when it is a non-negative safe integer. A negative, fractional, not finite or unsafe number returns an empty string. 2.4.0 read the digits of any number.",
+          "- A value with no characters the version keeps (empty, or only symbols) returns an empty string even with `options.pad`. Until 2.4.0 `pad` returned the full zero mask (`00.000.000/0000-00`).",
+          "- Since July 2026 new CNPJs may be alphanumeric. The default `version: 1` drops their letters, so pass `version: 2` to keep them. A number loses its leading zeros: pass a string, or use `options.pad`, for a CNPJ that starts with `0`.",
           "- Pending decision (findings §2 #2, #3): the reference (JS) formats only the characters an incomplete value has and returns an empty string for empty or invalid input. Other libraries return null."
         ],
         "pt-BR": [
@@ -32,6 +34,8 @@
           "- `options.version`: `1` (padrão) mantém somente dígitos. `2` (CNPJ alfanumérico) mantém letras (em maiúsculas) e dígitos.",
           "- `options.obfuscate` oculta os 2 primeiros caracteres e os 2 dígitos verificadores com `*`, depois do preenchimento. É uma convenção da biblioteca, sem fonte oficial: nenhuma lei ou ato da Receita Federal fixa regra de mascaramento para o CNPJ, cujos dados são públicos. Ela segue a regra que as Leis de Diretrizes Orçamentárias fixam para o CPF.",
           "- Um número só é lido quando é um inteiro seguro não negativo. Um número negativo, fracionário, não finito ou inseguro retorna uma string vazia. A 2.4.0 lia os dígitos de qualquer número.",
+          "- Um valor sem nenhum caractere que a versão mantém (vazio, ou só símbolos) retorna uma string vazia mesmo com `options.pad`. Até a 2.4.0, `pad` retornava a máscara inteira de zeros (`00.000.000/0000-00`).",
+          "- Desde julho de 2026 os novos CNPJs podem ser alfanuméricos. A `version: 1` padrão descarta as letras deles; passe `version: 2` para mantê-las. Um número perde os zeros à esquerda: passe uma string, ou use `options.pad`, para um CNPJ que começa com `0`.",
           "- Decisão pendente (findings §2 #2, #3): a referência (JS) formata só os caracteres que um valor incompleto tem e retorna uma string vazia para entrada vazia ou inválida. Outras bibliotecas retornam null."
         ]
       },
@@ -43,7 +47,7 @@
       "level": "core",
       "params": [
         { "name": "value", "type": "string | number" },
-        { "name": "options", "type": "FormatCnpjOptions", "optional": true }
+        { "name": "options", "type": "FormatCnpjOptions", "optional": true, "fields": [{ "name": "pad", "type": "boolean", "optional": true }, { "name": "version", "type": "1 | 2", "optional": true }, { "name": "obfuscate", "type": "boolean", "optional": true }] }
       ],
       "returns": "string",
       "tests": [
@@ -79,7 +83,7 @@
         { "args": [468434850001], "returns": "46.843.485/0001", "note": "JavaScript's own test: should format number cnpj with mask" },
         { "args": [4684348500018], "returns": "46.843.485/0001-8", "note": "JavaScript's own test: should format number cnpj with mask" },
         { "args": [46843485000186], "returns": "46.843.485/0001-86", "note": "JavaScript's own test: should format number cnpj with mask" },
-        { "args": ["", { "pad": true }], "returns": "00.000.000/0000-00", "note": "JavaScript's own test: should format cnpj with mask filling zeroes" },
+        { "args": ["", { "pad": true }], "returns": "", "note": "changed in 2.5.0 (#615): a value with no digits gives an empty string even with pad (2.4.0 gave 00.000.000/0000-00)" },
         { "args": ["4", { "pad": true }], "returns": "00.000.000/0000-04", "note": "JavaScript's own test: should format cnpj with mask filling zeroes" },
         { "args": ["46", { "pad": true }], "returns": "00.000.000/0000-46", "note": "JavaScript's own test: should format cnpj with mask filling zeroes" },
         { "args": ["468", { "pad": true }], "returns": "00.000.000/0004-68", "note": "JavaScript's own test: should format cnpj with mask filling zeroes" },
@@ -140,7 +144,12 @@
         { "args": [-11222333000181], "returns": "", "note": "JavaScript's JSDoc example; changed in 2.5.0 (#593): a number is read only when it is a non-negative safe integer" },
         { "args": [-1], "returns": "", "note": "changed in 2.5.0 (#593): a number is read only when it is a non-negative safe integer" },
         { "args": [1.5], "returns": "", "note": "changed in 2.5.0 (#593): a number is read only when it is a non-negative safe integer" },
-        { "args": [9007199254740992], "returns": "", "note": "changed in 2.5.0 (#593): a number is read only when it is a non-negative safe integer" }
+        { "args": [9007199254740992], "returns": "", "note": "changed in 2.5.0 (#593): a number is read only when it is a non-negative safe integer" },
+        { "args": ["abc", { "pad": true }], "returns": "", "note": "JavaScript's own test: should return an empty string for a value without digits even when padding" },
+        { "args": ["24522200000174"], "returns": "24.522.200/0001-74", "note": "JavaScript docs example" },
+        { "args": ["245222000174", { "pad": true }], "returns": "00.245.222/0001-74", "note": "JavaScript docs example" },
+        { "args": ["12345678000195", { "obfuscate": true }], "returns": "**.345.678/0001-**", "note": "JavaScript docs example" },
+        { "args": ["12OUT345000199"], "returns": "12.345.000/199", "note": "docs note: the default version 1 keeps digits only, so the letters of an alphanumeric CNPJ are dropped and the rest is masked as a partial value" }
       ]
     },
     "generate": {
@@ -151,14 +160,16 @@
           "",
           "- `versionOrParams` picks the version: `1` (default, numeric) or `2` (alphanumeric). It can also set the branch (número de ordem), an integer from 1 to 9999. The branch is random by default, and an invalid branch is ignored.",
           "- A branch given in `branch` is written as 4 digits in both versions (`3` gives `0003`). A random branch under version 2 can carry letters, like the root.",
-          "- A random branch is never `0000`: the establishments of a root are numbered from `0001`, the headquarters (matriz). 2.4.0 could return `0000`, about once in 10,000 numeric CNPJs."
+          "- A random branch is never `0000`: the establishments of a root are numbered from `0001`, the headquarters (matriz). 2.4.0 could return `0000`, about once in 10,000 numeric CNPJs.",
+          "- Invalid `branch` values (0, above 9999, fractional, not a number) are ignored and a random branch is used. A number `versionOrParams` other than `2` (or a value that is neither `2` nor an object) generates a numeric CNPJ."
         ],
         "pt-BR": [
           "Gera um CNPJ aleatório e válido, sem formatação.",
           "",
           "- `versionOrParams` escolhe a versão: `1` (padrão, numérico) ou `2` (alfanumérico). Também pode definir a filial (número de ordem), um inteiro de 1 a 9999. A filial é aleatória por padrão, e uma filial inválida é ignorada.",
           "- Uma filial dada em `branch` é escrita com 4 dígitos nas duas versões (`3` dá `0003`). Uma filial sorteada na versão 2 pode ter letras, como a raiz.",
-          "- Uma filial sorteada nunca é `0000`: os estabelecimentos de uma raiz são numerados a partir de `0001`, a matriz. A 2.4.0 podia retornar `0000`, cerca de uma vez a cada 10.000 CNPJs numéricos."
+          "- Uma filial sorteada nunca é `0000`: os estabelecimentos de uma raiz são numerados a partir de `0001`, a matriz. A 2.4.0 podia retornar `0000`, cerca de uma vez a cada 10.000 CNPJs numéricos.",
+          "- Um `branch` inválido (0, acima de 9999, fracionário, não numérico) é ignorado e um branch aleatório é usado. Um `versionOrParams` que não seja `2` nem um objeto gera um CNPJ numérico."
         ]
       },
       "references": [
@@ -174,7 +185,12 @@
         { "name": "generated-is-valid", "args": [], "satisfies": "cnpj.isValid", "repeat": 5, "note": "every generated value must pass the lib's own validator" },
         { "name": "branch-never-0000", "args": [], "matches": "^[0-9]{8}([1-9][0-9]{3}|0[1-9][0-9]{2}|00[1-9][0-9]|000[1-9])[0-9]{2}$", "repeat": 20, "note": "changed in 2.5.0 (#593): generateCnpj never draws the branch 0000" },
         { "name": "given-branch", "args": [{ "branch": 3 }], "matches": "^[0-9]{8}0003[0-9]{2}$", "repeat": 5, "note": "JavaScript's JSDoc example: generateCnpj({ branch: 3 }), the ordem block is 0003" },
-        { "name": "version-2-branch-never-0000", "args": [2], "matches": "^[0-9A-Z]{8}([1-9A-Z][0-9A-Z]{3}|0[1-9A-Z][0-9A-Z]{2}|00[1-9A-Z][0-9A-Z]|000[1-9A-Z])[0-9]{2}$", "repeat": 20, "note": "changed in 2.5.0 (#593): generateCnpj never draws the branch 0000 (under version 2 a random branch can carry letters)" }
+        { "name": "version-2-branch-never-0000", "args": [2], "matches": "^[0-9A-Z]{8}([1-9A-Z][0-9A-Z]{3}|0[1-9A-Z][0-9A-Z]{2}|00[1-9A-Z][0-9A-Z]|000[1-9A-Z])[0-9]{2}$", "repeat": 20, "note": "changed in 2.5.0 (#593): generateCnpj never draws the branch 0000 (under version 2 a random branch can carry letters)" },
+        { "args": [{ "version": 2, "branch": 1 }], "matches": "^[0-9A-Z]{8}0001[0-9]{2}$", "note": "JavaScript docs example: generateCnpj({ version: 2, branch: 1 }), the ordem block is 0001" },
+        { "args": [{ "branch": 0 }], "matches": "^[0-9]{14}$", "note": "JavaScript docs example: generateCnpj({ branch: 0 }), an out of range branch draws a random block" },
+        { "args": [{ "branch": 9999 }], "matches": "^[0-9]{8}9999[0-9]{2}$", "note": "JavaScript's own test: should write the branch as the ordem block in positions 9 to 12" },
+        { "args": [{ "branch": 42 }], "matches": "^[0-9]{8}0042[0-9]{2}$", "note": "JavaScript's own test: should zero pad a branch shorter than the four character ordem block" },
+        { "args": [2], "matches": "^[0-9A-Z]{14}$", "note": "JavaScript docs example: generateCnpj(2), an alphanumeric CNPJ" }
       ]
     },
     "getInfo": {
@@ -213,7 +229,7 @@
       "flatName": "getCnpjInfo",
       "params": [
         { "name": "value", "type": "string" },
-        { "name": "options", "type": "GetCnpjInfoOptions", "optional": true }
+        { "name": "options", "type": "GetCnpjInfoOptions", "optional": true, "fields": [{ "name": "version", "type": "1 | 2", "optional": true }] }
       ],
       "returns": "CnpjInfo?",
       "tests": [
@@ -256,6 +272,9 @@
           "",
           "- `options.version`: `1` (default) accepts numeric CNPJs only. `2` also accepts the alphanumeric CNPJ, case-insensitively. Any other value is read as `1`.",
           "- A numeric CNPJ whose digits are all the same is rejected. The alphanumeric format has no reserved list.",
+          "- Since July 2026 new CNPJs may be alphanumeric, which the default `version: 1` rejects. Pass `version: 2` to accept them.",
+          "- The official character set of the alphanumeric CNPJ is the capital letters `A` to `Z` and the digits; the 2 check digits are always digits. A lower case letter is accepted only as input normalization, like a mask character: the value is upper-cased first.",
+          "- The Ex1 of question 23 of the Receita Federal Q&A on the alphanumeric CNPJ, `AA345678/0003-29`, is a misprint: its check digits are `86`, so it is rejected.",
           "- Pending decision (findings §2 #1): the reference (JS) ignores the formatting characters (`.`, `-`, `/`) and whitespace around and between groups. Other libraries accept digits only."
         ],
         "pt-BR": [
@@ -263,6 +282,9 @@
           "",
           "- `options.version`: `1` (padrão) aceita somente CNPJs numéricos. `2` também aceita o CNPJ alfanumérico, sem diferenciar maiúsculas de minúsculas. Qualquer outro valor é lido como `1`.",
           "- Um CNPJ numérico com todos os dígitos iguais é rejeitado. O formato alfanumérico não tem lista de valores reservados.",
+          "- Desde julho de 2026 os novos CNPJs podem ser alfanuméricos, o que a `version: 1` padrão rejeita. Passe `version: 2` para aceitá-los.",
+          "- O conjunto oficial de caracteres do CNPJ alfanumérico são as letras maiúsculas `A` a `Z` e os dígitos; os 2 dígitos verificadores são sempre dígitos. Uma letra minúscula é aceita só como normalização da entrada, como um caractere da máscara: o valor é passado para maiúsculas antes.",
+          "- O Ex1 da pergunta 23 do Perguntas e Respostas da Receita Federal sobre o CNPJ alfanumérico, `AA345678/0003-29`, é um erro de impressão: seus dígitos verificadores são `86`, então é rejeitado.",
           "- Decisão pendente (findings §2 #1): a referência (JS) ignora os caracteres de formatação (`.`, `-`, `/`) e os espaços em branco em volta dos grupos e entre eles. Outras bibliotecas aceitam somente dígitos."
         ]
       },
@@ -274,7 +296,7 @@
       "level": "core",
       "params": [
         { "name": "cnpj", "type": "string" },
-        { "name": "options", "type": "IsValidCnpjOptions", "optional": true }
+        { "name": "options", "type": "IsValidCnpjOptions", "optional": true, "fields": [{ "name": "version", "type": "1 | 2", "optional": true }] }
       ],
       "returns": "boolean",
       "tests": [
@@ -317,7 +339,9 @@
         { "args": [" 13723705000189 "], "returns": true, "note": "JavaScript's own test: should return true when it has real leading and trailing whitespace (not just an internal mask)" },
         { "args": ["1Z 000 000 0000 39", { "version": 2 }], "returns": true, "note": "JavaScript's own test: should return true when an alphanumeric CNPJ uses a whitespace separator at every group boundary" },
         { "args": ["q0slfmbd7vx439", { "version": 2 }], "returns": true, "note": "JavaScript's own test: should return true when is a lowercase alphanumeric CNPJ" },
-        { "args": ["1z000000000039", { "version": 2 }], "returns": true, "note": "JavaScript's own test: should return true when the lowercase letter is exactly the boundary z, which must still be uppercased and counted" }
+        { "args": ["1z000000000039", { "version": 2 }], "returns": true, "note": "JavaScript's own test: should return true when the lowercase letter is exactly the boundary z, which must still be uppercased and counted" },
+        { "args": ["15515147234255"], "returns": false, "note": "JavaScript docs example" },
+        { "args": ["q0slfmbd7vx439"], "returns": false, "note": "default version 1 rejects an alphanumeric CNPJ" }
       ]
     },
     "parse": {
@@ -330,13 +354,15 @@
           "Removes CNPJ formatting and returns the normalized value, capped at 14 characters.",
           "",
           "- `options.version`: `1` (default) keeps digits only. `2` keeps letters and digits, upper-cased.",
-          "- A number is read only when it is a non-negative safe integer. A negative, fractional, not finite or unsafe number returns an empty string. 2.4.0 read the digits of any number."
+          "- A number is read only when it is a non-negative safe integer. A negative, fractional, not finite or unsafe number returns an empty string. 2.4.0 read the digits of any number.",
+          "- Since July 2026 new CNPJs may be alphanumeric. The default `version: 1` drops their letters, so pass `version: 2` to keep them. A lower case letter is upper-cased first, since the official set is `A` to `Z`."
         ],
         "pt-BR": [
           "Remove a formatação do CNPJ e retorna o valor normalizado, limitado a 14 caracteres.",
           "",
           "- `options.version`: `1` (padrão) mantém somente dígitos. `2` mantém letras e dígitos, em maiúsculas.",
-          "- Um número só é lido quando é um inteiro seguro não negativo. Um número negativo, fracionário, não finito ou inseguro retorna uma string vazia. A 2.4.0 lia os dígitos de qualquer número."
+          "- Um número só é lido quando é um inteiro seguro não negativo. Um número negativo, fracionário, não finito ou inseguro retorna uma string vazia. A 2.4.0 lia os dígitos de qualquer número.",
+          "- Desde julho de 2026 os novos CNPJs podem ser alfanuméricos. A `version: 1` padrão descarta as letras deles; passe `version: 2` para mantê-las. Uma letra minúscula é passada para maiúscula antes, pois o conjunto oficial é `A` a `Z`."
         ]
       },
       "references": [
@@ -346,7 +372,7 @@
       ],
       "params": [
         { "name": "value", "type": "string | number" },
-        { "name": "options", "type": "ParseCnpjOptions", "optional": true }
+        { "name": "options", "type": "ParseCnpjOptions", "optional": true, "fields": [{ "name": "version", "type": "1 | 2", "optional": true }] }
       ],
       "returns": "string",
       "tests": [
@@ -372,7 +398,9 @@
         { "args": [-11222333000181], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number; changed in 2.5.0 (#593): a number is read only when it is a non-negative safe integer" },
         { "args": [-1], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number; changed in 2.5.0 (#593): a number is read only when it is a non-negative safe integer" },
         { "args": [1.5], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number; changed in 2.5.0 (#593): a number is read only when it is a non-negative safe integer" },
-        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number; changed in 2.5.0 (#593): a number is read only when it is a non-negative safe integer" }
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number; changed in 2.5.0 (#593): a number is read only when it is a non-negative safe integer" },
+        { "args": ["24.522.200/0001-74"], "returns": "24522200000174", "note": "JavaScript docs example" },
+        { "args": ["12.OUT.345/0001-99", { "version": 2 }], "returns": "12OUT345000199", "note": "JavaScript docs example" }
       ]
     }
   }

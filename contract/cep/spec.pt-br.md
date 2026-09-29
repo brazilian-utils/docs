@@ -35,6 +35,7 @@ Os Correios atribuem a cada estado um ou mais blocos de CEP. `cep.getState` lê 
 - Dois blocos não pertencem a nenhum estado: `00000-000` a `00999-999` e `78900-000` a `78999-999`. MT termina em `78899-999`.
 - AM, DF e GO têm dois blocos cada. `72800-000` a `72999-999`, dentro do bloco do DF, pertence a GO.
 - A tabela completa está na descrição de `cep.getState`.
+- `cep.generate` sorteia só dentro desses blocos, então o CEP gerado sempre pertence a um estado.
 
 ## Exemplos
 
