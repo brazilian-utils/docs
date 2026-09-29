@@ -25,10 +25,10 @@
           "- A VIN has no printed grouping, so a space, `.`, `-` or `/` inside it makes the value invalid.",
           "- A VIN whose characters are all the same is rejected.",
           "- Only the ASCII letters and digits count. A non-ASCII letter that upper-cases into an ASCII one (`ß`, `ſ`) is rejected. Until 2.4.0 these characters were folded into ASCII letters.",
-          "- `options.checkDigit` defaults to false."
+          "- `options.checkDigit` defaults to `false`."
         ],
         "pt-BR": [
-          "Valida um chassi (VIN): 17 caracteres nas três seções da Resolução CONTRAN nº 968/2022, art. 3º (WMI, VDS e VIS), cada um um dígito ou uma letra que não seja `I`, `O` ou `Q`. A validação ignora maiúsculas e minúsculas e os espaços em volta.",
+          "Valida um chassi (VIN): 17 caracteres nas três seções da Resolução CONTRAN nº 968/2022, art. 3º (WMI, VDS e VIS), cada um um dígito ou uma letra que não seja `I`, `O` ou `Q`. A validação ignora maiúsculas e minúsculas e os espaços nas pontas.",
           "",
           "- A regra brasileira não exige dígito verificador, e muitos chassis fabricados no Brasil não o têm, então por padrão a função não o verifica: `9BWZZZ377VT004251` é válido. A 2.4.0 sempre exigia o dígito verificador norte-americano.",
           "- `options.checkDigit: true` acrescenta as regras norte-americanas do 49 CFR 565.15: o 9º caractere precisa ser o dígito verificador por módulo 11 ponderado (`0` a `9` ou `X`), e o 10º (ano-modelo) não pode ser `U`, `Z` nem `0`. Use para um veículo fabricado para os Estados Unidos ou o Canadá, ou para manter o resultado da 2.4.0.",
@@ -36,7 +36,7 @@
           "- Um VIN não tem agrupamento impresso, então um espaço, `.`, `-` ou `/` no meio dele torna o valor inválido.",
           "- Um VIN com todos os caracteres iguais é rejeitado.",
           "- Só contam as letras ASCII e os dígitos. Uma letra não ASCII que vira letra ASCII ao ser passada para maiúscula (`ß`, `ſ`) é rejeitada. Até a 2.4.0 esses caracteres eram convertidos em letras ASCII.",
-          "- `options.checkDigit` é false por padrão."
+          "- `options.checkDigit` é `false` por padrão."
         ]
       },
       "references": [

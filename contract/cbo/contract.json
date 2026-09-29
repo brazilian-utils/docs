@@ -19,20 +19,20 @@
           "Formats a CBO code with the mask `NNNN-NN`. Only the structure changes (use `cbo.isValid` to check the code against the table).",
           "",
           "- The mask is applied as far as the digits go, which is what an input being typed into needs.",
-          "- `options.pad` (default false) first left-pads the value with zeros to 6 digits. A number is treated as the string of its digits, so it is padded only with `pad`.",
+          "- `options.pad` (default `false`) first left-pads the value with zeros to 6 digits. A number is treated as the string of its digits, so it is padded only with `pad`.",
           "- A string is read for its digits: other characters are dropped and digits after the last one of the mask are ignored.",
-          "- Returns an empty string when there is no digit at all, also with `pad`. null and undefined give an empty string too.",
-          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string.",
+          "- Returns an empty string when there is no digit at all, also with `pad`. `null` and `undefined` return an empty string too.",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number returns an empty string.",
           "- New in 2.5.0 (#615), so every masked classification code has its formatter."
         ],
         "pt-BR": [
           "Formata um código CBO com a máscara `NNNN-NN`. Só a estrutura muda (use `cbo.isValid` para verificar o código na tabela).",
           "",
           "- A máscara é aplicada até onde os dígitos vão, o que serve a um campo em digitação.",
-          "- `options.pad` (padrão false) primeiro completa o valor com zeros à esquerda até 6 dígitos. Um número é tratado como a string dos seus dígitos, então só é completado com `pad`.",
+          "- `options.pad` (padrão `false`) primeiro completa o valor com zeros à esquerda até 6 dígitos. Um número é tratado como a string dos seus dígitos, então só é completado com `pad`.",
           "- Uma string é lida pelos seus dígitos: os outros caracteres são descartados e dígitos depois do último da máscara são ignorados.",
-          "- Retorna uma string vazia quando não há nenhum dígito, também com `pad`. null e undefined também dão string vazia.",
-          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia.",
+          "- Retorna uma string vazia quando não há nenhum dígito, também com `pad`. `null` e `undefined` também retornam uma string vazia.",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia.",
           "- Nova na 2.5.0 (#615), para que todo código com máscara tenha o seu formatador."
         ]
       },
@@ -82,15 +82,15 @@
           "Looks up a CBO code in the CBO 2002 occupation table and returns its `code` and official title (`description`).",
           "",
           "- Same input rules as `cbo.isValid`. The returned code is the 6 bare digits.",
-          "- Returns null for an unknown code or a value not written in one of the accepted forms. A run of separators between the groups is accepted, as in `cbo.isValid` (`2124--05` gives the entry; until 2.4.0 it gave null).",
-          "- It returns null exactly when `cbo.isValid` returns false. The table and its titles follow the current MTE release (10/07/2026). 106 titles changed from 2.4.0, and codes the MTE retired return null."
+          "- Returns `null` for an unknown code or a value not written in one of the accepted forms. A run of separators between the groups is accepted, as in `cbo.isValid` (`2124--05` gives the entry; until 2.4.0 it gave `null`).",
+          "- It returns `null` exactly when `cbo.isValid` returns `false`. The table and its titles follow the current MTE release (10/07/2026). 106 titles changed from 2.4.0, and codes the MTE retired return `null`."
         ],
         "pt-BR": [
           "Consulta um código CBO na tabela de ocupações CBO 2002 e retorna o `code` e o título oficial (`description`).",
           "",
           "- Mesmas regras de entrada de `cbo.isValid`. O código retornado tem os 6 dígitos sem máscara.",
-          "- Retorna null para um código desconhecido ou para um valor que não está escrito em uma das formas aceitas. Uma sequência de separadores entre os grupos é aceita, como em `cbo.isValid` (`2124--05` retorna o registro; até a 2.4.0 retornava null).",
-          "- Retorna null exatamente quando `cbo.isValid` retorna false. A tabela e os títulos seguem a release vigente do MTE (10/07/2026). 106 títulos mudaram em relação à 2.4.0, e códigos que o MTE retirou retornam null."
+          "- Retorna `null` para um código desconhecido ou para um valor que não está escrito em uma das formas aceitas. Uma sequência de separadores entre os grupos é aceita, como em `cbo.isValid` (`2124--05` retorna o registro; até a 2.4.0 retornava `null`).",
+          "- Retorna `null` exatamente quando `cbo.isValid` retorna `false`. A tabela e os títulos seguem a release vigente do MTE (10/07/2026). 106 títulos mudaram em relação à 2.4.0, e códigos que o MTE retirou retornam `null`."
         ]
       },
       "references": ["https://cbo.mte.gov.br/cbosite/pages/downloads.jsf"],
@@ -214,15 +214,15 @@
           "Removes CBO formatting and keeps only digits, capped at 6 digits.",
           "",
           "- It does not left-pad anything. A leading zero must be written out.",
-          "- Returns an empty string when there is no digit at all (null and undefined included).",
-          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
+          "- Returns an empty string when there is no digit at all (`null` and `undefined` included).",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number returns an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
         ],
         "pt-BR": [
           "Remove a formatação do CBO e mantém somente os dígitos, limitados a 6 dígitos.",
           "",
           "- Não completa nada com zeros à esquerda. Um zero à esquerda precisa estar escrito.",
-          "- Retorna uma string vazia quando não há nenhum dígito (null e undefined incluídos).",
-          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
+          "- Retorna uma string vazia quando não há nenhum dígito (`null` e `undefined` incluídos).",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
         ]
       },
       "references": ["https://cbo.mte.gov.br/cbosite/pages/downloads.jsf"],

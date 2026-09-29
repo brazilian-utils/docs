@@ -27,7 +27,7 @@
           "Formata um CNO com a máscara `00.000.00000/00` (a numeração do CEI).",
           "",
           "- Mesmas regras de `cei.format`: a máscara é aplicada até onde os dígitos vão, e os dígitos além do 12º são descartados. `options.pad` primeiro completa com zeros à esquerda até 12 dígitos.",
-          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal).",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal).",
           "- `options.pad` num valor sem dígitos (`\"\"`, `\"---\"`, `null`) continua retornando uma string vazia. Até a 2.4.0 `\"\"` e `\"---\"` retornavam a máscara inteira de zeros."
         ]
       },
@@ -130,7 +130,7 @@
         "pt-BR": [
           "Remove a formatação do CNO e mantém somente os dígitos, limitados a 12 dígitos.",
           "",
-          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
         ]
       },
       "references": ["https://www.gov.br/receitafederal/pt-br/assuntos/orientacao-tributaria/cadastros/cno"],

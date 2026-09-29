@@ -19,7 +19,7 @@
           "- Accepts the bare 3 digits as a string, or a non-negative integer. A CSOSN has no printed grouping, so the function rejects a masked value.",
           "- Surrounding whitespace is ignored. Any other string is rejected: the function does not pick out its digits (`\"abc101\"`).",
           "- Nothing is padded: no code starts with a zero, so a value narrower than 3 digits is not a code. A number is read only when it is a safe non-negative integer.",
-          "- No behaviour change in 2.5.0.",
+          "- No behavior change in 2.5.0.",
           "- Source: Anexo III-A of Convênio SINIEF s/nº 1970 (table instituted by Ajuste SINIEF 03/2010)."
         ],
         "pt-BR": [

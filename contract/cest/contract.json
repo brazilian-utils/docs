@@ -18,16 +18,16 @@
           "",
           "- The mask is progressive: a partial value is masked as far as it goes (`01001` gives `01.001`). Characters that are not digits are dropped, and digits after the 7th are ignored.",
           "- `options.pad` first left-pads the value with zeros to 7 digits. Without it, a number that lost its leading zero shifts the mask: `100100` gives `10.010.0`, and `01.001.00` with `pad`.",
-          "- A value without digits, and null or undefined, gives an empty string even with `pad`.",
-          "- A number is read only when it is a non-negative safe integer. A negative, fractional, not finite or unsafe number returns an empty string."
+          "- A value with no digits, and `null` or `undefined`, gives an empty string even with `pad`.",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number returns an empty string."
         ],
         "pt-BR": [
           "Formata um CEST com a máscara `NN.NNN.NN` (segmento, item, especificação), a forma que os anexos imprimem. Só a estrutura muda (use `cest.isValid` para verificar o código).",
           "",
           "- A máscara é progressiva: um valor parcial é formatado até onde vai (`01001` dá `01.001`). Caracteres que não são dígitos são descartados, e dígitos depois do 7º são ignorados.",
           "- `options.pad` primeiro completa o valor com zeros à esquerda até 7 dígitos. Sem ele, um número que perdeu o zero à esquerda desloca a máscara: `100100` dá `10.010.0`, e `01.001.00` com `pad`.",
-          "- Um valor sem dígitos, e null ou undefined, dá string vazia também com `pad`.",
-          "- Um número só é lido quando é um inteiro seguro não negativo. Um número negativo, fracionário, não finito ou inseguro retorna uma string vazia."
+          "- Um valor sem dígitos, e `null` ou `undefined`, retorna uma string vazia também com `pad`.",
+          "- Um número só é lido se for um inteiro seguro não negativo. Um número negativo, fracionário, não finito ou inseguro retorna uma string vazia."
         ]
       },
       "references": ["https://www.confaz.fazenda.gov.br/legislacao/convenios/2018/CV142_18"],
@@ -73,17 +73,17 @@
       },
       "description": {
         "en": [
-          "Looks up a CEST in the annexes of Convênio ICMS 142/18 and returns its code, description and segment. Returns null exactly when `cest.isValid` is false.",
+          "Looks up a CEST in the annexes of Convênio ICMS 142/18 and returns its code, description and segment. Returns `null` exactly when `cest.isValid` is `false`.",
           "",
-          "- Same input rules as `cest.isValid` (including a run of separators between the groups, `05..001.00`): a revoked item, an unknown code and a value not in an accepted form return null.",
+          "- Same input rules as `cest.isValid` (including a run of separators between the groups, `05..001.00`): a revoked item, an unknown code and a value not in an accepted form return `null`.",
           "- `code` is the 7 digits, without mask. `description` is the wording in force of the annex. `segment` is the name of the segment in Anexo I.",
           "- Returns a new object on every call.",
           "- The NCM/SH codes the annexes pair each CEST with are not part of the entry."
         ],
         "pt-BR": [
-          "Consulta um CEST nos anexos do Convênio ICMS 142/18 e retorna o código, a descrição e o segmento. Retorna null exatamente quando `cest.isValid` é false.",
+          "Consulta um CEST nos anexos do Convênio ICMS 142/18 e retorna o código, a descrição e o segmento. Retorna `null` exatamente quando `cest.isValid` é `false`.",
           "",
-          "- Mesmas regras de entrada de `cest.isValid` (inclusive uma sequência de separadores entre os grupos, `05..001.00`): item revogado, código desconhecido e valor fora das formas aceitas retornam null.",
+          "- Mesmas regras de entrada de `cest.isValid` (inclusive uma sequência de separadores entre os grupos, `05..001.00`): item revogado, código desconhecido e valor fora das formas aceitas retornam `null`.",
           "- `code` são os 7 dígitos, sem máscara. `description` é a redação vigente do anexo. `segment` é o nome do segmento no Anexo I.",
           "- Retorna um objeto novo a cada chamada.",
           "- Os códigos NCM/SH que os anexos associam a cada CEST não fazem parte do registro."
@@ -136,26 +136,26 @@
         "en": [
           "Checks whether a CEST is listed in the annexes of Convênio ICMS 142/18 (Anexos II to XXVI of the consolidated text, last amended by Convênio ICMS 180/24).",
           "",
-          "- A CEST has 7 digits: the first two are the segment, the third to the fifth the item of the segment and the last two the specification of the item (cláusula sexta, IV of the Convênio).",
+          "- A CEST has 7 digits: the first two digits are the segment, digits 3 to 5 are the item and the last two are the specification of the item (cláusula sexta, IV of the Convênio).",
           "- Accepted string forms: 7 digits, or `NN.NNN.NN` with any run of separators (space, `.`, `-` or `/`) between the groups, or none, and optional surrounding whitespace. Any other string is invalid: its digits are not picked out.",
           "- Bare digits are left-padded with zeros to 7, as a string or as a number, because segments 01 to 09 start with zero: `100100`, `\"100100\"` and `\"0100100\"` are the same code. A masked value is read as written.",
-          "- A number is read only when it is a non-negative safe integer. A negative, fractional, not finite or unsafe number is invalid.",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number is invalid.",
           "- Revoked items are invalid, for example 01.110.00, 03.001.00, 03.002.00, 03.004.00, 03.010.03, 03.014.00, 03.016.00, 10.023.00, 17.049.08, 17.049.09 and 20.035.01.",
-          "- The table has 1040 codes in 25 segments (Anexo I). Segments 15, 18 and 27 do not exist.",
+          "- The table has 1,040 codes in 25 segments (Anexo I). Segments 15, 18 and 27 do not exist.",
           "- The NCM/SH column of the annexes is not loaded, and there is no CEST×NCM cross-check. By cláusula sétima, the description is what decides.",
           "- Whether a state applies ICMS-ST to the code depends on state law and is out of scope. MVA/PMPF and Anexo XXVII are out of scope too."
         ],
         "pt-BR": [
           "Verifica se um CEST consta dos anexos do Convênio ICMS 142/18 (Anexos II a XXVI do texto consolidado, alterado até o Convênio ICMS 180/24).",
           "",
-          "- Um CEST tem 7 dígitos: os dois primeiros são o segmento, do terceiro ao quinto o item do segmento e os dois últimos a especificação do item (cláusula sexta, IV do Convênio).",
-          "- Formas aceitas em string: 7 dígitos, ou `NN.NNN.NN` com qualquer sequência de separadores (espaço, `.`, `-` ou `/`) entre os grupos, ou nenhum, e espaços opcionais em volta. Qualquer outra string é inválida: a função não extrai os dígitos dela.",
+          "- Um CEST tem 7 dígitos: os dois primeiros dígitos são o segmento, os dígitos 3 a 5 são o item do segmento e os dois últimos são a especificação do item (cláusula sexta, IV do Convênio).",
+          "- Formas aceitas em string: 7 dígitos, ou `NN.NNN.NN` com qualquer sequência de separadores (espaço, `.`, `-` ou `/`) entre os grupos, ou nenhum, e espaços opcionais nas pontas. Qualquer outra string é inválida: a função não extrai os dígitos dela.",
           "- Dígitos sem máscara são completados com zeros à esquerda até 7, em string ou em número, porque os segmentos 01 a 09 começam com zero: `100100`, `\"100100\"` e `\"0100100\"` são o mesmo código. Um valor com máscara é lido como foi escrito.",
-          "- Um número só é lido quando é um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro é inválido.",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro é inválido.",
           "- Itens revogados são inválidos, por exemplo 01.110.00, 03.001.00, 03.002.00, 03.004.00, 03.010.03, 03.014.00, 03.016.00, 10.023.00, 17.049.08, 17.049.09 e 20.035.01.",
-          "- A tabela tem 1040 códigos em 25 segmentos (Anexo I). Os segmentos 15, 18 e 27 não existem.",
+          "- A tabela tem 1.040 códigos em 25 segmentos (Anexo I). Os segmentos 15, 18 e 27 não existem.",
           "- A coluna NCM/SH dos anexos não é carregada, e não há validação cruzada CEST×NCM. Pela cláusula sétima, a descrição é o critério que decide.",
-          "- Se o estado aplica ICMS-ST ao código depende da lei estadual e fica fora do escopo. MVA/PMPF e o Anexo XXVII também ficam fora."
+          "- Saber se o estado aplica ICMS-ST ao código depende da lei estadual e fica fora do escopo. MVA/PMPF e o Anexo XXVII também ficam fora."
         ]
       },
       "references": ["https://www.confaz.fazenda.gov.br/legislacao/convenios/2018/CV142_18"],
@@ -204,15 +204,15 @@
           "Removes CEST formatting and keeps only digits, capped at 7.",
           "",
           "- The function does not left-pad the value. It keeps a partial code as written, so the leading zero of segments 01 to 09 has to be written out. `cest.isValid` and `cest.get` do pad bare digits.",
-          "- Returns an empty string when there is no digit at all (null and undefined included).",
-          "- A number is read only when it is a non-negative safe integer. A negative, fractional, not finite or unsafe number returns an empty string."
+          "- Returns an empty string when there is no digit at all (`null` and `undefined` included).",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number returns an empty string."
         ],
         "pt-BR": [
           "Remove a formatação do CEST e mantém apenas os dígitos, limitados a 7.",
           "",
           "- A função não completa o valor com zeros à esquerda. Ela mantém um código parcial como foi escrito, então o zero dos segmentos 01 a 09 precisa ser escrito. `cest.isValid` e `cest.get` completam dígitos sem máscara.",
-          "- Retorna uma string vazia quando não há nenhum dígito (null e undefined incluídos).",
-          "- Um número só é lido quando é um inteiro seguro não negativo. Um número negativo, fracionário, não finito ou inseguro retorna uma string vazia."
+          "- Retorna uma string vazia quando não há nenhum dígito (`null` e `undefined` incluídos).",
+          "- Um número só é lido se for um inteiro seguro não negativo. Um número negativo, fracionário, não finito ou inseguro retorna uma string vazia."
         ]
       },
       "references": ["https://www.confaz.fazenda.gov.br/legislacao/convenios/2018/CV142_18"],

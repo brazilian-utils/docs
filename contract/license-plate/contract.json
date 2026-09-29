@@ -22,19 +22,19 @@
           "The conversion follows the table of Anexo II of Resolução CONTRAN nº 969/2022. Every other character stays as it is.",
           "",
           "- The plate is read like `licensePlate.isValid` reads it: any case, the mask (`ABC-1234`, `ABC 1234`) accepted, whitespace around it ignored, and a mask character or any other character in another position makes it invalid. Until 2.4.0 such characters were stripped, so `A-BC1234` was converted.",
-          "- It returns an empty string, not null, when the value is not a valid old-format plate: a plate that is already Mercosul (`ABC1D23`), the withdrawn `LLLNNLN` sequence, a wrong length or an invalid value.",
+          "- It returns an empty string, not `null`, when the value is not a valid old-format plate: a plate that is already Mercosul (`ABC1D23`), the withdrawn `LLLNNLN` sequence, a wrong length or an invalid value.",
           "- Pending decision (findings §1b): the reference (JS) also accepts the hyphen mask (`ABC-1234`). Other libraries reject it.",
-          "- Pending decision (findings §2 #5): for a plate that is already Mercosul or is not a valid old-format plate, the reference (JS) returns an empty string. Most libraries return null."
+          "- Pending decision (findings §2 #5): for a plate that is already Mercosul or is not a valid old-format plate, the reference (JS) returns an empty string. Most libraries return `null`."
         ],
         "pt-BR": [
           "Converte uma placa no formato antigo (`LLLNNNN`) para o padrão Mercosul (`LLLNLNN`). O 5º caractere, um dígito, vira uma letra, de `0` a `9` para `A` a `J` (`ABC1234` vira `ABC1C34`). O resultado fica em maiúsculas e sem máscara.",
           "",
           "A conversão segue a tabela do Anexo II da Resolução CONTRAN nº 969/2022. Todos os outros caracteres ficam como estão.",
           "",
-          "- A placa é lida como `licensePlate.isValid` a lê: qualquer caixa, a máscara (`ABC-1234`, `ABC 1234`) aceita, espaços em volta ignorados, e um caractere de máscara ou qualquer outro caractere em outra posição a torna inválida. Até a 2.4.0 esses caracteres eram removidos, então `A-BC1234` era convertida.",
-          "- Retorna uma string vazia, não null, quando o valor não é uma placa válida no formato antigo: uma placa que já é Mercosul (`ABC1D23`), a sequência extinta `LLLNNLN`, um tamanho errado ou um valor inválido.",
+          "- A placa é lida como `licensePlate.isValid` a lê: qualquer caixa, a máscara (`ABC-1234`, `ABC 1234`) aceita, espaços nas pontas ignorados, e um caractere de máscara ou qualquer outro caractere em outra posição a torna inválida. Até a 2.4.0 esses caracteres eram removidos, então `A-BC1234` era convertida.",
+          "- Retorna uma string vazia, não `null`, quando o valor não é uma placa válida no formato antigo: uma placa que já é Mercosul (`ABC1D23`), a sequência extinta `LLLNNLN`, um tamanho errado ou um valor inválido.",
           "- Decisão pendente (findings §1b): a referência (JS) também aceita a máscara com hífen (`ABC-1234`). As outras bibliotecas a rejeitam.",
-          "- Decisão pendente (findings §2 #5): para uma placa que já é Mercosul ou que não é uma placa válida no formato antigo, a referência (JS) retorna uma string vazia. A maioria das bibliotecas retorna null."
+          "- Decisão pendente (findings §2 #5): para uma placa que já é Mercosul ou que não é uma placa válida no formato antigo, a referência (JS) retorna uma string vazia. A maioria das bibliotecas retorna `null`."
         ]
       },
       "references": [
@@ -77,7 +77,7 @@
           "- A partial value is formatted as far as it goes, so the function works as an input mask: the hyphen shows up as soon as the fourth character is a digit (`abc1` gives `ABC-1`), and a fifth character that is a letter keeps the Mercosul form (`abc1d` gives `ABC1D`).",
           "- Any character that is not an ASCII letter or digit is dropped first, and only the first 7 remain. Unlike `licensePlate.isValid`, the mask may sit anywhere.",
           "- Returns an empty string when the value cannot start a valid plate (`1234567`, `abc12d3`, `abc1da2`).",
-          "- A value that is not a string gives an empty string."
+          "- A value that is not a string returns an empty string."
         ],
         "pt-BR": [
           "Formata uma placa em maiúsculas. Placas no formato antigo (`LLLNNNN`) ganham um hífen (`ABC-1234`). Placas Mercosul (`LLLNLNN`) não têm separador.",
@@ -85,7 +85,7 @@
           "- Um valor parcial é formatado até onde vai, então a função serve como máscara de entrada: o hífen aparece assim que o quarto caractere é um dígito (`abc1` dá `ABC-1`), e um quinto caractere que é letra mantém a forma Mercosul (`abc1d` dá `ABC1D`).",
           "- Todo caractere que não seja letra ASCII ou dígito é descartado antes, e só os 7 primeiros ficam. Diferente de `licensePlate.isValid`, a máscara pode estar em qualquer posição.",
           "- Retorna uma string vazia quando o valor não pode ser o início de uma placa válida (`1234567`, `abc12d3`, `abc1da2`).",
-          "- Um valor que não é string dá uma string vazia."
+          "- Um valor que não é string retorna uma string vazia."
         ]
       },
       "references": [
@@ -175,16 +175,16 @@
           "Detects the format of a license plate: `LLLNNNN` for the old format, `LLLNLNN` for Mercosul.",
           "",
           "- The plate is read like `licensePlate.isValid` reads it: any case, whitespace around it ignored, and the mask (whitespace, `.`, `-` or `/`) accepted only between the third character and the last four. A mask character anywhere else, or any other character, makes the value invalid. Until 2.4.0 such characters were stripped, so `A-BC1234` gave `LLLNNNN`.",
-          "- Returns null when the value is not 7 letters and digits in one of the two formats, including the withdrawn `LLLNNLN` sequence.",
-          "- It returns null exactly when `licensePlate.isValid` returns false.",
+          "- Returns `null` when the value is not 7 letters and digits in one of the two formats, including the withdrawn `LLLNNLN` sequence.",
+          "- It returns `null` exactly when `licensePlate.isValid` returns `false`.",
           "- Pending decision (findings §1): Erlang returns named formats instead of the patterns."
         ],
         "pt-BR": [
           "Detecta o formato de uma placa: `LLLNNNN` para o formato antigo, `LLLNLNN` para Mercosul.",
           "",
-          "- A placa é lida como `licensePlate.isValid` a lê: qualquer caixa, espaços em volta ignorados, e a máscara (espaço, `.`, `-` ou `/`) aceita só entre o terceiro caractere e os quatro últimos. Um caractere de máscara em outro lugar, ou qualquer outro caractere, torna o valor inválido. Até a 2.4.0 esses caracteres eram removidos, então `A-BC1234` dava `LLLNNNN`.",
-          "- Retorna null quando o valor não tem 7 letras e dígitos em um dos dois formatos, inclusive a sequência extinta `LLLNNLN`.",
-          "- Retorna null exatamente quando `licensePlate.isValid` retorna false.",
+          "- A placa é lida como `licensePlate.isValid` a lê: qualquer caixa, espaços nas pontas ignorados, e a máscara (espaço, `.`, `-` ou `/`) aceita só entre o terceiro caractere e os quatro últimos. Um caractere de máscara em outro lugar, ou qualquer outro caractere, torna o valor inválido. Até a 2.4.0 esses caracteres eram removidos, então `A-BC1234` dava `LLLNNNN`.",
+          "- Retorna `null` quando o valor não tem 7 letras e dígitos em um dos dois formatos, inclusive a sequência extinta `LLLNNLN`.",
+          "- Retorna `null` exatamente quando `licensePlate.isValid` retorna `false`.",
           "- Decisão pendente (findings §1): Erlang retorna formatos com nome em vez dos padrões."
         ]
       },
@@ -224,8 +224,8 @@
           "- `options.format` restricts the check to one format: `\"LLLNNNN\"` (old, `ABC1234`) or `\"LLLNLNN\"` (Mercosul, `ABC1D23`), the codes `licensePlate.getFormat` returns and `licensePlate.generate` takes. Without it, or with any other value, both formats are accepted. Until 2.4.0 the option did not exist and both formats were always accepted.",
           "- Any other sequence of letters and digits, or extra characters, makes it invalid.",
           "- The mask (whitespace, `.`, `-` or `/`, alone or in a run) is accepted only between the third character and the last four, whitespace around the plate is ignored, and the check is case-insensitive.",
-          "- A mask character anywhere else, or any other character (`A@BC1234`, an emoji), makes the plate invalid instead of being stripped. Until 2.4.0 such characters were stripped (`A@B#C1$2%3^4` was true).",
-          "- `licensePlate.getFormat` returns null exactly when this returns false.",
+          "- A mask character anywhere else, or any other character (`A@BC1234`, an emoji), makes the plate invalid instead of being stripped. Until 2.4.0 such characters were stripped (`A@B#C1$2%3^4` was `true`).",
+          "- `licensePlate.getFormat` returns `null` exactly when this returns `false`.",
           "- The withdrawn motorcycle sequence `LLLNNLN` (`ABC12D3`) is invalid."
         ],
         "pt-BR": [
@@ -233,9 +233,9 @@
           "",
           "- `options.format` restringe a checagem a um formato: `\"LLLNNNN\"` (antigo, `ABC1234`) ou `\"LLLNLNN\"` (Mercosul, `ABC1D23`), os códigos que `licensePlate.getFormat` retorna e `licensePlate.generate` recebe. Sem ele, ou com qualquer outro valor, os dois formatos são aceitos. Até a 2.4.0 a opção não existia e os dois formatos eram sempre aceitos.",
           "- Qualquer outra sequência de letras e dígitos, ou caracteres a mais, torna a placa inválida.",
-          "- A máscara (espaço, `.`, `-` ou `/`, sozinha ou em sequência) só é aceita entre o terceiro caractere e os quatro últimos, os espaços em volta da placa são ignorados, e a verificação ignora maiúsculas e minúsculas.",
-          "- Um caractere de máscara em outro lugar, ou qualquer outro caractere (`A@BC1234`, um emoji), torna a placa inválida em vez de ser removido. Até a 2.4.0 esses caracteres eram removidos (`A@B#C1$2%3^4` era true).",
-          "- `licensePlate.getFormat` retorna null exatamente quando esta função retorna false.",
+          "- A máscara (espaço, `.`, `-` ou `/`, sozinha ou em sequência) só é aceita entre o terceiro caractere e os quatro últimos, os espaços nas pontas da placa são ignorados, e a verificação ignora maiúsculas e minúsculas.",
+          "- Um caractere de máscara em outro lugar, ou qualquer outro caractere (`A@BC1234`, um emoji), torna a placa inválida em vez de ser removido. Até a 2.4.0 esses caracteres eram removidos (`A@B#C1$2%3^4` era `true`).",
+          "- `licensePlate.getFormat` retorna `null` exatamente quando esta função retorna `false`.",
           "- A sequência antiga de motos, já extinta, `LLLNNLN` (`ABC12D3`) é inválida."
         ]
       },
@@ -310,13 +310,13 @@
           "Removes every character that is not an ASCII letter or digit from a license plate, upper-cases it and caps it at 7 characters (`abc-1234` gives `ABC1234`).",
           "",
           "- It does not validate: use `licensePlate.isValid` for that. The mask may sit anywhere, unlike in `licensePlate.isValid`.",
-          "- A value that is not a string gives an empty string."
+          "- A value that is not a string returns an empty string."
         ],
         "pt-BR": [
           "Remove de uma placa todo caractere que não seja letra ASCII ou dígito, converte para maiúsculas e limita a 7 caracteres (`abc-1234` dá `ABC1234`).",
           "",
           "- Não valida: use `licensePlate.isValid` para isso. A máscara pode estar em qualquer posição, diferente de `licensePlate.isValid`.",
-          "- Um valor que não é string dá uma string vazia."
+          "- Um valor que não é string retorna uma string vazia."
         ]
       },
       "references": [

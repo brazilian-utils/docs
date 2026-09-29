@@ -4,7 +4,7 @@
   "title": { "en": "GTIN (EAN/UPC)", "pt-BR": "GTIN (EAN/UPC)" },
   "summary": {
     "en": "Global Trade Item Number, the number under an EAN/UPC barcode: GTIN-8, GTIN-12, GTIN-13 and GTIN-14, ending in a GS1 modulus 10 check digit. The NF-e carries it in the cEAN and cEANTrib fields.",
-    "pt-BR": "Global Trade Item Number, o número sob um código de barras EAN/UPC: GTIN-8, GTIN-12, GTIN-13 e GTIN-14, terminado em um dígito verificador GS1 por módulo 10. A NF-e o leva nos campos cEAN e cEANTrib."
+    "pt-BR": "Global Trade Item Number, o número sob um código de barras EAN/UPC: GTIN-8, GTIN-12, GTIN-13 e GTIN-14, terminado em um dígito verificador GS1 por módulo 10. A NF-e o traz nos campos cEAN e cEANTrib."
   },
   "category": "products",
   "order": 1,
@@ -14,23 +14,23 @@
       "summary": { "en": "Reads the fields of a GTIN.", "pt-BR": "Lê os campos de um GTIN." },
       "description": {
         "en": [
-          "Reads the fields of a GTIN: structure, length, GS1 prefix, whether the prefix is Brazilian or a restricted range, and the check digit. Accepts the same input as `gtin.isValid` without options and returns null exactly when `gtin.isValid` is false.",
+          "Reads the fields of a GTIN: structure, length, GS1 prefix, whether the prefix is Brazilian or a restricted range, and the check digit. Accepts the same input as `gtin.isValid` without options and returns `null` exactly when `gtin.isValid` is `false`.",
           "",
           "- `type` (`GTIN-8`, `GTIN-12`, `GTIN-13` or `GTIN-14`) and `length` describe the value as written. A GTIN-14 that starts with 0 is reported as `GTIN-14`.",
           "- `prefix` is read from the 14-digit form (the value left-padded with zeros): positions 7 to 9 when positions 2 to 6 are zeros (a GS1-8 prefix, as in every GTIN-8), positions 2 to 4 otherwise. The first digit, a padding zero or the indicator digit, is never part of the prefix. So `10000078912349` has prefix `789`, the prefix of a GTIN-12 starts with 0, and a GTIN-14 has the prefix of the GTIN it packs.",
-          "- `isBrazilian` is true for the prefixes 789 and 790 (GS1 Brasil, as the SEFAZ rules name them).",
-          "- `isRestrictedCirculation` is true for the Restricted Circulation Number ranges of the GS1 General Specifications: GS1 prefixes 02, 04, 20 to 29 and 0000000, and GS1-8 prefixes 000 to 099 and 200 to 299. A restricted range does not make the code invalid. It is only reported.",
+          "- `isBrazilian` is `true` for the prefixes 789 and 790 (GS1 Brasil, as the SEFAZ rules name them).",
+          "- `isRestrictedCirculation` is `true` for the Restricted Circulation Number ranges of the GS1 General Specifications: GS1 prefixes 02, 04, 20 to 29 and 0000000, and GS1-8 prefixes 000 to 099 and 200 to 299. A restricted range does not make the code invalid. It is only reported.",
           "- `checkDigit` is the last digit, as a number.",
           "- The prefix is not checked against the list of GS1 Member Organisations, and no country name is returned. The prefix names the GS1 organisation that licensed the number, not the country of origin.",
           "- Returns a new object on every call."
         ],
         "pt-BR": [
-          "Lê os campos de um GTIN: estrutura, comprimento, prefixo GS1, se o prefixo é brasileiro ou de faixa restrita, e o dígito verificador. Aceita a mesma entrada que `gtin.isValid` sem opções e retorna null exatamente quando `gtin.isValid` é false.",
+          "Lê os campos de um GTIN: estrutura, comprimento, prefixo GS1, se o prefixo é brasileiro ou de faixa restrita, e o dígito verificador. Aceita a mesma entrada de `gtin.isValid` sem opções e retorna `null` exatamente quando `gtin.isValid` é `false`.",
           "",
-          "- `type` (`GTIN-8`, `GTIN-12`, `GTIN-13` ou `GTIN-14`) e `length` descrevem o valor como foi escrito. Um GTIN-14 que começa com 0 é reportado como `GTIN-14`.",
+          "- `type` (`GTIN-8`, `GTIN-12`, `GTIN-13` ou `GTIN-14`) e `length` descrevem o valor como foi escrito. Um GTIN-14 que começa com 0 é informado como `GTIN-14`.",
           "- `prefix` é lido da forma de 14 dígitos (o valor completado com zeros à esquerda): posições 7 a 9 quando as posições 2 a 6 são zeros (um prefixo GS1-8, como em todo GTIN-8), posições 2 a 4 nos outros casos. O primeiro dígito, zero de preenchimento ou indicador, nunca entra no prefixo. Assim `10000078912349` tem prefixo `789`, o prefixo de um GTIN-12 começa com 0, e um GTIN-14 tem o prefixo do GTIN que ele agrupa.",
-          "- `isBrazilian` é true para os prefixos 789 e 790 (GS1 Brasil, como as regras da SEFAZ os chamam).",
-          "- `isRestrictedCirculation` é true para as faixas de circulação restrita das GS1 General Specifications: prefixos GS1 02, 04, 20 a 29 e 0000000, e prefixos GS1-8 000 a 099 e 200 a 299. Faixa restrita não invalida o código. Só é reportada.",
+          "- `isBrazilian` é `true` para os prefixos 789 e 790 (GS1 Brasil, como as regras da SEFAZ os chamam).",
+          "- `isRestrictedCirculation` é `true` para as faixas de circulação restrita das GS1 General Specifications: prefixos GS1 02, 04, 20 a 29 e 0000000, e prefixos GS1-8 000 a 099 e 200 a 299. Faixa restrita não invalida o código. Só é informada.",
           "- `checkDigit` é o último dígito, como número.",
           "- O prefixo não é conferido contra a lista de Member Organisations da GS1, e nenhum nome de país é retornado. O prefixo indica a organização GS1 que licenciou o número, não o país de origem.",
           "- Retorna um objeto novo a cada chamada."
@@ -101,7 +101,7 @@
           "Valida um GTIN: 8, 12, 13 ou 14 dígitos e o dígito verificador GS1 por módulo 10.",
           "",
           "- Dígito verificador: os outros dígitos com pesos 3 e 1 alternados a partir da direita. O dígito verificador leva a soma ao próximo múltiplo de 10. É o que as regras I03-10 e I12-10 da NF-e verificam nos campos `cEAN` e `cEANTrib`.",
-          "- Só uma string de dígitos é lida; espaços em volta do valor são ignorados. Máscara, espaço no meio e letra são rejeitados. Número também é rejeitado, porque os zeros à esquerda definem o comprimento.",
+          "- Só uma string de dígitos é lida; espaços nas pontas do valor são ignorados. Máscara, espaço no meio e letra são rejeitados. Número também é rejeitado, porque os zeros à esquerda definem o comprimento.",
           "- Um valor só de zeros é rejeitado em qualquer comprimento, apesar de o dígito verificador ser válido. É uma regra da biblioteca, não da NF-e nem da GS1: a rejeição 611 é só o dígito verificador, e a GS1 reserva o prefixo `0000000` a números de circulação restrita dentro de uma empresa, em vez de proibi-lo. Zeros são rejeitados por serem o preenchimento comum de um GTIN ausente.",
           "- `SEM GTIN`, o texto que a NF-e usa para produto sem GTIN, é rejeitado.",
           "- `options.lengths` limita os comprimentos aceitos, por exemplo `{ lengths: [13] }`. Uma lista vazia não aceita nada. Quando ausente ou quando não é uma lista, os quatro comprimentos são aceitos.",

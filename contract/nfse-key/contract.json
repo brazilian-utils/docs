@@ -17,17 +17,17 @@
       },
       "description": {
         "en": [
-          "Parses a national NFS-e access key into its fields. It accepts the same input as `nfseKey.isValid` and returns null exactly when that function returns false.",
+          "Parses a national NFS-e access key into its fields. It accepts the same input as `nfseKey.isValid` and returns `null` exactly when that function returns `false`.",
           "",
-          "- The separators between fields are accepted as in `nfseKey.isValid`. The `NFS` prefix must touch the key. Only a string is read: any other type returns null.",
+          "- The separators between fields are accepted as in `nfseKey.isValid`. The `NFS` prefix must touch the key. Only a string is read: any other type returns `null`.",
           "- Fields: `municipalityCode` (7 digits, a string), `stateCode` (the 2-letter UF read from the first 2 digits of the municipality code), `generatorEnvironment` (1 municipality, 2 Sistema Nacional NFS-e), `taxIdType` (`cpf` or `cnpj`), `taxId`, `number` (the NFS-e number, a number from 1 to 9999999999999), `year`, `month` (1 to 12), `code` (the numeric code, a string) and `checkDigit` (a number).",
           "- The tax id is the 11-digit CPF without the `000` padding of the key, or the 14-character CNPJ, numeric or alphanumeric, in upper case.",
           "- The year is 2000 plus the 2 digits of the key. The numeric code keeps its 9 digits, leading zeros included."
         ],
         "pt-BR": [
-          "Decompõe a chave de acesso de uma NFS-e nacional em seus campos. Aceita a mesma entrada que `nfseKey.isValid` e retorna null exatamente quando essa função retorna false.",
+          "Decompõe a chave de acesso de uma NFS-e nacional em seus campos. Aceita a mesma entrada que `nfseKey.isValid` e retorna `null` exatamente quando essa função retorna `false`.",
           "",
-          "- Os separadores entre campos são aceitos como em `nfseKey.isValid`. O prefixo `NFS` deve encostar na chave. Só uma string é lida: qualquer outro tipo retorna null.",
+          "- Os separadores entre campos são aceitos como em `nfseKey.isValid`. O prefixo `NFS` deve encostar na chave. Só uma string é lida: qualquer outro tipo retorna `null`.",
           "- Campos: `municipalityCode` (7 dígitos, uma string), `stateCode` (a sigla da UF lida dos 2 primeiros dígitos do código do município), `generatorEnvironment` (1 prefeitura, 2 Sistema Nacional NFS-e), `taxIdType` (`cpf` ou `cnpj`), `taxId`, `number` (o número da NFS-e, um número de 1 a 9999999999999), `year`, `month` (1 a 12), `code` (o código numérico, uma string) e `checkDigit` (um número).",
           "- A inscrição é o CPF de 11 dígitos, sem o preenchimento `000` da chave, ou o CNPJ de 14 caracteres, numérico ou alfanumérico, em maiúsculas.",
           "- O ano é 2000 mais os 2 dígitos da chave. O código numérico mantém os seus 9 dígitos, com os zeros à esquerda."
@@ -217,9 +217,9 @@
         "en": [
           "Validates the 50-digit access key of a national NFS-e: municipality code (7), generator environment `ambGer` (1), tax id type (1), tax id (14), NFS-e number `nNFSe` (13), year and month `AAMM` (4), numeric code (9) and check digit (1).",
           "",
-          "- The key may start with `NFS`, the prefix of the XML `Id` attribute, in any case. Surrounding whitespace is ignored.",
+          "- The key may start with `NFS`, the prefix of the XML `Id` attribute, in any case. Whitespace around the value is ignored.",
           "- The DANFSe prints the key as a single block, so it has no printed mask (there is no `nfseKey.format`). The 8 fields (municipality code, `ambGer`, tax id type, tax id, `nNFSe`, `AAMM`, numeric code and check digit) may be written apart: any run of whitespace, `.`, `-` or `/` is accepted between two fields, as `cpf.isValid` reads its mask. A separator inside a field, or between the `NFS` prefix and the key, makes the value invalid.",
-          "- Only a string is read. Any other type returns false.",
+          "- Only a string is read. Any other type returns `false`.",
           "- The municipality code must start with an IBGE state code. The function checks only that prefix and does not look the municipality up.",
           "- `ambGer` must be 1 (municipality system) or 2 (Sistema Nacional NFS-e).",
           "- Tax id type 1 is a CPF, left-padded with `000`. Type 2 is a CNPJ. The CPF or CNPJ must have valid check digits of its own.",
@@ -234,18 +234,18 @@
         "pt-BR": [
           "Valida a chave de acesso de 50 dígitos de uma NFS-e nacional: código do município (7), ambiente gerador `ambGer` (1), tipo de inscrição (1), inscrição federal (14), número da NFS-e `nNFSe` (13), ano e mês `AAMM` (4), código numérico (9) e dígito verificador (1).",
           "",
-          "- A chave pode começar com `NFS`, o prefixo do atributo `Id` do XML, em qualquer caixa. Espaços nas extremidades são ignorados.",
+          "- A chave pode começar com `NFS`, o prefixo do atributo `Id` do XML, sem diferenciar maiúsculas de minúsculas. Espaços nas pontas são ignorados.",
           "- O DANFSe imprime a chave em um único bloco, então ela não tem máscara impressa (não existe `nfseKey.format`). Os 8 campos (código do município, `ambGer`, tipo de inscrição, inscrição federal, `nNFSe`, `AAMM`, código numérico e dígito verificador) podem ser escritos separados: qualquer sequência de espaço, `.`, `-` ou `/` é aceita entre dois campos, como `cpf.isValid` lê sua máscara. Um separador dentro de um campo, ou entre o prefixo `NFS` e a chave, torna o valor inválido.",
-          "- Só uma string é lida. Qualquer outro tipo retorna false.",
+          "- Só uma string é lida. Qualquer outro tipo retorna `false`.",
           "- O código do município deve começar com um código de UF do IBGE. A função confere só esse prefixo e não consulta o município.",
           "- O `ambGer` deve ser 1 (sistema da prefeitura) ou 2 (Sistema Nacional NFS-e).",
           "- Tipo de inscrição 1 é um CPF, completado com `000` à esquerda. Tipo 2 é um CNPJ. O CPF ou o CNPJ precisa ter os próprios dígitos verificadores válidos.",
-          "- Um CNPJ alfanumérico é aceito com tipo 2, como `cnpj.isValid` com version 2 o lê: letras só nas 14 posições da inscrição, em qualquer caixa. O schema alfanumérico vem do pacote de produção restrita (RTC) de 27/07/2026. O serviço trata o CNPJ alfanumérico em produção desde 10/08/2026, enquanto o XSD de produção de 09/02/2026 ainda define a chave só com dígitos.",
+          "- Um CNPJ alfanumérico é aceito com tipo 2, como `cnpj.isValid` com version 2 o lê: letras só nas 14 posições da inscrição, em maiúsculas ou minúsculas. O schema alfanumérico vem do pacote de produção restrita (RTC) de 27/07/2026. O serviço trata o CNPJ alfanumérico em produção desde 10/08/2026, enquanto o XSD de produção de 09/02/2026 ainda define a chave só com dígitos.",
           "- As letras de um CNPJ alfanumérico ficam nas 14 posições da inscrição federal (10 a 23 da chave), como o `TSIdNFSe` do pacote de schemas de 27/07/2026 as define.",
           "- O número da NFS-e não pode ser todo zero. O mês deve estar entre 01 e 12.",
           "- O dígito verificador é um módulo 11 sobre os 49 primeiros caracteres, pesos de 2 a 9 a partir da direita. Resto 0 ou 1 dá 0. Uma letra vale o seu código ASCII menos 48 (`A` vale 17), por analogia com a NT Conjunta 2025.001.",
           "- Nenhum documento oficial fixa os pesos nem a regra do resto; os documentos só dizem \"módulo 11\". A regra foi confirmada com mais de cem chaves de NFS-e de repositórios públicos, dos dois ambientes, com restos 0, 1 e 10 entre elas.",
-          "- A chave de exemplo do item 9.1 do Guia do Emissor v1.2 não é válida: o dígito verificador não fecha e o CNPJ é inválido.",
+          "- A chave de exemplo do item 9.1 do Guia do Emissor v1.2 não é válida: o dígito verificador não confere e o CNPJ é inválido.",
           "- As chaves dos modelos municipais de NFS-e que não são o padrão nacional ficam fora do escopo, assim como a chave de 44 dígitos de DF-e (use `nfeKey.isValid`)."
         ]
       },
@@ -310,7 +310,7 @@
           "",
           "- As letras antes do primeiro dígito são descartadas, incluindo o prefixo `NFS` do atributo `Id` do XML. As letras depois dele são mantidas em maiúsculas, porque um CNPJ alfanumérico as tem. `nfseKey.isValid` confere onde elas estão.",
           "- Todo outro caractere é removido. Uma chave parcial é mantida até onde vai.",
-          "- Um número só é lido quando é um inteiro seguro não negativo. Qualquer outro número retorna string vazia.",
+          "- Um número só é lido se for um inteiro seguro não negativo. Qualquer outro número retorna uma string vazia.",
           "- O resultado é o bloco único que o DANFSe imprime, por isso não existe `nfseKey.format`."
         ]
       },

@@ -25,7 +25,7 @@
           "",
           "- A máscara é aplicada até onde o valor vai. Uma categoria fica sem ponto (`A00`). O ponto aparece com o quarto caractere.",
           "- Só as letras A a Z (em qualquer caixa) e os dígitos 0 a 9 são lidos; todos os outros caracteres são descartados, inclusive as letras acentuadas. O resultado é limitado a 4 caracteres mais o ponto. A máscara não confere quais posições são letras e quais são dígitos (`\"1234\"` dá `123.4`).",
-          "- Um valor que não é string retorna string vazia."
+          "- Um valor que não é string retorna uma string vazia."
         ]
       },
       "references": ["http://www2.datasus.gov.br/cid10/V2008/descrcsv.htm"],
@@ -59,14 +59,14 @@
         "en": [
           "Looks up a CID-10 category or subcategory in the DATASUS tables and returns its code and official Portuguese description.",
           "",
-          "- Same input rules as `cid10.isValid`. Returns null exactly when that function returns false.",
+          "- Same input rules as `cid10.isValid`. Returns `null` exactly when that function returns `false`.",
           "- The returned code is upper case and without the dot (`A000`).",
           "- Same table as `cid10.isValid`: the DATASUS V2008 tables plus the U07 codes of the SIM table (`U07.1` is `{ code: \"U071\", description: \"Infecção pelo novo Coronavírus (COVID-19)\" }`). U09.9 and U10.9 are not found."
         ],
         "pt-BR": [
           "Consulta uma categoria ou subcategoria da CID-10 nas tabelas do DATASUS e retorna o código e a descrição oficial em português.",
           "",
-          "- Mesmas regras de entrada de `cid10.isValid`. Retorna null exatamente quando essa função retorna false.",
+          "- Mesmas regras de entrada de `cid10.isValid`. Retorna `null` exatamente quando essa função retorna `false`.",
           "- O código retornado está em maiúsculas e sem ponto (`A000`).",
           "- Mesma tabela de `cid10.isValid`: as tabelas V2008 do DATASUS mais os códigos U07 da tabela do SIM (`U07.1` é `{ code: \"U071\", description: \"Infecção pelo novo Coronavírus (COVID-19)\" }`). U09.9 e U10.9 não são encontrados."
         ]
@@ -126,11 +126,11 @@
         "pt-BR": [
           "Verifica se uma categoria ou subcategoria da CID-10 existe nas tabelas brasileiras publicadas pelo DATASUS.",
           "",
-          "- Aceita uma categoria (3 caracteres, `A00`) ou uma subcategoria (4 caracteres), com ponto (`A00.0`) ou sem ponto (`A000`). Caixa e espaços nas extremidades são ignorados.",
+          "- Aceita uma categoria (3 caracteres, `A00`) ou uma subcategoria (4 caracteres), com ponto (`A00.0`) ou sem ponto (`A000`). Caixa e espaços nas pontas são ignorados.",
           "- Outros separadores (`A00-0`), um 5º caractere, um sufixo de adaga ou asterisco e um valor que não é string são rejeitados.",
           "- Uma subcategoria só é válida quando a tabela a lista na sua categoria. `I10.0` é inválido porque I10 não tem subcategorias; `I10` é válido como categoria.",
           "- Dados: CID-10 V2008 do DATASUS, 2045 categorias e 12188 subcategorias, mais U07, U07.0, U07.1 e U07.2 da tabela do SIM do DATASUS (entre eles os códigos da COVID-19). Códigos que a OMS acrescentou depois, como U09.9 e U10.9, são inválidos.",
-          "- O layout `codCID` do evento S-2230 do eSocial não foi verificado com esta função."
+          "- O leiaute `codCID` do evento S-2230 do eSocial não foi verificado com esta função."
         ]
       },
       "references": [
@@ -188,7 +188,7 @@
           "",
           "- Mantém só letras e dígitos, limitados a 4 caracteres. Um valor mais curto (uma categoria, ou um código sendo digitado) passa até onde vai.",
           "- Não confere o código na tabela (use `cid10.isValid`).",
-          "- Um valor que não é string retorna string vazia."
+          "- Um valor que não é string retorna uma string vazia."
         ]
       },
       "references": ["http://www2.datasus.gov.br/cid10/V2008/descrcsv.htm"],

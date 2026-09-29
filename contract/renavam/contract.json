@@ -43,18 +43,18 @@
           "- A number is read only when it is a safe non-negative integer. A negative or fractional number is invalid: 2.4.0 accepted `-639884962` and `63988496.2`. Strings and non-negative integers give the same result as before.",
           "- Portaria DENATRAN nº 27/2013 gives 10 digits and a check digit \"calculado através do módulo 11, peso 9\". It does not write out the weights, the handling of a remainder of 0, 1 or 10, or how a 9-digit code is read as 11 digits. Those parts follow community references and market practice.",
           "- A number loses its leading zeros, so an 11-digit RENAVAM that starts with `0` is only accepted as a string: `\"08794266580\"` is valid and `8794266580` is not.",
-          "- A value that is not a string or a number returns false."
+          "- A value that is not a string or a number returns `false`."
         ],
         "pt-BR": [
           "Valida um RENAVAM: o formato antigo (9 dígitos, completado com zeros à esquerda até 11) ou o novo (11 dígitos), com dígito verificador por módulo 11.",
           "",
           "- A função ignora espaços, pontos, hífens e barras, sozinhos ou em sequência, então toda forma com pontuação é aceita (`0063988.4962`, `0063988/4962`, `00639884-962`). Qualquer outro caractere, em particular uma letra ou um sublinhado, torna o valor inválido. Até a 2.4.0 a barra era rejeitada.",
-          "- Dígito verificador: os dez dígitos da base, lidos da direita para a esquerda, são multiplicados por 2, 3, 4, 5, 6, 7, 8, 9, 2 e 3. O dígito é o resto por 11 de dez vezes a soma, com resto 10 lido como 0.",
+          "- Dígito verificador: os dez dígitos da base, lidos da direita para a esquerda, são multiplicados por 2, 3, 4, 5, 6, 7, 8, 9, 2 e 3. O dígito é o resto da divisão por 11 de dez vezes a soma, com resto 10 lido como 0.",
           "- Um valor com todos os dígitos iguais é rejeitado.",
           "- Um número só é lido se for um inteiro seguro não negativo. Número negativo ou fracionário é inválido: a 2.4.0 aceitava `-639884962` e `63988496.2`. Strings e inteiros não negativos dão o mesmo resultado de antes.",
           "- A Portaria DENATRAN nº 27/2013 dá 10 dígitos e um dígito verificador \"calculado através do módulo 11, peso 9\". Ela não escreve os pesos, o tratamento de resto 0, 1 ou 10, nem como um código de 9 dígitos é lido em 11. Essas partes seguem referências da comunidade e a prática de mercado.",
           "- Um número perde os zeros à esquerda, então um RENAVAM de 11 dígitos que começa com `0` só é aceito como string: `\"08794266580\"` é válido e `8794266580` não é.",
-          "- Um valor que não é string nem número retorna false."
+          "- Um valor que não é string nem número retorna `false`."
         ]
       },
       "references": [

@@ -24,30 +24,30 @@
           "- `auto` picks `service` for a service number, `international` when the value carries a country code, otherwise `nanp` for more than 9 digits and `sn` for the rest.",
           "- `e164` and `international` first drop a country code in the input, as `phone.parse` does, and fall back to `service` for a service number. `e164` keeps at most the 11 national digits, as `international` does (`119888877660000` gives `+5511988887766`). Until 2.4.0 `e164` kept them all.",
           "- `sn` and `nanp` drop an explicit `+55` or `0055` too, so `+5511987654321` gives `(11) 98765-4321` under `nanp`. Until 2.4.0 it gave `(55) 11987-6543`. A bare `55` stays, since it may be the DDD (`5511988887777` gives `(55) 11988-8877` under `nanp`).",
-          "- A number still being typed after an explicit country code is formatted as far as it goes (`+55 11 9` gives `+55 11 9` under `international` and `auto`, `+55119` under `e164`). The value `+55` alone gives an empty string.",
+          "- A number still being typed after an explicit country code is formatted as far as it goes (`+55 11 9` gives `+55 11 9` under `international` and `auto`, `+55119` under `e164`). The value `+55` alone returns an empty string.",
           "- `options.obfuscate` (default `false`, read for truthiness) hides the subscriber number with `*` under every mask. It keeps the prefix that names a region or a service (the DDD, `+55`, the `0800`-like code, the `300X`/`400X` root) and the last 2 digits the mask has room for: `(11) *****-**21`, `0800 *** **67`, `4004-**34`. This is a convention of the library, not an official rule. It keeps the count of the gov.br account, which shows only the last 2 digits of a mobile. The DDD stays visible, although gov.br hides it.",
           "- With the default subscriber-number mask, a DDD-prefixed value is truncated before it is obfuscated, so the visible pair is not the last 2 digits of the input (`11987654321` gives `*****-**43`). Pass `{ mask: \"auto\" }` when the value has a DDD.",
           "- Under the `service` mask with `obfuscate`, a value that is only a service prefix so far keeps it (`0800` stays `0800`), since the prefix names a service, not a subscriber. A value too short to be recognized (`080`) is fully hidden (`***`). A value that is not a service number becomes one `*` per digit, which hides the digits but not how many there were.",
           "- With `obfuscate`, a valid 3-digit public utility code (`190`) is returned as it is under the `service`, `auto`, `e164` and `international` masks. The `sn` and `nanp` masks read it as an ordinary short number and hide it.",
           "- Under `e164` with `obfuscate`, the digits after the 11th national digit are dropped. This affects only invalid input.",
-          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number).",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number returns an empty string (2.4.0 read the digits of any number).",
           "- Pending decision (findings §2 #4): the reference (JS) defaults to the subscriber-number mask, which truncates a DDD-prefixed number. The other libraries default to `(11)99402-9275`."
         ],
         "pt-BR": [
           "Formata um número de telefone de acordo com os padrões brasileiros.",
           "",
-          "- `options.mask` (padrão `sn`) escolhe o padrão: `sn` (só o número do assinante, 9 dígitos: `98765-4321`), `nanp` (DDD mais número, `(11) 90000-0000`, 11 dígitos para celular e 10 para fixo, qualquer outro tamanho mantém o agrupamento de 11 dígitos), `e164` (`+5511987654321`), `international` (`+55 11 98765-4321`), `service` (`0800 123 4567`, `4004-1234`) e `auto`. Uma `mask` desconhecida cai em `sn`.",
+          "- `options.mask` (padrão `sn`) escolhe o padrão: `sn` (só o número do assinante, 9 dígitos: `98765-4321`), `nanp` (DDD mais número, `(11) 90000-0000`, 11 dígitos para celular e 10 para fixo, qualquer outro tamanho mantém o agrupamento de 11 dígitos), `e164` (`+5511987654321`), `international` (`+55 11 98765-4321`), `service` (`0800 123 4567`, `4004-1234`) e `auto`. Uma `mask` desconhecida usa `sn`.",
           "- Se o valor incluir DDD, passe `{ mask: \"auto\" }` ou `\"nanp\"`: a máscara padrão `sn` presume que não há DDD e o corta (`11900000000` dá `11900-0000`).",
           "- `auto` escolhe `service` para um número de serviço, `international` quando o valor traz código de país e, nos outros casos, `nanp` para mais de 9 dígitos e `sn` para o resto.",
-          "- `e164` e `international` primeiro removem um código de país da entrada, como `phone.parse` faz, e caem em `service` para um número de serviço. `e164` mantém no máximo os 11 dígitos nacionais, como `international` (`119888877660000` dá `+5511988887766`). Até a 2.4.0 `e164` mantinha todos.",
-          "- `sn` e `nanp` também removem um `+55` ou `0055` explícito, então `+5511987654321` dá `(11) 98765-4321` em `nanp`. Até a 2.4.0 dava `(55) 11987-6543`. Um `55` sem marca fica, pois pode ser o DDD (`5511988887777` dá `(55) 11988-8877` em `nanp`).",
-          "- Um número ainda sendo digitado depois de um código de país explícito é formatado até onde vai (`+55 11 9` dá `+55 11 9` em `international` e `auto`, `+55119` em `e164`). O valor `+55` sozinho dá string vazia.",
-          "- `options.obfuscate` (padrão `false`, lido como verdadeiro ou falso) oculta o número do assinante com `*` em todas as máscaras. Mantém o prefixo que identifica uma região ou um serviço (o DDD, `+55`, o código tipo `0800`, a raiz `300X`/`400X`) e os 2 últimos dígitos que a máscara comporta: `(11) *****-**21`, `0800 *** **67`, `4004-**34`. É uma convenção da biblioteca, não uma regra oficial. Segue a contagem da conta gov.br, que mostra só os 2 últimos dígitos do celular. O DDD continua visível, embora o gov.br o esconda.",
+          "- `e164` e `international` primeiro removem um código de país da entrada, como `phone.parse` faz, e usam `service` para um número de serviço. `e164` mantém no máximo os 11 dígitos nacionais, como `international` (`119888877660000` dá `+5511988887766`). Até a 2.4.0 `e164` mantinha todos.",
+          "- `sn` e `nanp` também removem um `+55` ou `0055` explícito, então `+5511987654321` dá `(11) 98765-4321` em `nanp`. Até a 2.4.0 dava `(55) 11987-6543`. Um `55` sem `+` nem `00` fica, pois pode ser o DDD (`5511988887777` dá `(55) 11988-8877` em `nanp`).",
+          "- Um número ainda sendo digitado depois de um código de país explícito é formatado até onde vai (`+55 11 9` dá `+55 11 9` em `international` e `auto`, `+55119` em `e164`). O valor `+55` sozinho retorna uma string vazia.",
+          "- `options.obfuscate` (padrão `false`, lido como verdadeiro ou falso) oculta o número do assinante com `*` em todas as máscaras. Mantém o prefixo que identifica uma região ou um serviço (o DDD, `+55`, um código como `0800`, a raiz `300X`/`400X`) e os 2 últimos dígitos que a máscara comporta: `(11) *****-**21`, `0800 *** **67`, `4004-**34`. É uma convenção da biblioteca, não uma regra oficial. Segue a contagem da conta gov.br, que mostra só os 2 últimos dígitos do celular. O DDD continua visível, embora o gov.br o esconda.",
           "- Com a máscara padrão de número do assinante, um valor com DDD é cortado antes de ser ocultado, então o par visível não são os 2 últimos dígitos da entrada (`11987654321` dá `*****-**43`). Passe `{ mask: \"auto\" }` quando o valor tiver DDD.",
           "- Na máscara `service` com `obfuscate`, um valor que é só um prefixo de serviço até agora o mantém (`0800` fica `0800`), pois o prefixo nomeia um serviço, não um assinante. Um valor curto demais para ser reconhecido (`080`) é totalmente oculto (`***`). Um valor que não é número de serviço vira um `*` por dígito, o que esconde os dígitos mas não quantos eram.",
           "- Com `obfuscate`, um código de utilidade pública de 3 dígitos válido (`190`) é retornado como está nas máscaras `service`, `auto`, `e164` e `international`. As máscaras `sn` e `nanp` o leem como um número curto comum e o ocultam.",
           "- Em `e164` com `obfuscate`, os dígitos depois do 11º dígito nacional são descartados. Isso só afeta entrada inválida.",
-          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número).",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia (a 2.4.0 lia os dígitos de qualquer número).",
           "- Decisão pendente (findings §2 #4): a referência (JS) usa por padrão a máscara do número do assinante, que corta um número com DDD. As outras bibliotecas usam por padrão `(11)99402-9275`."
         ]
       },
@@ -295,7 +295,7 @@
         "pt-BR": [
           "Valida um número de telefone brasileiro, celular ou fixo por padrão.",
           "",
-          "- A função aceita um código de país (`+55`, `0055` ou só `55`) e o remove primeiro, como em `phone.parse`. Um `55` sem marca só é removido quando restam 10 ou 11 dígitos.",
+          "- A função aceita um código de país (`+55`, `0055` ou só `55`) e o remove primeiro, como em `phone.parse`. Um `55` sem `+` nem `00` só é removido quando restam 10 ou 11 dígitos.",
           "- O DDD precisa ser um código de área brasileiro válido (`00` não é).",
           "- Qualquer caractere que não seja dígito, espaço em branco ou `()+.-/` (uma letra, por exemplo) torna o valor inválido. Até a 2.4.0 esses caracteres eram descartados, então `11 98765-4321x` era válido.",
           "- `options.accept` (padrão `[\"mobile\", \"landline\"]`) lista os tipos de número que valem como válidos: `mobile`, `landline` e `service` (os números que `phone.isValidService` reconhece). Uma lista vazia rejeita tudo.",
@@ -446,7 +446,7 @@
         "pt-BR": [
           "Valida um número de celular: DDD mais 9 dígitos.",
           "",
-          "- A função aceita um código de país (`+55`, `0055` ou só `55`) e o remove primeiro, como em `phone.parse`. Um `55` sem marca só é removido quando restam 10 ou 11 dígitos.",
+          "- A função aceita um código de país (`+55`, `0055` ou só `55`) e o remove primeiro, como em `phone.parse`. Um `55` sem `+` nem `00` só é removido quando restam 10 ou 11 dígitos.",
           "- O DDD precisa ser um código de área brasileiro válido (`00` não é).",
           "- Qualquer caractere que não seja dígito, espaço em branco ou `()+.-/` (uma letra, por exemplo) torna o valor inválido. Até a 2.4.0 esses caracteres eram descartados, então `11 98765-4321x` era válido.",
           "- O primeiro dígito do assinante precisa ser 7, 8 ou 9 nas duas regras de numeração (Resolução Anatel nº 749/2022, art. 12, I, \"a\": Serviço Móvel Pessoal). A 2.4.0 também aceitava 6 na versão 1, embora 6 não seja SMP.",
@@ -515,7 +515,7 @@
         "pt-BR": [
           "Valida um número de serviço brasileiro, discado sem DDD. A função verifica só a estrutura: o número não precisa estar atribuído a ninguém.",
           "",
-          "- Um código de país (`+55`, `0055` ou só `55`) é aceito e removido primeiro, como em `phone.isValid` com `accept: [\"service\"]`: `+55 0800 123 4567` é válido. Até a 2.4.0 era rejeitado. Um `55` sem marca só é removido quando sobram 11 dígitos que formam um número de serviço (`5508001234567` é válido; `55190` e `5540041234` não são).",
+          "- Um código de país (`+55`, `0055` ou só `55`) é aceito e removido primeiro, como em `phone.isValid` com `accept: [\"service\"]`: `+55 0800 123 4567` é válido. Até a 2.4.0 era rejeitado. Um `55` sem `+` nem `00` só é removido quando sobram 11 dígitos que formam um número de serviço (`5508001234567` é válido; `55190` e `5540041234` não são).",
           "- Qualquer caractere que não seja dígito, espaço em branco ou `()+.-/` (uma letra, por exemplo) torna o valor inválido. Até a 2.4.0 esses caracteres eram descartados, então `abc190` era válido.",
           "- Códigos Não Geográficos `0300`, `0303`, `0500`, `0800` e `0900` seguidos de 7 dígitos (11 no total; a forma antiga de 6 dígitos, como `0800 123456`, é rejeitada). A regra do `0500` que codifica um valor de doação nos dois últimos dígitos não é aplicada.",
           "- Os números abreviados `300X`/`400X` (8 dígitos). Outros prefixos de operadora são rejeitados.",
@@ -608,14 +608,14 @@
           "",
           "- An explicit country code, written as `+55` or `0055` at the start of the value, is always stripped, however many digits follow, so a number still being typed keeps its DDD: `+55 11 9` gives `119`. Until 2.4.0 the length rule below applied to the explicit forms too, so `+55 11 9` gave `55119`.",
           "- A bare leading `55` is stripped only when 10 or 11 digits are left (DDD plus an 8 or 9 digit subscriber number). This way area code 55 is not mistaken for a country code: `55987654321` is kept, and `55 11 9` gives `55119`.",
-          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number)."
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number returns an empty string (2.4.0 read the digits of any number)."
         ],
         "pt-BR": [
           "Remove a formatação do telefone e mantém só os dígitos, limitados a 11.",
           "",
           "- Um código de país explícito, escrito como `+55` ou `0055` no início do valor, é sempre removido, quantos dígitos vierem depois, então um número ainda sendo digitado mantém o DDD: `+55 11 9` dá `119`. Até a 2.4.0 a regra de tamanho abaixo valia também para as formas explícitas, então `+55 11 9` dava `55119`.",
-          "- Um `55` inicial sem marca é removido apenas quando restam 10 ou 11 dígitos (DDD mais um assinante de 8 ou 9 dígitos). Assim, o DDD 55 não é confundido com o código de país: `55987654321` é mantido, e `55 11 9` dá `55119`.",
-          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número)."
+          "- Um `55` inicial sem `+` nem `00` é removido apenas quando restam 10 ou 11 dígitos (DDD mais um assinante de 8 ou 9 dígitos). Assim, o DDD 55 não é confundido com o código de país: `55987654321` é mantido, e `55 11 9` dá `55119`.",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia (a 2.4.0 lia os dígitos de qualquer número)."
         ]
       },
       "references": [

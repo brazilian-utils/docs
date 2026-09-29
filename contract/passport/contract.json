@@ -121,12 +121,12 @@
     },
     "parse": {
       "summary": {
-        "en": "Removes non-alphanumeric characters from a passport number, converts it to uppercase, and caps it to 8 characters.",
+        "en": "Removes non-alphanumeric characters from a passport number, converts it to uppercase and caps it at 8 characters.",
         "pt-BR": "Remove os caracteres não alfanuméricos de um número de passaporte, converte-o para maiúsculas e limita-o a 8 caracteres."
       },
       "description": {
         "en": [
-          "Removes every non-alphanumeric character from a passport number, upper-cases it and caps it to 8 characters."
+          "Removes every non-alphanumeric character from a passport number, upper-cases it and caps it at 8 characters."
         ],
         "pt-BR": [
           "Remove todo caractere não alfanumérico de um número de passaporte, converte-o para maiúsculas e limita-o a 8 caracteres."

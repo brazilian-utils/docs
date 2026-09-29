@@ -61,13 +61,13 @@ The 9th digit is the Região Fiscal of the Receita Federal of the address given 
 - The digit is not the place of birth or of residence. It is the region of the address at the first registration.
 - In a region with more than one state, the number does not say which one.
 - `getCpfInfo` returns `{ base, fiscalRegion, states, checkDigits }`: the first 8 digits, the 9th digit as a string, the states of that region sorted by state name, and the 2 check digits. It returns `null` exactly when `isValidCpf` is `false`.
-- `generateCpf(state)` writes the digit of the region of `state`. The state code is read ignoring case and surrounding whitespace (`"sp"` is `SP`). 2.4.0 read only the upper-case code.
+- `generateCpf(state)` writes the digit of the region of `state`. The state code is read ignoring case and surrounding whitespace (`"sp"` is `SP`). 2.4.0 read only the uppercase code.
 
 Example: `getCpfInfo("123.456.789-09")` returns `{ base: "12345678", fiscalRegion: "9", states: ["PR", "SC"], checkDigits: "09" }`.
 
 ## Numbers as input
 
-`formatCpf` and `parseCpf` also take a number. It is read only when it is a non-negative safe integer. A negative, fractional, not finite or unsafe number gives an empty string. 2.4.0 read the digits of any number.
+`formatCpf` and `parseCpf` also take a number. It is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string. 2.4.0 read the digits of any number.
 
 ## Regex
 

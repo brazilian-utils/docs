@@ -19,15 +19,15 @@
           "- The digits are read from the value and the mask is applied as far as they go: `\"206\"` stays `\"206\"`, `\"2062\"` becomes `\"206-2\"`. `options.pad` first left-pads with zeros to 4 digits (`\"62\"` becomes `\"006-2\"`).",
           "- Digits after the 4th are ignored, and other characters are dropped. A number is treated as the string of its digits, so it is padded only with `pad`.",
           "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped).",
-          "- Returns an empty string when there is nothing to format. Until 2.4.0, a value with no digits and `pad: true` returned `\"000-0\"`."
+          "- Returns an empty string when there is nothing to format. Until 2.4.0 a value with no digits and `pad: true` returned `\"000-0\"`."
         ],
         "pt-BR": [
           "Formata um código de natureza jurídica como `NNN-N`. Use `legalNature.isValid` para verificar o código.",
           "",
           "- Os dígitos são lidos do valor e a máscara é aplicada até onde eles vão: `\"206\"` continua `\"206\"`, `\"2062\"` vira `\"206-2\"`. `options.pad` primeiro completa com zeros à esquerda até 4 dígitos (`\"62\"` vira `\"006-2\"`).",
           "- Dígitos depois do 4º são ignorados, e os outros caracteres são descartados. Um número é tratado como a string dos seus dígitos, então só é completado com `pad`.",
-          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal).",
-          "- Retorna string vazia quando não há nada para formatar. Até a 2.4.0, um valor sem dígitos com `pad: true` retornava `\"000-0\"`."
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal).",
+          "- Retorna uma string vazia quando não há nada para formatar. Até a 2.4.0, um valor sem dígitos com `pad: true` retornava `\"000-0\"`."
         ]
       },
       "references": [
@@ -91,28 +91,28 @@
       },
       "description": {
         "en": [
-          "Looks up a legal nature code in the IBGE/CONCLA Natureza Jurídica 2021 table. Returns null for an unknown code.",
+          "Looks up a legal nature code in the IBGE/CONCLA Natureza Jurídica 2021 table. Returns `null` for an unknown code.",
           "",
-          "- Same input rules as `legalNature.isValid`: the 4 digits, a non-negative safe integer or the `NNN-N` mask, with any run of separators (whitespace, `.`, `-` or `/`) between the third and the fourth digit. `\"206.2\"` finds 2062.",
-          "- A separator anywhere else (`\"2-0-6-2\"`) or any other character (`\"2062a\"`) returns null. Until 2.4.0 the separators were stripped from anywhere in the string.",
-          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number returns null. 2.4.0 stripped the sign and decimal point of a number too, so `206.2` found 2062.",
+          "- Same input rules as `legalNature.isValid`: the 4 digits, a safe non-negative integer or the `NNN-N` mask, with any run of separators (whitespace, `.`, `-` or `/`) between the third and the fourth digit. `\"206.2\"` finds 2062.",
+          "- A separator anywhere else (`\"2-0-6-2\"`) or any other character (`\"2062a\"`) returns `null`. Until 2.4.0 the separators were stripped from anywhere in the string.",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number returns `null`. 2.4.0 stripped the sign and decimal point of a number too, so `206.2` found 2062.",
           "- No code starts with zero (the first digit is the category, 1 to 5), so nothing is padded: a number and the string of the same digits read the same.",
           "- The entry has the code, its description and its CONCLA category (given by the first digit): 1 Administração Pública, 2 Entidades Empresariais, 3 Entidades sem Fins Lucrativos, 4 Pessoas Físicas, 5 Organizações Internacionais e Outras Instituições Extraterritoriais.",
-          "- A code that a past revision retired comes back with `legacy: true` and the `currentCode` it corresponds to today, or null when the revision that retired it published no successor (2100, 3050 and 3123). The 92 codes in force have `legacy: false` and no `currentCode`.",
+          "- A code that a past revision retired comes back with `legacy: true` and the `currentCode` it corresponds to today, or `null` when the revision that retired it published no successor (2100, 3050 and 3123). The 92 codes in force have `legacy: false` and no `currentCode`.",
           "- The retired codes and what each corresponds to today: 2076 to 2070, 2208 to 2275, 3042 to 3069, 3093 to 3999 and 5002 to 5010; 2100, 3050 and 3123 have no successor.",
-          "- It returns null exactly when `legalNature.isValid` returns false."
+          "- It returns `null` exactly when `legalNature.isValid` returns `false`."
         ],
         "pt-BR": [
-          "Consulta um código de natureza jurídica na tabela Natureza Jurídica 2021 do IBGE/CONCLA. Retorna null para um código desconhecido.",
+          "Consulta um código de natureza jurídica na tabela Natureza Jurídica 2021 do IBGE/CONCLA. Retorna `null` para um código desconhecido.",
           "",
-          "- Mesmas regras de entrada de `legalNature.isValid`: os 4 dígitos, um inteiro seguro não negativo ou a máscara `NNN-N`, com qualquer sequência de separadores (espaço, `.`, `-` ou `/`) entre o terceiro e o quarto dígito. `\"206.2\"` acha o 2062.",
-          "- Um separador em qualquer outro lugar (`\"2-0-6-2\"`) ou qualquer outro caractere (`\"2062a\"`) retorna null. Até a 2.4.0 os separadores eram removidos de qualquer posição da string.",
-          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna null. A 2.4.0 também removia o sinal e o ponto decimal de um número, então `206.2` achava o 2062.",
-          "- Nenhum código começa com zero (o primeiro dígito é a categoria, de 1 a 5), então nada é completado com zeros: um número e a string dos mesmos dígitos são lidos igual.",
+          "- Mesmas regras de entrada de `legalNature.isValid`: os 4 dígitos, um inteiro seguro não negativo ou a máscara `NNN-N`, com qualquer sequência de separadores (espaço, `.`, `-` ou `/`) entre o terceiro e o quarto dígito. `\"206.2\"` encontra o 2062.",
+          "- Um separador em qualquer outro lugar (`\"2-0-6-2\"`) ou qualquer outro caractere (`\"2062a\"`) retorna `null`. Até a 2.4.0 os separadores eram removidos de qualquer posição da string.",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna `null`. A 2.4.0 também removia o sinal e o ponto decimal de um número, então `206.2` encontrava o 2062.",
+          "- Nenhum código começa com zero (o primeiro dígito é a categoria, de 1 a 5), então nada é completado com zeros: um número e a string dos mesmos dígitos são lidos do mesmo jeito.",
           "- A entrada tem o código, a descrição e a categoria CONCLA (dada pelo primeiro dígito): 1 Administração Pública, 2 Entidades Empresariais, 3 Entidades sem Fins Lucrativos, 4 Pessoas Físicas, 5 Organizações Internacionais e Outras Instituições Extraterritoriais.",
-          "- Um código que uma revisão anterior extinguiu volta com `legacy: true` e o `currentCode` correspondente atual, ou null quando a revisão que o extinguiu não publicou sucessor (2100, 3050 e 3123). Os 92 códigos em vigor têm `legacy: false` e nenhum `currentCode`.",
-          "- Os códigos extintos e o que cada um corresponde hoje: 2076 a 2070, 2208 a 2275, 3042 a 3069, 3093 a 3999 e 5002 a 5010; 2100, 3050 e 3123 não têm sucessor.",
-          "- Retorna null exatamente quando `legalNature.isValid` retorna false."
+          "- Um código que uma revisão anterior extinguiu volta com `legacy: true` e o `currentCode` a que ele corresponde hoje, ou `null` quando a revisão que o extinguiu não publicou sucessor (2100, 3050 e 3123). Os 92 códigos em vigor têm `legacy: false` e nenhum `currentCode`.",
+          "- Os códigos extintos e o código a que cada um corresponde hoje: 2076 a 2070, 2208 a 2275, 3042 a 3069, 3093 a 3999 e 5002 a 5010; 2100, 3050 e 3123 não têm sucessor.",
+          "- Retorna `null` exatamente quando `legalNature.isValid` retorna `false`."
         ]
       },
       "references": [
@@ -164,19 +164,19 @@
           "Checks whether a legal nature code exists in the IBGE/CONCLA Natureza Jurídica 2021 table.",
           "",
           "- It accepts the 92 codes in force, plus the 8 codes that a past revision retired. `legalNature.get` tells them apart.",
-          "- Accepts the 4 digits, a non-negative safe integer or the `NNN-N` mask. The mask is accepted only after the third digit, with any run of separators (whitespace, `.`, `-` or `/`) between the third and the fourth digit: `\"206.2\"`, `\"206--2\"` and `\"206 - 2\"` are valid. Surrounding whitespace is ignored.",
+          "- Accepts the 4 digits, a safe non-negative integer or the `NNN-N` mask. The mask is accepted only after the third digit, with any run of separators (whitespace, `.`, `-` or `/`) between the third and the fourth digit: `\"206.2\"`, `\"206--2\"` and `\"206 - 2\"` are valid. Surrounding whitespace is ignored.",
           "- A separator anywhere else, or any other character, makes the value invalid: `\"2-0-6-2\"`, `\"20.6.2\"`, `\"2062a\"`. Until 2.4.0 the separators were stripped from anywhere in the string, so `\"-2-0-6-2\"` was valid.",
           "- A number is read only when it is a safe non-negative integer (`2062` is valid). A negative, fractional, non-finite or unsafe number is invalid. Until 2.4.0 the function accepted only strings.",
-          "- Any value that is not a string or a number returns false."
+          "- Any value that is not a string or a number returns `false`."
         ],
         "pt-BR": [
           "Verifica se um código de natureza jurídica existe na tabela Natureza Jurídica 2021 do IBGE/CONCLA.",
           "",
           "- Aceita os 92 códigos em vigor e também os 8 códigos que uma revisão anterior extinguiu. `legalNature.get` distingue uns dos outros.",
-          "- Aceita os 4 dígitos, um inteiro seguro não negativo ou a máscara `NNN-N`. A máscara só é aceita depois do terceiro dígito, com qualquer sequência de separadores (espaço, `.`, `-` ou `/`) entre o terceiro e o quarto dígito: `\"206.2\"`, `\"206--2\"` e `\"206 - 2\"` são válidos. Espaços em volta são ignorados.",
+          "- Aceita os 4 dígitos, um inteiro seguro não negativo ou a máscara `NNN-N`. A máscara só é aceita depois do terceiro dígito, com qualquer sequência de separadores (espaço, `.`, `-` ou `/`) entre o terceiro e o quarto dígito: `\"206.2\"`, `\"206--2\"` e `\"206 - 2\"` são válidos. Espaços nas pontas são ignorados.",
           "- Um separador em qualquer outro lugar, ou qualquer outro caractere, torna o valor inválido: `\"2-0-6-2\"`, `\"20.6.2\"`, `\"2062a\"`. Até a 2.4.0 os separadores eram removidos de qualquer posição da string, então `\"-2-0-6-2\"` era válido.",
           "- Um número só é lido se for um inteiro seguro não negativo (`2062` é válido). Número negativo, fracionário, não finito ou inseguro é inválido. Até a 2.4.0 a função aceitava somente strings.",
-          "- Qualquer valor que não seja string nem número retorna false."
+          "- Qualquer valor que não seja string nem número retorna `false`."
         ]
       },
       "references": [
@@ -257,15 +257,15 @@
         "en": [
           "Returns the legal nature table as a map from code to description.",
           "",
-          "- By default, it returns only the 92 codes in force (`params.includeLegacy` is false). The table is CONCLA's Natureza Jurídica 2021.",
+          "- By default, it returns only the 92 codes in force (`params.includeLegacy` is `false`). The table is CONCLA's Natureza Jurídica 2021.",
           "- `params.includeLegacy: true` adds the 8 codes a past revision retired, 100 in all. `legalNature.isValid` and `legalNature.get` accept those codes either way.",
           "- It returns a fresh object on every call."
         ],
         "pt-BR": [
           "Retorna a tabela de naturezas jurídicas como um mapa de código para descrição.",
           "",
-          "- Por padrão, retorna somente os 92 códigos em vigor (`params.includeLegacy` é false). A tabela é a Natureza Jurídica 2021 da CONCLA.",
-          "- `params.includeLegacy: true` inclui os 8 códigos que uma revisão anterior extinguiu, 100 no total. `legalNature.isValid` e `legalNature.get` aceitam esses códigos de qualquer forma.",
+          "- Por padrão, retorna somente os 92 códigos em vigor (`params.includeLegacy` é `false`). A tabela é a Natureza Jurídica 2021 da CONCLA.",
+          "- `params.includeLegacy: true` inclui os 8 códigos que uma revisão anterior extinguiu, 100 no total. `legalNature.isValid` e `legalNature.get` aceitam esses códigos nos dois casos.",
           "- Retorna um objeto novo a cada chamada."
         ]
       },
@@ -500,7 +500,7 @@
           "",
           "- Categories: 1 Administração Pública, 2 Entidades Empresariais, 3 Entidades sem Fins Lucrativos, 4 Pessoas Físicas, 5 Organizações Internacionais e Outras Instituições Extraterritoriais.",
           "- `category` may be a string or a number: `\"2\"` and `2` return the same list. A prefix (`\"20\"`), a full code (`\"2062\"`), a padded value (`\" 2\"`, `\"02\"`) and a value outside 1 to 5 are not categories.",
-          "- Only the codes in force are listed by default (`options.includeLegacy` is false).",
+          "- Only the codes in force are listed by default (`options.includeLegacy` is `false`).",
           "- `options.includeLegacy: true` adds the codes a past revision retired (2076, 2100 and 2208 in category 2, 3042, 3050, 3093 and 3123 in category 3, 5002 in category 5). They come back with `legacy: true` and the `currentCode`.",
           "- The result is a fresh array of fresh entries on every call.",
           "- Returns an empty list for an unknown category or a value that is not a string or a number."
@@ -509,8 +509,8 @@
           "Retorna todas as naturezas jurídicas de uma categoria CONCLA (o primeiro dígito do código), em ordem de código.",
           "",
           "- Categorias: 1 Administração Pública, 2 Entidades Empresariais, 3 Entidades sem Fins Lucrativos, 4 Pessoas Físicas, 5 Organizações Internacionais e Outras Instituições Extraterritoriais.",
-          "- `category` pode ser uma string ou um número: `\"2\"` e `2` retornam a mesma lista. Um prefixo (`\"20\"`), um código completo (`\"2062\"`), um valor com espaço ou zero (`\" 2\"`, `\"02\"`) e um valor fora de 1 a 5 não são categorias.",
-          "- Por padrão só os códigos em vigor são listados (`options.includeLegacy` é false).",
+          "- `category` pode ser uma string ou um número: `\"2\"` e `2` retornam a mesma lista. Um prefixo (`\"20\"`), um código completo (`\"2062\"`), um valor com espaço ou zero à esquerda (`\" 2\"`, `\"02\"`) e um valor fora de 1 a 5 não são categorias.",
+          "- Por padrão só os códigos em vigor são listados (`options.includeLegacy` é `false`).",
           "- `options.includeLegacy: true` inclui os códigos que uma revisão anterior extinguiu (2076, 2100 e 2208 na categoria 2, 3042, 3050, 3093 e 3123 na categoria 3, 5002 na categoria 5). Eles voltam com `legacy: true` e o `currentCode`.",
           "- O resultado é um array novo, de entradas novas, a cada chamada.",
           "- Retorna uma lista vazia para uma categoria desconhecida ou para um valor que não é string nem número."
@@ -934,14 +934,14 @@
         "en": [
           "Removes legal nature formatting and keeps only digits, capped at 4 digits.",
           "",
-          "- It does not left-pad anything. Returns an empty string when there is no digit at all (null and undefined included).",
+          "- It does not left-pad anything. Returns an empty string when there is no digit at all (`null` and `undefined` included).",
           "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
         ],
         "pt-BR": [
           "Remove a formatação da natureza jurídica e mantém somente os dígitos, limitados a 4 dígitos.",
           "",
-          "- Não completa nada com zeros à esquerda. Retorna uma string vazia quando não há nenhum dígito (null e undefined incluídos).",
-          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
+          "- Não completa nada com zeros à esquerda. Retorna uma string vazia quando não há nenhum dígito (`null` e `undefined` incluídos).",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
         ]
       },
       "references": [

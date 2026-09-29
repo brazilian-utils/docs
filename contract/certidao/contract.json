@@ -20,18 +20,18 @@
           "",
           "- The function applies the mask as far as the digits go, so a partial matrícula being typed is masked progressively, and digits beyond the 32nd are dropped. `options.pad` left-pads with zeros to 32 digits first.",
           "- A full 32-digit matrícula does not fit an integer, so you must give it as a string.",
-          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped).",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number returns an empty string (2.4.0 read the digits of any number, sign and decimal point dropped).",
           "- A value with no digits returns an empty string even with `options.pad`. Until 2.4.0 it returned the full zero mask.",
-          "- `options.pad` defaults to false."
+          "- `options.pad` defaults to `false`."
         ],
         "pt-BR": [
           "Formata a matrícula de uma certidão de registro civil na máscara impressa do art. 473 do Código Nacional de Normas. A máscara agrupa os 32 dígitos como 6 2 2 4 1 5 3 7 2, separados por espaços.",
           "",
           "- A função aplica a máscara até onde os dígitos vão, então uma matrícula parcial em digitação é mascarada progressivamente, e os dígitos além do 32º são descartados. `options.pad` primeiro completa com zeros à esquerda até 32 dígitos.",
           "- Uma matrícula completa de 32 dígitos não cabe em um inteiro, então você deve passá-la como string.",
-          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal).",
-          "- Um valor sem dígitos retorna string vazia mesmo com `options.pad`. Até a 2.4.0 retornava a máscara completa de zeros.",
-          "- `options.pad` é false por padrão."
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal).",
+          "- Um valor sem dígitos retorna uma string vazia mesmo com `options.pad`. Até a 2.4.0 retornava a máscara completa de zeros.",
+          "- `options.pad` é `false` por padrão."
         ]
       },
       "references": [
@@ -67,18 +67,18 @@
       },
       "description": {
         "en": [
-          "Parses the matrícula of a certidão de registro civil into its fields. Returns null when it is not valid (same rules as `certidao.isValid`).",
+          "Parses the matrícula of a certidão de registro civil into its fields. Returns `null` when it is not valid (same rules as `certidao.isValid`).",
           "",
           "- `type` is the English name of the book (`birth`, `marriage`, `religious-marriage`, `death`, `stillbirth`, `banns`, `other`, `emancipation`, `interdiction`). Fields: CNS of the serventia (6 digits), acervo, service (always `55`), year, book type (birth, marriage, religious marriage, death, stillbirth, banns, other, emancipation, interdiction) and its raw code 1 to 9, book, page, term and the 2 check digits.",
-          "- `year` and `typeCode` are numbers. `registryCns`, `acervo`, `service`, `book`, `page`, `term` and `checkDigits` are strings that keep their leading zeros. The input is read like `certidao.isValid` reads it, so a masked value works and a non-string returns null.",
+          "- `year` and `typeCode` are numbers. `registryCns`, `acervo`, `service`, `book`, `page`, `term` and `checkDigits` are strings that keep their leading zeros. The input is read like `certidao.isValid` reads it, so a masked value works and a non-string returns `null`.",
           "- Art. 473 V of the Código Nacional de Normas lists book codes 1 to 7. Codes 8 (emancipação) and 9 (interdição) come from Provimento CNJ 3/2009, art. 7º V. That provimento was revoked by Provimento CNJ 63/2017, but certidões issued under it from 2010 carry those codes and are still valid, so both are read, as in 2.4.0.",
           "- `acervo` is `01` for the serventia's own acervo and `02` and up for each acervo it absorbed. Art. 473, §§ 3º to 5º split the absorbed ones by the date the origin serventia was extinguished or deactivated. Up to 31/12/2009 the CNS is the incorporating unit's and the acervo code runs from `02`, one per incorporation. From 01/01/2010 the CNS is the incorporated unit's own and the code is `01`, counted as that unit's own acervo. An acervo split between two or more successor serventias gets each successor's CNS with the code `02`."
         ],
         "pt-BR": [
-          "Decompõe a matrícula de uma certidão de registro civil em seus campos. Retorna null quando ela não é válida (mesmas regras de `certidao.isValid`).",
+          "Decompõe a matrícula de uma certidão de registro civil em seus campos. Retorna `null` quando ela não é válida (mesmas regras de `certidao.isValid`).",
           "",
           "- `type` é o nome do livro em inglês (`birth`, `marriage`, `religious-marriage`, `death`, `stillbirth`, `banns`, `other`, `emancipation`, `interdiction`). Campos: CNS da serventia (6 dígitos), acervo, serviço (sempre `55`), ano, tipo do livro (nascimento, casamento, casamento religioso, óbito, natimorto, proclamas, outros, emancipação, interdição) e seu código bruto de 1 a 9, livro, folha, termo e os 2 dígitos verificadores.",
-          "- `year` e `typeCode` são números. `registryCns`, `acervo`, `service`, `book`, `page`, `term` e `checkDigits` são strings que mantêm os zeros à esquerda. A entrada é lida como `certidao.isValid` a lê, então um valor com máscara funciona e um valor que não é string retorna null.",
+          "- `year` e `typeCode` são números. `registryCns`, `acervo`, `service`, `book`, `page`, `term` e `checkDigits` são strings que mantêm os zeros à esquerda. A entrada é lida como `certidao.isValid` a lê, então um valor com máscara funciona e um valor que não é string retorna `null`.",
           "- O art. 473 V do Código Nacional de Normas lista os códigos de livro de 1 a 7. Os códigos 8 (emancipação) e 9 (interdição) vêm do Provimento CNJ 3/2009, art. 7º V. Esse provimento foi revogado pelo Provimento CNJ 63/2017, mas as certidões emitidas sob ele a partir de 2010 trazem esses códigos e continuam válidas, então os dois são lidos, como na 2.4.0.",
           "- `acervo` é `01` para o acervo próprio da serventia e `02` em diante para cada acervo que ela absorveu. O art. 473, §§ 3º a 5º, separa os absorvidos pela data em que a serventia de origem foi extinta ou desativada. Até 31/12/2009 o CNS é o da unidade incorporadora e o código do acervo começa em `02`, um por incorporação. A partir de 01/01/2010 o CNS é o da própria unidade incorporada e o código é `01`, contado como acervo próprio dela. Um acervo dividido entre duas ou mais serventias sucessoras recebe o CNS de cada sucessora com o código `02`."
         ]
@@ -134,18 +134,18 @@
           "- Accepts the value unmasked or masked. Between the nine groups (6 2 2 4 1 5 3 7 2) any run of whitespace, `.`, `-` or `/` is allowed, and whitespace around the value is ignored; another separator (`#`), a letter, or digits grouped differently make the value invalid.",
           "- No official source publishes the check-digit algorithm. Art. 473 IX only names the check digits (positions 31 and 32). Provimento CNJ 3/2009 had them generated by a program the CNJ gave to the registrars, and the Caixa's Cadastro NIS layout says only \"módulo 11\". The modulus 11 weights and remainder rule (a remainder of 10 is read as 1) follow community reference implementations.",
           "- Only a string is accepted. The 32 digits of a matrícula do not fit a number.",
-          "- `options.accept` is a list of book types (`birth`, `marriage`, `religious-marriage`, `death`, `stillbirth`, `banns`, `other`, `emancipation`, `interdiction`). When it is missing or not a list, every type is accepted. An empty list accepts none, so the result is false."
+          "- `options.accept` is a list of book types (`birth`, `marriage`, `religious-marriage`, `death`, `stillbirth`, `banns`, `other`, `emancipation`, `interdiction`). When it is missing or not a list, every type is accepted. An empty list accepts none, so the result is `false`."
         ],
         "pt-BR": [
           "Valida a matrícula de 32 dígitos de uma certidão de registro civil (art. 473 do Código Nacional de Normas da Corregedoria Nacional de Justiça).",
           "",
-          "- Estrutura: CNS da serventia (6), acervo (2), serviço (2, sempre `55`), ano (4), tipo do livro (1), livro (5), folha (3), termo (7) e 2 dígitos verificadores por módulo 11.",
+          "- Leiaute: CNS da serventia (6), acervo (2), serviço (2, sempre `55`), ano (4), tipo do livro (1), livro (5), folha (3), termo (7) e 2 dígitos verificadores por módulo 11.",
           "- O serviço precisa ser `55`. O tipo do livro precisa ser de 1 a 7 (os livros do art. 473 V) ou 8 (`emancipation`, Livro E desdobrado para emancipações) ou 9 (`interdiction`, Livro E desdobrado para interdições), que vêm do Provimento CNJ 3/2009, art. 7º V, revogado, e são mantidos porque as certidões emitidas sob ele desde 2010 ainda os trazem. A função rejeita `0`, sejam quais forem os dígitos verificadores.",
           "- `options.accept` restringe os tipos de livro válidos aos listados (padrão: todos os tipos).",
-          "- Aceita o valor sem máscara ou com máscara. Entre os nove grupos (6 2 2 4 1 5 3 7 2) é permitida qualquer sequência de espaços, `.`, `-` ou `/`, e os espaços em volta do valor são ignorados; outro separador (`#`), uma letra ou dígitos agrupados de outra forma tornam o valor inválido.",
-          "- Nenhuma fonte oficial publica o algoritmo do dígito verificador. O art. 473 IX só nomeia os dígitos verificadores (posições 31 e 32). O Provimento CNJ 3/2009 os fazia gerar por um programa que o CNJ distribuiu aos cartórios, e o layout do Cadastro NIS da Caixa diz apenas \"módulo 11\". Os pesos do módulo 11 e a regra do resto (resto 10 vale 1) seguem implementações de referência da comunidade.",
+          "- Aceita o valor sem máscara ou com máscara. Entre os nove grupos (6 2 2 4 1 5 3 7 2) é permitida qualquer sequência de espaços, `.`, `-` ou `/`, e os espaços nas pontas do valor são ignorados; outro separador (`#`), uma letra ou dígitos agrupados de outra forma tornam o valor inválido.",
+          "- Nenhuma fonte oficial publica o algoritmo do dígito verificador. O art. 473 IX só nomeia os dígitos verificadores (posições 31 e 32). O Provimento CNJ 3/2009 os fazia gerar por um programa que o CNJ distribuiu aos cartórios, e o leiaute do Cadastro NIS da Caixa diz apenas \"módulo 11\". Os pesos do módulo 11 e a regra do resto (resto 10 vale 1) seguem implementações de referência da comunidade.",
           "- Só uma string é aceita. Os 32 dígitos de uma matrícula não cabem em um número.",
-          "- `options.accept` é uma lista de tipos de livro (`birth`, `marriage`, `religious-marriage`, `death`, `stillbirth`, `banns`, `other`, `emancipation`, `interdiction`). Quando falta ou não é uma lista, todos os tipos são aceitos. Uma lista vazia não aceita nenhum, então o resultado é false."
+          "- `options.accept` é uma lista de tipos de livro (`birth`, `marriage`, `religious-marriage`, `death`, `stillbirth`, `banns`, `other`, `emancipation`, `interdiction`). Quando falta ou não é uma lista, todos os tipos são aceitos. Uma lista vazia não aceita nenhum, então o resultado é `false`."
         ]
       },
       "references": [
@@ -208,13 +208,13 @@
           "Removes the formatting of a certidão matrícula and keeps only digits, capped at 32 digits.",
           "",
           "- A value shorter than 32 digits passes through as far as it goes, so the mask of an input still being typed can be stripped. Nothing is padded.",
-          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number returns an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
         ],
         "pt-BR": [
           "Remove a formatação da matrícula de uma certidão e mantém apenas os dígitos, com no máximo 32 dígitos.",
           "",
           "- Um valor com menos de 32 dígitos passa até onde vai, então dá para tirar a máscara de um campo ainda em digitação. Nada é completado com zeros.",
-          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
         ]
       },
       "references": ["https://atos.cnj.jus.br/atos/detalhar/5243", "https://atos.cnj.jus.br/atos/detalhar/1310"],

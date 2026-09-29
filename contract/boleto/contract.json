@@ -20,7 +20,7 @@
           "- A 48-digit linha digitável starting with `8` (boleto de arrecadação) gets four blocks of 11 digits, each followed by its check digit. The 44-digit arrecadação barcode keeps the cobrança bancária mask.",
           "- Every character that is not a digit is removed first, so a masked value is accepted. Digits beyond the length of the pattern are dropped.",
           "- Without `options.pad` a short value is masked only as far as its digits go (`104914` gives `10491.4`).",
-          "- A value with no digits (an empty string, `abc`, null) gives an empty string, even with `options.pad`. Until 2.4.0 `pad: true` returned the full zero mask for an empty string or one without digits.",
+          "- A value with no digits (an empty string, `abc`, `null`) gives an empty string, even with `options.pad`. Until 2.4.0 `pad: true` returned the full zero mask for an empty string or one without digits.",
           "- `options.pad` left-pads the value with zeros to the length of the pattern before masking.",
           "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number)."
         ],
@@ -31,9 +31,9 @@
           "- Uma linha digitável de 48 dígitos que começa com `8` (boleto de arrecadação) recebe quatro blocos de 11 dígitos, cada um seguido do seu dígito verificador. O código de barras de arrecadação de 44 dígitos mantém a máscara de cobrança bancária.",
           "- Todo caractere que não é dígito é removido antes, então um valor com máscara é aceito. Os dígitos além do tamanho do padrão são descartados.",
           "- Sem `options.pad`, um valor curto recebe a máscara só até onde vão os seus dígitos (`104914` dá `10491.4`).",
-          "- Um valor sem dígitos (string vazia, `abc`, null) dá string vazia, mesmo com `options.pad`. Até a 2.4.0 `pad: true` devolvia a máscara inteira de zeros para uma string vazia ou sem dígitos.",
+          "- Um valor sem dígitos (string vazia, `abc`, `null`) retorna uma string vazia, mesmo com `options.pad`. Até a 2.4.0 `pad: true` retornava a máscara inteira de zeros para uma string vazia ou sem dígitos.",
           "- `options.pad` completa o valor com zeros à esquerda até o tamanho do padrão, antes de aplicar a máscara.",
-          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número)."
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia (a 2.4.0 lia os dígitos de qualquer número)."
         ]
       },
       "references": [
@@ -132,7 +132,7 @@
           "",
           "- By default, the function generates a 47-digit cobrança bancária linha digitável. With `params.type` set to arrecadação, it generates a 48-digit boleto de arrecadação instead.",
           "- A cobrança bancária slip gets a random 3-digit bank code, the código de moeda `9` (real) and a fator de vencimento of `0000` (no due date) or `1000` to `9999`. Factors `0001` to `0999` denote no date and are never drawn.",
-          "- A boleto de arrecadação draws its segment from 1 to 7 (segment 9 is the banks' own) and its value identifier from all four values (`6` and `8` for an effective amount, `7` and `9` for a reference quantity), so `hasEffectiveValue` can be true or false.",
+          "- A boleto de arrecadação draws its segment from 1 to 7 (segment 9 is the banks' own) and its value identifier from all four values (`6` and `8` for an effective amount, `7` and `9` for a reference quantity), so `hasEffectiveValue` can be `true` or false.",
           "- `boleto.isValid` accepts the result.",
           "- It draws with `Math.random()`, so it is not cryptographically secure. Do not use it for security purposes."
         ],
@@ -166,30 +166,30 @@
       "summary": { "en": "Extracts information from a boleto.", "pt-BR": "Extrai informações de um boleto." },
       "description": {
         "en": [
-          "Extracts the amount, due date and bank code from a boleto: the 47-digit linha digitável or the 44-digit barcode of a cobrança bancária slip, or a boleto de arrecadação. Returns null when the value is not a valid boleto.",
+          "Extracts the amount, due date and bank code from a boleto: the 47-digit linha digitável or the 44-digit barcode of a cobrança bancária slip, or a boleto de arrecadação. Returns `null` when the value is not a valid boleto.",
           "",
           "- The result has `amount` (in cents), `expirationDate` and `bankCode` (the 3-digit COMPE code).",
-          "- The due date is null when the boleto carries no fator de vencimento (a factor below 1000).",
+          "- The due date is `null` when the boleto carries no fator de vencimento (a factor below 1000).",
           "- The fator de vencimento cycle reset on 2025-02-22, so a factor maps to two dates 9000 days apart. No FEBRABAN or Banco Central publication tells the cycles apart; the rule comes from bank manuals. `options.referenceDate` resolves the cycle as of that date instead of today. Pass it whenever the answer has to stay stable, since the same slip can resolve to the other date as time passes.",
           "- The window around `referenceDate` is about 8 years back (3000 days) and 15 years ahead (5500 days). A slip due more than about 8 years before it is read as the next cycle (a date in the future), and one due more than about 15 years after it as the previous cycle. To read an old slip, pass a `referenceDate` near its issue date. The search never goes below the first cycle, so an older `referenceDate` still resolves a factor to the oldest date it can denote, never one before the 1997-10-07 base date.",
-          "- A `referenceDate` that is not a valid `Date` (an invalid Date, a string, a number, null) is ignored and today is used. The call never throws. Until 2.4.0 an invalid Date gave the 1997 base date and a string or a number threw.",
-          "- The 44-digit barcode is read for the same fields as the linha digitável: the amount from positions 10 to 19 and the fator de vencimento from positions 6 to 9. Until 2.4.0 a cobrança bancária barcode gave null. A value that is not a string gives null.",
-          "- A boleto de arrecadação has no bank code and no due date: `bankCode` is `\"\"` and `expirationDate` is null. It also has `type` (`\"arrecadacao\"`), `segment` (1 to 7, or 9 for the banks' own use), `value` (the amount in reais, `amount` divided by 100) and `hasEffectiveValue` (whether the amount is an effective value or a reference quantity).",
-          "- A FEBRABAN \"Situação 2\" slip (bank `988`, código de moeda `0`, see `boleto.isValid`) carries the issuer's 8-digit ISPB where the amount would be. The result has `ispb` set to that ISPB, `amount` set to 0 and `expirationDate` null. `ispb` is new in 2.5.0 and is absent on every other slip.",
-          "- It returns null exactly when `boleto.isValid` returns false, so a slip with a código de moeda other than `9` gives null (2.4.0 decoded it)."
+          "- A `referenceDate` that is not a valid `Date` (an invalid Date, a string, a number, `null`) is ignored and today is used. The call never throws. Until 2.4.0 an invalid Date gave the 1997 base date and a string or a number threw.",
+          "- The 44-digit barcode is read for the same fields as the linha digitável: the amount from positions 10 to 19 and the fator de vencimento from positions 6 to 9. Until 2.4.0 a cobrança bancária barcode gave `null`. A value that is not a string gives `null`.",
+          "- A boleto de arrecadação has no bank code and no due date: `bankCode` is `\"\"` and `expirationDate` is `null`. It also has `type` (`\"arrecadacao\"`), `segment` (1 to 7, or 9 for the banks' own use), `value` (the amount in reais, `amount` divided by 100) and `hasEffectiveValue` (whether the amount is an effective value or a reference quantity).",
+          "- A FEBRABAN \"Situação 2\" slip (bank `988`, código de moeda `0`, see `boleto.isValid`) carries the issuer's 8-digit ISPB where the amount would be. The result has `ispb` set to that ISPB, `amount` set to 0 and `expirationDate` `null`. `ispb` is new in 2.5.0 and is absent on every other slip.",
+          "- It returns `null` exactly when `boleto.isValid` returns `false`, so a slip with a código de moeda other than `9` gives `null` (2.4.0 decoded it)."
         ],
         "pt-BR": [
-          "Interpreta um boleto e retorna o valor, a data de vencimento e o código do banco: da linha digitável de 47 dígitos ou do código de barras de 44 dígitos de um boleto de cobrança bancária, ou de um boleto de arrecadação. Retorna null quando a entrada não é um boleto válido.",
+          "Interpreta um boleto e retorna o valor, a data de vencimento e o código do banco: da linha digitável de 47 dígitos ou do código de barras de 44 dígitos de um boleto de cobrança bancária, ou de um boleto de arrecadação. Retorna `null` quando a entrada não é um boleto válido.",
           "",
           "- O resultado traz `amount` (em centavos), `expirationDate` e `bankCode` (o código COMPE de 3 dígitos).",
-          "- A data de vencimento é null quando o boleto não traz fator de vencimento (um fator abaixo de 1000).",
+          "- A data de vencimento é `null` quando o boleto não traz fator de vencimento (um fator abaixo de 1000).",
           "- O ciclo do fator de vencimento reiniciou em 2025-02-22, então um fator corresponde a duas datas com 9000 dias de diferença. Nenhuma publicação da FEBRABAN ou do Banco Central diferencia os ciclos; a regra vem de manuais de bancos. `options.referenceDate` resolve o ciclo com base nessa data, em vez de hoje. Passe-a sempre que a resposta precisar ser estável, pois o mesmo boleto pode passar a resolver para a outra data com o tempo.",
           "- A janela em torno de `referenceDate` é de cerca de 8 anos para trás (3000 dias) e 15 anos para frente (5500 dias). Um boleto que venceu há mais de cerca de 8 anos é lido como o próximo ciclo (uma data no futuro), e um que vence daqui a mais de cerca de 15 anos, como o ciclo anterior. Para ler um boleto antigo, passe uma `referenceDate` próxima da data de emissão. A busca nunca desce abaixo do primeiro ciclo, então uma `referenceDate` mais antiga ainda resolve um fator para a data mais antiga que ele pode indicar, nunca uma anterior à data-base de 1997-10-07.",
-          "- Uma `referenceDate` que não é um `Date` válido (um Date inválido, uma string, um número, null) é ignorada e usa-se hoje. A chamada nunca lança erro. Até a 2.4.0 um Date inválido dava a data-base de 1997 e uma string ou um número lançava erro.",
-          "- O código de barras de 44 dígitos é lido para os mesmos campos da linha digitável: o valor nas posições 10 a 19 e o fator de vencimento nas posições 6 a 9. Até a 2.4.0 o código de barras de cobrança bancária dava null. Um valor que não é string dá null.",
-          "- Um boleto de arrecadação não tem código do banco nem data de vencimento: `bankCode` é `\"\"` e `expirationDate` é null. Ele também traz `type` (`\"arrecadacao\"`), `segment` (de 1 a 7, ou 9 para uso dos próprios bancos), `value` (o valor em reais, `amount` dividido por 100) e `hasEffectiveValue` (se o valor é efetivo ou uma quantidade de referência).",
-          "- Um boleto da \"Situação 2\" da FEBRABAN (banco `988`, código de moeda `0`, ver `boleto.isValid`) traz o ISPB de 8 dígitos do emissor no lugar do valor. O resultado tem `ispb` com esse ISPB, `amount` igual a 0 e `expirationDate` null. O campo `ispb` é novo na 2.5.0 e não aparece em nenhum outro boleto.",
-          "- Retorna null exatamente quando `boleto.isValid` retorna false, então um boleto com código de moeda diferente de `9` dá null (a 2.4.0 o decodificava)."
+          "- Uma `referenceDate` que não é um `Date` válido (um Date inválido, uma string, um número, `null`) é ignorada e usa-se hoje. A chamada nunca lança erro. Até a 2.4.0 um Date inválido dava a data-base de 1997 e uma string ou um número lançavam erro.",
+          "- O código de barras de 44 dígitos é lido para os mesmos campos da linha digitável: o valor nas posições 10 a 19 e o fator de vencimento nas posições 6 a 9. Até a 2.4.0 o código de barras de cobrança bancária dava `null`. Um valor que não é string retorna `null`.",
+          "- Um boleto de arrecadação não tem código do banco nem data de vencimento: `bankCode` é `\"\"` e `expirationDate` é `null`. Ele também traz `type` (`\"arrecadacao\"`), `segment` (de 1 a 7, ou 9 para uso dos próprios bancos), `value` (o valor em reais, `amount` dividido por 100) e `hasEffectiveValue` (se o valor é efetivo ou uma quantidade de referência).",
+          "- Um boleto da \"Situação 2\" da FEBRABAN (banco `988`, código de moeda `0`, ver `boleto.isValid`) traz o ISPB de 8 dígitos do emissor no lugar do valor. O resultado tem `ispb` com esse ISPB, `amount` igual a 0 e `expirationDate` `null`. O campo `ispb` é novo na 2.5.0 e não aparece em nenhum outro boleto.",
+          "- Retorna `null` exatamente quando `boleto.isValid` retorna `false`, então um boleto com código de moeda diferente de `9` retorna `null` (a 2.4.0 o decodificava)."
         ]
       },
       "references": [
@@ -247,7 +247,7 @@
           "- A única exceção é o boleto da \"Situação 2\" da Convenção da Cobrança da FEBRABAN, emitido por uma instituição identificada só pelo ISPB: código do banco `988`, código de moeda `0`, fator de vencimento `0000` e o ISPB completado com zeros até 10 dígitos nas posições 10 a 19 do código de barras, no lugar do valor. O banco `988` com código de moeda `9` é um boleto comum.",
           "- O código de barras de cobrança bancária tem 44 dígitos: código do banco, código de moeda `9`, o dígito verificador módulo 11 na posição 5, fator de vencimento, valor e campo livre. Ele é conferido pelas mesmas regras da linha digitável. Até a 2.4.0 esse código de barras era rejeitado.",
           "- Um valor de 44 dígitos que começa com `8` é sempre um código de barras de arrecadação (o `8` é o seu identificador de produto). Um código de barras de cobrança bancária de um banco `8xx` não é aceito, porque os dois leiautes não poderiam ser distinguidos.",
-          "- Os caracteres de máscara (espaço em branco, `.`, `-` e `/`) são aceitos entre os dígitos, inclusive uma sequência deles, e espaço em branco em volta do valor. Qualquer outro caractere torna o valor inválido: letras, pontuação ou um caractere de máscara no início ou no fim dos dígitos. Então uma linha digitável cercada de letras é rejeitada. Até a 2.4.0 todo caractere que não era dígito era descartado.",
+          "- Os caracteres de máscara (espaço em branco, `.`, `-` e `/`) são aceitos entre os dígitos, inclusive uma sequência deles, e espaços nas pontas. Qualquer outro caractere torna o valor inválido: letras, pontuação ou um caractere de máscara no início ou no fim dos dígitos. Então uma linha digitável cercada de letras é rejeitada. Até a 2.4.0 todo caractere que não era dígito era descartado.",
           "- Um valor que não é string é inválido."
         ]
       },
@@ -344,7 +344,7 @@
           "Remove de um boleto todo caractere que não é dígito (máscara, espaços, letras) e retorna os dígitos, sem conferir se o boleto é válido.",
           "",
           "- O resultado é cortado em 47 dígitos, ou em 48 quando os dígitos começam com `8` (boleto de arrecadação). Os dígitos além disso são descartados.",
-          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número)."
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia (a 2.4.0 lia os dígitos de qualquer número)."
         ]
       },
       "references": [

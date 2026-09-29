@@ -70,7 +70,7 @@ Examples:
 ## Masking and numbers
 
 - `formatCnpj(value, { obfuscate: true })` hides the first 2 characters and the 2 check digits (`**.345.678/0001-**`). This is a convention of the library, with no official source: no law or Receita Federal act sets a masking rule for the CNPJ, whose data are public. It follows the rule the Leis de Diretrizes Orçamentárias set for the CPF.
-- `formatCnpj` and `parseCnpj` also take a number. It is read only when it is a non-negative safe integer. A negative, fractional, not finite or unsafe number gives an empty string. 2.4.0 read the digits of any number.
+- `formatCnpj` and `parseCnpj` also take a number. It is read only when it is a non-negative safe integer. A negative, fractional, non-finite or unsafe number returns an empty string. 2.4.0 read the digits of any number.
 
 ## Regex
 

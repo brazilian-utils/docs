@@ -20,7 +20,7 @@
           "Formats a CNS number into groups of 3-4-4-4 digits separated by spaces.",
           "",
           "- `options.pad` left-pads with zeros to 15 digits first.",
-          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped).",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number returns an empty string (2.4.0 read the digits of any number, sign and decimal point dropped).",
           "- A value with no digits (empty, or only letters and symbols) returns an empty string, even with `pad`. Until 2.4.0 `pad` returned the full zero mask (`000 0000 0000 0000`) for it.",
           "- Digits after the 15th are dropped. Every non-digit character is ignored."
         ],
@@ -28,7 +28,7 @@
           "Formata um número do CNS em grupos de 3-4-4-4 dígitos separados por espaços.",
           "",
           "- `options.pad` primeiro completa com zeros à esquerda até 15 dígitos.",
-          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal).",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal).",
           "- Um valor sem dígitos (vazio, ou só letras e símbolos) retorna uma string vazia, mesmo com `pad`. Até a 2.4.0, `pad` retornava a máscara inteira de zeros (`000 0000 0000 0000`) para ele.",
           "- Os dígitos depois do 15º são descartados. Todo caractere que não é dígito é ignorado."
         ]
@@ -89,7 +89,7 @@
           "- Cartão definitivo (começa com 1 ou 2): os 11 primeiros dígitos são a base, depois vem um sufixo de 3 dígitos (`000` ou `001`) e o dígito verificador. O dígito verificador é 11 menos o resto da divisão por 11 da soma ponderada da base (pesos de 15 a 5), com 11 lido como 0. Quando esse resultado é 10, soma-se 2 à soma ponderada, recalcula-se o dígito e o sufixo é `001` em vez de `000`.",
           "- Cartão provisório (começa com 7, 8 ou 9): a soma ponderada dos 15 dígitos (pesos de 15 a 1) deve ser múltiplo de 11.",
           "- Rejeita um número que começa com 5, conforme a ANVISA.",
-          "- Aceita os dígitos puros ou os grupos impressos 3-4-4-4 separados por espaço em branco, `.`, `-` ou `/`. Qualquer sequência desses caracteres é aceita entre dois grupos, e espaços em volta do valor são ignorados; qualquer outra coisa (uma letra, um separador dentro de um grupo ou nas pontas) é rejeitada.",
+          "- Aceita os dígitos puros ou os grupos impressos 3-4-4-4 separados por espaço em branco, `.`, `-` ou `/`. Qualquer sequência desses caracteres é aceita entre dois grupos, e espaços nas pontas do valor são ignorados; qualquer outra coisa (uma letra, um separador dentro de um grupo ou nas pontas) é rejeitada.",
           "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro é inválido.",
           "- Nenhuma fonte oficial publica a regra do dígito verificador como norma. A regra segue a \"Rotina de validação de CNS e Número Provisório\" do DATASUS, publicada no antigo site do Cartão Nacional de Saúde (link para a cópia arquivada), e a página da ANVISA. Nenhuma das duas cita primeiro dígito fora de 1, 2, 7, 8 ou 9, então um número que começa com 5 é rejeitado mesmo quando a soma ponderada confere.",
           "- Exemplos da documentação: `100000000060018` (definitivo, dígito verificador bruto 10, sufixo 001) e `700000000000005` (provisório) são válidos; `123456789010001` (dígito verificador errado) e `12345678901` (tamanho errado) não são."
@@ -150,12 +150,12 @@
         "en": [
           "Removes CNS formatting and keeps only digits, capped at 15 digits.",
           "",
-          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number returns an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
         ],
         "pt-BR": [
           "Remove a formatação do CNS e mantém apenas os dígitos, com no máximo 15 dígitos.",
           "",
-          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
         ]
       },
       "references": [

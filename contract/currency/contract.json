@@ -12,12 +12,12 @@
   "functions": {
     "convertToWords": {
       "summary": {
-        "en": "Formats an amount in Brazilian reais as its \"por extenso\" text, the style people use to write out an amount by hand on cheques and contracts.",
+        "en": "Formats an amount in Brazilian reais as its \"por extenso\" text, the style people use to write out an amount by hand on checks and contracts.",
         "pt-BR": "Formata um valor em reais por extenso, o estilo usado para escrever um valor à mão em cheques e contratos."
       },
       "description": {
         "en": [
-          "Writes an amount in reais in Brazilian Portuguese words (\"por extenso\"), as on cheques and contracts.",
+          "Writes an amount in reais in Brazilian Portuguese words (\"por extenso\"), as on checks and contracts.",
           "",
           "For example, `1523.45` becomes `\"mil quinhentos e vinte e três reais e quarenta e cinco centavos\"`.",
           "",
@@ -26,7 +26,7 @@
           "- The function adds the prefix \"menos\" to a negative amount, except when the amount truncates to nothing: `-0.001` is \"zero reais\".",
           "- The function takes no options. A round million, billion or trillion of reais takes \"de\" (\"um milhão de reais\"), and the centavos, when there are any, follow (\"um bilhão de reais e cinquenta centavos\").",
           "- Above about 90 trillion reais (`Number.MAX_SAFE_INTEGER / 100`) a number cannot hold cents, so the amount is read as whole reais. The cents are read off the decimal notation of the value, so floating point noise does not change them (`1.15` is \"um real e quinze centavos\").",
-          "- Pending decision (findings §1b): the reference (JS) writes all lower case with no comma between groups. Several libraries capitalise the first word and some add commas.",
+          "- Pending decision (findings §1b): the reference (JS) writes all lower case with no comma between groups. Several libraries capitalize the first word and some add commas.",
           "- Pending decision (findings §2 #9): for invalid input or an amount above 999 trillion reais, the reference (JS) returns an empty string."
         ],
         "pt-BR": [
@@ -97,18 +97,18 @@
           "",
           "- A number keeps its sign and its decimals. `options.symbol` (default `false`) prefixes the result with `R$` (`-R$ 1,50` for a negative one). `options.precision` sets the decimal places (default 2, clamped to 0 to 20; a precision that is not a finite number is 2).",
           "- The function reads a string as `currency.parse` reads it, except that a value without any separator is whole units (`1234` formats as `1.234,00`).",
-          "- A string with no digit reads as 0: `abc` and the empty string format as `0,00`, and null also gives `0,00`. A value that is not a finite number (`NaN`, infinite) or cannot be coerced to a number (a symbol, a plain object) gives an empty string. Any other non-string value goes through `Number()`, so `true` formats as `1,00` and `[]` as `0,00`.",
+          "- A string with no digit reads as 0: `abc` and the empty string format as `0,00`, and `null` also gives `0,00`. A value that is not a finite number (`NaN`, infinite) or cannot be coerced to a number (a symbol, a plain object) returns an empty string. Any other non-string value goes through `Number()`, so `true` formats as `1,00` and `[]` as `0,00`.",
           "- Pending decision (findings §1b): the reference (JS) adds no currency symbol by default (the `R$ ` prefix is opt-in through `options.symbol`). The other libraries prefix `R$ `.",
-          "- Pending decision (findings §2 #9): for a non-finite or non-numeric value, the reference (JS) returns an empty string. Other libraries return null."
+          "- Pending decision (findings §2 #9): for a non-finite or non-numeric value, the reference (JS) returns an empty string. Other libraries return `null`."
         ],
         "pt-BR": [
           "Formata um número no padrão BRL `1.234,56`.",
           "",
           "- Um número mantém o sinal e as casas decimais. `options.symbol` (padrão `false`) põe o prefixo `R$` no resultado (`-R$ 1,50` para um negativo). `options.precision` define as casas decimais (padrão 2, limitado de 0 a 20; uma precisão que não é um número finito vale 2).",
           "- A função lê uma string como `currency.parse` a lê, exceto que um valor sem nenhum separador vale unidades inteiras (`1234` é formatado como `1.234,00`).",
-          "- Uma string sem nenhum dígito vale 0: `abc` e a string vazia são formatadas como `0,00`, e null também dá `0,00`. Um valor que não é um número finito (`NaN`, infinito) ou não pode ser convertido em número (um symbol, um objeto simples) dá string vazia. Qualquer outro valor que não é string passa por `Number()`, então `true` é formatado como `1,00` e `[]` como `0,00`.",
+          "- Uma string sem nenhum dígito vale 0: `abc` e a string vazia são formatadas como `0,00`, e `null` também resulta em `0,00`. Um valor que não é um número finito (`NaN`, infinito) ou não pode ser convertido em número (um symbol, um objeto simples) retorna uma string vazia. Qualquer outro valor que não é string passa por `Number()`, então `true` é formatado como `1,00` e `[]` como `0,00`.",
           "- Decisão pendente (findings §1b): a referência (JS) não adiciona símbolo de moeda por padrão (o prefixo `R$ ` é opcional, via `options.symbol`). As outras bibliotecas usam o prefixo `R$ `.",
-          "- Decisão pendente (findings §2 #9): para um valor não finito ou não numérico, a referência (JS) retorna uma string vazia. Outras bibliotecas retornam null."
+          "- Decisão pendente (findings §2 #9): para um valor não finito ou não numérico, a referência (JS) retorna uma string vazia. Outras bibliotecas retornam `null`."
         ]
       },
       "references": ["https://www.planalto.gov.br/ccivil_03/leis/l9069.htm"],

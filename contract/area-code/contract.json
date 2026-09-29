@@ -20,7 +20,7 @@
           "Returns the DDD (area code, the Código Nacional of the Plano Geral de Numeração) that a municipality dials, given its 7-digit IBGE code.",
           "",
           "- `code` is read as `municipality.getByCode` reads it: a string with every non-digit removed, or a non-negative integer.",
-          "- Each of the 5,571 municipalities has exactly one DDD, so null only means that the code is not a municipality.",
+          "- Each of the 5,571 municipalities has exactly one DDD, so `null` only means that the code is not a municipality.",
           "- A DDD mostly follows state lines. The exceptions: 61, the DDD of Brasília, also covers 12 municipalities of Goiás. Porto União (SC) dials 42, Rio Negro (PR) dials 47 and Barracão (PR) dials 49.",
           "- `areaCode.getInfo` gives the state and region the DDD is seated in.",
           "- The table comes from the Anatel Códigos Nacionais file of 21/09/2026, rows in force only."
@@ -28,8 +28,8 @@
         "pt-BR": [
           "Retorna o DDD (o Código Nacional do Plano Geral de Numeração) que um município disca, dado o código IBGE de 7 dígitos.",
           "",
-          "- `code` é lido como em `municipality.getByCode`: uma string da qual todo não-dígito é removido, ou um inteiro não negativo.",
-          "- Cada um dos 5.571 municípios tem exatamente um DDD, então null só significa que o código não é de município.",
+          "- `code` é lido como em `municipality.getByCode`: uma string da qual todo caractere que não é dígito é removido, ou um inteiro não negativo.",
+          "- Cada um dos 5.571 municípios tem exatamente um DDD, então `null` só significa que o código não é de município.",
           "- O DDD quase sempre segue a divisa estadual. As exceções: o 61, DDD de Brasília, também atende 12 municípios de Goiás. Porto União (SC) disca 42, Rio Negro (PR) disca 47 e Barracão (PR) disca 49.",
           "- `areaCode.getInfo` dá o estado e a região sede do DDD.",
           "- A tabela vem do arquivo de Códigos Nacionais da Anatel de 21/09/2026, só linhas vigentes."
@@ -81,7 +81,7 @@
           "- The result carries the DDD, the state it is seated in (code and name), its region (code and name) and every state it serves.",
           "- The seat is the state of the city the code was allocated around, not necessarily the state with most of its municipalities: DDD 61 is seated in DF, which holds only 1 of its 13 municipalities (Brasília).",
           "- Four DDDs straddle a state border (61, 42, 47 and 49). For these, the list of states also has the other state, with the seat first: 61 gives `DF, GO`, 42 gives `PR, SC`, 47 and 49 give `SC, PR`.",
-          "- Returns null for a DDD not in use, a negative or non-integer number, or anything else."
+          "- Returns `null` for a DDD not in use, a negative or non-integer number, or anything else."
         ],
         "pt-BR": [
           "Retorna o estado e a região a que pertence um DDD, entre os 67 DDDs em uso no Plano Geral de Numeração da Anatel.",
@@ -91,7 +91,7 @@
           "- O resultado traz o DDD, o estado sede (sigla e nome), a região (código e nome) e todos os estados que ele atende.",
           "- A sede é o estado da cidade em torno da qual o código foi alocado, não necessariamente o estado com a maioria dos municípios: o DDD 61 tem sede no DF, que tem só 1 dos seus 13 municípios (Brasília).",
           "- Quatro DDDs cruzam uma divisa estadual (61, 42, 47 e 49). Para eles, a lista de estados também tem o outro estado, com a sede primeiro: o 61 dá `DF, GO`, o 42 dá `PR, SC`, o 47 e o 49 dão `SC, PR`.",
-          "- Retorna null para um DDD fora de uso, um número negativo ou não inteiro, ou qualquer outro valor."
+          "- Retorna `null` para um DDD fora de uso, um número negativo ou não inteiro, ou qualquer outro valor."
         ]
       },
       "references": [

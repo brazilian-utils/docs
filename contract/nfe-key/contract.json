@@ -24,19 +24,19 @@
           "- The function groups a masked or partial key as far as its characters go. `options.pad` first left-pads the key with zeros to 44 characters (`\"12345\"` gives `\"0000 0000 0000 0000 0000 0000 0000 0000 0000 0001 2345\"`).",
           "- The XML `Id` prefixes (`NFe`, `CTe`, `MDFe`, `BPe`, `NF3e`, `NFCom`) are stripped first, with the whitespace around them, the way `nfeKey.parse` reads them. Until 2.4.0 the prefix was not stripped, so the digit of `NF3e` ended up in the key.",
           "- The upper-cased letters of an alphanumeric CNPJ are kept in positions 7 to 18. A letter anywhere else is dropped, and the positions are counted on the characters kept. 2.4.0 dropped every letter.",
-          "- A value that is neither a string nor a non-negative safe integer (an object, `true`, `-1`, `1.5`, a bigint) returns an empty string instead of throwing. A number is read as the string of its digits. Characters after the 44th are dropped.",
-          "- Returns an empty string when there is nothing to format. Until 2.4.0, a value with no digits and `pad: true` returned the full zero mask."
+          "- A value that is neither a string nor a safe non-negative integer (an object, `true`, `-1`, `1.5`, a bigint) returns an empty string instead of throwing. A number is read as the string of its digits. Characters after the 44th are dropped.",
+          "- Returns an empty string when there is nothing to format. Until 2.4.0 a value with no digits and `pad: true` returned the full zero mask."
         ],
         "pt-BR": [
           "Formata uma chave de acesso de DF-e em grupos de 4 caracteres separados por espaços, como o DANFE e os outros documentos auxiliares a imprimem. Não valida a chave (use `nfeKey.isValid`).",
           "",
           "Todo documento auxiliar imprime a chave nessa forma: o DANFE da NF-e e da NFC-e, o DACTE do CT-e, do CT-e OS e da GTV-e, o DAMDFE do MDF-e, o DABPE do BP-e, o DANF3E da NF3e e o DANFE-COM da NFCom.",
           "",
-          "- A função agrupa uma chave com máscara ou parcial até onde vão os seus caracteres. `options.pad` antes completa a chave com zeros à esquerda até 44 caracteres (`\"12345\"` dá `\"0000 0000 0000 0000 0000 0000 0000 0000 0000 0001 2345\"`).",
-          "- Os prefixos `Id` do XML (`NFe`, `CTe`, `MDFe`, `BPe`, `NF3e`, `NFCom`) são removidos primeiro, com os espaços em volta, do jeito que `nfeKey.parse` os lê. Até a 2.4.0 o prefixo não era removido, então o dígito de `NF3e` entrava na chave.",
+          "- A função agrupa uma chave com máscara ou parcial até onde vão os seus caracteres. `options.pad` primeiro completa a chave com zeros à esquerda até 44 caracteres (`\"12345\"` dá `\"0000 0000 0000 0000 0000 0000 0000 0000 0000 0001 2345\"`).",
+          "- Os prefixos `Id` do XML (`NFe`, `CTe`, `MDFe`, `BPe`, `NF3e`, `NFCom`) são removidos primeiro, com os espaços nas pontas, do jeito que `nfeKey.parse` os lê. Até a 2.4.0 o prefixo não era removido, então o dígito de `NF3e` entrava na chave.",
           "- As letras de um CNPJ alfanumérico são mantidas em maiúsculas nas posições 7 a 18. Uma letra em qualquer outra posição é descartada, e as posições são contadas sobre os caracteres mantidos. A 2.4.0 descartava toda letra.",
-          "- Um valor que não é string nem inteiro seguro não negativo (um objeto, `true`, `-1`, `1.5`, um bigint) retorna string vazia em vez de lançar erro. Um número é lido como a string dos seus dígitos. Os caracteres depois do 44º são descartados.",
-          "- Retorna string vazia quando não há nada para formatar. Até a 2.4.0, um valor sem dígitos com `pad: true` retornava a máscara toda de zeros."
+          "- Um valor que não é string nem inteiro seguro não negativo (um objeto, `true`, `-1`, `1.5`, um bigint) retorna uma string vazia em vez de lançar erro. Um número é lido como a string dos seus dígitos. Os caracteres depois do 44º são descartados.",
+          "- Retorna uma string vazia quando não há nada para formatar. Até a 2.4.0, um valor sem dígitos com `pad: true` retornava a máscara toda de zeros."
         ]
       },
       "references": [
@@ -90,20 +90,20 @@
       },
       "description": {
         "en": [
-          "Parses a DF-e access key into its fields. It accepts the same input as `nfeKey.isValid` and returns null when the key is not valid.",
+          "Parses a DF-e access key into its fields. It accepts the same input as `nfeKey.isValid` and returns `null` when the key is not valid.",
           "",
-          "- Fields: `stateCode` (the 2-letter UF read from the cUF), `year` (4 digits), `month` (1 to 12), `taxId` (issuer tax id), `model` (the 2-digit model as a string, such as `\"55\"`), `series` (0 to 999) and `number` (1 to 999999999) as numbers, `emissionType` (the `tpEmis` code, a number), `code` (the numeric code as a string, keeping its leading zeros) and `checkDigit` (a number). An alphanumeric CNPJ keeps its upper-case letters.",
+          "- Fields: `stateCode` (the 2-letter UF read from the cUF), `year` (4 digits), `month` (1 to 12), `taxId` (issuer tax id), `model` (the 2-digit model as a string, such as `\"55\"`), `series` (0 to 999) and `number` (1 to 999999999) as numbers, `emissionType` (the `tpEmis` code, a number), `code` (the numeric code as a string, keeping its leading zeros) and `checkDigit` (a number). An alphanumeric CNPJ keeps its uppercase letters.",
           "- For NFCom and NF3e (models 62 and 66), `code` has 7 digits and the result also carries `authorizationSite` (`nSiteAutoriz`, a number from 0 to 9). The other models have no `authorizationSite`.",
           "- `taxId` is the 14 characters of positions 7 to 20 as written: a numeric CNPJ, an alphanumeric CNPJ (upper-cased) or a CPF left-padded with zeros. A `taxId` with a letter is always an alphanumeric CNPJ. A padded CPF and a CNPJ that starts with `000` look alike, so check it with `cpf.isValid` or `cnpj.isValid` when the type matters.",
-          "- It returns null exactly when `nfeKey.isValid` returns false."
+          "- It returns `null` exactly when `nfeKey.isValid` returns `false`."
         ],
         "pt-BR": [
-          "Decompõe uma chave de acesso de DF-e em seus campos. Aceita a mesma entrada que `nfeKey.isValid` e retorna null quando a chave não é válida.",
+          "Decompõe uma chave de acesso de DF-e em seus campos. Aceita a mesma entrada que `nfeKey.isValid` e retorna `null` quando a chave não é válida.",
           "",
           "- Campos: `stateCode` (a sigla da UF, lida do cUF), `year` (4 dígitos), `month` (1 a 12), `taxId` (inscrição federal do emitente), `model` (o modelo de 2 dígitos como string, como `\"55\"`), `series` (0 a 999) e `number` (1 a 999999999) como números, `emissionType` (o código `tpEmis`, um número), `code` (o código numérico como string, mantendo os zeros à esquerda) e `checkDigit` (um número). Um CNPJ alfanumérico mantém as letras em maiúsculas.",
           "- Na NFCom e na NF3e (modelos 62 e 66), `code` tem 7 dígitos e o resultado também traz `authorizationSite` (`nSiteAutoriz`, um número de 0 a 9). Os outros modelos não têm `authorizationSite`.",
           "- `taxId` são os 14 caracteres das posições 7 a 20 como estão escritos: um CNPJ numérico, um CNPJ alfanumérico (em maiúsculas) ou um CPF completado com zeros à esquerda. Um `taxId` com letra é sempre um CNPJ alfanumérico. Um CPF completado e um CNPJ que começa com `000` se parecem, então confira com `cpf.isValid` ou `cnpj.isValid` quando o tipo importar.",
-          "- Retorna null exatamente quando `nfeKey.isValid` retorna false."
+          "- Retorna `null` exatamente quando `nfeKey.isValid` retorna `false`."
         ]
       },
       "references": [
@@ -220,13 +220,13 @@
           "",
           "- The cUF must be a state and the month (`AAMM`) must be 01 to 12. The model must be one of the above. The emission type (`tpEmis`) must be one that the MOC of that model assigns: 1 to 7 and 9 for NF-e and NFC-e; 1, 3, 4, 5, 7 and 8 for CT-e; 1, 5, 7 and 8 for CT-e OS; 1, 2, 7 and 8 for GTV-e; 1, 2 and 3 for MDF-e; 1 and 2 for BP-e, NF3e and NFCom.",
           "- The key is `cUF(2) AAMM(4) CNPJ/CPF(14) mod(2) serie(3) nNF(9) tpEmis(1) cNF(8) cDV(1)`. NFCom and NF3e spend position 36 on `nSiteAutoriz` and leave 7 digits for `cNF`.",
-          "- For NF-e and NFC-e, the numeric code (`cNF`) must pass rule B03-10 of the MOC (no repeated or sequential values from the list of 20 the rule gives, and not equal to the document number). The rule applies to the documents sent after NT 2019.001, and NF-e software commonly used a `cNF` equal to the document number before it, so a key authorised earlier can be rejected.",
+          "- For NF-e and NFC-e, the numeric code (`cNF`) must pass rule B03-10 of the MOC (no repeated or sequential values from the list of 20 the rule gives, and not equal to the document number). The rule applies to the documents sent after NT 2019.001, and NF-e software commonly used a `cNF` equal to the document number before it, so a key authorized earlier can be rejected.",
           "- The function rejects a document number of all zeros. The check digit is a modulus 11 over the first 43 characters, with weights 2 to 9 cycling from the right; a remainder of 0 or 1 gives check digit 0.",
           "- The 44 characters may be grouped in 4 by whitespace, `.`, `-` or `/`, alone or in a run (`\"3517 - 0458 ...\"`). A separator inside a group of 4, or any other character, makes the key invalid. The function first strips the XML `Id` prefixes (`NFe`, `CTe`, `MDFe`, `BPe`, `NF3e`, `NFCom`, in any letter case), with any whitespace between the prefix and the first group.",
-          "- Positions 7 to 18 (the root and order of the issuer's CNPJ) may hold the letters of an alphanumeric CNPJ. The current schemas type the key as `[0-9]{6}[0-9A-Z]{12}[0-9]{26}` (NT Conjunta 2025.001, NF-e package PL_010), where older ones had 44 digits. A letter anywhere else, including the CNPJ check digits in positions 19 and 20, is rejected. Lower case is read as upper case, but a non-ASCII letter that upper-cases into an ASCII one (`ſ`, `ß`) is rejected. A CPF issuer is always 11 digits left-padded with zeros, so a letter there always belongs to an alphanumeric CNPJ. 2.4.0 accepted digits only.",
+          "- Positions 7 to 18 (the root and order of the issuer's CNPJ) may hold the letters of an alphanumeric CNPJ. The current schemas type the key as `[0-9]{6}[0-9A-Z]{12}[0-9]{26}` (NT Conjunta 2025.001, NF-e package PL_010), where older ones had 44 digits. A letter anywhere else, including the CNPJ check digits in positions 19 and 20, is rejected. lowercase is read as uppercase, but a non-ASCII letter that upper-cases into an ASCII one (`ſ`, `ß`) is rejected. A CPF issuer is always 11 digits left-padded with zeros, so a letter there always belongs to an alphanumeric CNPJ. 2.4.0 accepted digits only.",
           "- In the check digit, each character counts as its ASCII code minus 48: the digit itself for `0` to `9`, and 17 to 42 for `A` to `Z`, as in the alphanumeric CNPJ.",
-          "- GTV-e (64) accepts `tpEmis` 1, 2, 7 and 8 (CT-e MOC, field D15). The current package PL_CTe_400_RTC lists only 1 and 2, but 7 (SVC-RS) and 8 (SVC-SP) are kept so keys authorised under PL_CTe_400 still validate, since a key carries no schema version. This is the 2.4.0 behaviour.",
-          "- A value that is not a string returns false. The CPF or CNPJ check digits of the issuer are not checked, only the check digit of the key (read the key with `nfeKey.getInfo` and check its `taxId` with `cpf.isValid` or `cnpj.isValid`)."
+          "- GTV-e (64) accepts `tpEmis` 1, 2, 7 and 8 (CT-e MOC, field D15). The current package PL_CTe_400_RTC lists only 1 and 2, but 7 (SVC-RS) and 8 (SVC-SP) are kept so keys authorized under PL_CTe_400 still validate, since a key carries no schema version. This is the 2.4.0 behavior.",
+          "- A value that is not a string returns `false`. The CPF or CNPJ check digits of the issuer are not checked, only the check digit of the key (read the key with `nfeKey.getInfo` and check its `taxId` with `cpf.isValid` or `cnpj.isValid`)."
         ],
         "pt-BR": [
           "Valida uma chave de acesso de DF-e com 44 caracteres: NF-e (55), NFC-e (65), CT-e (57), MDF-e (58), CT-e OS (67), GTV-e (64), BP-e (63), NF3e (66) e NFCom (62). O CF-e-SAT (59) não é aceito.",
@@ -237,9 +237,9 @@
           "- A função rejeita um número de documento com todos os dígitos zero. O dígito verificador é um módulo 11 sobre os primeiros 43 caracteres, com pesos de 2 a 9 repetidos da direita para a esquerda; um resto 0 ou 1 dá dígito verificador 0.",
           "- Os 44 caracteres podem vir agrupados de 4 em 4 por espaço em branco, `.`, `-` ou `/`, sozinhos ou em sequência (`\"3517 - 0458 ...\"`). Um separador dentro de um grupo de 4, ou qualquer outro caractere, torna a chave inválida. A função primeiro remove os prefixos `Id` do XML (`NFe`, `CTe`, `MDFe`, `BPe`, `NF3e`, `NFCom`, em qualquer caixa), com os espaços entre o prefixo e o primeiro grupo.",
           "- As posições 7 a 18 (raiz e ordem do CNPJ do emitente) podem ter as letras de um CNPJ alfanumérico. Os schemas atuais tipam a chave como `[0-9]{6}[0-9A-Z]{12}[0-9]{26}` (NT Conjunta 2025.001, pacote PL_010 da NF-e), onde os antigos tinham 44 dígitos. Uma letra em qualquer outra posição, inclusive nos dígitos verificadores do CNPJ nas posições 19 e 20, é rejeitada. Minúsculas são lidas como maiúsculas, mas uma letra não ASCII que vira uma letra ASCII em maiúsculas (`ſ`, `ß`) é rejeitada. Um emitente CPF tem sempre 11 dígitos completados com zeros à esquerda, então uma letra ali sempre pertence a um CNPJ alfanumérico. A 2.4.0 só aceitava dígitos.",
-          "- No dígito verificador, cada caractere vale o seu código ASCII menos 48: o próprio dígito de `0` a `9`, e de 17 a 42 de `A` a `Z`, como no CNPJ alfanumérico.",
+          "- No dígito verificador, cada caractere vale o seu código ASCII menos 48: o próprio dígito para `0` a `9`, e 17 a 42 para `A` a `Z`, como no CNPJ alfanumérico.",
           "- A GTV-e (64) aceita `tpEmis` 1, 2, 7 e 8 (MOC do CT-e, campo D15). O pacote atual PL_CTe_400_RTC só lista 1 e 2, mas 7 (SVC-RS) e 8 (SVC-SP) são mantidos para que chaves autorizadas sob o PL_CTe_400 continuem válidas, já que a chave não carrega versão de schema. É o comportamento da 2.4.0.",
-          "- Um valor que não é string retorna false. Os dígitos verificadores do CPF ou CNPJ do emitente não são conferidos, só o dígito verificador da chave (leia a chave com `nfeKey.getInfo` e confira o `taxId` com `cpf.isValid` ou `cnpj.isValid`)."
+          "- Um valor que não é string retorna `false`. Os dígitos verificadores do CPF ou CNPJ do emitente não são conferidos, só o dígito verificador da chave (leia a chave com `nfeKey.getInfo` e confira o `taxId` com `cpf.isValid` ou `cnpj.isValid`)."
         ]
       },
       "references": [
@@ -337,10 +337,10 @@
         "pt-BR": [
           "Remove a formatação de uma chave de acesso de DF-e e mantém só os caracteres da chave, limitados a 44: dígitos, mais as letras de um CNPJ alfanumérico em maiúsculas nas posições 7 a 18.",
           "",
-          "- A função primeiro remove os prefixos `Id` do XML (`NFe`, `CTe`, `MDFe`, `BPe`, `NF3e`, `NFCom`), com os espaços em volta. O prefixo sai primeiro porque `NF3e` traz um dígito próprio que não faz parte da chave.",
+          "- A função primeiro remove os prefixos `Id` do XML (`NFe`, `CTe`, `MDFe`, `BPe`, `NF3e`, `NFCom`), com os espaços nas pontas. O prefixo sai primeiro porque `NF3e` traz um dígito próprio que não faz parte da chave.",
           "- Uma letra em qualquer outra posição é descartada, como qualquer outro caractere fora da chave. A 2.4.0 descartava toda letra.",
-          "- Um valor mais curto passa até onde vai, então a máscara de uma chave ainda sendo digitada pode ser removida com ela. Não confere a chave (use `nfeKey.isValid`).",
-          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
+          "- Um valor mais curto passa até onde vai, então o agrupamento de uma chave ainda em digitação também é removido. Não confere a chave (use `nfeKey.isValid`).",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
         ]
       },
       "references": [

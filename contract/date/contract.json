@@ -22,12 +22,12 @@
           "- Returns a new date and keeps the time of day. The function never changes the input. When the result day does not have that time (a daylight saving jump), the result is the nearest instant of that day.",
           "- An `amount` of 0 returns the same date, even on a non-business day. A negative `amount` walks backwards.",
           "- `options.includeOptional` (default true) counts the optional holidays (Carnaval Monday and Tuesday, Corpus Christi) as non-business days. With false, only `national` and `state` holidays count, so Corpus Christi still counts in DF, in MA from 2024 and in RJ from 2026, where it is a state holiday.",
-          "- `options.includeSaturday` (default false) counts Saturday as a business day, the labour law count of the payroll deadline (CLT art. 459 § 1º, read through IN MTP nº 2/2021, art. 14, I). Sunday and holidays stay excluded, including a holiday on a Saturday (Finados 2024-11-02, Independência 2024-09-07).",
+          "- `options.includeSaturday` (default false) counts Saturday as a business day, the labor law count of the payroll deadline (CLT art. 459 § 1º, read through IN MTP nº 2/2021, art. 14, I). Sunday and holidays stay excluded, including a holiday on a Saturday (Finados 2024-11-02, Independência 2024-09-07).",
           "- `includeSaturday` does not cover municipal holidays, which the IN also excludes. An exact count for a municipality has to remove them separately. The option name does not promise \"CLT\" for that reason.",
           "- A truthy value that is not a boolean (for example `\"false\"`) turns `includeSaturday` or `includeOptional` on.",
-          "- `options.stateCode` is read ignoring case and surrounding whitespace, as in every state util: `\"sp\"` and `\" SP \"` add the holidays of São Paulo. Only an omitted (undefined) `stateCode` means national holidays only.",
-          "- A `stateCode` that is present and is not a state code (`\"XX\"`, `\"\"`, `\"__proto__\"`, a number, null, an object) is rejected: the function returns null without looking at the date. 2.4.0 silently fell back to the national holidays for an unknown or lower-case code, so `\"sp\"` counted 9 July as a business day in São Paulo.",
-          "- Returns null for an invalid date, an `amount` that is not a finite integer, or a start or result outside the years 1900 to 2099.",
+          "- `options.stateCode` is read ignoring case and surrounding whitespace, as in every state util: `\"sp\"` and `\" SP \"` add the holidays of São Paulo. Only an omitted (`undefined`) `stateCode` means national holidays only.",
+          "- A `stateCode` that is present and is not a state code (`\"XX\"`, `\"\"`, `\"__proto__\"`, a number, `null`, an object) is rejected: the function returns `null` without looking at the date. 2.4.0 silently fell back to the national holidays for an unknown or lowercase code, so `\"sp\"` counted 9 July as a business day in São Paulo.",
+          "- Returns `null` for an invalid date, an `amount` that is not a finite integer, or a start or result outside the years 1900 to 2099.",
           "- The walk always ends. 2.4.0 could loop forever in time zones where a local day does not exist (Pacific/Apia and Pacific/Fakaofo on 2011-12-30, Pacific/Kiritimati and Pacific/Enderbury on 1994-12-31, Pacific/Kwajalein on 1993-08-21); the walk now skips that day. The half-hour shift of Australia/Lord_Howe was fixed too. Other results are unchanged.",
           "",
           "Recipes (no dedicated helper exists):",
@@ -35,29 +35,29 @@
           "- Next business day: `addBusinessDays(d, 1)`.",
           "- N-th business day of a month: `addBusinessDays(new Date(y, m, 0), n)`, starting from the last day of the previous month. When `n` is larger than the month's business days, the result falls in the next month; check its month.",
           "- Last business day of a month: `subBusinessDays(new Date(y, m + 1, 1), 1)`, starting from the first day of the next month.",
-          "- Edges: the n-th business day of January 1900 and the last business day of December 2099 return null, because the starting day is outside 1900 to 2099.",
-          "- With `{ includeSaturday: true }` the same recipe gives the labour law \"quinto dia útil\": `addBusinessDays(new Date(2024, 2, 0), 5, { includeSaturday: true })` is Wednesday 2024-03-06, while the banking count without the option is Thursday 2024-03-07."
+          "- Edges: the n-th business day of January 1900 and the last business day of December 2099 return `null`, because the starting day is outside 1900 to 2099.",
+          "- With `{ includeSaturday: true }` the same recipe gives the labor law \"quinto dia útil\": `addBusinessDays(new Date(2024, 2, 0), 5, { includeSaturday: true })` is Wednesday 2024-03-06, while the banking count without the option is Thursday 2024-03-07."
         ],
         "pt-BR": [
-          "Soma um número de dias úteis a uma data. Anda um dia do calendário por vez e conta só os dias que `date.isBusinessDay` aceita com as mesmas `options`.",
+          "Soma um número de dias úteis a uma data. Avança um dia do calendário por vez e conta só os dias que `date.isBusinessDay` aceita com as mesmas `options`.",
           "",
           "- Retorna uma nova data e mantém a hora do dia. A função nunca altera a entrada. Quando o dia do resultado não tem essa hora (um salto de horário de verão), o resultado é o instante mais próximo daquele dia.",
-          "- Um `amount` de 0 retorna a mesma data, mesmo em um dia que não é útil. Um `amount` negativo anda para trás.",
+          "- Um `amount` de 0 retorna a mesma data, mesmo em um dia que não é útil. Um `amount` negativo recua.",
           "- `options.includeOptional` (padrão true) conta os feriados opcionais (segunda e terça de Carnaval, Corpus Christi) como dias não úteis. Com false, só contam os feriados `national` e `state`, então Corpus Christi continua contando no DF, no MA a partir de 2024 e no RJ a partir de 2026, onde é feriado estadual.",
           "- `options.includeSaturday` (padrão false) conta o sábado como dia útil, a contagem trabalhista do prazo do salário (CLT art. 459 § 1º, lida pela IN MTP nº 2/2021, art. 14, I). Domingo e feriados continuam excluídos, inclusive feriado que cai no sábado (Finados 02/11/2024, Independência 07/09/2024).",
           "- `includeSaturday` não cobre feriados municipais, que a IN também exclui. Uma contagem exata para um município precisa removê-los à parte. Por isso o nome da opção não promete \"CLT\".",
-          "- Um valor truthy que não é booleano (por exemplo `\"false\"`) liga `includeSaturday` ou `includeOptional`.",
-          "- `options.stateCode` é lido sem diferenciar maiúsculas de minúsculas e sem os espaços das pontas, como em todo util que recebe UF: `\"sp\"` e `\" SP \"` somam os feriados de São Paulo. Só um `stateCode` omitido (undefined) significa apenas feriados nacionais.",
-          "- Um `stateCode` presente que não é sigla de estado (`\"XX\"`, `\"\"`, `\"__proto__\"`, um número, null, um objeto) é rejeitado: a função retorna null sem olhar a data. A 2.4.0 caía em silêncio nos feriados nacionais para uma sigla desconhecida ou em minúsculas, então `\"sp\"` contava 9 de julho como dia útil em São Paulo.",
-          "- Retorna null para uma data inválida, um `amount` que não é inteiro finito, ou um início ou resultado fora dos anos 1900 a 2099.",
-          "- A caminhada sempre termina. A 2.4.0 podia entrar em loop infinito em fusos onde um dia local não existe (Pacific/Apia e Pacific/Fakaofo em 30/12/2011, Pacific/Kiritimati e Pacific/Enderbury em 31/12/1994, Pacific/Kwajalein em 21/08/1993); agora a caminhada pula esse dia. O deslocamento de meia hora de Australia/Lord_Howe também foi corrigido. Os demais resultados não mudam.",
+          "- Um valor avaliado como verdadeiro (truthy) que não é booleano (por exemplo `\"false\"`) liga `includeSaturday` ou `includeOptional`.",
+          "- `options.stateCode` é lido sem diferenciar maiúsculas de minúsculas e sem os espaços das pontas, como em toda função que recebe UF: `\"sp\"` e `\" SP \"` somam os feriados de São Paulo. Só um `stateCode` omitido (`undefined`) significa apenas feriados nacionais.",
+          "- Um `stateCode` presente que não é sigla de estado (`\"XX\"`, `\"\"`, `\"__proto__\"`, um número, `null`, um objeto) é rejeitado: a função retorna `null` sem olhar a data. A 2.4.0 recorria em silêncio aos feriados nacionais para uma sigla desconhecida ou em minúsculas, então `\"sp\"` contava 9 de julho como dia útil em São Paulo.",
+          "- Retorna `null` para uma data inválida, um `amount` que não é inteiro finito, ou um início ou resultado fora dos anos 1900 a 2099.",
+          "- O avanço sempre termina. A 2.4.0 podia entrar em loop infinito em fusos onde um dia local não existe (Pacific/Apia e Pacific/Fakaofo em 30/12/2011, Pacific/Kiritimati e Pacific/Enderbury em 31/12/1994, Pacific/Kwajalein em 21/08/1993); agora o avanço pula esse dia. O deslocamento de meia hora de Australia/Lord_Howe também foi corrigido. Os demais resultados não mudam.",
           "",
           "Receitas (não existe helper próprio):",
           "",
           "- Próximo dia útil: `addBusinessDays(d, 1)`.",
           "- N-ésimo dia útil do mês: `addBusinessDays(new Date(y, m, 0), n)`, partindo do último dia do mês anterior. Se `n` passar do número de dias úteis do mês, o resultado cai no mês seguinte; confira o mês.",
           "- Último dia útil do mês: `subBusinessDays(new Date(y, m + 1, 1), 1)`, partindo do primeiro dia do mês seguinte.",
-          "- Bordas: o n-ésimo dia útil de janeiro/1900 e o último dia útil de dezembro/2099 retornam null, porque o dia de partida fica fora de 1900 a 2099.",
+          "- Casos-limite: o n-ésimo dia útil de janeiro/1900 e o último dia útil de dezembro/2099 retornam `null`, porque o dia de partida fica fora de 1900 a 2099.",
           "- Com `{ includeSaturday: true }` a mesma receita dá o \"quinto dia útil\" trabalhista: `addBusinessDays(new Date(2024, 2, 0), 5, { includeSaturday: true })` é quarta 06/03/2024, enquanto a contagem bancária, sem a opção, é quinta 07/03/2024."
         ]
       },
@@ -88,13 +88,13 @@
           "",
           "- `value` is a date (its local calendar date) or a string `dd/mm/yyyy` or ISO `yyyy-mm-dd`.",
           "- `options.style` (default `\"full\"`) spells out the day, the month and the year (`\"dois de março de dois mil e vinte e quatro\"`). `\"month\"` spells out only the month and leaves the day and the year as digits (`\"2 de março de 2024\"`), with day 1 as `1º` (`\"1º de janeiro de 2024\"`). Any other value is ignored and `\"full\"` is used.",
-          "- `options.weekday` (default false) puts the weekday name in lower case and a comma in front (`\"sábado, dois de março de dois mil e vinte e quatro\"`). The weekday comes from the resolved calendar date: the local date of a date value, or the parsed date of a string. It combines with either style.",
+          "- `options.weekday` (default false) puts the weekday name in lowercase and a comma in front (`\"sábado, dois de março de dois mil e vinte e quatro\"`). The weekday comes from the resolved calendar date: the local date of a date value, or the parsed date of a string. It combines with either style.",
           "- `style` and `weekday` are read strictly: only `\"month\"` and only `true` change the output. `\"true\"` or `1` for `weekday` do nothing.",
           "- Day 1 is \"primeiro\" in the `full` style.",
-          "- In the `full` style the year is written as `number.convertToWords` writes it (`1999` is \"mil novecentos e noventa e nove\", `2000` is \"dois mil\"). The result is always lower case.",
+          "- In the `full` style the year is written as `number.convertToWords` writes it (`1999` is \"mil novecentos e noventa e nove\", `2000` is \"dois mil\"). The result is always lowercase.",
           "- February 29th is accepted only on leap years of the proleptic Gregorian calendar (divisible by 4, except centuries not divisible by 400). A string must match `dd/mm/yyyy` or `yyyy-mm-dd` exactly, with no other characters around it.",
-          "- Pending decision (findings §1b): the reference (JS) writes all lower case and parses ISO strings. Go and Ruby capitalise and do not parse ISO strings.",
-          "- Pending decision (findings §2 #9): the reference (JS) returns an empty string for an invalid date, a malformed string, a day or month that does not exist, or a year before 1. Other libraries return null."
+          "- Pending decision (findings §1b): the reference (JS) writes all lowercase and parses ISO strings. Go and Ruby capitalize and do not parse ISO strings.",
+          "- Pending decision (findings §2 #9): the reference (JS) returns an empty string for an invalid date, a malformed string, a day or month that does not exist, or a year before 1. Other libraries return `null`."
         ],
         "pt-BR": [
           "Escreve uma data por extenso em português, por exemplo \"primeiro de janeiro de dois mil e vinte e quatro\".",
@@ -107,7 +107,7 @@
           "- No estilo `full` o ano é escrito como `number.convertToWords` o escreve (`1999` vira \"mil novecentos e noventa e nove\", `2000` vira \"dois mil\"). O resultado é sempre em minúsculas.",
           "- 29 de fevereiro só é aceito em anos bissextos do calendário gregoriano proléptico (divisíveis por 4, exceto séculos não divisíveis por 400). Uma string precisa casar exatamente com `dd/mm/yyyy` ou `yyyy-mm-dd`, sem nenhum outro caractere em volta.",
           "- Decisão pendente (findings §1b): a referência (JS) escreve tudo em minúsculas e interpreta strings ISO. Go e Ruby usam inicial maiúscula e não interpretam strings ISO.",
-          "- Decisão pendente (findings §2 #9): a referência (JS) retorna uma string vazia para uma data inválida, uma string malformada, um dia ou mês que não existe ou um ano antes de 1. As outras bibliotecas retornam null."
+          "- Decisão pendente (findings §2 #9): a referência (JS) retorna uma string vazia para uma data inválida, uma string malformada, um dia ou mês que não existe ou um ano antes de 1. As outras bibliotecas retornam `null`."
         ]
       },
       "flatName": "convertDateToWords",
@@ -169,7 +169,7 @@
           "- Counts `earlierDate` when it is a business day, and every business day strictly between the two. It never counts `laterDate`. The time of day is ignored.",
           "- The result is negative when `laterDate` is before `earlierDate`, and 0 on the same calendar day.",
           "- `options` as in `date.addBusinessDays`: `includeOptional`, `includeSaturday` and `stateCode`. With `{ includeSaturday: true }`, 2024-01-01 to 2024-01-08 gives 5 (1 January is a holiday, Sunday is excluded).",
-          "- Returns null when either date is invalid or outside the years 1900 to 2099, and when `options.stateCode` is present and is not a state code (2.4.0 fell back to national holidays)."
+          "- Returns `null` when either date is invalid or outside the years 1900 to 2099, and when `options.stateCode` is present and is not a state code (2.4.0 fell back to national holidays)."
         ],
         "pt-BR": [
           "Conta os dias úteis entre duas datas.",
@@ -177,7 +177,7 @@
           "- Conta `earlierDate` quando é dia útil e todos os dias úteis estritamente entre as duas. Nunca conta `laterDate`. A hora do dia é ignorada.",
           "- O resultado é negativo quando `laterDate` é antes de `earlierDate`, e 0 no mesmo dia do calendário.",
           "- `options` como em `date.addBusinessDays`: `includeOptional`, `includeSaturday` e `stateCode`. Com `{ includeSaturday: true }`, de 01/01/2024 a 08/01/2024 dá 5 (1º de janeiro é feriado, domingo fica fora).",
-          "- Retorna null quando uma das datas é inválida ou está fora dos anos 1900 a 2099, e quando `options.stateCode` está presente e não é sigla de estado (a 2.4.0 caía nos feriados nacionais)."
+          "- Retorna `null` quando uma das datas é inválida ou está fora dos anos 1900 a 2099, e quando `options.stateCode` está presente e não é sigla de estado (a 2.4.0 recorria aos feriados nacionais)."
         ]
       },
       "references": [
@@ -207,8 +207,8 @@
           "",
           "- `options` is `{ year, stateCode? }`. JavaScript also accepts a bare year, `getHolidays(2024)`, for the national holidays.",
           "- Each holiday has a name, a date and a `type`: `national`, `state`, `optional` (ponto facultativo) or `religious` (Páscoa, listed for convenience; no norm declares it).",
-          "- `stateCode` is read ignoring case and surrounding whitespace, as in every state util. Only an omitted (undefined) `stateCode` means national holidays only.",
-          "- A `stateCode` that is present and is not a state code (`\"XX\"`, `\"\"`, `\"__proto__\"`, a number, null, an object) returns an empty list. 2.4.0 returned the national holidays for it, so `{ year: 2024, stateCode: \"sp\" }` left out the São Paulo holidays.",
+          "- `stateCode` is read ignoring case and surrounding whitespace, as in every state util. Only an omitted (`undefined`) `stateCode` means national holidays only.",
+          "- A `stateCode` that is present and is not a state code (`\"XX\"`, `\"\"`, `\"__proto__\"`, a number, `null`, an object) returns an empty list. 2.4.0 returned the national holidays for it, so `{ year: 2024, stateCode: \"sp\" }` left out the São Paulo holidays.",
           "- Returns an empty list when `year` is not an integer from 1900 to 2099.",
           "- Each holiday appears only in the years its norm was in force:",
           "  - Fixed national holidays appear only in the years a federal norm declared them. Finados appears up to 1948 and from 2003 on, not from 1949 to 2002 (2.4.0 listed it every year). Nossa Senhora Aparecida appears from 1980. Dia da Consciência Negra (20 November) is national from 2024.",
@@ -239,8 +239,8 @@
           "",
           "- `options` é `{ year, stateCode? }`. O JavaScript também aceita só o ano, `getHolidays(2024)`, para os feriados nacionais.",
           "- Cada feriado tem um nome, uma data e um `type`: `national`, `state`, `optional` (ponto facultativo) ou `religious` (Páscoa, listada por conveniência; nenhuma norma a declara).",
-          "- `stateCode` é lido sem diferenciar maiúsculas de minúsculas e sem os espaços das pontas, como em todo util que recebe UF. Só um `stateCode` omitido (undefined) significa apenas feriados nacionais.",
-          "- Um `stateCode` presente que não é sigla de estado (`\"XX\"`, `\"\"`, `\"__proto__\"`, um número, null, um objeto) retorna uma lista vazia. A 2.4.0 retornava os feriados nacionais nesse caso, então `{ year: 2024, stateCode: \"sp\" }` omitia os feriados de São Paulo.",
+          "- `stateCode` é lido sem diferenciar maiúsculas de minúsculas e sem os espaços das pontas, como em toda função que recebe UF. Só um `stateCode` omitido (`undefined`) significa apenas feriados nacionais.",
+          "- Um `stateCode` presente que não é sigla de estado (`\"XX\"`, `\"\"`, `\"__proto__\"`, um número, `null`, um objeto) retorna uma lista vazia. A 2.4.0 retornava os feriados nacionais nesse caso, então `{ year: 2024, stateCode: \"sp\" }` omitia os feriados de São Paulo.",
           "- Retorna uma lista vazia quando `year` não é um inteiro de 1900 a 2099.",
           "- Cada feriado só aparece nos anos em que a norma vigia:",
           "  - Feriados nacionais de data fixa só aparecem nos anos em que uma norma federal os declarava. Finados aparece até 1948 e a partir de 2003, e não de 1949 a 2002 (a 2.4.0 listava todo ano). Nossa Senhora Aparecida aparece a partir de 1980. O Dia da Consciência Negra (20 de novembro) é nacional a partir de 2024.",
@@ -379,12 +379,12 @@
           "Checks whether a date is a Brazilian business day (dia útil), by its local calendar date. A business day is not a Saturday, a Sunday or a holiday of `date.getHolidays` for the same state.",
           "",
           "- `options.includeOptional` (default true) counts the optional holidays (Carnaval Monday and Tuesday, Corpus Christi, and the `optional` entries a state has, AM's 8 December and PE's 6 March of 2008 and 2009) as non-business days. With false, only `national` and `state` holidays count, so Corpus Christi still counts in DF, in MA from 2024 and in RJ from 2026, where it is a state holiday.",
-          "- `options.includeSaturday` (default false) counts Saturday as a business day, the labour law count of the payroll deadline (CLT art. 459 § 1º, read through IN MTP nº 2/2021, art. 14, I). Sunday and holidays stay excluded, including a holiday on a Saturday (Finados 2024-11-02, Independência 2024-09-07).",
+          "- `options.includeSaturday` (default false) counts Saturday as a business day, the labor law count of the payroll deadline (CLT art. 459 § 1º, read through IN MTP nº 2/2021, art. 14, I). Sunday and holidays stay excluded, including a holiday on a Saturday (Finados 2024-11-02, Independência 2024-09-07).",
           "- `includeSaturday` does not cover municipal holidays, which the IN also excludes. An exact count for a municipality has to remove them separately. The option name does not promise \"CLT\" for that reason.",
           "- A truthy value that is not a boolean (for example `\"false\"`) turns `includeSaturday` or `includeOptional` on.",
           "- An `options` that is not an object is ignored, as if it were omitted.",
-          "- `options.stateCode` is read ignoring case and surrounding whitespace, as in every state util: `\"sp\"` and `\" SP \"` add the holidays of São Paulo. Only an omitted (undefined) `stateCode` means national holidays only.",
-          "- A `stateCode` that is present and is not a state code (`\"XX\"`, `\"\"`, `\"__proto__\"`, a number, null, an object) is rejected: the function returns false without looking at the date. 2.4.0 silently fell back to the national holidays for an unknown or lower-case code, so `\"sp\"` counted 9 July as a business day in São Paulo.",
+          "- `options.stateCode` is read ignoring case and surrounding whitespace, as in every state util: `\"sp\"` and `\" SP \"` add the holidays of São Paulo. Only an omitted (`undefined`) `stateCode` means national holidays only.",
+          "- A `stateCode` that is present and is not a state code (`\"XX\"`, `\"\"`, `\"__proto__\"`, a number, `null`, an object) is rejected: the function returns `false` without looking at the date. 2.4.0 silently fell back to the national holidays for an unknown or lowercase code, so `\"sp\"` counted 9 July as a business day in São Paulo.",
           "- This is not by itself a bank or court calendar: banks also close on their branch's local holidays, and courts follow their own calendars.",
           "- Returns false for an invalid date or a year outside 1900 to 2099."
         ],
@@ -394,10 +394,10 @@
           "- `options.includeOptional` (padrão true) conta os feriados opcionais (segunda e terça de Carnaval, Corpus Christi e os itens `optional` de um estado, o 8 de dezembro do AM e o 6 de março de PE em 2008 e 2009) como dias não úteis. Com false, só contam os feriados `national` e `state`, então Corpus Christi continua contando no DF, no MA a partir de 2024 e no RJ a partir de 2026, onde é feriado estadual.",
           "- `options.includeSaturday` (padrão false) conta o sábado como dia útil, a contagem trabalhista do prazo do salário (CLT art. 459 § 1º, lida pela IN MTP nº 2/2021, art. 14, I). Domingo e feriados continuam excluídos, inclusive feriado que cai no sábado (Finados 02/11/2024, Independência 07/09/2024).",
           "- `includeSaturday` não cobre feriados municipais, que a IN também exclui. Uma contagem exata para um município precisa removê-los à parte. Por isso o nome da opção não promete \"CLT\".",
-          "- Um valor truthy que não é booleano (por exemplo `\"false\"`) liga `includeSaturday` ou `includeOptional`.",
+          "- Um valor avaliado como verdadeiro (truthy) que não é booleano (por exemplo `\"false\"`) liga `includeSaturday` ou `includeOptional`.",
           "- Um `options` que não é objeto é ignorado, como se tivesse sido omitido.",
-          "- `options.stateCode` é lido sem diferenciar maiúsculas de minúsculas e sem os espaços das pontas, como em todo util que recebe UF: `\"sp\"` e `\" SP \"` somam os feriados de São Paulo. Só um `stateCode` omitido (undefined) significa apenas feriados nacionais.",
-          "- Um `stateCode` presente que não é sigla de estado (`\"XX\"`, `\"\"`, `\"__proto__\"`, um número, null, um objeto) é rejeitado: a função retorna false sem olhar a data. A 2.4.0 caía em silêncio nos feriados nacionais para uma sigla desconhecida ou em minúsculas, então `\"sp\"` contava 9 de julho como dia útil em São Paulo.",
+          "- `options.stateCode` é lido sem diferenciar maiúsculas de minúsculas e sem os espaços das pontas, como em toda função que recebe UF: `\"sp\"` e `\" SP \"` somam os feriados de São Paulo. Só um `stateCode` omitido (`undefined`) significa apenas feriados nacionais.",
+          "- Um `stateCode` presente que não é sigla de estado (`\"XX\"`, `\"\"`, `\"__proto__\"`, um número, `null`, um objeto) é rejeitado: a função retorna `false` sem olhar a data. A 2.4.0 recorria em silêncio aos feriados nacionais para uma sigla desconhecida ou em minúsculas, então `\"sp\"` contava 9 de julho como dia útil em São Paulo.",
           "- Isso não é, por si só, o calendário bancário ou forense: bancos também fecham nos feriados locais da agência, e tribunais seguem calendários próprios.",
           "- Retorna false para uma data inválida ou um ano fora de 1900 a 2099."
         ]
@@ -431,19 +431,19 @@
           "Checks whether a date is a Brazilian holiday, by its local calendar date.",
           "",
           "- `options` carries the target date and, optionally, a state code whose holidays also count. Every holiday `date.getHolidays` lists counts, optional ones and the first round of the elections included.",
-          "- `options.stateCode` is read ignoring case and surrounding whitespace, as in every state util: `\"sp\"` and `\" SP \"` add the holidays of São Paulo. Only an omitted (undefined) `stateCode` means national holidays only.",
-          "- A `stateCode` that is present and is not a state code (`\"XX\"`, `\"\"`, `\"__proto__\"`, a number, null, an object) is rejected: the function returns false without looking at the date. 2.4.0 silently fell back to the national holidays for an unknown or lower-case code, so `\"sp\"` did not find 9 July as a holiday in São Paulo.",
+          "- `options.stateCode` is read ignoring case and surrounding whitespace, as in every state util: `\"sp\"` and `\" SP \"` add the holidays of São Paulo. Only an omitted (`undefined`) `stateCode` means national holidays only.",
+          "- A `stateCode` that is present and is not a state code (`\"XX\"`, `\"\"`, `\"__proto__\"`, a number, `null`, an object) is rejected: the function returns `false` without looking at the date. 2.4.0 silently fell back to the national holidays for an unknown or lowercase code, so `\"sp\"` did not find 9 July as a holiday in São Paulo.",
           "- `options.targetDate` is the date to check. It is read by its local calendar day, not by its UTC instant. `options.stateCode` is optional.",
           "- Returns false when `targetDate` is missing or is not a valid date, and when `stateCode` is present and is not a state code, even on a national holiday.",
           "- Returns false for a year outside 1900 to 2099, where `date.getHolidays` lists nothing.",
-          "- The `optional` and `religious` entries of `date.getHolidays` count: Carnaval Monday and Tuesday, Corpus Christi and Páscoa make the function return true. There is no `includeOptional` here, unlike `date.isBusinessDay`."
+          "- The `optional` and `religious` entries of `date.getHolidays` count: Carnaval Monday and Tuesday, Corpus Christi and Páscoa make the function return `true`. There is no `includeOptional` here, unlike `date.isBusinessDay`."
         ],
         "pt-BR": [
           "Verifica se uma data é feriado no Brasil, pela data local do calendário.",
           "",
           "- `options` traz a data alvo e, opcionalmente, a sigla de um estado cujos feriados também contam. Todo feriado que `date.getHolidays` lista conta, inclusive os opcionais e o 1º turno das eleições.",
-          "- `options.stateCode` é lido sem diferenciar maiúsculas de minúsculas e sem os espaços das pontas, como em todo util que recebe UF: `\"sp\"` e `\" SP \"` somam os feriados de São Paulo. Só um `stateCode` omitido (undefined) significa apenas feriados nacionais.",
-          "- Um `stateCode` presente que não é sigla de estado (`\"XX\"`, `\"\"`, `\"__proto__\"`, um número, null, um objeto) é rejeitado: a função retorna false sem olhar a data. A 2.4.0 caía em silêncio nos feriados nacionais para uma sigla desconhecida ou em minúsculas, então `\"sp\"` não achava 9 de julho como feriado em São Paulo.",
+          "- `options.stateCode` é lido sem diferenciar maiúsculas de minúsculas e sem os espaços das pontas, como em toda função que recebe UF: `\"sp\"` e `\" SP \"` somam os feriados de São Paulo. Só um `stateCode` omitido (`undefined`) significa apenas feriados nacionais.",
+          "- Um `stateCode` presente que não é sigla de estado (`\"XX\"`, `\"\"`, `\"__proto__\"`, um número, `null`, um objeto) é rejeitado: a função retorna `false` sem olhar a data. A 2.4.0 recorria em silêncio aos feriados nacionais para uma sigla desconhecida ou em minúsculas, então `\"sp\"` não reconhecia 9 de julho como feriado em São Paulo.",
           "- `options.targetDate` é a data a verificar. Ela é lida pelo dia local do calendário, não pelo instante em UTC. `options.stateCode` é opcional.",
           "- Retorna false quando `targetDate` está ausente ou não é uma data válida, e quando `stateCode` está presente e não é sigla de estado, mesmo num feriado nacional.",
           "- Retorna false para um ano fora de 1900 a 2099, onde `date.getHolidays` não lista nada.",
@@ -482,13 +482,13 @@
           "Subtracts a number of Brazilian business days from a date. This is the same as `date.addBusinessDays` with the opposite `amount`.",
           "",
           "- Same rules and options as `date.addBusinessDays` (`includeOptional`, `includeSaturday`, `stateCode`), including the same caveat on the time of day. A negative `amount` walks forwards.",
-          "- Last business day of a month: `subBusinessDays(new Date(y, m + 1, 1), 1)`. For December 2099 this returns null, because the starting day is in 2100."
+          "- Last business day of a month: `subBusinessDays(new Date(y, m + 1, 1), 1)`. For December 2099 this returns `null`, because the starting day is in 2100."
         ],
         "pt-BR": [
           "Subtrai um número de dias úteis de uma data. É o mesmo que `date.addBusinessDays` com o `amount` oposto.",
           "",
-          "- Mesmas regras e opções de `date.addBusinessDays` (`includeOptional`, `includeSaturday`, `stateCode`), inclusive a mesma ressalva sobre a hora do dia. Um `amount` negativo anda para frente.",
-          "- Último dia útil do mês: `subBusinessDays(new Date(y, m + 1, 1), 1)`. Para dezembro/2099 isso retorna null, porque o dia de partida fica em 2100."
+          "- Mesmas regras e opções de `date.addBusinessDays` (`includeOptional`, `includeSaturday`, `stateCode`), inclusive a mesma ressalva sobre a hora do dia. Um `amount` negativo avança.",
+          "- Último dia útil do mês: `subBusinessDays(new Date(y, m + 1, 1), 1)`. Para dezembro/2099 isso retorna `null`, porque o dia de partida fica em 2100."
         ]
       },
       "references": [

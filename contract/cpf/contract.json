@@ -18,22 +18,22 @@
           "",
           "- `options.pad` left-pads the value with zeros to 11 digits first.",
           "- `options.obfuscate` hides the first 3 digits and the 2 check digits with `*`, after padding. This is the rule the Leis de Diretrizes Orçamentárias set for publishing a CPF (Lei nº 14.194/2021, art. 149, and Lei nº 15.321/2025, art. 163).",
-          "- A number is read only when it is a non-negative safe integer. A negative, fractional, not finite or unsafe number returns an empty string. 2.4.0 read the digits of any number (`-12345678909` gave `123.456.789-09`).",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number returns an empty string. 2.4.0 read the digits of any number (`-12345678909` gave `123.456.789-09`).",
           "- A value with no digits (empty, or only letters and symbols) returns an empty string even with `options.pad`. Until 2.4.0 `pad` returned the full zero mask (`000.000.000-00`).",
           "- Digits beyond the 11th are dropped. A value that is not a string or a number (`null`, `undefined`, an object) returns an empty string.",
           "- A number loses its leading zeros, so pass a string, or use `options.pad`, for a CPF that starts with `0`.",
-          "- Pending decision (findings §2 #2, #3): the reference (JS) formats only the characters an incomplete value has and returns an empty string for empty or invalid input. Other libraries return null."
+          "- Pending decision (findings §2 #2, #3): the reference (JS) formats only the characters an incomplete value has and returns an empty string for empty or invalid input. Other libraries return `null`."
         ],
         "pt-BR": [
           "Formata um CPF como `000.000.000-00`.",
           "",
           "- `options.pad` primeiro completa o valor com zeros à esquerda até 11 dígitos.",
           "- `options.obfuscate` oculta os 3 primeiros dígitos e os 2 dígitos verificadores com `*`, depois do preenchimento. É a regra que as Leis de Diretrizes Orçamentárias fixam para publicar um CPF (Lei nº 14.194/2021, art. 149, e Lei nº 15.321/2025, art. 163).",
-          "- Um número só é lido quando é um inteiro seguro não negativo. Um número negativo, fracionário, não finito ou inseguro retorna uma string vazia. A 2.4.0 lia os dígitos de qualquer número (`-12345678909` dava `123.456.789-09`).",
+          "- Um número só é lido se for um inteiro seguro não negativo. Um número negativo, fracionário, não finito ou inseguro retorna uma string vazia. A 2.4.0 lia os dígitos de qualquer número (`-12345678909` dava `123.456.789-09`).",
           "- Um valor sem dígitos (vazio, ou só letras e símbolos) retorna uma string vazia mesmo com `options.pad`. Até a 2.4.0, `pad` retornava a máscara inteira de zeros (`000.000.000-00`).",
           "- Os dígitos além do 11º são descartados. Um valor que não é string nem número (`null`, `undefined`, um objeto) retorna uma string vazia.",
           "- Um número perde os zeros à esquerda; passe uma string, ou use `options.pad`, para um CPF que começa com `0`.",
-          "- Decisão pendente (findings §2 #2, #3): a referência (JS) formata só os caracteres que um valor incompleto tem e retorna uma string vazia para entrada vazia ou inválida. Outras bibliotecas retornam null."
+          "- Decisão pendente (findings §2 #2, #3): a referência (JS) formata só os caracteres que um valor incompleto tem e retorna uma string vazia para entrada vazia ou inválida. Outras bibliotecas retornam `null`."
         ]
       },
       "references": [
@@ -125,14 +125,14 @@
         "en": [
           "Generates a valid random CPF: 11 digits, unformatted.",
           "",
-          "- `state` (a state code such as `SP`) sets the 9th digit, the fiscal region, to the region of that state (see `cpf.getInfo`). The code is read ignoring letter case and surrounding whitespace, so `\"sp\"` and `\" SP \"` are `SP`. 2.4.0 read only the upper-case code and gave a random digit for `\"sp\"`.",
+          "- `state` (a state code such as `SP`) sets the 9th digit, the fiscal region, to the region of that state (see `cpf.getInfo`). The code is read ignoring letter case and surrounding whitespace, so `\"sp\"` and `\" SP \"` are `SP`. 2.4.0 read only the uppercase code and gave a random digit for `\"sp\"`.",
           "- Without `state`, or with an unknown code, the digit is random.",
           "- A CPF whose 11 digits are all the same is never returned."
         ],
         "pt-BR": [
           "Gera um CPF aleatório e válido: 11 dígitos, sem máscara.",
           "",
-          "- `state` (um código de estado como `SP`) define o 9º dígito, a região fiscal, com a região desse estado (veja `cpf.getInfo`). O código é lido sem distinção de caixa e sem os espaços em volta, então `\"sp\"` e `\" SP \"` são `SP`. A 2.4.0 só lia o código em maiúsculas e sorteava o dígito para `\"sp\"`.",
+          "- `state` (um código de estado como `SP`) define o 9º dígito, a região fiscal, com a região desse estado (veja `cpf.getInfo`). O código é lido sem distinção de caixa e sem espaços nas pontas, então `\"sp\"` e `\" SP \"` são `SP`. A 2.4.0 só lia o código em maiúsculas e sorteava o dígito para `\"sp\"`.",
           "- Sem `state`, ou com um código desconhecido, o dígito é aleatório.",
           "- Nunca retorna um número com os 11 dígitos iguais."
         ]
@@ -159,25 +159,25 @@
       },
       "description": {
         "en": [
-          "Reads the fields of a CPF: the 8-digit base, the fiscal region digit with its states, and the 2 check digits. Accepts the same input as `cpf.isValid` and returns null exactly when `cpf.isValid` is false.",
+          "Reads the fields of a CPF: the 8-digit base, the fiscal region digit with its states, and the 2 check digits. Accepts the same input as `cpf.isValid` and returns `null` exactly when `cpf.isValid` is `false`.",
           "",
           "- `base` is the first 8 digits. `checkDigits` is the last 2.",
           "- `fiscalRegion` is the 9th digit, as a string: `1` to `9` for the 1st to 9th Região Fiscal of the Receita Federal, and `0` for the 10th.",
           "- `states` lists the states of that region, sorted by state name: 1 DF, GO, MT, MS, TO; 2 AC, AP, AM, PA, RO, RR; 3 CE, MA, PI; 4 AL, PB, PE, RN; 5 BA, SE; 6 MG; 7 ES, RJ; 8 SP; 9 PR, SC; 0 RS.",
           "- The digit is the fiscal region of the address given at the first registration. It is not the place of birth or of residence.",
           "- In a region with more than one state, the number does not say which one.",
-          "- Returns null for a reserved number such as `00000000000` and for any value that is not a string.",
+          "- Returns `null` for a reserved number such as `00000000000` and for any value that is not a string.",
           "- Returns a new object, with a new `states` list, on every call."
         ],
         "pt-BR": [
-          "Lê os campos de um CPF: a base de 8 dígitos, o dígito da região fiscal com os seus estados, e os 2 dígitos verificadores. Aceita a mesma entrada que `cpf.isValid` e retorna null exatamente quando `cpf.isValid` é false.",
+          "Lê os campos de um CPF: a base de 8 dígitos, o dígito da região fiscal com os seus estados, e os 2 dígitos verificadores. Aceita a mesma entrada que `cpf.isValid` e retorna `null` exatamente quando `cpf.isValid` é `false`.",
           "",
           "- `base` são os 8 primeiros dígitos. `checkDigits` são os 2 últimos.",
           "- `fiscalRegion` é o 9º dígito, como string: `1` a `9` para a 1ª a 9ª Região Fiscal da Receita Federal, e `0` para a 10ª.",
           "- `states` lista os estados dessa região, ordenados pelo nome do estado: 1 DF, GO, MT, MS, TO; 2 AC, AP, AM, PA, RO, RR; 3 CE, MA, PI; 4 AL, PB, PE, RN; 5 BA, SE; 6 MG; 7 ES, RJ; 8 SP; 9 PR, SC; 0 RS.",
           "- O dígito indica a região fiscal do endereço informado no primeiro cadastro. Não é o local de nascimento nem de residência.",
           "- Numa região com vários estados, o número não diz qual deles.",
-          "- Retorna null para um número reservado como `00000000000` e para qualquer valor que não é string.",
+          "- Retorna `null` para um número reservado como `00000000000` e para qualquer valor que não é string.",
           "- Retorna um objeto novo, com uma lista `states` nova, a cada chamada."
         ]
       },
@@ -228,7 +228,7 @@
           "- Pending decision (findings §2 #1): the reference (JS) ignores the formatting characters (`.`, `-`) and whitespace around and between groups. Other libraries accept digits only."
         ],
         "pt-BR": [
-          "Valida um CPF: 9 dígitos base e 2 dígitos verificadores por módulo 11 (REGRA_VALIDA_CPF da Receita Federal).",
+          "Valida um CPF: 9 dígitos de base e 2 dígitos verificadores por módulo 11 (REGRA_VALIDA_CPF da Receita Federal).",
           "",
           "- Rejeita um número reservado (os 11 dígitos iguais, por exemplo `00000000000`).",
           "- Um valor que não tem exatamente 11 dígitos, ou com dígitos verificadores errados, é inválido.",
@@ -295,13 +295,13 @@
         "en": [
           "Removes CPF formatting and keeps only digits, capped at 11 digits.",
           "",
-          "- A number is read only when it is a non-negative safe integer. A negative, fractional, not finite or unsafe number returns an empty string. 2.4.0 read the digits of any number.",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number returns an empty string. 2.4.0 read the digits of any number.",
           "- A value that is not a string or a number (`null`, `undefined`, an object) returns an empty string."
         ],
         "pt-BR": [
           "Remove a formatação do CPF e mantém apenas os dígitos, com no máximo 11 dígitos.",
           "",
-          "- Um número só é lido quando é um inteiro seguro não negativo. Um número negativo, fracionário, não finito ou inseguro retorna uma string vazia. A 2.4.0 lia os dígitos de qualquer número.",
+          "- Um número só é lido se for um inteiro seguro não negativo. Um número negativo, fracionário, não finito ou inseguro retorna uma string vazia. A 2.4.0 lia os dígitos de qualquer número.",
           "- Um valor que não é string nem número (`null`, `undefined`, um objeto) retorna uma string vazia."
         ]
       },

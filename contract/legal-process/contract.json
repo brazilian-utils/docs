@@ -21,18 +21,18 @@
           "",
           "- Every character that is not a digit is dropped first, and only the first 20 digits are kept. The mask is applied as far as the digits go, so a value being typed is masked progressively (`00020802` gives `0002080-2`).",
           "- `options.pad` first left-pads the value with zeros to 20 digits.",
-          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped).",
-          "- An empty value, or one without digits, returns an empty string even with `pad`. Until 2.4.0 `pad` returned the full zero mask.",
-          "- Pending decision (findings §2 #2, #3): the reference (JS) formats only the characters an incomplete value has and returns an empty string for empty or invalid input. Other libraries return null."
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number returns an empty string (2.4.0 read the digits of any number, sign and decimal point dropped).",
+          "- An empty value, or one without digits, returns an empty string even with `pad`. Until 2.4.0 `pad` returned the whole zero mask.",
+          "- Pending decision (findings §2 #2, #3): the reference (JS) formats only the characters an incomplete value has. It returns an empty string for empty or invalid input. The other libraries return `null`."
         ],
         "pt-BR": [
           "Formata um número de processo judicial com a máscara do CNJ `NNNNNNN-DD.AAAA.J.TR.OOOO`.",
           "",
-          "- Todo caractere que não é dígito é descartado antes, e só os 20 primeiros dígitos ficam. A máscara é aplicada até onde os dígitos vão, então um valor em digitação é mascarado progressivamente (`00020802` dá `0002080-2`).",
+          "- Todo caractere que não é dígito é descartado antes, e só os 20 primeiros dígitos ficam. A máscara é aplicada até onde os dígitos vão, então um valor sendo digitado é mascarado progressivamente (`00020802` dá `0002080-2`).",
           "- `options.pad` primeiro completa o valor com zeros à esquerda até 20 dígitos.",
-          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal).",
-          "- Um valor vazio, ou sem dígitos, retorna string vazia mesmo com `pad`. Até a 2.4.0 o `pad` retornava a máscara toda de zeros.",
-          "- Decisão pendente (findings §2 #2, #3): a referência (JS) formata só os caracteres que um valor incompleto tem e retorna uma string vazia para entrada vazia ou inválida. Outras bibliotecas retornam null."
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal).",
+          "- Um valor vazio, ou sem dígitos, retorna uma string vazia mesmo com `pad`. Até a 2.4.0 o `pad` retornava a máscara toda de zeros.",
+          "- Decisão pendente (findings §2 #2, #3): a referência (JS) formata só os caracteres que um valor incompleto tem. Ela retorna uma string vazia para entrada vazia ou inválida. As outras bibliotecas retornam `null`."
         ]
       },
       "references": ["https://atos.cnj.jus.br/atos/detalhar/119"],
@@ -92,14 +92,14 @@
           "",
           "- `options.year` sets the `AAAA` field: an integer from the current year to 9999 (default: the current year). `options.court` sets the segment `J`: an integer from 1 to 9 (default: random).",
           "- The function picks `TR` among the tribunals of the chosen segment, so the pair always names a court that exists. The sequence number and the unidade de origem are random and the check digits are computed.",
-          "- Returns null when the year or the segment is out of range or not an integer, or when the options are not an object."
+          "- Returns `null` when the year or the segment is out of range or not an integer, or when the options are not an object."
         ],
         "pt-BR": [
           "Gera um número de processo judicial aleatório e válido (20 dígitos, sem formatação) no formato `NNNNNNNDDAAAAJTROOOO` da Resolução CNJ nº 65/2008.",
           "",
           "- `options.year` define o campo `AAAA`: um inteiro do ano atual até 9999 (padrão: o ano atual). `options.court` define o segmento `J`: um inteiro de 1 a 9 (padrão: aleatório).",
           "- A função escolhe `TR` entre os tribunais do segmento escolhido, então o par sempre indica um tribunal que existe. O número sequencial e a unidade de origem são aleatórios e os dígitos verificadores são calculados.",
-          "- Retorna null quando o ano ou o segmento está fora do intervalo ou não é inteiro, ou quando as opções não são um objeto."
+          "- Retorna `null` quando o ano ou o segmento está fora do intervalo ou não é inteiro, ou quando as opções não são um objeto."
         ]
       },
       "references": ["https://atos.cnj.jus.br/atos/detalhar/119"],
@@ -131,7 +131,7 @@
           "",
           "- `J` and `TR` must name a segment and a tribunal that exist (art. 1º, §§ 4º and 5º). `J` is 1 (STF), 2 (CNJ), 3 (STJ), 4 (Justiça Federal), 5 (Justiça do Trabalho), 6 (Justiça Eleitoral), 7 (Justiça Militar da União), 8 (Justiça Estadual) or 9 (Justiça Militar Estadual). `TR` is `00` for `J` 1, 2 and 3; for `J` 4, `01` to `06` (TRF) or `90` (CJF); for `J` 5, `00` (TST), `01` to `24` (TRT) or `90` (CSJT); for `J` 6, `00` (TSE) or `01` to `27` (TRE); for `J` 7, `00` (STM) or `01` to `12` (CJM); for `J` 8, `01` to `27` (TJ); for `J` 9, `13`, `21` or `26` (TJM of MG, RS and SP).",
           "- The unidade de origem `OOOO` is only checked as four digits, because art. 1º, § 6º leaves its codification to each tribunal.",
-          "- Accepts the 20 digits bare or with the CNJ mask, and only a string (a number is invalid). Whitespace, `.`, `-` and `/` (the mask characters `cpf.isValid` reads), in any run, are accepted between the `NNNNNNN`, `DD`, `AAAA`, `J`, `TR` and `OOOO` fields, or omitted, so `0002080-25.2012.515.0049` (`J` and `TR` fused) is valid. Whitespace around the value is ignored. A separator inside a field (`000208-0252012.5.15.0049`), at the start or the end of the value, any other character (`_`) and a letter make it invalid. Until 2.4.0 a slash between the fields made it invalid, so `0002080/25.2012.5.15.0049` was false.",
+          "- Accepts the 20 digits bare or with the CNJ mask, and only a string (a number is invalid). Whitespace, `.`, `-` and `/` (the mask characters `cpf.isValid` reads), in any run, are accepted between the `NNNNNNN`, `DD`, `AAAA`, `J`, `TR` and `OOOO` fields, or omitted, so `0002080-25.2012.515.0049` (`J` and `TR` fused) is valid. Whitespace around the value is ignored. A separator inside a field (`000208-0252012.5.15.0049`), at the start or the end of the value, any other character (`_`) and a letter make it invalid. Until 2.4.0 a slash between the fields made it invalid, so `0002080/25.2012.5.15.0049` was `false`.",
           "- The check digits follow art. 1º § 2º and Anexo VIII (\"Cálculo do dígito verificador\") of Resolução CNJ 65/2008. The TRF da 6ª Região (`4.06`) is valid per Resolução CNJ 477/2022.",
           "- The TRF6 example printed in Anexo II, `0000100-15.2008.406.0000`, is fictitious, as the Anexo says. Written in the `NNNNNNN-DD.AAAA.J.TR.OOOO` form its check digits are 68, not 15, so the function accepts `0000100-68.2008.4.06.0000` and rejects the printed one.",
           "- Pending decision (findings §2 #7): Go, Python, Ruby and Rust reject numbers that the reference (JS) generates for the current year. The segment/tribunal rules need to be reconciled."
@@ -141,7 +141,7 @@
           "",
           "- `J` e `TR` precisam indicar um segmento e um tribunal que existem (art. 1º, §§ 4º e 5º). `J` é 1 (STF), 2 (CNJ), 3 (STJ), 4 (Justiça Federal), 5 (Justiça do Trabalho), 6 (Justiça Eleitoral), 7 (Justiça Militar da União), 8 (Justiça Estadual) ou 9 (Justiça Militar Estadual). `TR` é `00` para `J` 1, 2 e 3; para `J` 4, `01` a `06` (TRF) ou `90` (CJF); para `J` 5, `00` (TST), `01` a `24` (TRT) ou `90` (CSJT); para `J` 6, `00` (TSE) ou `01` a `27` (TRE); para `J` 7, `00` (STM) ou `01` a `12` (CJM); para `J` 8, `01` a `27` (TJ); para `J` 9, `13`, `21` ou `26` (TJM de MG, RS e SP).",
           "- A unidade de origem `OOOO` só é verificada como quatro dígitos, porque o art. 1º, § 6º deixa a codificação dela a cargo de cada tribunal.",
-          "- Aceita os 20 dígitos sem máscara ou com a máscara do CNJ, e só string (um número é inválido). Espaço em branco, `.`, `-` e `/` (os caracteres de máscara que `cpf.isValid` lê), em qualquer sequência, são aceitos entre os campos `NNNNNNN`, `DD`, `AAAA`, `J`, `TR` e `OOOO`, ou omitidos, então `0002080-25.2012.515.0049` (`J` e `TR` juntos) é válido. O espaço em branco em volta do valor é ignorado. Um separador dentro de um campo (`000208-0252012.5.15.0049`), no começo ou no fim do valor, qualquer outro caractere (`_`) e uma letra tornam o valor inválido. Até a 2.4.0 uma barra entre os campos o tornava inválido, então `0002080/25.2012.5.15.0049` era false.",
+          "- Aceita os 20 dígitos sem máscara ou com a máscara do CNJ, e só string (um número é inválido). Espaço em branco, `.`, `-` e `/` (os caracteres de máscara que `cpf.isValid` lê), em qualquer sequência, são aceitos entre os campos `NNNNNNN`, `DD`, `AAAA`, `J`, `TR` e `OOOO`, ou omitidos, então `0002080-25.2012.515.0049` (`J` e `TR` juntos) é válido. Espaços nas pontas são ignorados. Um separador dentro de um campo (`000208-0252012.5.15.0049`), no começo ou no fim do valor, qualquer outro caractere (`_`) e uma letra tornam o valor inválido. Até a 2.4.0 uma barra entre os campos o tornava inválido, então `0002080/25.2012.5.15.0049` era `false`.",
           "- Os dígitos verificadores seguem o art. 1º § 2º e o Anexo VIII (\"Cálculo do dígito verificador\") da Resolução CNJ 65/2008. O TRF da 6ª Região (`4.06`) é válido conforme a Resolução CNJ 477/2022.",
           "- O exemplo do TRF6 impresso no Anexo II, `0000100-15.2008.406.0000`, é fictício, como o próprio Anexo diz. Escrito na forma `NNNNNNN-DD.AAAA.J.TR.OOOO`, os dígitos verificadores dele são 68, não 15, então a função aceita `0000100-68.2008.4.06.0000` e rejeita o impresso.",
           "- Decisão pendente (findings §2 #7): Go, Python, Ruby e Rust rejeitam números que a referência (JS) gera para o ano atual. As regras de segmento/tribunal precisam ser conciliadas."
@@ -214,12 +214,12 @@
         "en": [
           "Removes court case number formatting and keeps only digits, capped at 20 digits.",
           "",
-          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number returns an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
         ],
         "pt-BR": [
           "Remove a formatação do processo judicial e mantém somente os dígitos, limitados a 20 dígitos.",
           "",
-          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
         ]
       },
       "references": ["https://atos.cnj.jus.br/atos/detalhar/119"],

@@ -17,17 +17,17 @@
           "Formats an NBS code with the mask `N.NNNN.NN.NN`. Only the structure changes (use `nbs.isValid` to check the code).",
           "",
           "- The function reads the digits of a string and masks them as far as they go, so a partial code is masked progressively. Other characters and digits after the ninth are dropped.",
-          "- `options.pad` (default false) first left-pads the digits with zeros to the 9 digits of a complete code: `\"1\"` gives `0.0000.00.01`. Every NBS code starts with 1, so the padding only serves a caller that wants a fixed width.",
-          "- Returns an empty string when there is no digit at all, even with `pad` (an empty value is not padded to the zero mask).",
+          "- `options.pad` (default `false`) first left-pads the digits with zeros to the 9 digits of a complete code: `\"1\"` gives `0.0000.00.01`. Every NBS code starts with 1, so the padding only serves a caller that wants a fixed width.",
+          "- An empty value, or one without digits, returns an empty string even with `pad` (it is not padded to the zero mask).",
           "- A number is read only when it is a safe non-negative integer. Any other number returns an empty string."
         ],
         "pt-BR": [
           "Formata um código NBS com a máscara `N.NNNN.NN.NN`. Só a estrutura muda (use `nbs.isValid` para verificar o código).",
           "",
           "- A função lê os dígitos de uma string e aplica a máscara até onde eles vão, então um código parcial é formatado aos poucos. Outros caracteres e os dígitos depois do nono são descartados.",
-          "- `options.pad` (padrão false) primeiro completa os dígitos com zeros à esquerda até os 9 dígitos de um código completo: `\"1\"` dá `0.0000.00.01`. Todo código NBS começa com 1, então o preenchimento só serve a quem quer largura fixa.",
-          "- Retorna string vazia quando não há nenhum dígito, mesmo com `pad` (um valor vazio não é preenchido até a máscara de zeros).",
-          "- Um número só é lido quando é um inteiro seguro não negativo. Qualquer outro número retorna string vazia."
+          "- `options.pad` (padrão `false`) primeiro completa os dígitos com zeros à esquerda até os 9 dígitos de um código completo: `\"1\"` dá `0.0000.00.01`. Todo código NBS começa com 1, então o preenchimento só serve a quem quer largura fixa.",
+          "- Um valor vazio, ou sem dígitos, retorna uma string vazia mesmo com `pad` (ele não é completado até a máscara de zeros).",
+          "- Um número só é lido se for um inteiro seguro não negativo. Qualquer outro número retorna uma string vazia."
         ]
       },
       "references": [
@@ -77,14 +77,14 @@
           "Looks up an NBS code in the NBS 2.0 table and returns its code and official description.",
           "",
           "- A run of separators between the groups is accepted, as in `nbs.isValid` (`\"1..0101.11.00\"`).",
-          "- Same input rules as `nbs.isValid`. Returns null exactly when that function returns false.",
+          "- Same input rules as `nbs.isValid`. Returns `null` exactly when that function returns `false`.",
           "- The returned code is the 9 bare digits."
         ],
         "pt-BR": [
           "Consulta um código NBS na tabela NBS 2.0 e retorna o código e a descrição oficial.",
           "",
           "- Uma sequência de separadores entre os grupos é aceita, como em `nbs.isValid` (`\"1..0101.11.00\"`).",
-          "- Mesmas regras de entrada de `nbs.isValid`. Retorna null exatamente quando essa função retorna false.",
+          "- Mesmas regras de entrada de `nbs.isValid`. Retorna `null` exatamente quando essa função retorna `false`.",
           "- O código retornado tem os 9 dígitos sem máscara."
         ]
       },
@@ -136,8 +136,8 @@
           "Checks whether an NBS code exists in the NBS 2.0 table that the MDIC publishes (Portarias Conjuntas RFB/SCS 1.429/2018 and 2.000/2018).",
           "",
           "- A code has 9 digits, printed as `N.NNNN.NN.NN`: the digit 1, the chapter, the position, the two subposition levels, the item and the subitem.",
-          "- Accepts the 9 digits, the `N.NNNN.NN.NN` mask or a non-negative integer. The mask accepts any run of separators between the groups: space, `.`, `-` or `/` (`\"1..0101.11.00\"` is valid). Surrounding whitespace is ignored.",
-          "- Any other string is rejected (`\"1.0101abc11.00\"`). The function does not pick out its digits. Nothing is padded: every code starts with 1.",
+          "- Accepts the 9 digits, the `N.NNNN.NN.NN` mask or a non-negative integer. The mask accepts any run of separators between the groups: space, `.`, `-` or `/` (`\"1..0101.11.00\"` is valid). Whitespace around the value is ignored.",
+          "- Any other string is rejected (`\"1.0101abc11.00\"`). The function does not extract its digits. Nothing is padded: every code starts with 1.",
           "- Only complete codes are valid. The chapter, position and subposition headings (`\"1.01\"`, `\"1.0101\"`, `\"1.0101.1\"`) are not. The table has 920 complete codes.",
           "- The function follows the MDIC nomenclature. 1.0402.29.00, 1.0403.29.00 and 1.0904.40.00 are valid here, although the NFS-e refuses them. The placeholder `9.9999.99.99` of the NFS-e ANEXO B is not valid."
         ],
@@ -145,7 +145,7 @@
           "Verifica se um código NBS existe na tabela NBS 2.0 publicada pelo MDIC (Portarias Conjuntas RFB/SCS 1.429/2018 e 2.000/2018).",
           "",
           "- Um código tem 9 dígitos, impressos como `N.NNNN.NN.NN`: o dígito 1, o capítulo, a posição, os dois níveis de subposição, o item e o subitem.",
-          "- Aceita os 9 dígitos, a máscara `N.NNNN.NN.NN` ou um inteiro não negativo. A máscara aceita qualquer sequência de separadores entre os grupos: espaço, `.`, `-` ou `/` (`\"1..0101.11.00\"` é válido). Espaços nas extremidades são ignorados.",
+          "- Aceita os 9 dígitos, a máscara `N.NNNN.NN.NN` ou um inteiro não negativo. A máscara aceita qualquer sequência de separadores entre os grupos: espaço, `.`, `-` ou `/` (`\"1..0101.11.00\"` é válido). Espaços nas pontas são ignorados.",
           "- Qualquer outra string é rejeitada (`\"1.0101abc11.00\"`). A função não extrai os dígitos dela. Nada é completado com zeros: todo código começa com 1.",
           "- Só códigos completos são válidos. Os cabeçalhos de capítulo, posição e subposição (`\"1.01\"`, `\"1.0101\"`, `\"1.0101.1\"`) não são. A tabela tem 920 códigos completos.",
           "- A função segue a nomenclatura do MDIC. 1.0402.29.00, 1.0403.29.00 e 1.0904.40.00 são válidos aqui, embora a NFS-e os recuse. O placeholder `9.9999.99.99` do ANEXO B da NFS-e não é válido."
@@ -192,14 +192,14 @@
           "Removes NBS formatting and keeps only digits, capped at 9 digits.",
           "",
           "- It does not left-pad anything. A partial code (a chapter, a position or a subposition still being typed) stays as written, because every NBS code starts with 1.",
-          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string.",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number returns an empty string.",
           "- Returns an empty string when there is no digit at all."
         ],
         "pt-BR": [
           "Remove a formatação do NBS e mantém somente os dígitos, limitados a 9 dígitos.",
           "",
           "- Não completa nada com zeros à esquerda. Um código parcial (um capítulo, uma posição ou uma subposição ainda sendo digitada) fica como está escrito, porque todo código NBS começa com 1.",
-          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia.",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia.",
           "- Retorna string vazia quando não há nenhum dígito."
         ]
       },

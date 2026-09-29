@@ -19,7 +19,7 @@
         "en": [
           "Looks up a subitem of the LC 116/2003 service list and returns its code and description.",
           "",
-          "- Same input rules as `serviceItem.isValid`. Returns null exactly when that function returns false.",
+          "- Same input rules as `serviceItem.isValid`. Returns `null` exactly when that function returns `false`.",
           "- The separators of `serviceItem.isValid` are accepted between the item and the subitem (`\"1-01\"` gives code `1.01`).",
           "- The returned code is the form the law prints: the item without a leading zero, a dot and the 2-digit subitem (`\"1.01\"`, `\"40.01\"`).",
           "- The description is the text of the national list (ANEXO B of the NFS-e). Subitem 17.14 is \"Advocacia\", with no final period, as in the official sheet."
@@ -27,7 +27,7 @@
         "pt-BR": [
           "Consulta um subitem da lista de serviços da LC 116/2003 e retorna o código e a descrição.",
           "",
-          "- Mesmas regras de entrada de `serviceItem.isValid`. Retorna null exatamente quando essa função retorna false.",
+          "- Mesmas regras de entrada de `serviceItem.isValid`. Retorna `null` exatamente quando essa função retorna `false`.",
           "- Os separadores de `serviceItem.isValid` são aceitos entre o item e o subitem (`\"1-01\"` dá o código `1.01`).",
           "- O código retornado é a forma que a lei imprime: o item sem zero à esquerda, um ponto e o subitem de 2 dígitos (`\"1.01\"`, `\"40.01\"`).",
           "- A descrição é o texto da lista nacional (ANEXO B da NFS-e). O subitem 17.14 é \"Advocacia\", sem ponto final, como na planilha oficial."
@@ -92,7 +92,7 @@
         "en": [
           "Checks whether a value is a subitem in force of the service list annexed to Lei Complementar 116/2003.",
           "",
-          "- Accepts the form the law prints (`\"1.01\"`), a zero-padded item (`\"01.01\"`), the bare digits (`\"0101\"`, `\"101\"`, the first 4 digits of a cTribNac) or a non-negative integer (`101`). Surrounding whitespace is ignored.",
+          "- Accepts the form the law prints (`\"1.01\"`), a zero-padded item (`\"01.01\"`), the bare digits (`\"0101\"`, `\"101\"`, the first 4 digits of a cTribNac) or a non-negative integer (`101`). Whitespace around the value is ignored.",
           "- The subitem always has 2 digits (`\"1.1\"` is invalid). Any run of separators (space, `.`, `-` or `/`) is accepted between the item and the subitem, so `\"1-01\"`, `\"1 01\"` and `\"1..01\"` are valid; any other character (`\"1_01\"`, `\"1,01\"`) is rejected. A number is read as bare digits, so the fractional number `1.01` is invalid: write the dotted form as a string.",
           "- The vetoed subitems 3.01, 7.14, 7.15, 13.01 and 17.07 are invalid. So are item headings (`\"1\"`), the 6-digit national codes and item 99 of the national list, which is not part of the law.",
           "- Subitem 11.05, added by LC 183/2021, is valid.",
@@ -101,7 +101,7 @@
         "pt-BR": [
           "Verifica se um valor é um subitem vigente da lista de serviços anexa à Lei Complementar 116/2003.",
           "",
-          "- Aceita a forma que a lei imprime (`\"1.01\"`), o item com zero à esquerda (`\"01.01\"`), os dígitos sem ponto (`\"0101\"`, `\"101\"`, os 4 primeiros dígitos de um cTribNac) ou um inteiro não negativo (`101`). Espaços nas extremidades são ignorados.",
+          "- Aceita a forma que a lei imprime (`\"1.01\"`), o item com zero à esquerda (`\"01.01\"`), os dígitos sem ponto (`\"0101\"`, `\"101\"`, os 4 primeiros dígitos de um cTribNac) ou um inteiro não negativo (`101`). Espaços nas pontas são ignorados.",
           "- O subitem sempre tem 2 dígitos (`\"1.1\"` é inválido). Qualquer sequência de separadores (espaço, `.`, `-` ou `/`) é aceita entre o item e o subitem, então `\"1-01\"`, `\"1 01\"` e `\"1..01\"` são válidos; qualquer outro caractere (`\"1_01\"`, `\"1,01\"`) é rejeitado. Um número é lido como dígitos sem ponto, então o número fracionário `1.01` é inválido: escreva a forma com ponto como string.",
           "- Os subitens vetados 3.01, 7.14, 7.15, 13.01 e 17.07 são inválidos. Também são inválidos os títulos de item (`\"1\"`), os códigos nacionais de 6 dígitos e o item 99 da lista nacional, que não faz parte da lei.",
           "- O subitem 11.05, incluído pela LC 183/2021, é válido.",

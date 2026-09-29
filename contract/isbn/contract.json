@@ -19,7 +19,7 @@
         "en": [
           "Formats an ISBN-13 the way it is printed: its five elements separated by hyphens (`978-65-89999-01-0`). The lengths of the group and of the registrant come from `isbn.getInfo`.",
           "",
-          "- Returns an empty string exactly when `isbn.getInfo` returns null: a partial or invalid value, or a group or registrant not assigned yet.",
+          "- Returns an empty string exactly when `isbn.getInfo` returns `null`: a partial or invalid value, or a group or registrant not assigned yet.",
           "- The `ISBN` label is not added, and it is not accepted in the input: `isbn.getInfo` rejects it, so a value with a label returns an empty string.",
           "- The input may use any run of separators (space, `.`, `-`, `/`) between digits, as in `isbn.isValid`.",
           "- Unlike `cpf.format`, it does not mask a partial value, because the element lengths depend on the whole number."
@@ -27,8 +27,8 @@
         "pt-BR": [
           "Formata um ISBN-13 como ele é impresso: os cinco elementos separados por hifens (`978-65-89999-01-0`). Os comprimentos do grupo e do registrante vêm de `isbn.getInfo`.",
           "",
-          "- Retorna uma string vazia exatamente quando `isbn.getInfo` retorna null: valor parcial ou inválido, ou grupo ou registrante ainda não atribuído.",
-          "- O rótulo `ISBN` não é acrescentado, e também não é aceito na entrada: `isbn.getInfo` o rejeita, então um valor com rótulo retorna string vazia.",
+          "- Retorna uma string vazia exatamente quando `isbn.getInfo` retorna `null`: valor parcial ou inválido, ou grupo ou registrante ainda não atribuído.",
+          "- O rótulo `ISBN` não é acrescentado, e também não é aceito na entrada: `isbn.getInfo` o rejeita, então um valor com rótulo retorna uma string vazia.",
           "- A entrada pode usar qualquer sequência de separadores (espaço, `.`, `-`, `/`) entre os dígitos, como em `isbn.isValid`.",
           "- Ao contrário de `cpf.format`, não formata um valor parcial, porque os comprimentos dos elementos dependem do número inteiro."
         ]
@@ -58,23 +58,23 @@
       "summary": { "en": "Splits an ISBN-13 into its elements.", "pt-BR": "Decompõe um ISBN-13 em seus elementos." },
       "description": {
         "en": [
-          "Splits a valid ISBN-13 into its elements: prefix, registration group, registrant, publication and check digit, with the agency of the group. Returns null when `isbn.isValid` is false, and also when the group or the registrant is in a range not assigned yet.",
+          "Splits a valid ISBN-13 into its elements: prefix, registration group, registrant, publication and check digit, with the agency of the group. Returns `null` when `isbn.isValid` is `false`, and also when the group or the registrant is in a range not assigned yet.",
           "",
-          "- The value follows the rules of `isbn.isValid`: a run of separators is accepted and the `ISBN` label is not, so `ISBN 978-65-89999-01-0` returns null.",
+          "- The value follows the rules of `isbn.isValid`: a run of separators is accepted and the `ISBN` label is not, so `ISBN 978-65-89999-01-0` returns `null`.",
           "- The group and the registrant have variable lengths. They come from the RangeMessage of the International ISBN Agency, which the library refreshes every week.",
-          "- A valid check digit is not enough: a group or registrant not assigned gives null. This includes the gaps at the start of a group, as in 978-968 and 978-970.",
+          "- A valid check digit is not enough: a group or registrant not assigned returns `null`. This includes the gaps at the start of a group, as in 978-968 and 978-970.",
           "- Fields: `isbn` (the 13 digits, without label or hyphens), `prefix` (`\"978\"` or `\"979\"`), `registrationGroup`, `registrant` and `publication` (strings, with their leading zeros), `checkDigit` (a number), `agency` and `isBrazilian`. `agency` is the name the RangeMessage gives to the group, for example `Brazil` or `English language`.",
-          "- `isBrazilian` is true for the groups 85 and 65 (Agência Brasileira do ISBN).",
+          "- `isBrazilian` is `true` for the groups 85 and 65 (Agência Brasileira do ISBN).",
           "- Returns a new object on every call."
         ],
         "pt-BR": [
-          "Decompõe um ISBN-13 válido em seus elementos: prefixo, grupo de registro, registrante, publicação e dígito verificador, com a agência do grupo. Retorna null quando `isbn.isValid` é false, e também quando o grupo ou o registrante está numa faixa ainda não atribuída.",
+          "Decompõe um ISBN-13 válido em seus elementos: prefixo, grupo de registro, registrante, publicação e dígito verificador, com a agência do grupo. Retorna `null` quando `isbn.isValid` é `false`, e também quando o grupo ou o registrante está numa faixa ainda não atribuída.",
           "",
-          "- O valor segue as regras de `isbn.isValid`: uma sequência de separadores é aceita e o rótulo `ISBN` não, então `ISBN 978-65-89999-01-0` retorna null.",
+          "- O valor segue as regras de `isbn.isValid`: uma sequência de separadores é aceita e o rótulo `ISBN` não, então `ISBN 978-65-89999-01-0` retorna `null`.",
           "- O grupo e o registrante têm comprimentos variáveis. Eles vêm da RangeMessage da International ISBN Agency, que a biblioteca atualiza toda semana.",
-          "- Dígito verificador válido não basta: grupo ou registrante não atribuído dá null. Isso inclui as lacunas no início de um grupo, como em 978-968 e 978-970.",
+          "- Dígito verificador válido não basta: grupo ou registrante não atribuído retorna `null`. Isso inclui as lacunas no início de um grupo, como em 978-968 e 978-970.",
           "- Campos: `isbn` (os 13 dígitos, sem rótulo nem hifens), `prefix` (`\"978\"` ou `\"979\"`), `registrationGroup`, `registrant` e `publication` (strings, com os zeros à esquerda), `checkDigit` (um número), `agency` e `isBrazilian`. `agency` é o nome que a RangeMessage dá ao grupo, por exemplo `Brazil` ou `English language`.",
-          "- `isBrazilian` é true para os grupos 85 e 65 (Agência Brasileira do ISBN).",
+          "- `isBrazilian` é `true` para os grupos 85 e 65 (Agência Brasileira do ISBN).",
           "- Retorna um objeto novo a cada chamada."
         ]
       },
@@ -117,7 +117,7 @@
           "- The `ISBN` label a book prints in front of the number is not part of the value: `ISBN 978-65-89999-01-0` is invalid, as for any other validator.",
           "- It does not check whether the registration group and the registrant are assigned. `isbn.getInfo` does.",
           "- The example the Agência Brasileira do ISBN prints, `978-65-89999-01-3`, has a wrong check digit. The valid number ends in 0: `978-65-89999-01-0`.",
-          "- Only a string is read. Any other type returns false."
+          "- Only a string is read. Any other type returns `false`."
         ],
         "pt-BR": [
           "Valida um ISBN-13: prefixo 978 ou 979, 13 dígitos e o dígito verificador por módulo 10.",
@@ -125,11 +125,11 @@
           "- Dígito verificador: os 12 primeiros dígitos com pesos 1 e 3 alternados. O dígito verificador leva a soma a um múltiplo de 10. É a mesma regra do GTIN-13.",
           "- O ISBN de 10 dígitos é rejeitado: desde 2007 só existe a forma de 13 dígitos.",
           "- `979-0` é rejeitado: é a faixa do ISMN (partituras), e a RangeMessage não lhe atribui grupo ISBN. O prefixo 977 e qualquer outro prefixo são rejeitados.",
-          "- Separadores: espaço, `.`, `-` ou `/` entre dois dígitos, sozinhos ou em sequência (os caracteres de máscara que `cpf.isValid` lê), e espaços em volta do valor. Quaisquer dois dígitos podem ser uma divisa, porque os grupos variam de comprimento. Separador no início ou no fim e qualquer outro caractere são rejeitados.",
+          "- Separadores: espaço, `.`, `-` ou `/` entre dois dígitos, sozinhos ou em sequência (os caracteres de máscara que `cpf.isValid` lê), e espaços nas pontas do valor. Quaisquer dois dígitos podem ser uma fronteira, porque os grupos variam de comprimento. Separador no início ou no fim e qualquer outro caractere são rejeitados.",
           "- O rótulo `ISBN` que o livro imprime antes do número não faz parte do valor: `ISBN 978-65-89999-01-0` é inválido, como em qualquer outro validador.",
           "- Não verifica se o grupo de registro e o registrante estão atribuídos. `isbn.getInfo` verifica.",
           "- O exemplo impresso pela Agência Brasileira do ISBN, `978-65-89999-01-3`, tem dígito verificador errado. O número válido termina em 0: `978-65-89999-01-0`.",
-          "- Só uma string é lida. Qualquer outro tipo retorna false."
+          "- Só uma string é lida. Qualquer outro tipo retorna `false`."
         ]
       },
       "references": [

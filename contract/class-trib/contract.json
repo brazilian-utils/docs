@@ -19,7 +19,7 @@
         "en": [
           "Looks up a cClassTrib code in the official table and returns its code, its CST-IBS/CBS, its name and its description.",
           "",
-          "- Same input rules as `classTrib.isValid` without `options.cst`. Returns null exactly when `classTrib.isValid` called without `options.cst` returns false.",
+          "- Same input rules as `classTrib.isValid` without `options.cst`. Returns `null` exactly when `classTrib.isValid` called without `options.cst` returns `false`.",
           "- `cst` is the first 3 digits of the code: every classification belongs to one CST.",
           "- `name` is the short name the official table gives for display (the column \"Nome cClassTrib\") and `description` the situation the classification refers to (the column \"Descrição cClassTrib\"), both copied word for word from the official spreadsheet, on one line. The legal wording of the spreadsheet (article of Lei Complementar 214/2025 and of the regulations) is not returned.",
           "- The SVRS online table (Portal dos Documentos Fiscais Eletrônicos) differs from the official workbook in 5 names and 7 descriptions; the differences for 550017 and 200041 change the meaning. The function follows the workbook."
@@ -27,7 +27,7 @@
         "pt-BR": [
           "Consulta um cClassTrib na tabela oficial e retorna o código, o CST-IBS/CBS, o nome e a descrição.",
           "",
-          "- Mesmas regras de entrada de `classTrib.isValid` sem `options.cst`. Retorna null exatamente quando `classTrib.isValid` chamada sem `options.cst` retorna false.",
+          "- Mesmas regras de entrada de `classTrib.isValid` sem `options.cst`. Retorna `null` exatamente quando `classTrib.isValid` chamada sem `options.cst` retorna `false`.",
           "- `cst` são os 3 primeiros dígitos do código: cada classificação pertence a um CST.",
           "- `name` é o nome curto que a tabela oficial dá para exibição (a coluna \"Nome cClassTrib\") e `description` a situação a que a classificação se refere (a coluna \"Descrição cClassTrib\"), ambos copiados literalmente da planilha oficial, em uma só linha. A redação legal da planilha (artigo da Lei Complementar 214/2025 e dos regulamentos) não é retornada.",
           "- A tabela online da SVRS (Portal dos Documentos Fiscais Eletrônicos) diverge da planilha oficial em 5 nomes e 7 descrições; as divergências de 550017 e 200041 mudam o sentido. A função segue a planilha."
@@ -104,20 +104,20 @@
         "en": [
           "Checks whether a cClassTrib code (Código de Classificação Tributária of the IBS and the CBS) exists in the official table. This is the check behind NF-e rejection 1023.",
           "",
-          "- Accepts a string of bare digits, with optional surrounding whitespace, or a non-negative safe integer. A value shorter than 6 digits is left-padded with zeros: `1` and `\"1\"` are the code `000001`.",
+          "- Accepts a string of bare digits, with optional surrounding whitespace, or a safe non-negative integer. A value shorter than 6 digits is left-padded with zeros: `1` and `\"1\"` are the code `000001`.",
           "- Any other string is rejected (`\"c200001\"`, `\"200.001\"`). A negative, fractional or unsafe number is invalid.",
           "- The first 3 digits of a cClassTrib are its CST-IBS/CBS. `options.cst` checks the pair, as NF-e rejection 1024 does. It is read like `cstIbsCbs.isValid` reads a code. A `cst` that is given and does not match makes the result false, whatever its value.",
           "- `options.cst` is optional. An `undefined` or omitted `cst` checks the cClassTrib alone. A `cst` that is `null`, empty or not written as a code (`\"\"`, `\"200001\"`, `-200`) makes the result false. It is padded to 3 digits (`0` and `\"000\"` are the same CST).",
-          "- A null or non-object `options` is read as no options, so the cClassTrib is checked alone.",
+          "- A `null` or non-object `options` is read as no options, so the cClassTrib is checked alone.",
           "- Only the classifications in force in the table count: one the Informe Técnico excluded by closing its validity (`dFimVig`) is not in it. 220001, 220002 and 220003 (excluded by v.1.60) are invalid. CST 220 itself stays valid in `cstIbsCbs.isValid`.",
           "- The table is the version published on 2026-06-23 and has 161 classifications in force. The function does not read the date: the validity was applied when the table was built."
         ],
         "pt-BR": [
           "Verifica se um cClassTrib (Código de Classificação Tributária do IBS e da CBS) existe na tabela oficial. É a verificação da rejeição 1023 da NF-e.",
           "",
-          "- Aceita uma string só de dígitos, com espaços opcionais nas extremidades, ou um inteiro seguro não negativo. Um valor com menos de 6 dígitos é completado com zeros à esquerda: `1` e `\"1\"` são o código `000001`.",
+          "- Aceita uma string só de dígitos, com espaços opcionais nas pontas, ou um inteiro seguro não negativo. Um valor com menos de 6 dígitos é completado com zeros à esquerda: `1` e `\"1\"` são o código `000001`.",
           "- Qualquer outra string é rejeitada (`\"c200001\"`, `\"200.001\"`). Um número negativo, fracionário ou inseguro é inválido.",
-          "- Os 3 primeiros dígitos do cClassTrib são o seu CST-IBS/CBS. `options.cst` verifica o par, como a rejeição 1024 da NF-e. Ele é lido como `cstIbsCbs.isValid` lê um código. Um `cst` informado que não bate torna o resultado false, qualquer que seja o valor.",
+          "- Os 3 primeiros dígitos do cClassTrib são o seu CST-IBS/CBS. `options.cst` verifica o par, como a rejeição 1024 da NF-e. Ele é lido como `cstIbsCbs.isValid` lê um código. Um `cst` informado que não corresponde torna o resultado false, qualquer que seja o valor.",
           "- `options.cst` é opcional. Um `cst` `undefined` ou omitido verifica só o cClassTrib. Um `cst` `null`, vazio ou que não esteja escrito como código (`\"\"`, `\"200001\"`, `-200`) torna o resultado false. Ele é completado com zeros até 3 dígitos (`0` e `\"000\"` são o mesmo CST).",
           "- Um `options` nulo ou que não seja objeto é lido como sem opções, então só o cClassTrib é verificado.",
           "- Só contam as classificações vigentes na tabela: uma que o Informe Técnico excluiu ao encerrar sua vigência (`dFimVig`) não está nela. 220001, 220002 e 220003 (excluídas pela v.1.60) são inválidas. O CST 220 continua válido em `cstIbsCbs.isValid`.",

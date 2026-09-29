@@ -21,18 +21,18 @@
           "",
           "- `code` may be a string or a non-negative integer.",
           "- A string has every character that is not a digit removed first, as in 2.4.0: `\"35/SP\"` and `\" 35 \"` resolve to São Paulo.",
-          "- A negative or fractional number is not read as a code and returns null.",
+          "- A negative or fractional number is not read as a code and returns `null`.",
           "- The result has the code, name, region code, region name and IBGE code.",
-          "- Returns null when the code matches no state."
+          "- Returns `null` when the code matches no state."
         ],
         "pt-BR": [
           "Retorna o estado cujo código IBGE de 2 dígitos (cUF, o código no primeiro campo da chave de acesso de um DF-e) corresponde a `code`.",
           "",
           "- `code` pode ser uma string ou um inteiro não negativo.",
           "- De uma string, todo caractere que não é dígito é removido antes, como na 2.4.0: `\"35/SP\"` e `\" 35 \"` resolvem para São Paulo.",
-          "- Um número negativo ou fracionário não é lido como código e retorna null.",
+          "- Um número negativo ou fracionário não é lido como código e retorna `null`.",
           "- O resultado tem a sigla, o nome, o código da região, o nome da região e o código IBGE.",
-          "- Retorna null quando o código não corresponde a nenhum estado."
+          "- Retorna `null` quando o código não corresponde a nenhum estado."
         ]
       },
       "references": [
@@ -68,7 +68,7 @@
           "",
           "- The match ignores case and surrounding whitespace: `\"to\"` and `\" TO \"` both give Palmas.",
           "- The Distrito Federal has no municipalities. Its capital is Brasília, with the code the IBGE gives the whole district (5300108).",
-          "- Returns null for a string that is not a state code, and for a value that is not a string.",
+          "- Returns `null` for a string that is not a state code, and for a value that is not a string.",
           "- The `State` type has no capital field. The capital comes only from this function.",
           "- Each call returns a new object."
         ],
@@ -77,7 +77,7 @@
           "",
           "- A comparação ignora maiúsculas e minúsculas e espaços nas pontas: `\"to\"` e `\" TO \"` dão Palmas.",
           "- O Distrito Federal não tem municípios. A capital é Brasília, com o código que o IBGE dá ao distrito inteiro (5300108).",
-          "- Retorna null para uma string que não é sigla de estado e para um valor que não é string.",
+          "- Retorna `null` para uma string que não é sigla de estado e para um valor que não é string.",
           "- O tipo `State` não tem campo de capital. A capital vem só desta função.",
           "- Cada chamada retorna um objeto novo."
         ]
@@ -117,15 +117,15 @@
           "Returns the two-letter code (sigla) of a state from its full name.",
           "",
           "- The match ignores accents, case and surrounding whitespace. Internal whitespace collapses into one space.",
-          "- Only the full name matches. The code (`SP`) and a name written without its spaces (`saopaulo`) return null.",
-          "- Returns null when no state matches."
+          "- Only the full name matches. The code (`SP`) and a name written without its spaces (`saopaulo`) return `null`.",
+          "- Returns `null` when no state matches."
         ],
         "pt-BR": [
           "Retorna a sigla de duas letras de um estado a partir do nome completo.",
           "",
           "- A comparação ignora acentos, maiúsculas e minúsculas e espaços nas pontas. Espaços internos seguidos viram um só espaço.",
-          "- Só o nome completo corresponde. A sigla (`SP`) e um nome escrito sem os espaços (`saopaulo`) retornam null.",
-          "- Retorna null quando nenhum estado corresponde."
+          "- Só o nome completo corresponde. A sigla (`SP`) e um nome escrito sem os espaços (`saopaulo`) retornam `null`.",
+          "- Retorna `null` quando nenhum estado corresponde."
         ]
       },
       "references": ["https://servicodados.ibge.gov.br/api/v1/localidades/estados"],
@@ -165,13 +165,13 @@
           "Returns the full name of a state from its two-letter code (sigla).",
           "",
           "- The match ignores case and surrounding whitespace.",
-          "- Returns null when no state matches."
+          "- Returns `null` when no state matches."
         ],
         "pt-BR": [
           "Retorna o nome completo de um estado a partir da sigla de duas letras.",
           "",
           "- A comparação ignora maiúsculas e minúsculas e espaços nas pontas.",
-          "- Retorna null quando nenhum estado corresponde."
+          "- Retorna `null` quando nenhum estado corresponde."
         ]
       },
       "references": ["https://servicodados.ibge.gov.br/api/v1/localidades/estados"],
@@ -242,7 +242,7 @@
           "- Some states straddle more than one zone, and the capital's zone says nothing about the rest. The west of Amazonas (`America/Eirunepe`, UTC-5) and the west of Pará (`America/Santarem`, UTC-3) are not represented, and Fernando de Noronha (`America/Noronha`, UTC-2), a district of Pernambuco, resolves as Recife (`America/Recife`, UTC-3).",
           "- The offsets follow the capitals: Acre UTC-5; Amazonas, Roraima, Rondônia, Mato Grosso and Mato Grosso do Sul UTC-4; the other states UTC-3. One tzdata zone can serve several states (`America/Sao_Paulo` also covers DF, GO, MG, ES, RJ, PR, SC and RS, and `America/Fortaleza` also covers MA, PI, RN and PB besides CE).",
           "- The match ignores case and surrounding whitespace.",
-          "- Returns null when no state matches."
+          "- Returns `null` when no state matches."
         ],
         "pt-BR": [
           "Retorna o fuso horário IANA (zona tzdata) de um estado: a zona da capital, por exemplo `America/Sao_Paulo`.",
@@ -250,7 +250,7 @@
           "- Alguns estados atravessam mais de um fuso, e o fuso da capital não diz nada sobre o resto. O oeste do Amazonas (`America/Eirunepe`, UTC-5) e o oeste do Pará (`America/Santarem`, UTC-3) não são representados, e Fernando de Noronha (`America/Noronha`, UTC-2), um distrito de Pernambuco, resolve como Recife (`America/Recife`, UTC-3).",
           "- Os deslocamentos seguem as capitais: Acre UTC-5; Amazonas, Roraima, Rondônia, Mato Grosso e Mato Grosso do Sul UTC-4; os outros estados UTC-3. Um mesmo fuso do tzdata pode servir vários estados (`America/Sao_Paulo` também cobre DF, GO, MG, ES, RJ, PR, SC e RS, e `America/Fortaleza` também cobre MA, PI, RN e PB além do CE).",
           "- A comparação ignora maiúsculas e minúsculas e espaços nas pontas.",
-          "- Retorna null quando nenhum estado corresponde."
+          "- Retorna `null` quando nenhum estado corresponde."
         ]
       },
       "references": [

@@ -11,8 +11,8 @@
   "functions": {
     "format": {
       "summary": {
-        "en": "Formats a PIS number with the specified pattern.",
-        "pt-BR": "Formata um número de PIS com o padrão especificado."
+        "en": "Formats a PIS number as `000.00000.00-0`.",
+        "pt-BR": "Formata um número de PIS como `000.00000.00-0`."
       },
       "description": {
         "en": [
@@ -22,10 +22,10 @@
           "- `options.obfuscate` (default `false`) hides the first 3 digits and the check digit with `*`, after padding: `***.45678.90-*`. It works with `pad` and on a partial value. Like `pad`, it is read for truthiness: a non-boolean such as `1` hides the digits too, and `0` does not.",
           "- No authority publishes a masking rule for the PIS. The rule is an analogy with the one the Leis de Diretrizes Orçamentárias set for publishing a CPF (\"ocultar os três primeiros dígitos e os dois dígitos verificadores\", Lei nº 12.309/2010, art. 87, § 5º, repeated up to the LDO 2026, Lei nº 15.321/2025, art. 163), not a published norm.",
           "- `cns.format` and `passport.format` have no `obfuscate` option.",
-          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number).",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number returns an empty string (2.4.0 read the digits of any number, sign and decimal point dropped).",
           "- A value with no digits (empty, or only letters and symbols) returns an empty string even with `options.pad`. Until 2.4.0 `pad` returned the full zero mask (`000.00000.00-0`).",
           "- Digits after the 11th are dropped.",
-          "- Pending decision (findings §2 #2, #3): the reference (JS) formats only the characters an incomplete value has and returns an empty string for empty or invalid input. Other libraries return null."
+          "- Pending decision (findings §2 #2, #3): the reference (JS) formats only the characters an incomplete value has and returns an empty string for empty or invalid input. Other libraries return `null`."
         ],
         "pt-BR": [
           "Formata um PIS como `000.00000.00-0`.",
@@ -34,10 +34,10 @@
           "- `options.obfuscate` (padrão `false`) oculta com `*` os 3 primeiros dígitos e o dígito verificador, depois do preenchimento: `***.45678.90-*`. Funciona junto com `pad` e em um valor parcial. Como `pad`, é lido como verdadeiro ou falso: um não booleano como `1` também oculta os dígitos, e `0` não oculta.",
           "- Nenhuma autoridade publica uma regra de mascaramento para o PIS. A regra é uma analogia com a que as Leis de Diretrizes Orçamentárias fixam para publicar um CPF (\"ocultar os três primeiros dígitos e os dois dígitos verificadores\", Lei nº 12.309/2010, art. 87, § 5º, repetida até a LDO 2026, Lei nº 15.321/2025, art. 163), não uma norma publicada.",
           "- `cns.format` e `passport.format` não têm a opção `obfuscate`.",
-          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número).",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal).",
           "- Um valor sem dígitos (vazio, ou só letras e símbolos) retorna uma string vazia mesmo com `options.pad`. Até a 2.4.0, `pad` retornava a máscara inteira de zeros (`000.00000.00-0`).",
           "- Os dígitos depois do 11º são descartados.",
-          "- Decisão pendente (findings §2 #2, #3): a referência (JS) formata só os caracteres que um valor incompleto tem e retorna uma string vazia para entrada vazia ou inválida. Outras bibliotecas retornam null."
+          "- Decisão pendente (findings §2 #2, #3): a referência (JS) formata só os caracteres que um valor incompleto tem e retorna uma string vazia para entrada vazia ou inválida. Outras bibliotecas retornam `null`."
         ]
       },
       "references": [
@@ -140,7 +140,7 @@
         "pt-BR": [
           "Gera um PIS aleatório e válido: 11 dígitos, sem máscara.",
           "",
-          "- Nenhuma fonte oficial publica os pesos do dígito verificador. O MOS do eSocial dá 11 dígitos com o verificador, e o manual do SIRC diz que o verificador usa módulo 11; os leiautes da Caixa pedem só um \"Número de PIS/PASEP válido\". Os pesos seguem uma referência da comunidade (brutils)."
+          "- Nenhuma fonte oficial publica os pesos do dígito verificador. O MOS do eSocial dá 11 dígitos com o dígito verificador, e o manual do SIRC diz que o dígito verificador usa módulo 11; os leiautes da Caixa pedem só um \"Número de PIS/PASEP válido\". Os pesos seguem uma referência da comunidade (brutils)."
         ]
       },
       "references": [
@@ -165,17 +165,17 @@
           "- No official source publishes the check-digit weights. The eSocial MOS gives 11 digits with the check digit, and the SIRC manual says the check digit uses modulus 11; the Caixa layouts ask only for a \"Número de PIS/PASEP válido\". The weights follow a community reference (brutils).",
           "- The function ignores whitespace and the characters `.`, `-`, `/`, `(`, `)`, `,` and `*`, in any number and position. Any other character makes the value invalid. Exactly 11 digits are required once they are removed, and the check digit must match.",
           "- The check-digit weights are 3, 2, 9, 8, 7, 6, 5, 4, 3 and 2 over the first 10 digits, with modulus 11.",
-          "- Only a string is read. Any other type returns false.",
+          "- Only a string is read. Any other type returns `false`.",
           "- Pending decision (findings §1): the reference (JS) rejects a value whose digits are all the same as a reserved number. The other libraries accept them when the check digit matches.",
           "- Pending decision (findings §2 #1): the reference (JS) ignores those formatting characters and whitespace. Other libraries accept digits only."
         ],
         "pt-BR": [
           "Valida um PIS/PASEP/NIT: 10 dígitos base e um dígito verificador por módulo 11.",
           "",
-          "- Nenhuma fonte oficial publica os pesos do dígito verificador. O MOS do eSocial dá 11 dígitos com o verificador, e o manual do SIRC diz que o verificador usa módulo 11; os leiautes da Caixa pedem só um \"Número de PIS/PASEP válido\". Os pesos seguem uma referência da comunidade (brutils).",
+          "- Nenhuma fonte oficial publica os pesos do dígito verificador. O MOS do eSocial dá 11 dígitos com o dígito verificador, e o manual do SIRC diz que o dígito verificador usa módulo 11; os leiautes da Caixa pedem só um \"Número de PIS/PASEP válido\". Os pesos seguem uma referência da comunidade (brutils).",
           "- A função ignora espaços em branco e os caracteres `.`, `-`, `/`, `(`, `)`, `,` e `*`, em qualquer quantidade e posição. Qualquer outro caractere torna o valor inválido. São exigidos exatamente 11 dígitos depois de removidos, e o dígito verificador precisa conferir.",
           "- Os pesos do dígito verificador são 3, 2, 9, 8, 7, 6, 5, 4, 3 e 2 sobre os 10 primeiros dígitos, com módulo 11.",
-          "- Só uma string é lida. Qualquer outro tipo retorna false.",
+          "- Só uma string é lida. Qualquer outro tipo retorna `false`.",
           "- Decisão pendente (findings §1): a referência (JS) rejeita como número reservado um valor com todos os dígitos iguais. As outras bibliotecas aceitam esses valores quando o dígito verificador confere.",
           "- Decisão pendente (findings §2 #1): a referência (JS) ignora esses caracteres de formatação e os espaços em branco. Outras bibliotecas aceitam apenas dígitos."
         ]
@@ -232,13 +232,13 @@
         "en": [
           "Removes PIS formatting and keeps only digits, capped at 11 digits (the digits after the 11th are dropped).",
           "",
-          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number).",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number returns an empty string (2.4.0 read the digits of any number, sign and decimal point dropped).",
           "- A value with no digits returns an empty string."
         ],
         "pt-BR": [
           "Remove a formatação do PIS e mantém apenas os dígitos, com no máximo 11 dígitos (os dígitos depois do 11º são descartados).",
           "",
-          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número).",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal).",
           "- Um valor sem dígitos retorna uma string vazia."
         ]
       },

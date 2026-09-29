@@ -20,7 +20,7 @@ The CEP is a numeric code of eight digits. The postal service assigns these code
 
 1. Check that the input contains exactly `8` characters.
 2. Check that all characters are digits.
-3. If both conditions are true, return valid. If not, return invalid.
+3. If both conditions are `true`, return valid. If not, return invalid.
 
 ## Regex
 

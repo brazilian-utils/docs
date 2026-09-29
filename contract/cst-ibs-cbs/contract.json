@@ -19,14 +19,14 @@
         "en": [
           "Looks up a CST-IBS/CBS code in the official table and returns its code and description.",
           "",
-          "- Same input rules as `cstIbsCbs.isValid`. Returns null exactly when that function returns false.",
-          "- The returned code is the 3 digits, padded. The description is the text of the CST sheet of the official table."
+          "- Same input rules as `cstIbsCbs.isValid`. Returns `null` exactly when that function returns `false`.",
+          "- The returned code has 3 digits, padded with zeros. The description is the text of the CST sheet of the official table."
         ],
         "pt-BR": [
           "Consulta um CST-IBS/CBS na tabela oficial e retorna o código e a descrição.",
           "",
-          "- Mesmas regras de entrada de `cstIbsCbs.isValid`. Retorna null exatamente quando essa função retorna false.",
-          "- O código retornado tem os 3 dígitos, completados. A descrição é o texto da aba CST da tabela oficial."
+          "- Mesmas regras de entrada de `cstIbsCbs.isValid`. Retorna `null` exatamente quando essa função retorna `false`.",
+          "- O código retornado tem 3 dígitos, completados com zeros. A descrição é o texto da aba CST da tabela oficial."
         ]
       },
       "references": [
@@ -73,16 +73,16 @@
       "description": {
         "en": [
           "Checks whether a CST-IBS/CBS code (Código de Situação Tributária of the IBS and the CBS) exists in the official table. It is the code the `CST` field of the `IBSCBS` group carries in the electronic fiscal documents of the tax reform (NF-e, NFC-e, CT-e, NFS-e and others), and the check behind NF-e rejection 1020.",
+          "",
           "- Accepts a string of bare digits, with optional surrounding whitespace, or a non-negative safe integer. A value shorter than 3 digits is left-padded with zeros, as a string or as a number, since the codes start with zeros a numeric field drops: `0`, `\"0\"` and `\"000\"` are all the code `000`, and `10` and `\"10\"` are `010`.",
-          "- Accepts a string of bare digits, with optional surrounding whitespace, or a non-negative integer. A value shorter than 3 digits is left-padded with zeros: `10` and `\"10\"` are the code `010`.",
-          "- Any other string is rejected (`\"cst200\"`, `\"2.00\"`). The function does not pick out its digits. A negative or fractional number is invalid.",
+          "- Any other string is rejected (`\"cst200\"`, `\"2.00\"`). The function does not extract its digits. A negative or fractional number is invalid.",
           "- The table published on 2026-06-23 has 18 codes: 000, 010, 011, 200, 220, 221, 222, 400, 410, 510, 515, 550, 620, 800, 810, 811, 820 and 830. CST 220 stays valid, although its classifications were excluded (see `classTrib.isValid`).",
           "- The IBS and the CBS share this table. It is separate from `cst.isValid` because its 3-digit codes collide with the ICMS CST, and `cst.isValid` without a `tax` accepts a code of any table, so adding these codes would change what that default accepts."
         ],
         "pt-BR": [
           "Verifica se um CST-IBS/CBS (Código de Situação Tributária do IBS e da CBS) existe na tabela oficial. É o código que o campo `CST` do grupo `IBSCBS` traz nos documentos fiscais eletrônicos da reforma tributária (NF-e, NFC-e, CT-e, NFS-e e outros), e a verificação da rejeição 1020 da NF-e.",
-          "- Aceita uma string só de dígitos, com espaços opcionais nas extremidades, ou um inteiro seguro não negativo. Um valor com menos de 3 dígitos é completado com zeros à esquerda, como string ou como número, porque os códigos começam com zeros que um campo numérico perde: `0`, `\"0\"` e `\"000\"` são todos o código `000`, e `10` e `\"10\"` são `010`.",
-          "- Aceita uma string só de dígitos, com espaços opcionais nas extremidades, ou um inteiro não negativo. Um valor com menos de 3 dígitos é completado com zeros à esquerda: `10` e `\"10\"` são o código `010`.",
+          "",
+          "- Aceita uma string só de dígitos, com espaços opcionais nas pontas, ou um inteiro seguro não negativo. Um valor com menos de 3 dígitos é completado com zeros à esquerda, como string ou como número, porque os códigos começam com zeros que um campo numérico perde: `0`, `\"0\"` e `\"000\"` são todos o código `000`, e `10` e `\"10\"` são `010`.",
           "- Qualquer outra string é rejeitada (`\"cst200\"`, `\"2.00\"`). A função não extrai os dígitos dela. Um número negativo ou fracionário é inválido.",
           "- A tabela publicada em 23/06/2026 tem 18 códigos: 000, 010, 011, 200, 220, 221, 222, 400, 410, 510, 515, 550, 620, 800, 810, 811, 820 e 830. O CST 220 continua válido, embora as suas classificações tenham sido excluídas (veja `classTrib.isValid`).",
           "- O IBS e a CBS usam a mesma tabela. Ela fica separada de `cst.isValid` porque os seus códigos de 3 dígitos colidem com o CST do ICMS, e `cst.isValid` sem `tax` aceita um código de qualquer tabela, então incluir esses códigos mudaria o que esse padrão aceita."

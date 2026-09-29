@@ -17,28 +17,28 @@
       },
       "description": {
         "en": [
-          "Generates a Pix BR Code payload. Give exactly one of a key (static) or a PSP URL (dynamic), otherwise the function returns null.",
+          "Generates a Pix BR Code payload. Give exactly one of a key (static) or a PSP URL (dynamic), otherwise the function returns `null`.",
           "",
-          "- `params` (`GeneratePixPayloadParams`): `key` or `url` (exactly one), `merchantName` and `merchantCity` (required), and the optional `amount`, `txid` and `description`. A value that is not an object gives null.",
-          "- With `key` the payload is static (object `01` is left out, so it can be paid more than once) and the key is normalized as `pixKey.getInfo` does. A key that `pixKey.getInfo` rejects gives null, so an email key with `&` gives null.",
-          "- With `url` the payload is dynamic (Point of Initiation `12`) and cannot carry an `amount` or a `txid`: either gives null. `url` is the PSP location (field 26-25): a host optionally followed by a path, no scheme (`pix.example.com/qr/v2/1234`), at most 77 characters. The host has dot-separated labels of letters, digits and hyphens (a hyphen never starts or ends a label) with at least one dot, and the path takes only URL path characters (a `%` only as the start of a percent-encoded octet, `%41`). A scheme (`https://...`), a port, a query string, whitespace, a host without a dot, or an empty or non-string `url` gives null.",
-          "- `merchantName` and `merchantCity` are required: null when either is missing, blank or empty after folding. They are folded to printable ASCII (accents dropped), truncated to 25 and 15 characters, and trimmed after the truncation.",
-          "- `amount` is written with two decimal places. A value that does not survive that (`0.005`, `123.456`), or that is zero, negative, not finite or longer than 13 characters once written (`9999999999.99` is the largest) gives null. Floating-point noise beyond the second decimal, as in `0.1 + 0.2` (written `0.30`), is accepted.",
-          "- `txid` is 1 to 25 letters and digits (default `***`, always written in field 62-05). Anything else, `***` included, gives null.",
+          "- `params` (`GeneratePixPayloadParams`): `key` or `url` (exactly one), `merchantName` and `merchantCity` (required), and the optional `amount`, `txid` and `description`. A value that is not an object returns `null`.",
+          "- With `key` the payload is static (object `01` is left out, so it can be paid more than once) and the key is normalized as `pixKey.getInfo` does. A key that `pixKey.getInfo` rejects returns `null`, so an email key with `&` returns `null`.",
+          "- With `url` the payload is dynamic (Point of Initiation `12`) and cannot carry an `amount` or a `txid`: either returns `null`. `url` is the PSP location (field 26-25): a host optionally followed by a path, no scheme (`pix.example.com/qr/v2/1234`), at most 77 characters. The host has dot-separated labels of letters, digits and hyphens (a hyphen never starts or ends a label) with at least one dot, and the path takes only URL path characters (a `%` only as the start of a percent-encoded octet, `%41`). A scheme (`https://...`), a port, a query string, whitespace, a host without a dot, or an empty or non-string `url` returns `null`.",
+          "- `merchantName` and `merchantCity` are required: `null` when either is missing, blank or empty after folding. They are folded to printable ASCII (accents dropped), truncated to 25 and 15 characters, and trimmed after the truncation.",
+          "- `amount` is written with two decimal places. A value that does not survive that (`0.005`, `123.456`), or that is zero, negative, not finite or longer than 13 characters once written (`9999999999.99` is the largest) returns `null`. Floating-point noise beyond the second decimal, as in `0.1 + 0.2` (written `0.30`), is accepted.",
+          "- `txid` is 1 to 25 letters and digits (default `***`, always written in field 62-05). Anything else, `***` included, returns `null`.",
           "- `description` loses its accents as the name and city do. It is written in field 26-02, in whatever room is left of the 99 characters of the template after the GUI and the key or URL, and never over 72 characters, trimmed after the truncation, and dropped when nothing is left.",
           "- Every payload the function returns is one `pixPayload.isValid` accepts: the key in its DICT form, the 62-05 txid always written, the name and city within their limits and an amount greater than zero, and `pixPayload.getInfo` reads it back.",
           "- Pix Saque (`fss`), unreserved templates (IDs 80 to 99) and composite Pix Automático QR Codes are never written."
         ],
         "pt-BR": [
-          "Gera o payload de um BR Code Pix. Informe exatamente um entre uma chave (estático) ou uma URL do PSP (dinâmico). Caso contrário, a função retorna null.",
+          "Gera o payload de um BR Code Pix. Informe exatamente uma chave (estático) ou uma URL do PSP (dinâmico). Caso contrário, a função retorna `null`.",
           "",
-          "- `params` (`GeneratePixPayloadParams`): `key` ou `url` (exatamente um), `merchantName` e `merchantCity` (obrigatórios) e, opcionalmente, `amount`, `txid` e `description`. Um valor que não é objeto dá null.",
-          "- Com `key` o payload é estático (o objeto `01` fica de fora, então ele pode ser pago mais de uma vez) e a chave é normalizada como `pixKey.getInfo` faz. Uma chave que `pixKey.getInfo` rejeita dá null, então uma chave de e-mail com `&` dá null.",
-          "- Com `url` o payload é dinâmico (Point of Initiation `12`) e não pode trazer `amount` nem `txid`: qualquer um dos dois dá null. `url` é a location do PSP (campo 26-25): um host seguido opcionalmente de um caminho, sem esquema (`pix.example.com/qr/v2/1234`), com no máximo 77 caracteres. O host tem rótulos separados por ponto, com letras, dígitos e hífens (um hífen nunca abre nem fecha um rótulo), e ao menos um ponto, e o caminho aceita só caracteres de caminho de URL (um `%` só como início de um octeto codificado, `%41`). Um esquema (`https://...`), uma porta, uma query string, espaço em branco, um host sem ponto, ou uma `url` vazia ou que não é string, dá null.",
-          "- `merchantName` e `merchantCity` são obrigatórios: null quando um deles falta, está em branco ou fica vazio após a redução. Eles são reduzidos a ASCII imprimível (sem acentos), truncados em 25 e 15 caracteres e aparados depois do truncamento.",
-          "- `amount` é escrito com duas casas decimais. Um valor que não sobrevive a isso (`0.005`, `123.456`), ou que é zero, negativo, não finito ou maior que 13 caracteres depois de escrito (`9999999999.99` é o maior) dá null. O ruído de ponto flutuante depois da segunda casa, como em `0.1 + 0.2` (escrito `0.30`), é aceito.",
-          "- `txid` tem de 1 a 25 letras e dígitos (padrão `***`, sempre escrito no campo 62-05). Qualquer outra coisa, `***` inclusive, dá null.",
-          "- `description` perde os acentos como o nome e a cidade. Ela é escrita no campo 26-02, no espaço que sobra dos 99 caracteres do template depois do GUI e da chave ou URL, e nunca com mais de 72 caracteres, aparada depois do truncamento, e é descartada quando não sobra nada.",
+          "- `params` (`GeneratePixPayloadParams`): `key` ou `url` (exatamente um), `merchantName` e `merchantCity` (obrigatórios) e, opcionalmente, `amount`, `txid` e `description`. Um valor que não é objeto retorna `null`.",
+          "- Com `key` o payload é estático (o objeto `01` fica de fora, então ele pode ser pago mais de uma vez) e a chave é normalizada como `pixKey.getInfo` faz. Uma chave que `pixKey.getInfo` rejeita retorna `null`, então uma chave de e-mail com `&` retorna `null`.",
+          "- Com `url` o payload é dinâmico (Point of Initiation `12`) e não pode trazer `amount` nem `txid`: qualquer um dos dois retorna `null`. `url` é a location do PSP (campo 26-25): um host seguido opcionalmente de um caminho, sem esquema (`pix.example.com/qr/v2/1234`), com no máximo 77 caracteres. O host tem rótulos separados por ponto, com letras, dígitos e hífens (um hífen nunca abre nem fecha um rótulo), e ao menos um ponto, e o caminho aceita só caracteres de caminho de URL (um `%` só como início de um octeto codificado, `%41`). Um esquema (`https://...`), uma porta, uma query string, espaço em branco, um host sem ponto, ou uma `url` vazia ou que não é string, retorna `null`.",
+          "- `merchantName` e `merchantCity` são obrigatórios: `null` quando um deles falta, está em branco ou fica vazio após a redução. Eles são reduzidos a ASCII imprimível (sem acentos), truncados em 25 e 15 caracteres e, depois do truncamento, ficam sem espaços nas pontas.",
+          "- `amount` é escrito com duas casas decimais. Um valor que não sobrevive a isso (`0.005`, `123.456`), ou que é zero, negativo, não finito ou maior que 13 caracteres depois de escrito (`9999999999.99` é o maior) retorna `null`. O ruído de ponto flutuante depois da segunda casa, como em `0.1 + 0.2` (escrito `0.30`), é aceito.",
+          "- `txid` tem de 1 a 25 letras e dígitos (padrão `***`, sempre escrito no campo 62-05). Qualquer outra coisa, `***` inclusive, retorna `null`.",
+          "- `description` perde os acentos como o nome e a cidade. Ela é escrita no campo 26-02, no espaço que sobra dos 99 caracteres do template depois do GUI e da chave ou URL, e nunca com mais de 72 caracteres, sem espaços nas pontas depois do truncamento, e é descartada quando não sobra nada.",
           "- Todo payload que a função retorna é aceito por `pixPayload.isValid`: a chave na forma do DICT, o txid 62-05 sempre escrito, nome e cidade dentro dos limites e um valor maior que zero, e `pixPayload.getInfo` o lê de volta.",
           "- Pix Saque (`fss`), templates não reservados (IDs 80 a 99) e QR Codes compostos do Pix Automático nunca são escritos."
         ]
@@ -139,28 +139,28 @@
     "getInfo": {
       "summary": {
         "en": "Splits a Pix BR Code payload, the string behind a Pix QR Code and behind \"Pix copia e cola\", into its fields.",
-        "pt-BR": "Decompõe o payload de um BR Code Pix, a string por trás de um QR Code Pix e do Pix copia e cola."
+        "pt-BR": "Decompõe o payload de um BR Code Pix, a string por trás de um QR Code Pix e do Pix copia e cola, em seus campos."
       },
       "description": {
         "en": [
-          "Parses a Pix BR Code payload into its fields. Returns null exactly when `pixPayload.isValid` returns false, never a partial result.",
+          "Parses a Pix BR Code payload into its fields. Returns `null` exactly when `pixPayload.isValid` returns `false`, never a partial result.",
           "",
           "- Fields: merchant name and city, point of initiation (dynamic when there is a PSP location or object `01` is `12`, static otherwise, so a key payload with `01` = `12` is dynamic) and either the key (static) or the URL (dynamic).",
           "- Amount (a number, so `98.` reads as 98), txid, description (26-02) and the withdrawal facilitator of a Pix Saque (`fss`, the 8-digit ISPB in 26-03) are present only when the payload carries them. The `***` txid marker means no txid.",
           "- With a PSP location, the function leaves out the amount and the txid, as §2.7 of the manual requires (\"Se preenchidos, seu conteúdo deve ser ignorado\").",
-          "- Every rule of `pixPayload.isValid` applies, so a payload without object `62`, with a static txid outside 1 to 25 letters and digits, or with a key not in its DICT form gives null. 2.4.0 parsed those payloads.",
-          "- A repeated object ID, a CRC that is not the last top-level object and every other rule of `pixPayload.isValid` give null, so the payload is never partly read. A value that is not a string gives null.",
+          "- Every rule of `pixPayload.isValid` applies, so a payload without object `62`, with a static txid outside 1 to 25 letters and digits, or with a key not in its DICT form returns `null`. 2.4.0 parsed those payloads.",
+          "- A repeated object ID, a CRC that is not the last top-level object and every other rule of `pixPayload.isValid` return `null`, so the payload is never partly read. A value that is not a string returns `null`.",
           "- A composite Pix Automático QR Code that also carries a key or a payment location is read as an ordinary payload, its recurrence location dropped. Whitespace around the payload is ignored."
         ],
         "pt-BR": [
-          "Decompõe o payload de um BR Code Pix em seus campos. Retorna null exatamente quando `pixPayload.isValid` retorna false, nunca um resultado parcial.",
+          "Decompõe o payload de um BR Code Pix em seus campos. Retorna `null` exatamente quando `pixPayload.isValid` retorna `false`, nunca um resultado parcial.",
           "",
           "- Campos: nome e cidade do recebedor, point of initiation (dinâmico quando há uma location do PSP ou o objeto `01` é `12`, estático nos outros casos, então um payload com chave e `01` = `12` é dinâmico) e a chave (estático) ou a URL (dinâmico).",
           "- Valor (um número, então `98.` é lido como 98), txid, descrição (26-02) e o facilitador de saque de um Pix Saque (`fss`, o ISPB de 8 dígitos em 26-03) só aparecem quando o payload os traz. O marcador de txid `***` significa sem txid.",
           "- Com uma location do PSP, a função deixa de fora o valor e o txid, como o §2.7 do manual exige (\"Se preenchidos, seu conteúdo deve ser ignorado\").",
-          "- Todas as regras de `pixPayload.isValid` valem, então um payload sem o objeto `62`, com txid estático fora de 1 a 25 letras e dígitos ou com chave fora da forma do DICT dá null. A 2.4.0 decompunha esses payloads.",
-          "- Um ID de objeto repetido, um CRC que não é o último objeto de nível superior e toda outra regra de `pixPayload.isValid` dão null, então o payload nunca é lido em parte. Um valor que não é string dá null.",
-          "- Um QR Code composto do Pix Automático que também traz uma chave ou uma location de pagamento é lido como um payload comum, sem a location da recorrência. Espaço em branco em volta do payload é ignorado."
+          "- Todas as regras de `pixPayload.isValid` valem, então um payload sem o objeto `62`, com txid estático fora de 1 a 25 letras e dígitos ou com chave fora da forma do DICT retorna `null`. A 2.4.0 decompunha esses payloads.",
+          "- Um ID de objeto repetido, um CRC que não é o último objeto de nível superior e toda outra regra de `pixPayload.isValid` retornam `null`, então o payload nunca é lido em parte. Um valor que não é string retorna `null`.",
+          "- Um QR Code composto do Pix Automático que também traz uma chave ou uma location de pagamento é lido como um payload comum, sem a location da recorrência. Espaços nas pontas do payload são ignorados."
         ]
       },
       "references": [
@@ -369,22 +369,22 @@
           "- Next to a PSP location, only the presence of 62-05 is checked. §2.7 says a filled txid or amount in a dynamic BR Code must be ignored, so a dynamic payload with a filled 62-05 stays valid.",
           "- Unreserved templates (IDs 80 to 99) are ignored. A composite Pix Automático QR Code that also carries a key or a payment location is read as an ordinary payload; one that carries only the recurrence, with no key or payment location, is invalid.",
           "- 2.4.0 checked mostly the structure. It accepted a payload without `62`, a txid with `-`, `_` or spaces or over 25 characters, a masked or uppercase key, a phone key without `+55`, a name or city over the limits, a lowercase country code, a merchant category code that is not 4 digits and an object of length `00`. It rejected an amount with a `.` and no decimals (`98.`).",
-          "- A value that is not a string is invalid. Whitespace around the payload is accepted."
+          "- A value that is not a string is invalid. Whitespace around the payload is ignored."
         ],
         "pt-BR": [
           "Valida o payload de um BR Code Pix contra o Manual de Padrões para Iniciação do Pix v2.10.0 e, onde o manual é omisso, o EMV QRCPS-MPM em que ele se baseia. A função verifica a forma da chave, não se ela está registrada no DICT.",
           "",
-          "- Estrutura: TLV bem formado com todo tamanho de `01` a `99`, o indicador de formato `000201` como primeiro objeto e o CRC-16 (`63`) como último objeto de nível superior, inteiro e conferindo com o payload. Oito caracteres finais que só parecem `6304` e um checksum (dentro de outro objeto, por exemplo) não contam como o CRC. Um CRC em hexadecimal minúsculo é aceito, como na 2.4.0 (nenhuma fonte oficial fixa a caixa).",
+          "- Estrutura: TLV bem formado com todo tamanho de `01` a `99`, o indicador de formato `000201` como primeiro objeto e o CRC-16 (`63`) como último objeto de nível superior, inteiro e conferindo com o payload. Oito caracteres finais que só parecem `6304` e um checksum (dentro de outro objeto, por exemplo) não contam como o CRC. Um CRC em hexadecimal minúsculo é aceito, como na 2.4.0 (nenhuma fonte oficial define maiúsculas ou minúsculas).",
           "- Um ID de objeto não pode se repetir no mesmo nível (o EMV dá a cada objeto um ID por nível), quaisquer que sejam os valores, mesmo com um CRC que confere. Até a 2.4.0 o último ID repetido prevalecia. Só payloads forjados repetem um ID.",
-          "- Objetos obrigatórios: código de categoria (`52`) com 4 dígitos, moeda (`53`) `986`, país (`58`) `BR` em maiúsculas, nome do recebedor (`59`) com no máximo 25 caracteres e cidade (`60`) com no máximo 15. Só o tamanho é verificado: nenhum dos manuais do Pix restringe os caracteres do nome e da cidade (o EMV os tipa como `ans`), então um nome com acentos é aceito, embora `pixPayload.generate` reduza ambos a ASCII imprimível.",
-          "- O primeiro template Merchant Account Information (IDs 26 a 51) que traz o GUI `br.gov.bcb.pix` (sem distinção de caixa) é o verificado, e um template sem o GUI é ignorado. Ele contém exatamente um entre: uma chave Pix na forma do DICT, como `pixKey.getInfo` a retorna (sem máscara, e-mail ou UUID em minúsculas, telefone com `+55`), opcionalmente com o ISPB de 8 dígitos de um facilitador de Pix Saque (`fss`, 26-03); ou uma location do PSP (26-25), host e caminho com no máximo 77 caracteres, nunca junto de um `fss`. O host tem rótulos separados por ponto, com letras, dígitos e hífens, e ao menos um ponto, e o caminho aceita só caracteres de caminho de URL (sem esquema, porta, query string ou espaço em branco).",
+          "- Objetos obrigatórios: código de categoria (`52`) com 4 dígitos, moeda (`53`) `986`, país (`58`) `BR` em maiúsculas, nome do recebedor (`59`) com no máximo 25 caracteres e cidade (`60`) com no máximo 15. Só o tamanho é verificado: nenhum dos manuais do Pix restringe os caracteres do nome e da cidade (o EMV os classifica como `ans`), então um nome com acentos é aceito, embora `pixPayload.generate` reduza ambos a ASCII imprimível.",
+          "- O primeiro template Merchant Account Information (IDs 26 a 51) que traz o GUI `br.gov.bcb.pix` (sem diferenciar maiúsculas de minúsculas) é o verificado, e um template sem o GUI é ignorado. Ele contém exatamente um entre: uma chave Pix na forma do DICT, como `pixKey.getInfo` a retorna (sem máscara, e-mail ou UUID em minúsculas, telefone com `+55`), opcionalmente com o ISPB de 8 dígitos de um facilitador de Pix Saque (`fss`, 26-03); ou uma location do PSP (26-25), host e caminho com no máximo 77 caracteres, nunca junto de um `fss`. O host tem rótulos separados por ponto, com letras, dígitos e hífens, e ao menos um ponto, e o caminho aceita só caracteres de caminho de URL (sem esquema, porta, query string ou espaço em branco).",
           "- O objeto `01` é opcional. Quando presente, deve ser `11` ou `12`.",
           "- O valor (`54`) tem dígitos com um `.` decimal opcional (`98.73`, `98` e `98.` são aceitos), no máximo 2 casas e 13 caracteres. Zero só é aceito em um Pix Saque (com `fss`) ou junto de uma location do PSP; um payload só com chave precisa de valor maior que zero.",
           "- O Additional Data Field Template (`62`) com o txid (62-05) é obrigatório (\"sempre presente em um BR Code\", §2.6). O txid é `***` (sem txid) ou de 1 a 25 letras e dígitos (§2.6.2). Assim, num payload estático o `-` do exemplo do Manual do BR Code `RP12345678-2019` fica excluído.",
           "- Junto de uma location do PSP, só a presença do 62-05 é verificada. O §2.7 diz que txid ou valor preenchidos num BR Code dinâmico devem ser ignorados, então um payload dinâmico com 62-05 preenchido continua válido.",
           "- Templates não reservados (IDs 80 a 99) são ignorados. Um QR Code composto do Pix Automático que também traz uma chave ou uma location de pagamento é lido como um payload comum; um que traz só a recorrência, sem chave nem location de pagamento, é inválido.",
           "- A 2.4.0 verificava sobretudo a estrutura. Aceitava payload sem `62`, txid com `-`, `_` ou espaços ou com mais de 25 caracteres, chave com máscara ou em maiúsculas, chave de telefone sem `+55`, nome ou cidade acima dos limites, código de país em minúsculas, código de categoria que não tem 4 dígitos e objeto com tamanho `00`. Rejeitava um valor com `.` e sem decimais (`98.`).",
-          "- Um valor que não é string é inválido. Espaço em branco em volta do payload é aceito."
+          "- Um valor que não é string é inválido. Espaços nas pontas do payload são ignorados."
         ]
       },
       "references": [

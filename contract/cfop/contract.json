@@ -18,22 +18,22 @@
         "en": [
           "Formats a CFOP code with the mask `N.NNN`. Only the structure changes (use `cfop.isValid` to check the code against the table).",
           "",
-          "- The mask is applied as far as the digits go, which is what an input being typed into needs.",
-          "- `options.pad` (default false) first left-pads the value with zeros to 4 digits. A number is treated as the string of its digits, so it is padded only with `pad`.",
+          "- The mask is applied as far as the digits go, so a value being typed is masked progressively.",
+          "- `options.pad` (default `false`) first left-pads the value with zeros to 4 digits. A number is treated as the string of its digits, so it is padded only with `pad`.",
           "- A string is read for its digits: other characters are dropped and digits after the last one of the mask are ignored.",
-          "- Returns an empty string when there is no digit at all, also with `pad`. null and undefined give an empty string too.",
-          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string.",
+          "- An empty value, or one without digits, returns an empty string even with `pad`. `null` and `undefined` return an empty string too.",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number returns an empty string.",
           "- No CFOP starts with a zero, so `pad` only serves a caller that wants a fixed width.",
           "- New in 2.5.0 (#615), so every masked classification code has its formatter."
         ],
         "pt-BR": [
           "Formata um código CFOP com a máscara `N.NNN`. Só a estrutura muda (use `cfop.isValid` para verificar o código na tabela).",
           "",
-          "- A máscara é aplicada até onde os dígitos vão, o que serve a um campo em digitação.",
-          "- `options.pad` (padrão false) primeiro completa o valor com zeros à esquerda até 4 dígitos. Um número é tratado como a string dos seus dígitos, então só é completado com `pad`.",
+          "- A máscara é aplicada até onde os dígitos vão, então um valor sendo digitado é mascarado progressivamente.",
+          "- `options.pad` (padrão `false`) primeiro completa o valor com zeros à esquerda até 4 dígitos. Um número é tratado como a string dos seus dígitos, então só é completado com `pad`.",
           "- Uma string é lida pelos seus dígitos: os outros caracteres são descartados e dígitos depois do último da máscara são ignorados.",
-          "- Retorna uma string vazia quando não há nenhum dígito, também com `pad`. null e undefined também dão string vazia.",
-          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia.",
+          "- Um valor vazio, ou sem dígitos, retorna uma string vazia mesmo com `pad`. `null` e `undefined` também retornam uma string vazia.",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia.",
           "- Nenhum CFOP começa com zero, então `pad` só serve a quem quer largura fixa.",
           "- Nova na 2.5.0 (#615), para que todo código com máscara tenha o seu formatador."
         ]
@@ -76,14 +76,14 @@
         "en": [
           "Looks up a CFOP code in the official table and returns its code and description.",
           "",
-          "- Same input rules as `cfop.isValid`, including a run of separators between the groups (`5..102` gives the entry; until 2.4.0 it gave null). Returns null for a heading, an unknown code or a value not in an accepted form.",
-          "- It returns null exactly when `cfop.isValid` returns false."
+          "- Same input rules as `cfop.isValid`, including a run of separators between the groups (`5..102` gives the entry; until 2.4.0 it gave `null`). Returns `null` for a heading, an unknown code or a value not in an accepted form.",
+          "- It returns `null` exactly when `cfop.isValid` returns `false`."
         ],
         "pt-BR": [
           "Consulta um código CFOP na tabela oficial e retorna o código e a descrição.",
           "",
-          "- Mesmas regras de entrada de `cfop.isValid`, inclusive uma sequência de separadores entre os grupos (`5..102` retorna o registro; até a 2.4.0 retornava null). Retorna null para um título, um código desconhecido ou um valor fora das formas aceitas.",
-          "- Retorna null exatamente quando `cfop.isValid` retorna false."
+          "- Mesmas regras de entrada de `cfop.isValid`, inclusive uma sequência de separadores entre os grupos (`5..102` retorna o registro; até a 2.4.0 retornava `null`). Retorna `null` para um título, um código desconhecido ou um valor fora das formas aceitas.",
+          "- Retorna `null` exatamente quando `cfop.isValid` retorna `false`."
         ]
       },
       "references": [
@@ -137,7 +137,7 @@
           "",
           "- Only operable codes count: the function rejects group and subgroup headings (codes ending in `00` and `50`).",
           "- Accepts the 4 digits, the `N.NNN` form or a non-negative integer. A masked string may have any run of separators (space, `.`, `-` or `/`) between the groups: `5..102` is valid. Until 2.4.0 the form had a single separator and `5..102` was rejected. Any other string is rejected.",
-          "- Surrounding whitespace is ignored.",
+          "- Whitespace around the value is ignored.",
           "- No CFOP starts with a zero, so the function pads nothing."
         ],
         "pt-BR": [
@@ -196,15 +196,15 @@
           "Removes CFOP formatting and keeps only digits, capped at 4 digits.",
           "",
           "- The function does not pad the result.",
-          "- Returns an empty string when there is no digit at all (null and undefined included).",
-          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
+          "- Returns an empty string when there is no digit at all (`null` and `undefined` included).",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number returns an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
         ],
         "pt-BR": [
           "Remove a formatação do CFOP e mantém apenas os dígitos, limitados a 4.",
           "",
           "- A função não completa o resultado com zeros.",
-          "- Retorna uma string vazia quando não há nenhum dígito (null e undefined incluídos).",
-          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
+          "- Retorna string vazia quando não há nenhum dígito (`null` e `undefined` incluídos).",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
         ]
       },
       "references": ["https://www.confaz.fazenda.gov.br/legislacao/ajustes/sinief/cfop_cvsn_1-6.24"],
