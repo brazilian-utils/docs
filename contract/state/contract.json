@@ -117,12 +117,14 @@
           "Returns the two-letter code (sigla) of a state from its full name.",
           "",
           "- The match ignores accents, case and surrounding whitespace. Internal whitespace collapses into one space.",
+          "- Only the full name matches. The code (`SP`) and a name written without its spaces (`saopaulo`) return null.",
           "- Returns null when no state matches."
         ],
         "pt-BR": [
           "Retorna a sigla de duas letras de um estado a partir do nome completo.",
           "",
           "- A comparação ignora acentos, maiúsculas e minúsculas e espaços nas pontas. Espaços internos seguidos viram um só espaço.",
+          "- Só o nome completo corresponde. A sigla (`SP`) e um nome escrito sem os espaços (`saopaulo`) retornam null.",
           "- Retorna null quando nenhum estado corresponde."
         ]
       },
@@ -238,7 +240,7 @@
           "Returns the IANA time zone (tzdata zone) of a state: the zone of its capital, such as `America/Sao_Paulo`.",
           "",
           "- Some states straddle more than one zone, and the capital's zone says nothing about the rest. The west of Amazonas (`America/Eirunepe`, UTC-5) and the west of Pará (`America/Santarem`, UTC-3) are not represented, and Fernando de Noronha (`America/Noronha`, UTC-2), a district of Pernambuco, resolves as Recife (`America/Recife`, UTC-3).",
-          "- The offsets follow the capitals: Acre UTC-5; Amazonas, Roraima, Rondônia, Mato Grosso and Mato Grosso do Sul UTC-4; the other states UTC-3. One tzdata zone can serve several states (`America/Sao_Paulo` also covers DF, GO, MG, ES, RJ, PR, SC and RS).",
+          "- The offsets follow the capitals: Acre UTC-5; Amazonas, Roraima, Rondônia, Mato Grosso and Mato Grosso do Sul UTC-4; the other states UTC-3. One tzdata zone can serve several states (`America/Sao_Paulo` also covers DF, GO, MG, ES, RJ, PR, SC and RS, and `America/Fortaleza` also covers MA, PI, RN and PB besides CE).",
           "- The match ignores case and surrounding whitespace.",
           "- Returns null when no state matches."
         ],
@@ -246,7 +248,7 @@
           "Retorna o fuso horário IANA (zona tzdata) de um estado: a zona da capital, por exemplo `America/Sao_Paulo`.",
           "",
           "- Alguns estados atravessam mais de um fuso, e o fuso da capital não diz nada sobre o resto. O oeste do Amazonas (`America/Eirunepe`, UTC-5) e o oeste do Pará (`America/Santarem`, UTC-3) não são representados, e Fernando de Noronha (`America/Noronha`, UTC-2), um distrito de Pernambuco, resolve como Recife (`America/Recife`, UTC-3).",
-          "- Os deslocamentos seguem as capitais: Acre UTC-5; Amazonas, Roraima, Rondônia, Mato Grosso e Mato Grosso do Sul UTC-4; os outros estados UTC-3. Um mesmo fuso do tzdata pode servir vários estados (`America/Sao_Paulo` também cobre DF, GO, MG, ES, RJ, PR, SC e RS).",
+          "- Os deslocamentos seguem as capitais: Acre UTC-5; Amazonas, Roraima, Rondônia, Mato Grosso e Mato Grosso do Sul UTC-4; os outros estados UTC-3. Um mesmo fuso do tzdata pode servir vários estados (`America/Sao_Paulo` também cobre DF, GO, MG, ES, RJ, PR, SC e RS, e `America/Fortaleza` também cobre MA, PI, RN e PB além do CE).",
           "- A comparação ignora maiúsculas e minúsculas e espaços nas pontas.",
           "- Retorna null quando nenhum estado corresponde."
         ]
@@ -306,12 +308,14 @@
         "en": [
           "Returns the 27 Brazilian federative units, sorted by name (pt-BR collation).",
           "",
-          "- Each entry has the two-letter code, the name, the region code and name, and the 2-digit IBGE code."
+          "- Each entry has the two-letter code, the name, the region code and name, and the 2-digit IBGE code.",
+          "- Each call returns a new array of new objects."
         ],
         "pt-BR": [
           "Retorna as 27 unidades da federação, ordenadas por nome (ordenação pt-BR).",
           "",
-          "- Cada item tem a sigla de duas letras, o nome, o código e o nome da região e o código IBGE de 2 dígitos."
+          "- Cada item tem a sigla de duas letras, o nome, o código e o nome da região e o código IBGE de 2 dígitos.",
+          "- Cada chamada retorna um array novo com objetos novos."
         ]
       },
       "references": ["https://servicodados.ibge.gov.br/api/docs/localidades"],

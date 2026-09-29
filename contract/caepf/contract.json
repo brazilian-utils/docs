@@ -19,16 +19,16 @@
         "en": [
           "Formats a CAEPF with the mask `000.000.000/000-00`.",
           "",
-          "- The mask is applied as far as the digits go. `options.pad` first left-pads with zeros to 14 digits.",
+          "- The mask is applied as far as the digits go, so a value being typed is masked progressively, and digits beyond the 14th are dropped. `options.pad` first left-pads with zeros to 14 digits.",
           "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped).",
-          "- `options.pad` on a value with no digits (`\"\"`, `\"---\"`, `null`) still gives an empty string. Until 2.4.0 it gave the whole zero mask. Changed in 2.5.0 (#615)."
+          "- `options.pad` on a value with no digits (`\"\"`, `\"---\"`, `null`) still gives an empty string. Until 2.4.0 `\"\"` and `\"---\"` gave the whole zero mask."
         ],
         "pt-BR": [
           "Formata um CAEPF com a máscara `000.000.000/000-00`.",
           "",
-          "- A máscara é aplicada até onde os dígitos vão. `options.pad` primeiro completa com zeros à esquerda até 14 dígitos.",
+          "- A máscara é aplicada até onde os dígitos vão, então um valor em digitação é mascarado progressivamente, e os dígitos além do 14º são descartados. `options.pad` primeiro completa com zeros à esquerda até 14 dígitos.",
           "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal).",
-          "- `options.pad` num valor sem dígitos (`\"\"`, `\"---\"`, `null`) continua retornando uma string vazia. Até a 2.4.0 retornava a máscara inteira de zeros. Mudou na 2.5.0 (#615)."
+          "- `options.pad` num valor sem dígitos (`\"\"`, `\"---\"`, `null`) continua retornando uma string vazia. Até a 2.4.0 `\"\"` e `\"---\"` retornavam a máscara inteira de zeros."
         ]
       },
       "references": [
@@ -59,7 +59,7 @@
         { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
         { "args": ["", { "pad": true }], "returns": "", "note": "changed in 2.5.0 (#615): should return an empty string for a value without digits even when padding; 2.4.0 returned the zero mask" },
         { "args": ["---", { "pad": true }], "returns": "", "note": "changed in 2.5.0 (#615): a value with no digits gives an empty string even with pad" },
-        { "args": [null, { "pad": true }], "returns": "", "note": "changed in 2.5.0 (#615): nullish input gives an empty string even with pad" },
+        { "args": [null, { "pad": true }], "returns": "", "note": "a null value gives an empty string even with pad (2.4.0 did the same)" },
         { "args": [-249859674386], "returns": "", "note": "JavaScript docs example: not a non-negative safe integer" }
       ]
     },
@@ -70,8 +70,8 @@
           "Validates a CAEPF: 14 digits, the 9-digit CPF base of the holder, a 3-digit sequence and 2 check digits.",
           "",
           "- Both check digits follow the CNPJ modulus 11. Then the resulting pair is shifted by 12, wrapping around 100.",
-          "- A base whose digits are all the same is rejected.",
-          "- The value may be a number or a string, masked as `000.000.000/000-00` or not.",
+          "- A value whose 12-digit base (the CPF base and the sequence) has all digits the same is rejected.",
+          "- The value may be a number or a string, unmasked or split into the printed groups (3, 3, 3, 3 and 2 digits) by any run of whitespace, `.`, `-` or `/` between two groups. Whitespace around the value is ignored. Anything else, such as another separator, a letter or a different grouping, is rejected.",
           "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number is invalid.",
           "- No official source publishes the check digit rule. Only the 14 positions and the 9-digit CPF base are official (SERPRO's documentation of the Receita Federal cadastro). The IN RFB 1.828/2018 has no check digit, and the eSocial only checks that the number exists in the Receita Federal base. The 3 + 2 split of the last 5 digits and the rule come from third-party reference implementations. They accept SERPRO's example `00000002500171`.",
           "- A number loses its leading zeros, so a value that starts with `0` is only accepted as a string."
@@ -80,8 +80,8 @@
           "Valida um CAEPF: 14 dígitos, com a base de 9 dígitos do CPF do titular, uma sequência de 3 dígitos e 2 dígitos verificadores.",
           "",
           "- Os dois dígitos verificadores seguem o módulo 11 do CNPJ. Depois, o par resultante é deslocado em 12, com volta ao chegar a 100.",
-          "- Uma base com todos os dígitos iguais é rejeitada.",
-          "- O valor pode ser um número ou uma string, com a máscara `000.000.000/000-00` ou sem ela.",
+          "- Um valor cuja base de 12 dígitos (a base do CPF e o número de ordem) tem todos os dígitos iguais é rejeitado.",
+          "- O valor pode ser um número ou uma string, sem máscara ou dividido nos grupos impressos (3, 3, 3, 3 e 2 dígitos) por qualquer sequência de espaços, `.`, `-` ou `/` entre dois grupos. Os espaços em volta do valor são ignorados. Qualquer outra forma, como outro separador, uma letra ou um agrupamento diferente, é rejeitada.",
           "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro é inválido.",
           "- Nenhuma fonte oficial publica a regra do dígito verificador. Só as 14 posições e a base de 9 dígitos do CPF são oficiais (documentação do SERPRO do cadastro da Receita Federal). A IN RFB 1.828/2018 não traz dígito verificador, e o eSocial só verifica se o número existe na base da Receita. A divisão 3 + 2 dos últimos 5 dígitos e a regra vêm de implementações de referência de terceiros. Elas aceitam o exemplo do SERPRO, `00000002500171`.",
           "- Um número perde os zeros à esquerda, então um valor que começa com `0` só é aceito como string."

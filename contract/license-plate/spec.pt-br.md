@@ -34,7 +34,7 @@ Placas de identificação veicular são as chapas dianteira e traseira fixadas n
 
 ## Regex
 
-- Entrada bruta (a máscara fica entre o terceiro caractere e os quatro últimos): `^[A-Za-z]{3}[\s.\-/]*[0-9A-Za-z]{4}$`
+- Entrada bruta (a máscara fica entre o terceiro caractere e os quatro últimos): `^\s*[A-Za-z]{3}[\s.\-/]*[0-9A-Za-z]{4}\s*$`
 - Apenas caracteres (padrão pré-Mercosul ou Mercosul): `^(?:[A-Z]{3}[0-9]{4}|[A-Z]{3}[0-9][A-Z][0-9]{2})$`
 
 ## Exemplos

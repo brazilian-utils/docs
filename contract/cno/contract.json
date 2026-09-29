@@ -19,16 +19,16 @@
         "en": [
           "Formats a CNO with the mask `00.000.00000/00` (the CEI numbering).",
           "",
-          "- Same rules as `cei.format`. `options.pad` first left-pads with zeros to 12 digits.",
+          "- Same rules as `cei.format`: the mask is applied as far as the digits go, and digits beyond the 12th are dropped. `options.pad` first left-pads with zeros to 12 digits.",
           "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped).",
-          "- `options.pad` on a value with no digits (`\"\"`, `\"---\"`, `null`) still gives an empty string. Until 2.4.0 it gave the whole zero mask. Changed in 2.5.0 (#615)."
+          "- `options.pad` on a value with no digits (`\"\"`, `\"---\"`, `null`) still gives an empty string. Until 2.4.0 `\"\"` and `\"---\"` gave the whole zero mask."
         ],
         "pt-BR": [
           "Formata um CNO com a máscara `00.000.00000/00` (a numeração do CEI).",
           "",
-          "- Mesmas regras de `cei.format`. `options.pad` primeiro completa com zeros à esquerda até 12 dígitos.",
+          "- Mesmas regras de `cei.format`: a máscara é aplicada até onde os dígitos vão, e os dígitos além do 12º são descartados. `options.pad` primeiro completa com zeros à esquerda até 12 dígitos.",
           "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal).",
-          "- `options.pad` num valor sem dígitos (`\"\"`, `\"---\"`, `null`) continua retornando uma string vazia. Até a 2.4.0 retornava a máscara inteira de zeros. Mudou na 2.5.0 (#615)."
+          "- `options.pad` num valor sem dígitos (`\"\"`, `\"---\"`, `null`) continua retornando uma string vazia. Até a 2.4.0 `\"\"` e `\"---\"` retornavam a máscara inteira de zeros."
         ]
       },
       "references": ["https://www.gov.br/receitafederal/pt-br/assuntos/orientacao-tributaria/cadastros/cno"],
@@ -55,7 +55,7 @@
         { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
         { "args": ["", { "pad": true }], "returns": "", "note": "changed in 2.5.0 (#615): should return an empty string for a value without digits even when padding; 2.4.0 returned the zero mask" },
         { "args": ["---", { "pad": true }], "returns": "", "note": "changed in 2.5.0 (#615): a value with no digits gives an empty string even with pad" },
-        { "args": [null, { "pad": true }], "returns": "", "note": "changed in 2.5.0 (#615): nullish input gives an empty string even with pad" },
+        { "args": [null, { "pad": true }], "returns": "", "note": "a null value gives an empty string even with pad (2.4.0 did the same)" },
         { "args": [-249859674386], "returns": "", "note": "JavaScript docs example: not a non-negative safe integer" },
         { "args": ["979"], "returns": "97.9", "note": "JavaScript docs example: no padding by default" }
       ]

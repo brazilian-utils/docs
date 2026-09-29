@@ -22,8 +22,7 @@
           "- The mask is progressive: a partial value is masked as far as it goes. Characters that are not digits are dropped, and digits after the 9th are ignored.",
           "- `options.pad` first left-pads the value with zeros to 9 digits.",
           "- An 8-digit value is a number whose sector lost its leading zero. Without `pad`, the mask groups it one position early (`10001018` gives `10.0010.18`). Use `{ pad: true }` to get the correct mask (`01.0001.018`).",
-          "- A number is read only when it is a non-negative safe integer. A negative, fractional, not finite or unsafe number returns an empty string.",
-          "- A value with no digits (empty, or only letters and symbols) returns an empty string, even with `pad`. Until 2.4.0 `pad` returned the full zero mask (`00.0000.000`) for it."
+          "- A number is read only when it is a non-negative safe integer. A negative, fractional, not finite or unsafe number returns an empty string."
         ],
         "pt-BR": [
           "Formata uma Inscrição SUFRAMA com a máscara `00.0000.000`. Só a estrutura muda (use `suframa.isValid` para verificar o número).",
@@ -31,8 +30,7 @@
           "- A máscara é progressiva: um valor parcial é formatado até onde vai. Caracteres que não são dígitos são descartados, e dígitos depois do 9º são ignorados.",
           "- `options.pad` primeiro completa o valor com zeros à esquerda até 9 dígitos.",
           "- Um valor de 8 dígitos é um número cujo setor perdeu o zero à esquerda. Sem `pad`, a máscara agrupa uma posição antes (`10001018` dá `10.0010.18`). Use `{ pad: true }` para obter a máscara correta (`01.0001.018`).",
-          "- Um número só é lido quando é um inteiro seguro não negativo. Um número negativo, fracionário, não finito ou inseguro retorna uma string vazia.",
-          "- Um valor sem dígitos (vazio, ou só letras e símbolos) retorna uma string vazia, mesmo com `pad`. Até a 2.4.0, `pad` retornava a máscara inteira de zeros (`00.0000.000`) para ele."
+          "- Um número só é lido quando é um inteiro seguro não negativo. Um número negativo, fracionário, não finito ou inseguro retorna uma string vazia."
         ]
       },
       "references": ["https://www.confaz.fazenda.gov.br/legislacao/arquivo-manuais/moc7-visao-geral.pdf"],
@@ -66,7 +64,7 @@
         { "args": [1.5], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" },
         { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" },
         { "args": [-101234567, { "pad": true }], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" },
-        { "args": ["", { "pad": true }], "returns": "", "note": "changed in 2.5.0 (#615): a value with no digits gives an empty string even with pad. 2.4.0 returned 00.0000.000. JavaScript's own test: should return an empty string for a value without digits" },
+        { "args": ["", { "pad": true }], "returns": "", "note": "a value with no digits gives an empty string even with pad. JavaScript's own test: should return an empty string for a value without digits" },
         { "args": ["abc", { "pad": true }], "returns": "", "note": "a value with letters only has no digits" }
       ]
     },
@@ -109,7 +107,7 @@
           "- The NF-e field is numeric, with 8 or 9 positions. The sector `SS` can start with 0, and the number then loses that zero and has 8 digits. The sector can never be `00`.",
           "- An 8-digit value is validated with the zero put back on the left. So an 8-digit value that starts with 0 is rejected, because it becomes sector `00`. The NF-e manual only says that `SS` can start with 0: this reading of 8 digits is an inference of the library.",
           "- Check digit: modulus 11 over the first 8 digits, weights 2 to 9 from right to left. The digit is 0 when the remainder is 0 or 1.",
-          "- Accepts the mask characters whitespace, `.`, `-` and `/`, alone or in a run, between the fields of `SS.NNNN.LLD` (the check digit included, as in `20.5678.10-6`), and surrounding whitespace. Any other character, or a separator inside a field, makes the value invalid. Until 2.4.0 the library also accepted `(`, `)`, `,` and `*`.",
+          "- Accepts the mask characters whitespace, `.`, `-` and `/`, alone or in a run, between the fields of `SS.NNNN.LLD` (the check digit included, as in `20.5678.10-6`), and surrounding whitespace. Any other character, or a separator inside a field, makes the value invalid.",
           "- Sector and locality are not checked against a table: there is no complete official list. For that reason there is no `getSuframaInfo`.",
           "- Rule E18-30 of the NF-e (recipient in AC, AM, RO, RR or Macapá/Santana-AP) is out of scope.",
           "- The rule comes from the NF-e Manual de Orientação do Contribuinte (MOC 7.0, section 8.4, and field E18 `ISUF`, rule E18-20, rejection 235). SUFRAMA itself publishes no layout and no check digit.",
@@ -121,7 +119,7 @@
           "- O campo da NF-e é numérico, com 8 ou 9 posições. O setor `SS` pode começar com 0, e aí o número perde esse zero e fica com 8 dígitos. O setor nunca pode ser `00`.",
           "- Um valor de 8 dígitos é validado com o zero recolocado à esquerda. Por isso um valor de 8 dígitos que começa com 0 é rejeitado: vira setor `00`. O manual da NF-e só diz que `SS` pode começar com 0: essa leitura dos 8 dígitos é inferência da biblioteca.",
           "- Dígito verificador: módulo 11 sobre os 8 primeiros dígitos, pesos 2 a 9 da direita para a esquerda. O dígito é 0 quando o resto é 0 ou 1.",
-          "- Aceita como máscara espaço em branco, `.`, `-` e `/`, sozinhos ou em sequência, entre os campos de `SS.NNNN.LLD` (dígito verificador incluído, como em `20.5678.10-6`), e espaço em branco em volta. Qualquer outro caractere, ou um separador dentro de um campo, torna o valor inválido. Até a 2.4.0 a biblioteca também aceitava `(`, `)`, `,` e `*`.",
+          "- Aceita como máscara espaço em branco, `.`, `-` e `/`, sozinhos ou em sequência, entre os campos de `SS.NNNN.LLD` (dígito verificador incluído, como em `20.5678.10-6`), e espaço em branco em volta. Qualquer outro caractere, ou um separador dentro de um campo, torna o valor inválido.",
           "- Setor e localidade não são validados contra tabela: não existe lista oficial exaustiva. Por isso não há `getSuframaInfo`.",
           "- A regra E18-30 da NF-e (destinatário em AC, AM, RO, RR ou Macapá/Santana-AP) fica fora do escopo.",
           "- A regra vem do Manual de Orientação do Contribuinte da NF-e (MOC 7.0, seção 8.4, e campo E18 `ISUF`, regra E18-20, rejeição 235). A própria SUFRAMA não publica leiaute nem dígito verificador.",
@@ -166,9 +164,9 @@
         { "args": ["100000010"], "returns": true, "note": "JavaScript's own test: when the remainder is 0 and the check digit is 0" },
         { "args": ["600001300"], "returns": true, "note": "JavaScript's own test: when the remainder is 1 and the check digit is 0" },
         { "args": ["100000061"], "returns": true, "note": "JavaScript's own test: when the remainder is 10 and the check digit is 1" },
-        { "args": ["(12)3456789"], "returns": false, "note": "changed in 2.5.0 (#615): parentheses are not mask characters. JavaScript's own test: when it contains letters or special characters" },
-        { "args": ["12,3456,789"], "returns": false, "note": "changed in 2.5.0 (#615): the comma is not a mask character. JavaScript's own test: when it contains letters or special characters" },
-        { "args": ["12*3456*789"], "returns": false, "note": "changed in 2.5.0 (#615): the asterisk is not a mask character. JavaScript's own test: when it contains letters or special characters" },
+        { "args": ["(12)3456789"], "returns": false, "note": "parentheses are not mask characters. JavaScript's own test: when it contains letters or special characters" },
+        { "args": ["12,3456,789"], "returns": false, "note": "the comma is not a mask character. JavaScript's own test: when it contains letters or special characters" },
+        { "args": ["12*3456*789"], "returns": false, "note": "the asterisk is not a mask character. JavaScript's own test: when it contains letters or special characters" },
         { "args": ["1.23456789"], "returns": false, "note": "JavaScript's own test: when a separator sits inside a field or before or after the value" },
         { "args": ["123.456.789"], "returns": false, "note": "JavaScript's own test: when a separator sits inside a field or before or after the value" },
         { "args": ["-123456789"], "returns": false, "note": "JavaScript's own test: when a separator sits inside a field or before or after the value" },

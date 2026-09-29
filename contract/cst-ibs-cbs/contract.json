@@ -76,16 +76,16 @@
           "",
           "- Accepts a string of bare digits, with optional surrounding whitespace, or a non-negative integer. A value shorter than 3 digits is left-padded with zeros: `10` and `\"10\"` are the code `010`.",
           "- Any other string is rejected (`\"cst200\"`, `\"2.00\"`). The function does not pick out its digits. A negative or fractional number is invalid.",
-          "- The table published on 2026-06-23 has 18 codes. CST 220 stays valid, although its classifications were closed.",
-          "- The IBS and the CBS share this table. It is separate from `cst.isValid` because its 3-digit codes collide with the ICMS CST, and adding them to the default of `cst.isValid` would change its result. `cst.isValid` did not change."
+          "- The table published on 2026-06-23 has 18 codes: 000, 010, 011, 200, 220, 221, 222, 400, 410, 510, 515, 550, 620, 800, 810, 811, 820 and 830. CST 220 stays valid, although its classifications were excluded (see `classTrib.isValid`).",
+          "- The IBS and the CBS share this table. It is separate from `cst.isValid` because its 3-digit codes collide with the ICMS CST, and `cst.isValid` without a `tax` accepts a code of any table, so adding these codes would change what that default accepts."
         ],
         "pt-BR": [
           "Verifica se um CST-IBS/CBS (Código de Situação Tributária do IBS e da CBS) existe na tabela oficial. É a verificação da rejeição 1020 da NF-e.",
           "",
           "- Aceita uma string só de dígitos, com espaços opcionais nas extremidades, ou um inteiro não negativo. Um valor com menos de 3 dígitos é completado com zeros à esquerda: `10` e `\"10\"` são o código `010`.",
           "- Qualquer outra string é rejeitada (`\"cst200\"`, `\"2.00\"`). A função não extrai os dígitos dela. Um número negativo ou fracionário é inválido.",
-          "- A tabela publicada em 23/06/2026 tem 18 códigos. O CST 220 continua válido, embora as suas classificações tenham sido encerradas.",
-          "- O IBS e a CBS usam a mesma tabela. Ela fica separada de `cst.isValid` porque os seus códigos de 3 dígitos colidem com o CST do ICMS, e incluí-los no padrão de `cst.isValid` mudaria o resultado dessa função. `cst.isValid` não mudou."
+          "- A tabela publicada em 23/06/2026 tem 18 códigos: 000, 010, 011, 200, 220, 221, 222, 400, 410, 510, 515, 550, 620, 800, 810, 811, 820 e 830. O CST 220 continua válido, embora as suas classificações tenham sido excluídas (veja `classTrib.isValid`).",
+          "- O IBS e a CBS usam a mesma tabela. Ela fica separada de `cst.isValid` porque os seus códigos de 3 dígitos colidem com o CST do ICMS, e `cst.isValid` sem `tax` aceita um código de qualquer tabela, então incluir esses códigos mudaria o que esse padrão aceita."
         ]
       },
       "references": [

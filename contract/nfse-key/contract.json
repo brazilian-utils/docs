@@ -20,7 +20,7 @@
           "Parses a national NFS-e access key into its fields. It accepts the same input as `nfseKey.isValid` and returns null exactly when that function returns false.",
           "",
           "- The separators between fields are accepted as in `nfseKey.isValid`. The `NFS` prefix must touch the key. Only a string is read: any other type returns null.",
-          "- Fields: municipality code (7 digits), state (from the first 2 digits of the municipality code), generator environment (1 municipality, 2 Sistema Nacional NFS-e), tax id type (`cpf` or `cnpj`), tax id, NFS-e number, year, month, numeric code and check digit.",
+          "- Fields: `municipalityCode` (7 digits, a string), `stateCode` (the 2-letter UF read from the first 2 digits of the municipality code), `generatorEnvironment` (1 municipality, 2 Sistema Nacional NFS-e), `taxIdType` (`cpf` or `cnpj`), `taxId`, `number` (the NFS-e number, a number from 1 to 9999999999999), `year`, `month` (1 to 12), `code` (the numeric code, a string) and `checkDigit` (a number).",
           "- The tax id is the 11-digit CPF without the `000` padding of the key, or the 14-character CNPJ, numeric or alphanumeric, in upper case.",
           "- The year is 2000 plus the 2 digits of the key. The numeric code keeps its 9 digits, leading zeros included."
         ],
@@ -28,7 +28,7 @@
           "Decompõe a chave de acesso de uma NFS-e nacional em seus campos. Aceita a mesma entrada que `nfseKey.isValid` e retorna null exatamente quando essa função retorna false.",
           "",
           "- Os separadores entre campos são aceitos como em `nfseKey.isValid`. O prefixo `NFS` deve encostar na chave. Só uma string é lida: qualquer outro tipo retorna null.",
-          "- Campos: código do município (7 dígitos), UF (a partir dos 2 primeiros dígitos do código do município), ambiente gerador (1 prefeitura, 2 Sistema Nacional NFS-e), tipo de inscrição (`cpf` ou `cnpj`), inscrição federal, número da NFS-e, ano, mês, código numérico e dígito verificador.",
+          "- Campos: `municipalityCode` (7 dígitos, uma string), `stateCode` (a sigla da UF lida dos 2 primeiros dígitos do código do município), `generatorEnvironment` (1 prefeitura, 2 Sistema Nacional NFS-e), `taxIdType` (`cpf` ou `cnpj`), `taxId`, `number` (o número da NFS-e, um número de 1 a 9999999999999), `year`, `month` (1 a 12), `code` (o código numérico, uma string) e `checkDigit` (um número).",
           "- A inscrição é o CPF de 11 dígitos, sem o preenchimento `000` da chave, ou o CNPJ de 14 caracteres, numérico ou alfanumérico, em maiúsculas.",
           "- O ano é 2000 mais os 2 dígitos da chave. O código numérico mantém os seus 9 dígitos, com os zeros à esquerda."
         ]
@@ -190,7 +190,7 @@
             "code": "135792468",
             "checkDigit": 3
           },
-          "note": "changed in 2.5.0 (#615): a mask between the fields is accepted (2.4.0: null). JavaScript's own test: should read a key split at the boundaries of its fields, as isValidNfseKey does"
+          "note": "a mask between the fields is accepted. JavaScript's own test: should read a key split at the boundaries of its fields, as isValidNfseKey does"
         },
         { "args": ["35503082258716523000119000000000001226011357924684"], "returns": null, "note": "JavaScript's own test: should return null when the check digit does not match" },
         { "args": ["99503082258716523000119000000000001226011357924680"], "returns": null, "note": "JavaScript's own test: should return null when the municipality code does not start with an IBGE UF code, even with a matching check digit" },
@@ -218,33 +218,35 @@
           "Validates the 50-digit access key of a national NFS-e: municipality code (7), generator environment `ambGer` (1), tax id type (1), tax id (14), NFS-e number `nNFSe` (13), year and month `AAMM` (4), numeric code (9) and check digit (1).",
           "",
           "- The key may start with `NFS`, the prefix of the XML `Id` attribute, in any case. Surrounding whitespace is ignored.",
-          "- The DANFSe prints the key as a single block, so it has no printed mask (there is no `nfseKey.format`). The 8 fields (municipality code, `ambGer`, tax id type, tax id, `nNFSe`, `AAMM`, numeric code and check digit) may be written apart: any run of whitespace, `.`, `-` or `/` is accepted between two fields, as `cpf.isValid` reads its mask. A separator inside a field, or between the `NFS` prefix and the key, makes the value invalid. Until 2.4.0 any separator made the key invalid.",
+          "- The DANFSe prints the key as a single block, so it has no printed mask (there is no `nfseKey.format`). The 8 fields (municipality code, `ambGer`, tax id type, tax id, `nNFSe`, `AAMM`, numeric code and check digit) may be written apart: any run of whitespace, `.`, `-` or `/` is accepted between two fields, as `cpf.isValid` reads its mask. A separator inside a field, or between the `NFS` prefix and the key, makes the value invalid.",
           "- Only a string is read. Any other type returns false.",
           "- The municipality code must start with an IBGE state code. The function checks only that prefix and does not look the municipality up.",
           "- `ambGer` must be 1 (municipality system) or 2 (Sistema Nacional NFS-e).",
           "- Tax id type 1 is a CPF, left-padded with `000`. Type 2 is a CNPJ. The CPF or CNPJ must have valid check digits of its own.",
-          "- An alphanumeric CNPJ is accepted with type 2, as `cnpj.isValid` with version 2 reads it: letters only in the 14 tax id positions, in any case. The alphanumeric schema comes from the restricted-production (RTC) package of 2026-07-27. The production XSD still types the key as digits only.",
-          "- The official `TSChaveNFSe` pattern puts the letter window at positions 7 to 20. That matches neither the key layout nor `TSIdNFSe` (positions 10 to 23). The function follows the key layout.",
+          "- An alphanumeric CNPJ is accepted with type 2, as `cnpj.isValid` with version 2 reads it: letters only in the 14 tax id positions, in any case. The alphanumeric schema comes from the restricted-production (RTC) package of 2026-07-27. The service has handled the alphanumeric CNPJ in production since 2026-08-10, while the production XSD of 2026-02-09 still types the key as digits only.",
+          "- The letters of an alphanumeric CNPJ stand in the 14 positions of the tax id (10 to 23 of the key), as `TSIdNFSe` of the schema bundle of 2026-07-27 types them.",
           "- The NFS-e number cannot be all zeros. The month must be 01 to 12.",
           "- The check digit is a modulus 11 over the first 49 characters, weights 2 to 9 from the right. A remainder of 0 or 1 gives 0. A letter counts as its ASCII code minus 48 (`A` is 17), by analogy with NT Conjunta 2025.001.",
-          "- No official document states the weights or the remainder rule; the documents only say \"módulo 11\". The rule was confirmed with 115 real keys.",
-          "- The example key in item 9.1 of the Guia do Emissor v1.2 is not valid: its check digit does not match and its CNPJ is invalid."
+          "- No official document states the weights or the remainder rule; the documents only say \"módulo 11\". The rule was confirmed against more than a hundred NFS-e keys from public repositories, from both environments, with remainders 0, 1 and 10 among them.",
+          "- The example key in item 9.1 of the Guia do Emissor v1.2 is not valid: its check digit does not match and its CNPJ is invalid.",
+          "- The keys of the municipal NFS-e models that are not the national standard are out of scope, and so is the 44-digit DF-e key (use `nfeKey.isValid`)."
         ],
         "pt-BR": [
           "Valida a chave de acesso de 50 dígitos de uma NFS-e nacional: código do município (7), ambiente gerador `ambGer` (1), tipo de inscrição (1), inscrição federal (14), número da NFS-e `nNFSe` (13), ano e mês `AAMM` (4), código numérico (9) e dígito verificador (1).",
           "",
           "- A chave pode começar com `NFS`, o prefixo do atributo `Id` do XML, em qualquer caixa. Espaços nas extremidades são ignorados.",
-          "- O DANFSe imprime a chave em um único bloco, então ela não tem máscara impressa (não existe `nfseKey.format`). Os 8 campos (código do município, `ambGer`, tipo de inscrição, inscrição federal, `nNFSe`, `AAMM`, código numérico e dígito verificador) podem ser escritos separados: qualquer sequência de espaço, `.`, `-` ou `/` é aceita entre dois campos, como `cpf.isValid` lê sua máscara. Um separador dentro de um campo, ou entre o prefixo `NFS` e a chave, torna o valor inválido. Até a 2.4.0 qualquer separador invalidava a chave.",
+          "- O DANFSe imprime a chave em um único bloco, então ela não tem máscara impressa (não existe `nfseKey.format`). Os 8 campos (código do município, `ambGer`, tipo de inscrição, inscrição federal, `nNFSe`, `AAMM`, código numérico e dígito verificador) podem ser escritos separados: qualquer sequência de espaço, `.`, `-` ou `/` é aceita entre dois campos, como `cpf.isValid` lê sua máscara. Um separador dentro de um campo, ou entre o prefixo `NFS` e a chave, torna o valor inválido.",
           "- Só uma string é lida. Qualquer outro tipo retorna false.",
           "- O código do município deve começar com um código de UF do IBGE. A função confere só esse prefixo e não consulta o município.",
           "- O `ambGer` deve ser 1 (sistema da prefeitura) ou 2 (Sistema Nacional NFS-e).",
           "- Tipo de inscrição 1 é um CPF, completado com `000` à esquerda. Tipo 2 é um CNPJ. O CPF ou o CNPJ precisa ter os próprios dígitos verificadores válidos.",
-          "- Um CNPJ alfanumérico é aceito com tipo 2, como `cnpj.isValid` com version 2 o lê: letras só nas 14 posições da inscrição, em qualquer caixa. O schema alfanumérico vem do pacote de produção restrita (RTC) de 27/07/2026. O XSD de produção ainda define a chave só com dígitos.",
-          "- O padrão oficial `TSChaveNFSe` põe a janela de letras nas posições 7 a 20. Isso não bate com a estrutura da chave nem com o `TSIdNFSe` (posições 10 a 23). A função segue a estrutura da chave.",
+          "- Um CNPJ alfanumérico é aceito com tipo 2, como `cnpj.isValid` com version 2 o lê: letras só nas 14 posições da inscrição, em qualquer caixa. O schema alfanumérico vem do pacote de produção restrita (RTC) de 27/07/2026. O serviço trata o CNPJ alfanumérico em produção desde 10/08/2026, enquanto o XSD de produção de 09/02/2026 ainda define a chave só com dígitos.",
+          "- As letras de um CNPJ alfanumérico ficam nas 14 posições da inscrição federal (10 a 23 da chave), como o `TSIdNFSe` do pacote de schemas de 27/07/2026 as define.",
           "- O número da NFS-e não pode ser todo zero. O mês deve estar entre 01 e 12.",
           "- O dígito verificador é um módulo 11 sobre os 49 primeiros caracteres, pesos de 2 a 9 a partir da direita. Resto 0 ou 1 dá 0. Uma letra vale o seu código ASCII menos 48 (`A` vale 17), por analogia com a NT Conjunta 2025.001.",
-          "- Nenhum documento oficial fixa os pesos nem a regra do resto; os documentos só dizem \"módulo 11\". A regra foi confirmada com 115 chaves reais.",
-          "- A chave de exemplo do item 9.1 do Guia do Emissor v1.2 não é válida: o dígito verificador não fecha e o CNPJ é inválido."
+          "- Nenhum documento oficial fixa os pesos nem a regra do resto; os documentos só dizem \"módulo 11\". A regra foi confirmada com mais de cem chaves de NFS-e de repositórios públicos, dos dois ambientes, com restos 0, 1 e 10 entre elas.",
+          "- A chave de exemplo do item 9.1 do Guia do Emissor v1.2 não é válida: o dígito verificador não fecha e o CNPJ é inválido.",
+          "- As chaves dos modelos municipais de NFS-e que não são o padrão nacional ficam fora do escopo, assim como a chave de 44 dígitos de DF-e (use `nfeKey.isValid`)."
         ]
       },
       "references": [
@@ -270,8 +272,8 @@
         { "args": ["35503082258716523000119000000000001226011357924684"], "returns": false, "note": "JavaScript's own test: should return false when the check digit does not match" },
         { "args": ["3550308225871652300011900000000000122601135792468"], "returns": false, "note": "JavaScript's own test: should return false when it does not have 50 digits" },
         { "args": ["355030822587165230001190000000000012260113579246833"], "returns": false, "note": "JavaScript's own test: should return false when it does not have 50 digits" },
-        { "args": ["3550308 2 2 58716523000119 0000000000012 2601 135792468 3"], "returns": true, "note": "changed in 2.5.0 (#615): a mask between the fields is accepted (2.4.0: false). JavaScript's own test: should accept the mask characters isValidCpf reads at the boundaries of its fields" },
-        { "args": ["3550308.2.2.58716523000119.0000000000012.2601.135792468-3"], "returns": true, "note": "changed in 2.5.0 (#615): a mask between the fields is accepted (2.4.0: false). JavaScript's own test: should accept the mask characters isValidCpf reads at the boundaries of its fields" },
+        { "args": ["3550308 2 2 58716523000119 0000000000012 2601 135792468 3"], "returns": true, "note": "a mask between the fields is accepted. JavaScript's own test: should accept the mask characters isValidCpf reads at the boundaries of its fields" },
+        { "args": ["3550308.2.2.58716523000119.0000000000012.2601.135792468-3"], "returns": true, "note": "a mask between the fields is accepted. JavaScript's own test: should accept the mask characters isValidCpf reads at the boundaries of its fields" },
         { "args": ["35170458716523000119550010000000121000123458"], "returns": false, "note": "JavaScript's own test: should return false for the 44 digit key of an NF-e" },
         { "name": "guia-do-emissor-example", "args": ["31062001251235800000112230000000173023019580208160"], "returns": false, "note": "JavaScript's own test: should return false for the example of the Guia do Emissor Público Nacional Web v1.2, item 9.1, an illustrative key whose check digit does not match and whose issuer CNPJ 51235800000112 is not valid either" },
         { "args": ["35503082258716523000119000000000001226131357924684"], "returns": false, "note": "JavaScript's own test: should return false when the month is 13, even with a matching check digit" },

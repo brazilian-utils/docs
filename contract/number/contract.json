@@ -22,7 +22,9 @@
           "- Accepts integers from -999 999 999 999 999 to 999 999 999 999 999. The function truncates a non-integer toward zero and puts \"menos\" before a negative number.",
           "- `options.gender` (`\"masculine\"` by default, or `\"feminine\"`) agrees \"um/uma\", \"dois/duas\" and the hundreds (\"duzentos/duzentas\") with the noun the number qualifies.",
           "- The last group takes an \"e\" before it only when it is below 100 or a round hundred: 1200 is \"mil e duzentos\" and 1100 is \"mil e cem\", while 1235 is \"mil duzentos e trinta e cinco\" and 1101 is \"mil cento e um\".",
-          "- Returns an empty string for a value outside that range or not finite."
+          "- Returns an empty string for a value outside that range, not finite, or not a number.",
+          "- Zero is \"zero\", and so is any value that truncates to 0 (`-0.5`, never \"menos zero\"). The result is always lower case.",
+          "- With `\"feminine\"`, only the thousands group and the last group change (2000 is \"duas mil\", 21 is \"vinte e uma\"). The multiplier of \"milhão\", \"bilhão\" and \"trilhão\" stays masculine (2 000 000 is \"dois milhões\")."
         ],
         "pt-BR": [
           "Escreve um inteiro por extenso em português, como número cardinal. Por exemplo, 1235 é \"mil duzentos e trinta e cinco\".",
@@ -30,7 +32,9 @@
           "- Aceita inteiros de -999 999 999 999 999 a 999 999 999 999 999. A função trunca um não inteiro em direção a zero e coloca \"menos\" antes de um número negativo.",
           "- `options.gender` (`\"masculine\"` por padrão, ou `\"feminine\"`) faz \"um/uma\", \"dois/duas\" e as centenas (\"duzentos/duzentas\") concordarem com o substantivo que o número qualifica.",
           "- O último grupo leva um \"e\" antes dele só quando é menor que 100 ou uma centena redonda: 1200 é \"mil e duzentos\" e 1100 é \"mil e cem\", enquanto 1235 é \"mil duzentos e trinta e cinco\" e 1101 é \"mil cento e um\".",
-          "- Retorna uma string vazia para um valor fora desse intervalo ou não finito."
+          "- Retorna uma string vazia para um valor fora desse intervalo, não finito ou que não é número.",
+          "- Zero é \"zero\", e também qualquer valor que trunca para 0 (`-0.5`, nunca \"menos zero\"). O resultado é sempre em minúsculas.",
+          "- Com `\"feminine\"`, só o grupo dos milhares e o último grupo mudam (2000 é \"duas mil\", 21 é \"vinte e uma\"). O multiplicador de \"milhão\", \"bilhão\" e \"trilhão\" continua no masculino (2 000 000 é \"dois milhões\")."
         ]
       },
       "flatName": "convertNumberToWords",

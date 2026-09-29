@@ -215,12 +215,14 @@
           "Removes CBO formatting and keeps only digits, capped at 6 digits.",
           "",
           "- It does not left-pad anything. A leading zero must be written out.",
+          "- Returns an empty string when there is no digit at all (null and undefined included).",
           "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
         ],
         "pt-BR": [
           "Remove a formatação do CBO e mantém somente os dígitos, limitados a 6 dígitos.",
           "",
           "- Não completa nada com zeros à esquerda. Um zero à esquerda precisa estar escrito.",
+          "- Retorna uma string vazia quando não há nenhum dígito (null e undefined incluídos).",
           "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
         ]
       },

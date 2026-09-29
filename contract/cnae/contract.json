@@ -16,16 +16,18 @@
         "en": [
           "Formats a CNAE subclass code with the mask `NNNN-N/NN`. Only the structure changes (use `cnae.isValid` to check the code).",
           "",
-          "- The mask is applied as far as the digits go. `options.pad` first left-pads with zeros to 7 digits.",
-          "- Characters other than digits are dropped.",
+          "- The mask is applied as far as the digits go, which is what an input being typed into needs.",
+          "- `options.pad` (default false) first left-pads the value with zeros to 7 digits. A number is treated as the string of its digits, so it is padded only with `pad`.",
+          "- A string is read for its digits: other characters are dropped and digits after the last one of the mask are ignored.",
           "- Returns an empty string when there is no digit at all, also with `pad`. null and undefined give an empty string too. Until 2.4.0 `pad` turned an empty value into the zero mask (`0000-0/00`).",
           "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
         ],
         "pt-BR": [
           "Formata um código de subclasse CNAE com a máscara `NNNN-N/NN`. Só a estrutura muda (use `cnae.isValid` para verificar o código).",
           "",
-          "- A máscara é aplicada até onde os dígitos vão. `options.pad` primeiro completa com zeros à esquerda até 7 dígitos.",
-          "- Caracteres que não são dígitos são descartados.",
+          "- A máscara é aplicada até onde os dígitos vão, o que serve a um campo em digitação.",
+          "- `options.pad` (padrão false) primeiro completa o valor com zeros à esquerda até 7 dígitos. Um número é tratado como a string dos seus dígitos, então só é completado com `pad`.",
+          "- Uma string é lida pelos seus dígitos: os outros caracteres são descartados e dígitos depois do último da máscara são ignorados.",
           "- Retorna uma string vazia quando não há nenhum dígito, também com `pad`. null e undefined também dão string vazia. Até a 2.4.0 o `pad` transformava um valor vazio na máscara de zeros (`0000-0/00`).",
           "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
         ]
@@ -179,12 +181,14 @@
           "Removes CNAE formatting and keeps only digits, capped at 7 digits.",
           "",
           "- It does not left-pad anything. A partial code stays as written.",
+          "- Returns an empty string when there is no digit at all (null and undefined included).",
           "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
         ],
         "pt-BR": [
           "Remove a formatação do CNAE e mantém somente os dígitos, limitados a 7 dígitos.",
           "",
           "- Não completa nada com zeros à esquerda. Um código parcial fica como está escrito.",
+          "- Retorna uma string vazia quando não há nenhum dígito (null e undefined incluídos).",
           "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
         ]
       },

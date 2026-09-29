@@ -25,8 +25,8 @@
           "- The mask hides by position. A voter ID given as a number has lost its leading zeros, so pass `pad` together with `obfuscate` for it.",
           "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number).",
           "- Pending decision (findings §2 #2, #3): the reference (JS) formats only the characters an incomplete value has and returns an empty string for empty or invalid input. Other libraries return null.",
-          "- A value with no digits (empty, or only letters and symbols) returns an empty string, even with `pad`. Until 2.4.0 `pad` returned the full zero mask (`0000 0000 00 00`) for it.",
-          "- `options.obfuscate` is read for truthiness: a non-boolean such as `1` hides the digits too, and `0` does not. `options.pad` and `options.obfuscate` can be combined (`123450159` gives `***1 2345 01 **`)."
+          "- A value with no digits (empty, or only letters and symbols) returns an empty string, even with `pad`.",
+          "- `options.obfuscate` is applied after `pad`, and is read for truthiness like `pad`: a non-boolean such as `1` hides the digits too, and `0` does not. The two can be combined (`123450159` gives `***1 2345 01 **`)."
         ],
         "pt-BR": [
           "Formata um título de eleitor com o agrupamento `0000 0000 00 00`.",
@@ -38,8 +38,8 @@
           "- A máscara oculta por posição. Um título passado como número perdeu os zeros à esquerda, então passe `pad` junto com `obfuscate` nesse caso.",
           "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número).",
           "- Decisão pendente (findings §2 #2, #3): a referência (JS) formata só os caracteres que um valor incompleto tem e retorna uma string vazia para entrada vazia ou inválida. Outras bibliotecas retornam null.",
-          "- Um valor sem dígitos (vazio, ou só letras e símbolos) retorna uma string vazia, mesmo com `pad`. Até a 2.4.0, `pad` retornava a máscara inteira de zeros (`0000 0000 00 00`) para ele.",
-          "- `options.obfuscate` é lido como verdadeiro ou falso: um não booleano como `1` também oculta os dígitos, e `0` não oculta. `options.pad` e `options.obfuscate` podem ser combinados (`123450159` dá `***1 2345 01 **`)."
+          "- Um valor sem dígitos (vazio, ou só letras e símbolos) retorna uma string vazia, mesmo com `pad`.",
+          "- `options.obfuscate` é aplicado depois de `pad`, e é lido como verdadeiro ou falso, como `pad`: um não booleano como `1` também oculta os dígitos, e `0` não oculta. Os dois podem ser combinados (`123450159` dá `***1 2345 01 **`)."
         ]
       },
       "references": [
@@ -91,12 +91,12 @@
         { "args": ["123456780124", { "pad": true }], "returns": "1234 5678 01 24", "note": "JavaScript's own test: should restore the leading zeros of a voter id issued without them when pad is true" },
         { "args": ["123450159", { "pad": true, "obfuscate": true }], "returns": "***1 2345 01 **", "note": "JavaScript's own test: should restore the leading zeros of a voter id issued without them when pad is true" },
         { "args": ["123450159", { "pad": false }], "returns": "1234 5015 9", "note": "JavaScript's own test: should restore the leading zeros of a voter id issued without them when pad is true" },
-        { "args": ["123450159"], "returns": "1234 5015 9", "note": "JavaScript's own test: without pad a shorter value is formatted from the left, as a partial value" },
-        { "args": [123450159, { "obfuscate": true }], "returns": "***4 5015 9", "note": "the mask hides by position: without pad a number that lost its leading zeros shows the wrong digits (the #593 note asks for pad)" },
+        { "args": ["123450159"], "returns": "1234 5015 9", "note": "JavaScript docs example" },
+        { "args": [123450159, { "obfuscate": true }], "returns": "***4 5015 9", "note": "the mask hides by position: without pad a number that lost its leading zeros shows the wrong digits" },
         { "args": [-123456780124], "returns": "", "note": "changed in 2.5.0 (#593): a negative number is not a safe non-negative integer. 2.4.0 returned \"1234 5678 01 24\". JavaScript's own test: when it is a negative, fractional or unsafe number" },
         { "args": [1.5], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" },
         { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number (2^53)" },
-        { "args": ["", { "pad": true }], "returns": "", "note": "changed in 2.5.0 (#615): a value with no digits gives an empty string even with pad. 2.4.0 returned 0000 0000 00 00. JavaScript's own test: should return an empty string for a value without digits even when padding" },
+        { "args": ["", { "pad": true }], "returns": "", "note": "JavaScript's own test: should return an empty string for a value without digits even when padding" },
         { "args": ["abc", { "pad": true }], "returns": "", "note": "JavaScript's own test: should return an empty string for a value without digits even when padding" },
         { "args": ["123456780175"], "returns": "1234 5678 01 75", "note": "JavaScript docs example" }
       ]
@@ -110,12 +110,16 @@
         "en": [
           "Generates a valid random voter ID: 12 digits, unformatted, with the leading zeros of the sequential number kept.",
           "",
-          "- `state` (a state code, or `ZZ` for a voter ID issued abroad) sets the UF code. Letter case and surrounding whitespace are ignored (`\" sp \"` is `SP`); 2.4.0 read a lowercase code as unknown. An unknown value falls back to `ZZ` (UF `28`)."
+          "- `state` (a state code, or `ZZ` for a voter ID issued abroad) sets the UF code. Letter case and surrounding whitespace are ignored (`\" sp \"` is `SP`); 2.4.0 read a lowercase code as unknown. An unknown value falls back to `ZZ` (UF `28`).",
+          "- The result always has 12 digits. The same ID without the leading zeros of its sequential number is valid too (`voterId.isValid` reads it).",
+          "- A value that is not a string also falls back to `ZZ`; the function never throws for `state`."
         ],
         "pt-BR": [
           "Gera um título de eleitor aleatório e válido: 12 dígitos, sem máscara, com os zeros à esquerda do número sequencial mantidos.",
           "",
-          "- `state` (um código de estado, ou `ZZ` para um título emitido no exterior) define o código da UF. Maiúsculas, minúsculas e espaços em volta são ignorados (`\" sp \"` é `SP`); a 2.4.0 lia um código em minúsculas como desconhecido. Com um valor desconhecido, a função usa `ZZ` (UF `28`)."
+          "- `state` (um código de estado, ou `ZZ` para um título emitido no exterior) define o código da UF. Maiúsculas, minúsculas e espaços em volta são ignorados (`\" sp \"` é `SP`); a 2.4.0 lia um código em minúsculas como desconhecido. Com um valor desconhecido, a função usa `ZZ` (UF `28`).",
+          "- O resultado sempre tem 12 dígitos. O mesmo título sem os zeros à esquerda do número sequencial também é válido (`voterId.isValid` o lê).",
+          "- Um valor que não é string também usa `ZZ`; a função nunca lança exceção por causa de `state`."
         ]
       },
       "references": [
@@ -176,13 +180,13 @@
         { "args": ["1234567880191"], "returns": false, "note": "changed in 2.5.0 (#593): a voter ID has at most 12 digits (Resolução TSE nº 23.659/2021, art. 36), so a 13-digit value is rejected. 2.4.0 returned true. JavaScript's own test: should reject a 13-digit value, since a voter id has at most 12 digits" },
         { "args": ["1234567880192"], "returns": false, "note": "a 13-digit value: still false in 2.5.0, now because a voter ID has at most 12 digits (Resolução TSE nº 23.659/2021, art. 36)" },
         { "args": ["1234567890396"], "returns": false, "note": "a 13-digit value: still false in 2.5.0, now because a voter ID has at most 12 digits (Resolução TSE nº 23.659/2021, art. 36)" },
-        { "args": ["123456780396"], "returns": true, "note": "JavaScript's own test: a 12-digit value whose checksum matches" },
+        { "args": ["123456780396"], "returns": true, "note": "a 12-digit value whose check digits match (UF 03)" },
         { "args": ["12345678980191"], "returns": false, "note": "JavaScript's own test: should reject a value longer than 12 digits" },
         { "args": ["123456789900"], "returns": false, "note": "JavaScript's own test: should return false when the UF code is outside 01-28" },
         { "args": ["1234567890345"], "returns": false, "note": "a 13-digit value: still false in 2.5.0, now because a voter ID has at most 12 digits (Resolução TSE nº 23.659/2021, art. 36)" },
         { "args": ["ab102385010671"], "returns": false, "note": "JavaScript's own test: should reject a value with a letter attached to the digits" },
         { "args": ["102385010671ab"], "returns": false, "note": "JavaScript's own test: should reject a value with a letter attached to the digits" },
-        { "args": ["1023-8501-06-71"], "returns": true, "note": "changed in 2.5.0 (#615): hyphens and slashes are mask characters, like in cpf.isValid. 2.4.0 returned false. JavaScript's own test: should accept the documented mask characters" },
+        { "args": ["1023-8501-06-71"], "returns": true, "note": "changed in 2.5.0 (#615): hyphens and slashes are mask characters, like in cpf.isValid. 2.4.0 returned false. JavaScript's own test: should reject a mask character outside whitespace, `.`, `-` and `/`" },
         { "args": ["1023 8501 06 71"], "returns": true, "note": "JavaScript's own test: should accept the documented whitespace and dot masks" },
         { "args": ["1023.8501.06.71"], "returns": true, "note": "JavaScript's own test: should accept the documented whitespace and dot masks" },
         { "args": ["1234 5678 8 01 91"], "returns": false, "note": "changed in 2.5.0 (#593): a voter ID has at most 12 digits (Resolução TSE nº 23.659/2021, art. 36), so a 13-digit value is rejected. 2.4.0 returned true. JavaScript's own test: should reject a 13-digit value, since a voter id has at most 12 digits" },
@@ -210,7 +214,7 @@
         { "args": ["123 4567 01 91"], "returns": true, "note": "JavaScript's own test: should only accept separators between the groups of a sequential number grouped from the right" },
         { "args": ["1234 567 01 91"], "returns": false, "note": "JavaScript's own test: should only accept separators between the groups of a sequential number grouped from the right" },
         { "args": ["1234 5678 0 1 91"], "returns": false, "note": "JavaScript's own test: should only accept separators between the groups of a sequential number grouped from the right" },
-        { "args": ["1023-8501/06-71"], "returns": true, "note": "JavaScript's own test: should accept the documented mask characters" },
+        { "args": ["1023-8501/06-71"], "returns": true, "note": "JavaScript's own test: should accept the documented whitespace and dot masks" },
         { "args": [" 1023  8501 06 71 "], "returns": true, "note": "a run of whitespace around and between the groups is accepted" },
         { "args": ["1023_8501_06_71"], "returns": false, "note": "an underscore is not a mask character" },
         { "args": ["1023(8501)0671"], "returns": false, "note": "parentheses are not mask characters" }

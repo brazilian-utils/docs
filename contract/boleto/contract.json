@@ -19,7 +19,8 @@
           "- The function groups the 47-digit cobrança bancária linha digitável as `00000.00000 00000.000000 00000.000000 0 00000000000000`.",
           "- A 48-digit linha digitável starting with `8` (boleto de arrecadação) gets four blocks of 11 digits, each followed by its check digit. The 44-digit arrecadação barcode keeps the cobrança bancária mask.",
           "- Every character that is not a digit is removed first, so a masked value is accepted. Digits beyond the length of the pattern are dropped.",
-          "- A value with no digits (an empty string, `abc`, null) gives an empty string, even with `options.pad`. Until 2.4.0 `pad: true` returned the full zero mask.",
+          "- Without `options.pad` a short value is masked only as far as its digits go (`104914` gives `10491.4`).",
+          "- A value with no digits (an empty string, `abc`, null) gives an empty string, even with `options.pad`. Until 2.4.0 `pad: true` returned the full zero mask for an empty string or one without digits.",
           "- `options.pad` left-pads the value with zeros to the length of the pattern before masking.",
           "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number)."
         ],
@@ -29,7 +30,8 @@
           "- A função agrupa a linha digitável de cobrança bancária de 47 dígitos como `00000.00000 00000.000000 00000.000000 0 00000000000000`.",
           "- Uma linha digitável de 48 dígitos que começa com `8` (boleto de arrecadação) recebe quatro blocos de 11 dígitos, cada um seguido do seu dígito verificador. O código de barras de arrecadação de 44 dígitos mantém a máscara de cobrança bancária.",
           "- Todo caractere que não é dígito é removido antes, então um valor com máscara é aceito. Os dígitos além do tamanho do padrão são descartados.",
-          "- Um valor sem dígitos (string vazia, `abc`, null) dá string vazia, mesmo com `options.pad`. Até a 2.4.0 `pad: true` devolvia a máscara inteira de zeros.",
+          "- Sem `options.pad`, um valor curto recebe a máscara só até onde vão os seus dígitos (`104914` dá `10491.4`).",
+          "- Um valor sem dígitos (string vazia, `abc`, null) dá string vazia, mesmo com `options.pad`. Até a 2.4.0 `pad: true` devolvia a máscara inteira de zeros para uma string vazia ou sem dígitos.",
           "- `options.pad` completa o valor com zeros à esquerda até o tamanho do padrão, antes de aplicar a máscara.",
           "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número)."
         ]
@@ -105,10 +107,10 @@
         { "args": ["84610000000246100291100054603390069589506108"], "returns": "84610.00000 02461.002911 00054.603390 0 69589506108", "note": "JavaScript's own test: arrecadação should keep the cobrança bancária mask for the 44 digit barcode" },
         { "args": ["846100000005246100291102005460339004695895061080123"], "returns": "84610.00000 05246.100291 10200.546033 9 00469589506108", "note": "JavaScript's own test: arrecadação" },
         { "args": ["84610000000-5 24610029110-2 00546033900-4 69589506108-0"], "returns": "84610000000-5 24610029110-2 00546033900-4 69589506108-0", "note": "JavaScript's own test: arrecadação should remove all non numeric characters" },
-        { "args": [-1], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
-        { "args": [1.5], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
-        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (2 ** 53, #593 number rule)" },
-        { "args": [1e+21, { "pad": true }], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number, even with pad (#593 number rule)" },
+        { "args": [-1], "returns": "", "note": "#593 number rule. JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number" },
+        { "args": [1.5], "returns": "", "note": "#593 number rule. JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number" },
+        { "args": [9007199254740992], "returns": "", "note": "#593 number rule (2 ** 53 is not a safe integer). JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number" },
+        { "args": [1e+21, { "pad": true }], "returns": "", "note": "#593 number rule (even with pad). JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number" },
         { "args": [123], "returns": "123", "note": "a safe non-negative integer is read as its digits" },
         { "args": ["", { "pad": true }], "returns": "", "note": "should return an empty string for an empty value or one without digits" },
         { "args": ["abc", { "pad": true }], "returns": "", "note": "should return an empty string for an empty value or one without digits" },
@@ -116,8 +118,6 @@
         { "args": ["1900000901149", { "pad": true }], "returns": "00000.00000 00000.000000 00000.000000 0 01900000901149", "note": "JavaScript docs example" },
         { "args": [123456, { "pad": true }], "returns": "00000.00000 00000.000000 00000.000000 0 00000000123456", "note": "should pad a short value up to the bank slip length" },
         { "args": ["00190000090114971860168524522114675860000102656"], "returns": "00190.00009 01149.718601 68524.522114 6 75860000102656", "note": "JavaScript docs example" },
-        { "args": ["846100000005246100291102005460339004695895061080123"], "returns": "84610.00000 05246.100291 10200.546033 9 00469589506108", "note": "JavaScript's own test: arrecadação shouldn't apply the arrecadação mask past its length (48)" },
-        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" },
         { "args": [null], "returns": "", "note": "JavaScript's own test: should return an empty string when the value is nullish" }
       ]
     },
@@ -132,14 +132,18 @@
           "",
           "- By default, the function generates a 47-digit cobrança bancária linha digitável. With `params.type` set to arrecadação, it generates a 48-digit boleto de arrecadação instead.",
           "- A cobrança bancária slip gets a random 3-digit bank code, the código de moeda `9` (real) and a fator de vencimento of `0000` (no due date) or `1000` to `9999`. Factors `0001` to `0999` denote no date and are never drawn.",
-          "- `boleto.isValid` accepts the result."
+          "- A boleto de arrecadação draws its segment from 1 to 7 (segment 9 is the banks' own) and its value identifier from all four values (`6` and `8` for an effective amount, `7` and `9` for a reference quantity), so `hasEffectiveValue` can be true or false.",
+          "- `boleto.isValid` accepts the result.",
+          "- It draws with `Math.random()`, so it is not cryptographically secure. Do not use it for security purposes."
         ],
         "pt-BR": [
           "Gera um número de boleto aleatório e válido.",
           "",
           "- Por padrão, a função gera uma linha digitável de cobrança bancária com 47 dígitos. Com `params.type` definido como arrecadação, ela gera um boleto de arrecadação com 48 dígitos.",
           "- Um boleto de cobrança bancária recebe um código de banco aleatório de 3 dígitos, o código de moeda `9` (real) e um fator de vencimento `0000` (sem vencimento) ou de `1000` a `9999`. Os fatores `0001` a `0999` não indicam data e nunca são sorteados.",
-          "- `boleto.isValid` aceita o resultado."
+          "- Um boleto de arrecadação sorteia o segmento de 1 a 7 (o segmento 9 é de uso dos próprios bancos) e o identificador de valor entre os quatro valores (`6` e `8` para valor efetivo, `7` e `9` para quantidade de referência), então `hasEffectiveValue` pode ser verdadeiro ou falso.",
+          "- `boleto.isValid` aceita o resultado.",
+          "- O sorteio usa `Math.random()`, então não é criptograficamente seguro. Não use para fins de segurança."
         ]
       },
       "references": [
@@ -155,9 +159,7 @@
       "tests": [
         { "name": "generated-is-valid", "args": [], "satisfies": "boleto.isValid", "repeat": 5, "note": "every generated value must pass the lib's own validator" },
         { "args": [{ "type": "arrecadacao" }], "matches": "^8\\d{47}$", "note": "JavaScript docs example: a 48-digit boleto de arrecadação" },
-        { "args": [{ "type": "arrecadacao" }], "satisfies": "boleto.isValid", "note": "JavaScript's own test: should generate a valid arrecadação bank slip" },
-        { "args": [{ "type": "bancario" }], "matches": "^\\d{47}$", "note": "JavaScript's own test: should keep generating bancário bank slips by default" },
-        { "args": [{ "type": "bancario" }], "satisfies": "boleto.isValid", "note": "JavaScript's own test: should keep generating bancário bank slips by default" }
+        { "args": [{ "type": "bancario" }], "matches": "^\\d{47}$", "note": "JavaScript's own test: should keep generating bancário bank slips by default" }
       ]
     },
     "getInfo": {
@@ -166,26 +168,26 @@
         "en": [
           "Extracts the amount, due date and bank code from a boleto: the 47-digit linha digitável or the 44-digit barcode of a cobrança bancária slip, or a boleto de arrecadação. Returns null when the value is not a valid boleto.",
           "",
-          "- The amount is in cents. The bank code is the 3-digit COMPE code.",
+          "- The result has `amount` (in cents), `expirationDate` and `bankCode` (the 3-digit COMPE code).",
           "- The due date is null when the boleto carries no fator de vencimento (a factor below 1000).",
-          "- The fator de vencimento cycle reset on 2025-02-22, so a factor maps to two dates 9000 days apart. `options.referenceDate` resolves the cycle as of that date instead of today. Pass it whenever the answer has to stay stable, since the same slip can resolve to the other date as time passes.",
+          "- The fator de vencimento cycle reset on 2025-02-22, so a factor maps to two dates 9000 days apart. No FEBRABAN or Banco Central publication tells the cycles apart; the rule comes from bank manuals. `options.referenceDate` resolves the cycle as of that date instead of today. Pass it whenever the answer has to stay stable, since the same slip can resolve to the other date as time passes.",
           "- The window around `referenceDate` is about 8 years back (3000 days) and 15 years ahead (5500 days). A slip due more than about 8 years before it is read as the next cycle (a date in the future), and one due more than about 15 years after it as the previous cycle. To read an old slip, pass a `referenceDate` near its issue date. The search never goes below the first cycle, so an older `referenceDate` still resolves a factor to the oldest date it can denote, never one before the 1997-10-07 base date.",
           "- A `referenceDate` that is not a valid `Date` (an invalid Date, a string, a number, null) is ignored and today is used. The call never throws. Until 2.4.0 an invalid Date gave the 1997 base date and a non-Date threw.",
-          "- The 44-digit barcode is read for the same fields as the linha digitável: the amount from positions 10 to 19 and the fator de vencimento from positions 6 to 9. A value that is not a string gives null.",
-          "- A boleto de arrecadação has no bank code and no due date. It also reports its type, segment, the amount in reais and whether that amount is effective.",
+          "- The 44-digit barcode is read for the same fields as the linha digitável: the amount from positions 10 to 19 and the fator de vencimento from positions 6 to 9. Until 2.4.0 a cobrança bancária barcode gave null. A value that is not a string gives null.",
+          "- A boleto de arrecadação has no bank code and no due date: `bankCode` is `\"\"` and `expirationDate` is null. It also has `type` (`\"arrecadacao\"`), `segment` (1 to 7, or 9 for the banks' own use), `value` (the amount in reais, `amount` divided by 100) and `hasEffectiveValue` (whether the amount is an effective value or a reference quantity).",
           "- A FEBRABAN \"Situação 2\" slip (bank `988`, código de moeda `0`, see `boleto.isValid`) carries the issuer's 8-digit ISPB where the amount would be. The result has `ispb` set to that ISPB, `amount` set to 0 and `expirationDate` null. `ispb` is new in 2.5.0 and is absent on every other slip.",
           "- It returns null exactly when `boleto.isValid` returns false, so a slip with a código de moeda other than `9` gives null (2.4.0 decoded it)."
         ],
         "pt-BR": [
           "Interpreta um boleto e retorna o valor, a data de vencimento e o código do banco: da linha digitável de 47 dígitos ou do código de barras de 44 dígitos de um boleto de cobrança bancária, ou de um boleto de arrecadação. Retorna null quando a entrada não é um boleto válido.",
           "",
-          "- O valor está em centavos. O código do banco é o código COMPE de 3 dígitos.",
+          "- O resultado traz `amount` (em centavos), `expirationDate` e `bankCode` (o código COMPE de 3 dígitos).",
           "- A data de vencimento é null quando o boleto não traz fator de vencimento (um fator abaixo de 1000).",
-          "- O ciclo do fator de vencimento reiniciou em 2025-02-22, então um fator corresponde a duas datas com 9000 dias de diferença. `options.referenceDate` resolve o ciclo com base nessa data, em vez de hoje. Passe-a sempre que a resposta precisar ser estável, pois o mesmo boleto pode passar a resolver para a outra data com o tempo.",
+          "- O ciclo do fator de vencimento reiniciou em 2025-02-22, então um fator corresponde a duas datas com 9000 dias de diferença. Nenhuma publicação da FEBRABAN ou do Banco Central diferencia os ciclos; a regra vem de manuais de bancos. `options.referenceDate` resolve o ciclo com base nessa data, em vez de hoje. Passe-a sempre que a resposta precisar ser estável, pois o mesmo boleto pode passar a resolver para a outra data com o tempo.",
           "- A janela em torno de `referenceDate` é de cerca de 8 anos para trás (3000 dias) e 15 anos para frente (5500 dias). Um boleto que venceu há mais de cerca de 8 anos é lido como o próximo ciclo (uma data no futuro), e um que vence daqui a mais de cerca de 15 anos, como o ciclo anterior. Para ler um boleto antigo, passe uma `referenceDate` próxima da data de emissão. A busca nunca desce abaixo do primeiro ciclo, então uma `referenceDate` mais antiga ainda resolve um fator para a data mais antiga que ele pode indicar, nunca uma anterior à data-base de 1997-10-07.",
           "- Uma `referenceDate` que não é um `Date` válido (um Date inválido, uma string, um número, null) é ignorada e usa-se hoje. A chamada nunca lança erro. Até a 2.4.0 um Date inválido dava a data-base de 1997 e um valor que não era Date lançava erro.",
-          "- O código de barras de 44 dígitos é lido para os mesmos campos da linha digitável: o valor nas posições 10 a 19 e o fator de vencimento nas posições 6 a 9. Um valor que não é string dá null.",
-          "- Um boleto de arrecadação não tem código do banco nem data de vencimento. Ele também informa o tipo, o segmento, o valor em reais e se esse valor é efetivo.",
+          "- O código de barras de 44 dígitos é lido para os mesmos campos da linha digitável: o valor nas posições 10 a 19 e o fator de vencimento nas posições 6 a 9. Até a 2.4.0 o código de barras de cobrança bancária dava null. Um valor que não é string dá null.",
+          "- Um boleto de arrecadação não tem código do banco nem data de vencimento: `bankCode` é `\"\"` e `expirationDate` é null. Ele também traz `type` (`\"arrecadacao\"`), `segment` (de 1 a 7, ou 9 para uso dos próprios bancos), `value` (o valor em reais, `amount` dividido por 100) e `hasEffectiveValue` (se o valor é efetivo ou uma quantidade de referência).",
           "- Um boleto da \"Situação 2\" da FEBRABAN (banco `988`, código de moeda `0`, ver `boleto.isValid`) traz o ISPB de 8 dígitos do emissor no lugar do valor. O resultado tem `ispb` com esse ISPB, `amount` igual a 0 e `expirationDate` null. O campo `ispb` é novo na 2.5.0 e não aparece em nenhum outro boleto.",
           "- Retorna null exatamente quando `boleto.isValid` retorna false, então um boleto com código de moeda diferente de `9` dá null (a 2.4.0 o decodificava)."
         ]
@@ -323,9 +325,7 @@
         { "args": ["001967586000010265600000011497186068524522110"], "returns": false, "note": "JavaScript's own test: cobrança bancária barcode: should return false when the length is 43 or 45" },
         { "args": ["80491758600001026560000001149718606852452211"], "returns": false, "note": "JavaScript's own test: cobrança bancária barcode: should return false when it starts with 8, since a 44-digit value starting with 8 is an arrecadação barcode only (bank 804 with a valid check digit)" },
         { "args": ["84610000000246100291100054603390069589506109"], "returns": false, "note": "JavaScript's own test: cobrança bancária barcode: should return false when it is a 44-digit value starting with 8 that fits neither layout" },
-        { "args": ["85890000460524601791606075930508683148300001"], "returns": true, "note": "JavaScript's own test: arrecadação: should return true for the barcode form of the FEBRABAN §11 modulus 10 example" },
-        { "args": ["84610000000246100291100054603390069589506108"], "returns": true, "note": "JavaScript's own test: arrecadação: should return true for the barcode form of the FEBRABAN §11 modulus 10 example" },
-        { "args": ["848900000002404201622015806051904292586034111220"], "returns": true, "note": "JavaScript's own test: arrecadação: should return true when it is a valid modulo 11 linha digitável" }
+        { "args": ["84610000000246100291100054603390069589506108"], "returns": true, "note": "JavaScript's own test: arrecadação: should return true for the barcode form of the FEBRABAN §11 modulus 10 example" }
       ]
     },
     "parse": {
@@ -335,11 +335,17 @@
       },
       "description": {
         "en": [
+          "Removes every character that is not a digit from a boleto (mask, spaces, letters) and returns the digits, without checking that the boleto is valid.",
+          "",
+          "- The result is cut to 47 digits, or to 48 when the digits start with `8` (boleto de arrecadação). Digits beyond that are dropped.",
           "Removes boleto formatting and keeps only digits, capped at 47 digits (48 for a boleto de arrecadação).",
           "",
           "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number)."
         ],
         "pt-BR": [
+          "Remove de um boleto todo caractere que não é dígito (máscara, espaços, letras) e retorna os dígitos, sem conferir se o boleto é válido.",
+          "",
+          "- O resultado é cortado em 47 dígitos, ou em 48 quando os dígitos começam com `8` (boleto de arrecadação). Os dígitos além disso são descartados.",
           "Remove a formatação do boleto e mantém apenas os dígitos, limitados a 47 (48 para um boleto de arrecadação).",
           "",
           "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número)."
@@ -360,10 +366,10 @@
         { "args": ["10491.44A338 55119.000002? ABC00000.000?141 3 25230000093423"], "returns": "10491443385511900000200000000141325230000093423", "note": "JavaScript's own test: should remove non numeric characters" },
         { "args": ["10491443385511900000200000000141325230000093423123"], "returns": "10491443385511900000200000000141325230000093423", "note": "JavaScript's own test: should ignore digits after the boleto length" },
         { "args": ["846100000005246100291102005460339004695895061080123"], "returns": "846100000005246100291102005460339004695895061080", "note": "JavaScript's own test: arrecadação should ignore digits after the arrecadação length" },
-        { "args": [-1], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
-        { "args": [1.5], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
-        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (2 ** 53, #593 number rule)" },
-        { "args": [1e+21], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" }
+        { "args": [-1], "returns": "", "note": "#593 number rule. JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number" },
+        { "args": [1.5], "returns": "", "note": "#593 number rule. JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number" },
+        { "args": [9007199254740992], "returns": "", "note": "#593 number rule (2 ** 53 is not a safe integer). JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number" },
+        { "args": [1e+21], "returns": "", "note": "#593 number rule. JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number" }
       ]
     }
   }

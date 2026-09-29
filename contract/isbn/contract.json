@@ -20,19 +20,17 @@
           "Formats an ISBN-13 the way it is printed: its five elements separated by hyphens (`978-65-89999-01-0`). The lengths of the group and of the registrant come from `isbn.getInfo`.",
           "",
           "- Returns an empty string exactly when `isbn.getInfo` returns null: a partial or invalid value, or a group or registrant not assigned yet.",
-          "- The `ISBN` label is not added, and it is not accepted in the input: `isbn.getInfo` rejects it, so a value with a label returns an empty string. Until 2.4.0 the label was read and left out.",
+          "- The `ISBN` label is not added, and it is not accepted in the input: `isbn.getInfo` rejects it, so a value with a label returns an empty string.",
           "- The input may use any run of separators (space, `.`, `-`, `/`) between digits, as in `isbn.isValid`.",
-          "- Unlike `cpf.format`, it does not mask a partial value, because the element lengths depend on the whole number.",
-          "- Loads the same range table as `isbn.getInfo`."
+          "- Unlike `cpf.format`, it does not mask a partial value, because the element lengths depend on the whole number."
         ],
         "pt-BR": [
           "Formata um ISBN-13 como ele é impresso: os cinco elementos separados por hifens (`978-65-89999-01-0`). Os comprimentos do grupo e do registrante vêm de `isbn.getInfo`.",
           "",
           "- Retorna uma string vazia exatamente quando `isbn.getInfo` retorna null: valor parcial ou inválido, ou grupo ou registrante ainda não atribuído.",
-          "- O rótulo `ISBN` não é acrescentado, e também não é aceito na entrada: `isbn.getInfo` o rejeita, então um valor com rótulo retorna string vazia. Até a 2.4.0 o rótulo era lido e ficava fora do resultado.",
+          "- O rótulo `ISBN` não é acrescentado, e também não é aceito na entrada: `isbn.getInfo` o rejeita, então um valor com rótulo retorna string vazia.",
           "- A entrada pode usar qualquer sequência de separadores (espaço, `.`, `-`, `/`) entre os dígitos, como em `isbn.isValid`.",
-          "- Ao contrário de `cpf.format`, não formata um valor parcial, porque os comprimentos dos elementos dependem do número inteiro.",
-          "- Carrega a mesma tabela de faixas que `isbn.getInfo`."
+          "- Ao contrário de `cpf.format`, não formata um valor parcial, porque os comprimentos dos elementos dependem do número inteiro."
         ]
       },
       "references": [
@@ -51,7 +49,7 @@
         { "args": [""], "returns": "", "note": "JavaScript's own test: should return an empty string for a partial or invalid value, or a range not assigned yet" },
         { "name": "unassigned-registrant", "args": ["9786503000006"], "returns": "", "note": "978-65-03… is not assigned yet, although the check digit is valid" },
         { "args": ["979-10-90636-07-1"], "returns": "979-10-90636-07-1", "note": "a 979 ISBN, as in JavaScript's own test: should split a 979 ISBN" },
-        { "args": ["ISBN 978 85 333 0227 3"], "returns": "", "note": "changed in 2.5.0 (#615): the ISBN label is no longer accepted (2.4.0: \"978-85-333-0227-3\"). JavaScript's own test: should read a value with other separators and give back the hyphenated form" },
+        { "args": ["ISBN 978 85 333 0227 3"], "returns": "", "note": "the ISBN label is not accepted, so the value gives an empty string. JavaScript's own test: should read a value with other separators and give back the hyphenated form" },
         { "args": ["978 85 333 0227 3"], "returns": "978-85-333-0227-3", "note": "JavaScript's own test: should read a value with other separators and give back the hyphenated form" },
         { "args": ["978.85.333.0227.3"], "returns": "978-85-333-0227-3", "note": "separators other than a hyphen are read, as in isbn.isValid" }
       ]
@@ -62,23 +60,21 @@
         "en": [
           "Splits a valid ISBN-13 into its elements: prefix, registration group, registrant, publication and check digit, with the agency of the group. Returns null when `isbn.isValid` is false, and also when the group or the registrant is in a range not assigned yet.",
           "",
-          "- The value follows the rules of `isbn.isValid`: a run of separators is accepted and the `ISBN` label is not, so `ISBN 978-65-89999-01-0` returns null (2.4.0 read the label).",
+          "- The value follows the rules of `isbn.isValid`: a run of separators is accepted and the `ISBN` label is not, so `ISBN 978-65-89999-01-0` returns null.",
           "- The group and the registrant have variable lengths. They come from the RangeMessage of the International ISBN Agency, which the library refreshes every week.",
           "- A valid check digit is not enough: a group or registrant not assigned gives null. This includes the gaps at the start of a group, as in 978-968 and 978-970.",
-          "- `isbn` is the 13 digits, without label or hyphens. `checkDigit` is a number. `agency` is the name the RangeMessage gives to the group, for example `Brazil` or `English language`.",
+          "- Fields: `isbn` (the 13 digits, without label or hyphens), `prefix` (`\"978\"` or `\"979\"`), `registrationGroup`, `registrant` and `publication` (strings, with their leading zeros), `checkDigit` (a number), `agency` and `isBrazilian`. `agency` is the name the RangeMessage gives to the group, for example `Brazil` or `English language`.",
           "- `isBrazilian` is true for the groups 85 and 65 (Agência Brasileira do ISBN).",
-          "- The range table costs about 27 KB minified (6.2 KB gzip). Only `isbn.getInfo` and `isbn.format` load it.",
           "- Returns a new object on every call."
         ],
         "pt-BR": [
           "Decompõe um ISBN-13 válido em seus elementos: prefixo, grupo de registro, registrante, publicação e dígito verificador, com a agência do grupo. Retorna null quando `isbn.isValid` é false, e também quando o grupo ou o registrante está numa faixa ainda não atribuída.",
           "",
-          "- O valor segue as regras de `isbn.isValid`: uma sequência de separadores é aceita e o rótulo `ISBN` não, então `ISBN 978-65-89999-01-0` retorna null (a 2.4.0 lia o rótulo).",
+          "- O valor segue as regras de `isbn.isValid`: uma sequência de separadores é aceita e o rótulo `ISBN` não, então `ISBN 978-65-89999-01-0` retorna null.",
           "- O grupo e o registrante têm comprimentos variáveis. Eles vêm da RangeMessage da International ISBN Agency, que a biblioteca atualiza toda semana.",
           "- Dígito verificador válido não basta: grupo ou registrante não atribuído dá null. Isso inclui as lacunas no início de um grupo, como em 978-968 e 978-970.",
-          "- `isbn` são os 13 dígitos, sem rótulo nem hifens. `checkDigit` é um número. `agency` é o nome que a RangeMessage dá ao grupo, por exemplo `Brazil` ou `English language`.",
+          "- Campos: `isbn` (os 13 dígitos, sem rótulo nem hifens), `prefix` (`\"978\"` ou `\"979\"`), `registrationGroup`, `registrant` e `publication` (strings, com os zeros à esquerda), `checkDigit` (um número), `agency` e `isBrazilian`. `agency` é o nome que a RangeMessage dá ao grupo, por exemplo `Brazil` ou `English language`.",
           "- `isBrazilian` é true para os grupos 85 e 65 (Agência Brasileira do ISBN).",
-          "- A tabela de faixas custa cerca de 27 KB minificado (6,2 KB gzip). Só `isbn.getInfo` e `isbn.format` a carregam.",
           "- Retorna um objeto novo a cada chamada."
         ]
       },
@@ -91,7 +87,7 @@
       "params": [{ "name": "value", "type": "string" }],
       "returns": "IsbnInfo?",
       "tests": [
-        { "args": ["ISBN 978-65-89999-01-0"], "returns": null, "note": "changed in 2.5.0 (#615): the ISBN label is no longer accepted (2.4.0 returned the info)" },
+        { "args": ["ISBN 978-65-89999-01-0"], "returns": null, "note": "the ISBN label is not accepted" },
         { "args": ["9788533302273"], "returns": { "isbn": "9788533302273", "prefix": "978", "registrationGroup": "85", "registrant": "333", "publication": "0227", "checkDigit": 3, "agency": "Brazil", "isBrazilian": true }, "note": "JavaScript's own test: should split a Brazilian ISBN of the group 85, a 3 digit registrant (2000000 to 4549999)" },
         { "args": ["9788519999992"], "returns": { "isbn": "9788519999992", "prefix": "978", "registrationGroup": "85", "registrant": "19", "publication": "99999", "checkDigit": 2, "agency": "Brazil", "isBrazilian": true }, "note": "JavaScript's own test: should include the last value of a range in it (978-85, 1999999 is the end of the 2 digit range)" },
         { "args": ["9788520000007"], "returns": { "isbn": "9788520000007", "prefix": "978", "registrationGroup": "85", "registrant": "200", "publication": "0000", "checkDigit": 7, "agency": "Brazil", "isBrazilian": true }, "note": "JavaScript's own test: should include the last value of a range in it (978-85, 1999999 is the end of the 2 digit range)" },
@@ -118,7 +114,7 @@
           "- The 10-digit ISBN is rejected: since 2007 only the 13-digit form exists.",
           "- `979-0` is rejected: it is the ISMN range (printed music), and the RangeMessage gives it no ISBN group. Prefix 977 and any other prefix are rejected.",
           "- Separators: whitespace, `.`, `-` or `/` between two digits, alone or in a run (the mask characters `cpf.isValid` reads), and whitespace around the value. Any two digits may be a boundary, because the groups vary in length. A leading or trailing separator and any other character are rejected.",
-          "- The `ISBN` label a book prints in front of the number is not part of the value: `ISBN 978-65-89999-01-0` is invalid, as for any other validator. Until 2.4.0 the label (`ISBN`, `ISBN-13`, optional colon, any case) was accepted, and a run of separators was rejected.",
+          "- The `ISBN` label a book prints in front of the number is not part of the value: `ISBN 978-65-89999-01-0` is invalid, as for any other validator.",
           "- It does not check whether the registration group and the registrant are assigned. `isbn.getInfo` does.",
           "- The example the Agência Brasileira do ISBN prints, `978-65-89999-01-3`, has a wrong check digit. The valid number ends in 0: `978-65-89999-01-0`.",
           "- Only a string is read. Any other type returns false."
@@ -130,7 +126,7 @@
           "- O ISBN de 10 dígitos é rejeitado: desde 2007 só existe a forma de 13 dígitos.",
           "- `979-0` é rejeitado: é a faixa do ISMN (partituras), e a RangeMessage não lhe atribui grupo ISBN. O prefixo 977 e qualquer outro prefixo são rejeitados.",
           "- Separadores: espaço, `.`, `-` ou `/` entre dois dígitos, sozinhos ou em sequência (os caracteres de máscara que `cpf.isValid` lê), e espaços em volta do valor. Quaisquer dois dígitos podem ser uma divisa, porque os grupos variam de comprimento. Separador no início ou no fim e qualquer outro caractere são rejeitados.",
-          "- O rótulo `ISBN` que o livro imprime antes do número não faz parte do valor: `ISBN 978-65-89999-01-0` é inválido, como em qualquer outro validador. Até a 2.4.0 o rótulo (`ISBN`, `ISBN-13`, dois-pontos opcional, qualquer caixa) era aceito, e uma sequência de separadores era rejeitada.",
+          "- O rótulo `ISBN` que o livro imprime antes do número não faz parte do valor: `ISBN 978-65-89999-01-0` é inválido, como em qualquer outro validador.",
           "- Não verifica se o grupo de registro e o registrante estão atribuídos. `isbn.getInfo` verifica.",
           "- O exemplo impresso pela Agência Brasileira do ISBN, `978-65-89999-01-3`, tem dígito verificador errado. O número válido termina em 0: `978-65-89999-01-0`.",
           "- Só uma string é lida. Qualquer outro tipo retorna false."
@@ -144,7 +140,7 @@
       "params": [{ "name": "value", "type": "string" }],
       "returns": "boolean",
       "tests": [
-        { "args": ["ISBN 978-65-89999-01-0"], "returns": false, "note": "changed in 2.5.0 (#615): the ISBN label is no longer accepted (2.4.0: true)" },
+        { "args": ["ISBN 978-65-89999-01-0"], "returns": false, "note": "the ISBN label is not accepted" },
         { "args": ["8533302274"], "returns": false, "note": "from the maintainer briefing, #600 (ISBN-10)" },
         { "args": ["9790260000438"], "returns": false, "note": "from the maintainer briefing, #600 (ISMN)" },
         { "args": ["978-65-89999-01-3"], "returns": false, "note": "from the maintainer briefing, #600 (the example the Agência Brasileira do ISBN prints, wrong check digit)" },
@@ -156,19 +152,19 @@
         { "args": ["978-92-95055-12-4"], "returns": true, "note": "JavaScript's own test: should accept the ISBN Users' Manual example, 978-92-95055-12-4" },
         { "args": ["978-85-333-0227-3"], "returns": true, "note": "JavaScript's own test: should accept Brazilian ISBNs of the groups 85 and 65" },
         { "args": ["979-10-90636-07-1"], "returns": true, "note": "JavaScript's own test: should accept a 979 ISBN" },
-        { "args": ["ISBN-13: 978-85-333-0227-3"], "returns": false, "note": "changed in 2.5.0 (#615): the ISBN label is no longer accepted (2.4.0: true)" },
-        { "args": ["isbn 9788533302273"], "returns": false, "note": "changed in 2.5.0 (#615): the ISBN label is no longer accepted (2.4.0: true)" },
-        { "args": [" ISBN:9788533302273 "], "returns": false, "note": "changed in 2.5.0 (#615): the ISBN label is no longer accepted (2.4.0: true)" },
+        { "args": ["ISBN-13: 978-85-333-0227-3"], "returns": false, "note": "the ISBN label is not accepted" },
+        { "args": ["isbn 9788533302273"], "returns": false, "note": "the ISBN label is not accepted" },
+        { "args": [" ISBN:9788533302273 "], "returns": false, "note": "the ISBN label is not accepted" },
         { "args": ["978 85 333 0227 3"], "returns": true, "note": "JavaScript's own test: should accept a single whitespace or hyphen between any two digits" },
         { "args": ["9-7-8-8-5-3-3-3-0-2-2-7-3"], "returns": true, "note": "JavaScript's own test: should accept a single whitespace or hyphen between any two digits" },
         { "args": ["9x788533302273"], "returns": false, "note": "JavaScript's own test: should reject any other character between the first digits" },
         { "args": ["978-85-333-0227-4"], "returns": false, "note": "JavaScript's own test: should reject a wrong check digit, the Agência Brasileira do ISBN example included" },
         { "args": ["85-333-0227-6"], "returns": false, "note": "JavaScript's own test: should reject the 10 digit ISBN" },
         { "args": ["030640615X"], "returns": false, "note": "JavaScript's own test: should reject the 10 digit ISBN" },
-        { "args": ["978--85-333-0227-3"], "returns": true, "note": "changed in 2.5.0 (#615): a run of separators, and . and /, are accepted between two digits (2.4.0: false)" },
+        { "args": ["978--85-333-0227-3"], "returns": true, "note": "a run of separators, and . and /, are accepted between two digits" },
         { "args": ["-978-85-333-0227-3"], "returns": false, "note": "JavaScript's own test: should reject a run of separators, a leading or trailing one and any other character" },
         { "args": ["978-85-333-0227-3-"], "returns": false, "note": "JavaScript's own test: should reject a run of separators, a leading or trailing one and any other character" },
-        { "args": ["978.85.333.0227.3"], "returns": true, "note": "changed in 2.5.0 (#615): a run of separators, and . and /, are accepted between two digits (2.4.0: false)" },
+        { "args": ["978.85.333.0227.3"], "returns": true, "note": "a run of separators, and . and /, are accepted between two digits" },
         { "args": ["978853330227"], "returns": false, "note": "JavaScript's own test: should reject the wrong number of digits" },
         { "args": ["97885333022730"], "returns": false, "note": "JavaScript's own test: should reject the wrong number of digits" },
         { "args": [""], "returns": false, "note": "JavaScript's own test: should reject the wrong number of digits" },
@@ -193,14 +189,14 @@
         "en": [
           "Removes the hyphens and every other character that is not a digit from an ISBN-13, keeping at most 13 digits.",
           "",
-          "- It only removes non-digits and keeps the first 13. It does not remove the `ISBN` label: in `ISBN-13: 978-85-333-0227-3` the `13` stays among the digits, so the result is `1397885333022`. Give it the number without the label. Until 2.4.0 the label was removed first.",
+          "- It only removes non-digits and keeps the first 13. It does not remove the `ISBN` label: in `ISBN-13: 978-85-333-0227-3` the `13` stays among the digits, so the result is `1397885333022`. Give it the number without the label.",
           "- A partial value keeps the digits it has. The function does not check the ISBN.",
           "- Only a string is read. Any other type returns an empty string."
         ],
         "pt-BR": [
           "Remove os hifens e todo caractere que não é dígito de um ISBN-13, mantendo no máximo 13 dígitos.",
           "",
-          "- Só remove o que não é dígito e mantém os 13 primeiros. Não remove o rótulo `ISBN`: em `ISBN-13: 978-85-333-0227-3` o `13` fica entre os dígitos, e o resultado é `1397885333022`. Passe o número sem o rótulo. Até a 2.4.0 o rótulo era removido antes.",
+          "- Só remove o que não é dígito e mantém os 13 primeiros. Não remove o rótulo `ISBN`: em `ISBN-13: 978-85-333-0227-3` o `13` fica entre os dígitos, e o resultado é `1397885333022`. Passe o número sem o rótulo.",
           "- Um valor parcial mantém os dígitos que tem. A função não verifica o ISBN.",
           "- Só uma string é lida. Qualquer outro tipo retorna uma string vazia."
         ]
@@ -209,11 +205,11 @@
       "params": [{ "name": "value", "type": "string" }],
       "returns": "string",
       "tests": [
-        { "args": ["ISBN-13: 978-85-333-0227-3"], "returns": "1397885333022", "note": "changed in 2.5.0 (#615): the ISBN label is no longer removed, so the 13 of ISBN-13 stays (2.4.0: \"9788533302273\")" },
+        { "args": ["ISBN-13: 978-85-333-0227-3"], "returns": "1397885333022", "note": "the ISBN label is not removed, so the 13 of ISBN-13 stays among the digits" },
         { "args": ["978-85-333-0227-3"], "returns": "9788533302273", "note": "JavaScript's own test: should remove the hyphens and whitespace" },
         { "args": ["978 85 333 0227 3"], "returns": "9788533302273", "note": "JavaScript's own test: should remove the hyphens and whitespace" },
-        { "args": ["ISBN 978-85-333-0227-3"], "returns": "9788533302273", "note": "the label has no digits of its own, so the result is unchanged from 2.4.0" },
-        { "args": ["isbn-13 9788533302273"], "returns": "1397885333022", "note": "changed in 2.5.0 (#615): the ISBN label is no longer removed, so the 13 of ISBN-13 stays (2.4.0: \"9788533302273\")" },
+        { "args": ["ISBN 978-85-333-0227-3"], "returns": "9788533302273", "note": "the label has no digits of its own" },
+        { "args": ["isbn-13 9788533302273"], "returns": "1397885333022", "note": "the ISBN label is not removed, so the 13 of ISBN-13 stays among the digits" },
         { "args": ["97885333022731234"], "returns": "9788533302273", "note": "JavaScript's own test: should keep at most 13 digits" },
         { "args": ["978-85"], "returns": "97885", "note": "JavaScript's own test: should return the digits of a partial value" },
         { "args": [""], "returns": "", "note": "JavaScript's own test: should return the digits of a partial value" },

@@ -96,7 +96,7 @@
         { "args": ["x'@a.com"], "returns": false, "note": "JavaScript's own test: when the local part holds a character outside the accepted set (a trailing apostrophe)" },
         { "args": ["user@localhost"], "returns": false, "note": "JavaScript's own test: when the domain has a single label" },
         { "args": ["john.doe@hotmail.com"], "returns": true, "note": "JavaScript docs example" },
-        { "args": ["test@domain.co.uk"], "returns": true, "note": "JavaScript's own test: JavaScript's own test: should return true when is a valid email with subdomain" }
+        { "args": ["test@domain.co.uk"], "returns": true, "note": "JavaScript's own test: should return true when is a valid email with subdomain" }
       ]
     }
   }

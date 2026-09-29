@@ -20,8 +20,8 @@
           "Formats a CNPJ as `00.000.000/0000-00`.",
           "",
           "- `options.pad` first left-pads the value with zeros to 14 characters.",
-          "- `options.version`: `1` (default) keeps digits only. `2` (alphanumeric CNPJ) keeps letters (upper-cased) and digits.",
-          "- `options.obfuscate` hides the first 2 characters and the 2 check digits with `*`, after padding. This is a convention of the library, with no official source: no law or Receita Federal act sets a masking rule for the CNPJ, whose data are public. It follows the rule the Leis de Diretrizes Orçamentárias set for the CPF.",
+          "- `options.version`: `1` (default) keeps digits only. `2` (alphanumeric CNPJ) keeps letters (upper-cased) and digits. Any other value is read as `1`.",
+          "- `options.obfuscate` (default `false`, read for truthiness like `pad`) hides the first 2 characters and the 2 check digits with `*`, after padding. This is a convention of the library, with no official source: no law or Receita Federal act sets a masking rule for the CNPJ, whose data are public. It follows the rule the Leis de Diretrizes Orçamentárias set for the CPF.",
           "- A number is read only when it is a non-negative safe integer. A negative, fractional, not finite or unsafe number returns an empty string. 2.4.0 read the digits of any number.",
           "- A value with no characters the version keeps (empty, or only symbols) returns an empty string even with `options.pad`. Until 2.4.0 `pad` returned the full zero mask (`00.000.000/0000-00`).",
           "- Since July 2026 new CNPJs may be alphanumeric. The default `version: 1` drops their letters, so pass `version: 2` to keep them. A number loses its leading zeros: pass a string, or use `options.pad`, for a CNPJ that starts with `0`.",
@@ -31,8 +31,8 @@
           "Formata um CNPJ como `00.000.000/0000-00`.",
           "",
           "- `options.pad` primeiro completa o valor com zeros à esquerda até 14 caracteres.",
-          "- `options.version`: `1` (padrão) mantém somente dígitos. `2` (CNPJ alfanumérico) mantém letras (em maiúsculas) e dígitos.",
-          "- `options.obfuscate` oculta os 2 primeiros caracteres e os 2 dígitos verificadores com `*`, depois do preenchimento. É uma convenção da biblioteca, sem fonte oficial: nenhuma lei ou ato da Receita Federal fixa regra de mascaramento para o CNPJ, cujos dados são públicos. Ela segue a regra que as Leis de Diretrizes Orçamentárias fixam para o CPF.",
+          "- `options.version`: `1` (padrão) mantém somente dígitos. `2` (CNPJ alfanumérico) mantém letras (em maiúsculas) e dígitos. Qualquer outro valor é lido como `1`.",
+          "- `options.obfuscate` (padrão `false`, lido como verdadeiro ou falso, como `pad`) oculta os 2 primeiros caracteres e os 2 dígitos verificadores com `*`, depois do preenchimento. É uma convenção da biblioteca, sem fonte oficial: nenhuma lei ou ato da Receita Federal fixa regra de mascaramento para o CNPJ, cujos dados são públicos. Ela segue a regra que as Leis de Diretrizes Orçamentárias fixam para o CPF.",
           "- Um número só é lido quando é um inteiro seguro não negativo. Um número negativo, fracionário, não finito ou inseguro retorna uma string vazia. A 2.4.0 lia os dígitos de qualquer número.",
           "- Um valor sem nenhum caractere que a versão mantém (vazio, ou só símbolos) retorna uma string vazia mesmo com `options.pad`. Até a 2.4.0, `pad` retornava a máscara inteira de zeros (`00.000.000/0000-00`).",
           "- Desde julho de 2026 os novos CNPJs podem ser alfanuméricos. A `version: 1` padrão descarta as letras deles; passe `version: 2` para mantê-las. Um número perde os zeros à esquerda: passe uma string, ou use `options.pad`, para um CNPJ que começa com `0`.",
@@ -169,7 +169,7 @@
           "- `versionOrParams` escolhe a versão: `1` (padrão, numérico) ou `2` (alfanumérico). Também pode definir a filial (número de ordem), um inteiro de 1 a 9999. A filial é aleatória por padrão, e uma filial inválida é ignorada.",
           "- Uma filial dada em `branch` é escrita com 4 dígitos nas duas versões (`3` dá `0003`). Uma filial sorteada na versão 2 pode ter letras, como a raiz.",
           "- Uma filial sorteada nunca é `0000`: os estabelecimentos de uma raiz são numerados a partir de `0001`, a matriz. A 2.4.0 podia retornar `0000`, cerca de uma vez a cada 10.000 CNPJs numéricos.",
-          "- Um `branch` inválido (0, acima de 9999, fracionário, não numérico) é ignorado e um branch aleatório é usado. Um `versionOrParams` que não seja `2` nem um objeto gera um CNPJ numérico."
+          "- Um valor inválido de `branch` (0, acima de 9999, fracionário, não numérico) é ignorado e uma filial aleatória é usada. Um `versionOrParams` que não seja `2` nem um objeto gera um CNPJ numérico."
         ]
       },
       "references": [
@@ -353,14 +353,14 @@
         "en": [
           "Removes CNPJ formatting and returns the normalized value, capped at 14 characters.",
           "",
-          "- `options.version`: `1` (default) keeps digits only. `2` keeps letters and digits, upper-cased.",
+          "- `options.version`: `1` (default) keeps digits only. `2` keeps letters and digits, upper-cased. Any other value is read as `1`.",
           "- A number is read only when it is a non-negative safe integer. A negative, fractional, not finite or unsafe number returns an empty string. 2.4.0 read the digits of any number.",
           "- Since July 2026 new CNPJs may be alphanumeric. The default `version: 1` drops their letters, so pass `version: 2` to keep them. A lower case letter is upper-cased first, since the official set is `A` to `Z`."
         ],
         "pt-BR": [
           "Remove a formatação do CNPJ e retorna o valor normalizado, limitado a 14 caracteres.",
           "",
-          "- `options.version`: `1` (padrão) mantém somente dígitos. `2` mantém letras e dígitos, em maiúsculas.",
+          "- `options.version`: `1` (padrão) mantém somente dígitos. `2` mantém letras e dígitos, em maiúsculas. Qualquer outro valor é lido como `1`.",
           "- Um número só é lido quando é um inteiro seguro não negativo. Um número negativo, fracionário, não finito ou inseguro retorna uma string vazia. A 2.4.0 lia os dígitos de qualquer número.",
           "- Desde julho de 2026 os novos CNPJs podem ser alfanuméricos. A `version: 1` padrão descarta as letras deles; passe `version: 2` para mantê-las. Uma letra minúscula é passada para maiúscula antes, pois o conjunto oficial é `A` a `Z`."
         ]

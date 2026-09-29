@@ -34,7 +34,7 @@ Vehicle license plates are the front and rear plates fixed to a vehicle. A plate
 
 ## Regex
 
-- Raw input (the mask sits between the third character and the last four): `^[A-Za-z]{3}[\s.\-/]*[0-9A-Za-z]{4}$`
+- Raw input (the mask sits between the third character and the last four): `^\s*[A-Za-z]{3}[\s.\-/]*[0-9A-Za-z]{4}\s*$`
 - Characters only (pre-Mercosul or Mercosul pattern): `^(?:[A-Z]{3}[0-9]{4}|[A-Z]{3}[0-9][A-Z][0-9]{2})$`
 
 ## Examples

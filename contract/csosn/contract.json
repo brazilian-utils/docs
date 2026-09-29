@@ -19,7 +19,8 @@
           "- Accepts the bare 3 digits as a string, or a non-negative integer. A CSOSN has no printed grouping, so the function rejects a masked value.",
           "- Surrounding whitespace is ignored. Any other string is rejected: the function does not pick out its digits (`\"abc101\"`).",
           "- Nothing is padded: no code starts with a zero, so a value narrower than 3 digits is not a code. A number is read only when it is a safe non-negative integer.",
-          "- No behaviour change in 2.5.0."
+          "- No behaviour change in 2.5.0.",
+          "- Source: Anexo III-A of Convênio SINIEF s/nº 1970 (table instituted by Ajuste SINIEF 03/2010)."
         ],
         "pt-BR": [
           "Verifica se um CSOSN é um dos 10 códigos da tabela oficial: `101`, `102`, `103`, `201`, `202`, `203`, `300`, `400`, `500`, `900`.",
@@ -27,7 +28,8 @@
           "- Aceita os 3 dígitos sem formatação como string, ou um inteiro não negativo. O CSOSN não tem agrupamento impresso, então a função rejeita um valor com máscara.",
           "- Espaços nas extremidades são ignorados. Qualquer outra string é rejeitada: a função não extrai os dígitos dela (`\"abc101\"`).",
           "- Nada é completado com zeros: nenhum código começa com zero, então um valor com menos de 3 dígitos não é um código. Um número só é lido se for um inteiro seguro não negativo.",
-          "- Sem mudança de comportamento na 2.5.0."
+          "- Sem mudança de comportamento na 2.5.0.",
+          "- Fonte: Anexo III-A do Convênio SINIEF s/nº 1970 (tabela instituída pelo Ajuste SINIEF 03/2010)."
         ]
       },
       "references": [

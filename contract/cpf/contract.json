@@ -20,6 +20,7 @@
           "- `options.obfuscate` hides the first 3 digits and the 2 check digits with `*`, after padding. This is the rule the Leis de Diretrizes Orçamentárias set for publishing a CPF (Lei nº 14.194/2021, art. 149, and Lei nº 15.321/2025, art. 163).",
           "- A number is read only when it is a non-negative safe integer. A negative, fractional, not finite or unsafe number returns an empty string. 2.4.0 read the digits of any number (`-12345678909` gave `123.456.789-09`).",
           "- A value with no digits (empty, or only letters and symbols) returns an empty string even with `options.pad`. Until 2.4.0 `pad` returned the full zero mask (`000.000.000-00`).",
+          "- Digits beyond the 11th are dropped. A value that is not a string or a number (`null`, `undefined`, an object) returns an empty string.",
           "- A number loses its leading zeros, so pass a string, or use `options.pad`, for a CPF that starts with `0`.",
           "- Pending decision (findings §2 #2, #3): the reference (JS) formats only the characters an incomplete value has and returns an empty string for empty or invalid input. Other libraries return null."
         ],
@@ -30,6 +31,7 @@
           "- `options.obfuscate` oculta os 3 primeiros dígitos e os 2 dígitos verificadores com `*`, depois do preenchimento. É a regra que as Leis de Diretrizes Orçamentárias fixam para publicar um CPF (Lei nº 14.194/2021, art. 149, e Lei nº 15.321/2025, art. 163).",
           "- Um número só é lido quando é um inteiro seguro não negativo. Um número negativo, fracionário, não finito ou inseguro retorna uma string vazia. A 2.4.0 lia os dígitos de qualquer número (`-12345678909` dava `123.456.789-09`).",
           "- Um valor sem dígitos (vazio, ou só letras e símbolos) retorna uma string vazia mesmo com `options.pad`. Até a 2.4.0, `pad` retornava a máscara inteira de zeros (`000.000.000-00`).",
+          "- Os dígitos além do 11º são descartados. Um valor que não é string nem número (`null`, `undefined`, um objeto) retorna uma string vazia.",
           "- Um número perde os zeros à esquerda; passe uma string, ou use `options.pad`, para um CPF que começa com `0`.",
           "- Decisão pendente (findings §2 #2, #3): a referência (JS) formata só os caracteres que um valor incompleto tem e retorna uma string vazia para entrada vazia ou inválida. Outras bibliotecas retornam null."
         ]
@@ -220,6 +222,7 @@
           "Validates a CPF: 9 base digits and 2 modulus 11 check digits (REGRA_VALIDA_CPF of the Receita Federal).",
           "",
           "- Rejects a reserved number (all 11 digits the same, for example `00000000000`).",
+          "- A value that does not have exactly 11 digits, or the wrong check digits, is invalid.",
           "- Empty, blank or non-numeric input is invalid.",
           "- Sources: the norm of the CPF, IN RFB nº 2.172/2024, does not define the check digits. The rule and the worked example `280.012.389-38` come from the Receita Federal Manual de Preenchimento da e-Financeira (REGRA_VALIDA_CPF). The reserved numbers come from the Receita Federal DJE layout, which lists the 10 numbers with all digits the same (`000.000.000-00` to `999.999.999-99`) as not valid.",
           "- Pending decision (findings §2 #1): the reference (JS) ignores the formatting characters (`.`, `-`) and whitespace around and between groups. Other libraries accept digits only."
@@ -228,6 +231,7 @@
           "Valida um CPF: 9 dígitos base e 2 dígitos verificadores por módulo 11 (REGRA_VALIDA_CPF da Receita Federal).",
           "",
           "- Rejeita um número reservado (os 11 dígitos iguais, por exemplo `00000000000`).",
+          "- Um valor que não tem exatamente 11 dígitos, ou com dígitos verificadores errados, é inválido.",
           "- Entrada vazia, em branco ou não numérica é inválida.",
           "- Fontes: a norma do CPF, IN RFB nº 2.172/2024, não define os dígitos verificadores. A regra e o exemplo `280.012.389-38` vêm do Manual de Preenchimento da e-Financeira da Receita Federal (REGRA_VALIDA_CPF). Os números reservados vêm do leiaute DJE da Receita Federal, que lista como inválidos os 10 números com todos os dígitos iguais (`000.000.000-00` a `999.999.999-99`).",
           "- Decisão pendente (findings §2 #1): a referência (JS) ignora os caracteres de formatação (`.`, `-`) e os espaços em branco antes, depois e entre os grupos. Outras bibliotecas aceitam apenas dígitos."
@@ -291,12 +295,14 @@
         "en": [
           "Removes CPF formatting and keeps only digits, capped at 11 digits.",
           "",
-          "- A number is read only when it is a non-negative safe integer. A negative, fractional, not finite or unsafe number returns an empty string. 2.4.0 read the digits of any number."
+          "- A number is read only when it is a non-negative safe integer. A negative, fractional, not finite or unsafe number returns an empty string. 2.4.0 read the digits of any number.",
+          "- A value that is not a string or a number (`null`, `undefined`, an object) returns an empty string."
         ],
         "pt-BR": [
           "Remove a formatação do CPF e mantém apenas os dígitos, com no máximo 11 dígitos.",
           "",
-          "- Um número só é lido quando é um inteiro seguro não negativo. Um número negativo, fracionário, não finito ou inseguro retorna uma string vazia. A 2.4.0 lia os dígitos de qualquer número."
+          "- Um número só é lido quando é um inteiro seguro não negativo. Um número negativo, fracionário, não finito ou inseguro retorna uma string vazia. A 2.4.0 lia os dígitos de qualquer número.",
+          "- Um valor que não é string nem número (`null`, `undefined`, um objeto) retorna uma string vazia."
         ]
       },
       "references": ["https://www.gov.br/receitafederal/pt-br/assuntos/meu-cpf"],

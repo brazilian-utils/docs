@@ -16,21 +16,23 @@
           "Formats a CNH number as `000000000-00` (9 digits, hyphen, 2 check digits).",
           "",
           "- `options.pad` left-pads the value with zeros to 11 digits first.",
-          "- `options.obfuscate` (default `false`) hides the first 3 digits and the 2 check digits with `*`: `***503064-**`. It works with `pad` and on a partial value.",
+          "- `options.obfuscate` (default `false`) hides the first 3 digits and the 2 check digits with `*`, after padding: `***503064-**`. It works with `pad` and on a partial value. Like `pad`, it is read for truthiness: a non-boolean such as `1` hides the digits too, and `0` does not.",
           "- No authority publishes a masking rule for the CNH. The rule is an analogy with the one the Leis de Diretrizes Orçamentárias set for publishing a CPF (\"ocultar os três primeiros dígitos e os dois dígitos verificadores\", Lei nº 12.309/2010, art. 87, § 5º, repeated up to the LDO 2026, Lei nº 15.321/2025, art. 163), not a published norm.",
           "- `cns.format` and `passport.format` have no `obfuscate` option.",
           "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number).",
-          "- A value with no digits (empty, or only letters and symbols) returns an empty string even with `options.pad`. Until 2.4.0 `pad` returned the full zero mask (`000000000-00`)."
+          "- A value with no digits (empty, or only letters and symbols) returns an empty string even with `options.pad`. Until 2.4.0 `pad` returned the full zero mask (`000000000-00`).",
+          "- Digits after the 11th are dropped."
         ],
         "pt-BR": [
           "Formata um número de CNH como `000000000-00` (9 dígitos, hífen, 2 dígitos verificadores).",
           "",
           "- `options.pad` primeiro completa o valor com zeros à esquerda até 11 dígitos.",
-          "- `options.obfuscate` (padrão `false`) oculta com `*` os 3 primeiros dígitos e os 2 dígitos verificadores: `***503064-**`. Funciona junto com `pad` e em um valor parcial.",
+          "- `options.obfuscate` (padrão `false`) oculta com `*` os 3 primeiros dígitos e os 2 dígitos verificadores, depois do preenchimento: `***503064-**`. Funciona junto com `pad` e em um valor parcial. Como `pad`, é lido como verdadeiro ou falso: um não booleano como `1` também oculta os dígitos, e `0` não oculta.",
           "- Nenhuma autoridade publica uma regra de mascaramento para a CNH. A regra é uma analogia com a que as Leis de Diretrizes Orçamentárias fixam para publicar um CPF (\"ocultar os três primeiros dígitos e os dois dígitos verificadores\", Lei nº 12.309/2010, art. 87, § 5º, repetida até a LDO 2026, Lei nº 15.321/2025, art. 163), não uma norma publicada.",
           "- `cns.format` e `passport.format` não têm a opção `obfuscate`.",
           "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número).",
-          "- Um valor sem dígitos (vazio, ou só letras e símbolos) retorna uma string vazia mesmo com `options.pad`. Até a 2.4.0, `pad` retornava a máscara inteira de zeros (`000000000-00`)."
+          "- Um valor sem dígitos (vazio, ou só letras e símbolos) retorna uma string vazia mesmo com `options.pad`. Até a 2.4.0, `pad` retornava a máscara inteira de zeros (`000000000-00`).",
+          "- Os dígitos depois do 11º são descartados."
         ]
       },
       "references": [
@@ -78,8 +80,16 @@
     "generate": {
       "summary": { "en": "Generates a valid random CNH.", "pt-BR": "Gera um número de CNH aleatório e válido." },
       "description": {
-        "en": ["Generates a valid random CNH number: 11 digits, unformatted, accepted by `cnh.isValid`."],
-        "pt-BR": ["Gera um número de CNH aleatório e válido: 11 dígitos, sem máscara, que `cnh.isValid` aceita."]
+        "en": [
+          "Generates a valid random CNH number: 11 digits, unformatted, accepted by `cnh.isValid`.",
+          "",
+          "- The 9 base digits are never all the same."
+        ],
+        "pt-BR": [
+          "Gera um número de CNH aleatório e válido: 11 dígitos, sem máscara, que `cnh.isValid` aceita.",
+          "",
+          "- Os 9 dígitos base nunca são todos iguais."
+        ]
       },
       "references": [
         "https://www.gov.br/transportes/pt-br/assuntos/transito/conteudo-contran/resolucoes/Resolucao8862021F.pdf",
@@ -99,6 +109,8 @@
           "",
           "- The function ignores whitespace, dots, hyphens and slashes, in any number and position (`000000001/19` and `000000001-19` are read as `00000000119`). Any other character makes the value invalid. Until 2.4.0 a slash made the value invalid.",
           "- Rejects a value whose 11 digits are all the same.",
+          "- Exactly 11 digits are required once the ignored characters are removed.",
+          "- Only a string is read. Any other type returns false.",
           "- No official text publishes the check-digit weights. Resolução CONTRAN nº 886/2021, art. 4º, and Resolução CONTRAN nº 1.020/2025, art. 10, give only the layout (9 characters and 2 check digits). The algorithm follows a community reference.",
           "- Pending decision (findings §1): the reference (JS) keeps a remainder of 1 in the first check digit as `1`, as real registry numbers do (art. 4º § 1º says `0`). Python and Erlang use a different (2022) algorithm."
         ],
@@ -107,6 +119,8 @@
           "",
           "- A função ignora espaços, pontos, hífens e barras, em qualquer quantidade e posição (`000000001/19` e `000000001-19` são lidos como `00000000119`). Qualquer outro caractere torna o valor inválido. Até a 2.4.0 uma barra tornava o valor inválido.",
           "- Rejeita um valor com os 11 dígitos iguais.",
+          "- São exigidos exatamente 11 dígitos depois de removidos os caracteres ignorados.",
+          "- Só uma string é lida. Qualquer outro tipo retorna false.",
           "- Nenhum texto oficial publica os pesos dos dígitos verificadores. A Resolução CONTRAN nº 886/2021, art. 4º, e a Resolução CONTRAN nº 1.020/2025, art. 10, dão só o leiaute (9 caracteres e 2 dígitos verificadores). O algoritmo segue uma referência da comunidade.",
           "- Decisão pendente (findings §1): a referência (JS) mantém um resto 1 no primeiro dígito verificador como `1`, como fazem os números de registro reais (o art. 4º § 1º diz `0`). Python e Erlang usam um algoritmo diferente (de 2022)."
         ]
@@ -154,14 +168,16 @@
       },
       "description": {
         "en": [
-          "Removes CNH formatting and keeps only digits, capped at 11 digits.",
+          "Removes CNH formatting and keeps only digits, capped at 11 digits (the digits after the 11th are dropped).",
           "",
-          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number)."
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number).",
+          "- A value with no digits returns an empty string."
         ],
         "pt-BR": [
-          "Remove a formatação da CNH e mantém apenas os dígitos, com no máximo 11 dígitos.",
+          "Remove a formatação da CNH e mantém apenas os dígitos, com no máximo 11 dígitos (os dígitos depois do 11º são descartados).",
           "",
-          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número)."
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro dá string vazia (a 2.4.0 lia os dígitos de qualquer número).",
+          "- Um valor sem dígitos retorna uma string vazia."
         ]
       },
       "references": [

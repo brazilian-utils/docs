@@ -79,7 +79,8 @@
           "- `areaCode` may be a string or a non-negative integer.",
           "- A string has every character that is not a digit removed first, as in 2.4.0: `\"(0xx11)\"` and `\" 11 \"` resolve to 11.",
           "- The result carries the DDD, the state it is seated in (code and name), its region (code and name) and every state it serves.",
-          "- Four DDDs straddle a state border (61, 42, 47 and 49). For these, the list of states also has the other state, with the seat first.",
+          "- The seat is the state of the city the code was allocated around, not necessarily the state with most of its municipalities: DDD 61 is seated in DF, which holds only 1 of its 13 municipalities (Brasília).",
+          "- Four DDDs straddle a state border (61, 42, 47 and 49). For these, the list of states also has the other state, with the seat first: 61 gives `DF, GO`, 42 gives `PR, SC`, 47 and 49 give `SC, PR`.",
           "- Returns null for a DDD not in use, a negative or non-integer number, or anything else."
         ],
         "pt-BR": [
@@ -88,7 +89,8 @@
           "- `areaCode` pode ser uma string ou um inteiro não negativo.",
           "- De uma string, todo caractere que não é dígito é removido antes, como na 2.4.0: `\"(0xx11)\"` e `\" 11 \"` resolvem para 11.",
           "- O resultado traz o DDD, o estado sede (sigla e nome), a região (código e nome) e todos os estados que ele atende.",
-          "- Quatro DDDs cruzam uma divisa estadual (61, 42, 47 e 49). Para eles, a lista de estados também tem o outro estado, com a sede primeiro.",
+          "- A sede é o estado da cidade em torno da qual o código foi alocado, não necessariamente o estado com a maioria dos municípios: o DDD 61 tem sede no DF, que tem só 1 dos seus 13 municípios (Brasília).",
+          "- Quatro DDDs cruzam uma divisa estadual (61, 42, 47 e 49). Para eles, a lista de estados também tem o outro estado, com a sede primeiro: o 61 dá `DF, GO`, o 42 dá `PR, SC`, o 47 e o 49 dão `SC, PR`.",
           "- Retorna null para um DDD fora de uso, um número negativo ou não inteiro, ou qualquer outro valor."
         ]
       },

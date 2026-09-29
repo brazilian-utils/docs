@@ -17,6 +17,7 @@
           "Formats a CEP as `00000-000`.",
           "",
           "- `options.pad` left-pads the value with zeros to 8 digits first. Otherwise, a CEP that starts with `0` and comes as a number loses that zero.",
+          "- Every character that is not a digit is removed, and digits past the 8th are dropped. An incomplete value is masked only as far as it goes (`010010` is `01001-0`).",
           "- Pending decision (findings §2 #2, #3): the reference (JS) formats only the characters an incomplete value has. It returns an empty string for empty or invalid input. Other libraries return null.",
           "- An empty value, or one without digits, returns an empty string even with `pad`. Until 2.4.0 `pad` returned the whole zero mask (`00000-000`).",
           "- A number is only read when it is a non-negative safe integer. Any other number (negative, fractional, not finite) returns an empty string, with or without `pad`."
@@ -25,6 +26,7 @@
           "Formata um CEP como `00000-000`.",
           "",
           "- `options.pad` primeiro completa o valor com zeros à esquerda até 8 dígitos. Sem isso, um CEP que começa com `0` e chega como número perde esse zero.",
+          "- Todo caractere que não é dígito é removido, e os dígitos depois do 8º são descartados. Um valor incompleto recebe a máscara só até onde vai (`010010` vira `01001-0`).",
           "- Decisão pendente (findings §2 #2, #3): a referência (JS) formata só os caracteres que um valor incompleto tem. Ela retorna uma string vazia para entrada vazia ou inválida. As outras bibliotecas retornam null.",
           "- Um valor vazio, ou sem dígitos, retorna string vazia mesmo com `pad`. Até a 2.4.0 o `pad` retornava a máscara toda de zeros (`00000-000`).",
           "- Um número só é lido quando é um inteiro seguro não negativo. Qualquer outro número (negativo, fracionário, não finito) retorna string vazia, com ou sem `pad`."
@@ -78,7 +80,7 @@
           "",
           "- A CEP has no check digit, so every 8-digit string is structurally valid.",
           "- The CEP is drawn inside the ranges the Correios assign to the states, each CEP with the same chance. It always belongs to a state, so `cep.getState` never returns null for it.",
-          "- `00000-000` to `00999-999` and `78900-000` to `78999-999`, which no state owns, are never generated. Until 2.4.0 any 8-digit string could come out, about 1 in 80 of them in one of those two ranges.",
+          "- `00000-000` to `00999-999` and `78900-000` to `78999-999`, which no state owns, are never generated. Until 2.4.0 any 8-digit string could come out, about 1 in 90 of them in one of those two ranges.",
           "- A range is the block a state owns, not a promise that every CEP in it is in use, so the CEP generated may not be the CEP of a real address."
         ],
         "pt-BR": [
@@ -86,7 +88,7 @@
           "",
           "- O CEP não tem dígito verificador, então toda string de 8 dígitos é estruturalmente válida.",
           "- O CEP é sorteado dentro das faixas que os Correios atribuem aos estados, cada CEP com a mesma chance. Ele sempre pertence a um estado, então `cep.getState` nunca retorna null para ele.",
-          "- `00000-000` a `00999-999` e `78900-000` a `78999-999`, que nenhum estado possui, nunca são gerados. Até a 2.4.0 qualquer string de 8 dígitos podia sair, cerca de 1 em 80 numa dessas duas faixas.",
+          "- `00000-000` a `00999-999` e `78900-000` a `78999-999`, que nenhum estado possui, nunca são gerados. Até a 2.4.0 qualquer string de 8 dígitos podia sair, cerca de 1 em 90 numa dessas duas faixas.",
           "- A faixa é o bloco que um estado possui, não uma garantia de que todo CEP dentro dela esteja em uso, então o CEP gerado pode não ser o CEP de um endereço real."
         ]
       },
@@ -167,6 +169,7 @@
           "- Each result is the ViaCEP record unchanged.",
           "- The function retries transient network failures.",
           "- Fails with an error. The error tells apart a missing or invalid state/city/street, an address with no match, and an HTTP error from the service.",
+          "- A request that cannot be performed at all (no connection, for example) fails with the underlying network error, not with one of these errors.",
           "- `params.federalUnit` is the two-letter state code, for example `SP`. It must be a string and a known UF. `params.city` and `params.street` are the city and the street name (or part of it).",
           "- `city` and `street` must be strings with at least 3 characters once trimmed and stripped of accents, the minimum ViaCEP accepts. A blank value, a value that is not a string, or one under 3 characters fails with the validation error before any request.",
           "- A `params` that is not an object (omitted, null, a string) and a `federalUnit` that is not a string fail with the validation error too.",
@@ -179,6 +182,7 @@
           "- Cada resultado é o registro do ViaCEP sem alteração.",
           "- A função tenta de novo as falhas transitórias de rede.",
           "- Falha com um erro. O erro distingue UF/município/logradouro ausente ou inválido, um endereço sem resultado e um erro HTTP do serviço.",
+          "- Uma requisição que não chega a ser feita (sem conexão, por exemplo) falha com o erro de rede original, não com um desses erros.",
           "- `params.federalUnit` é o código de duas letras da UF, por exemplo `SP`. Precisa ser string e uma UF conhecida. `params.city` e `params.street` são o município e o nome do logradouro (ou parte dele).",
           "- `city` e `street` precisam ser strings com pelo menos 3 caracteres depois de tirar os espaços das pontas e os acentos, o mínimo que o ViaCEP aceita. Um valor em branco, que não é string ou com menos de 3 caracteres falha com o erro de validação antes de qualquer requisição.",
           "- Um `params` que não é objeto (omitido, null, string) e um `federalUnit` que não é string também falham com o erro de validação.",
@@ -208,9 +212,9 @@
           "- A number must be a non-negative integer: `-20040020` and `2004002.5` return null. A CEP that starts with `0` must be passed as a string.",
           "- The result is the same object as `state.getByIbgeCode` and `state.list` return (a new copy each call).",
           "- Returns null for an invalid CEP, a value that is neither a string nor a number, and a CEP outside every range.",
-          "- Two blocks belong to no state: `00000-000` to `00999-999`, and `78900-000` to `78999-999`. In the second one, MT ends at `78899-999`. Some secondary sources, such as Wikipedia, get this wrong.",
+          "- Two blocks belong to no state: `00000-000` to `00999-999`, and `78900-000` to `78999-999`. In the second one, MT ends at `78899-999`.",
           "- A range is the block assigned to a state. It does not mean every CEP inside it is in use. SP is one range, so `10000-000` returns SP although no city uses `10xxx`.",
-          "- The table is maintained by hand from the Correios \"Busca Faixa de CEP\" search, cross-checked against the Correios \"Localidades alvo\" list.",
+          "- The table is the answer of the Correios \"Busca Faixa de CEP\" search when only the state is given.",
           "",
           "| UF | CEP |",
           "|---|---|",
@@ -249,9 +253,9 @@
           "- Um número precisa ser um inteiro não negativo: `-20040020` e `2004002.5` retornam null. CEP que começa com `0` deve ser passado como string.",
           "- O resultado é o mesmo objeto que `state.getByIbgeCode` e `state.list` retornam (uma cópia nova a cada chamada).",
           "- Retorna null para um CEP inválido, um valor que não é string nem número e um CEP fora de qualquer faixa.",
-          "- Dois blocos não pertencem a nenhum estado: `00000-000` a `00999-999`, e `78900-000` a `78999-999`. No segundo, MT termina em `78899-999`. Algumas fontes secundárias, como a Wikipédia, erram esse ponto.",
+          "- Dois blocos não pertencem a nenhum estado: `00000-000` a `00999-999`, e `78900-000` a `78999-999`. No segundo, MT termina em `78899-999`.",
           "- A faixa é o bloco atribuído ao estado. Ela não garante que todo CEP dentro dela esteja em uso. SP é uma faixa única, então `10000-000` retorna SP, embora nenhuma cidade use `10xxx`.",
-          "- A tabela é mantida à mão a partir da \"Busca Faixa de CEP\" dos Correios, com verificação cruzada na lista \"Localidades alvo\" dos Correios.",
+          "- A tabela é a resposta da \"Busca Faixa de CEP\" dos Correios quando só o estado é informado.",
           "",
           "| UF | Faixa de CEP |",
           "|---|---|",
@@ -341,7 +345,6 @@
           "Validates a CEP: exactly 8 digits.",
           "",
           "- `cep` may be a string or a number. A CEP that starts with `0` must be a string.",
-          "- Letters or other characters make the value invalid.",
           "- Pending decision (findings §2 #1): the reference (JS) ignores spaces, dots and hyphens (`01310-200` is valid). Other libraries accept digits only.",
           "- Spaces, dots, hyphens and slashes are ignored, wherever they appear. Any other character makes the value invalid.",
           "- A number is only read when it is a non-negative safe integer: `-20040020` and `2004002.1` are invalid. `isValid` and `getState` read the number `1310100` as 7 digits and reject it, while `getAddressInfo` and `format` with `pad` left-pad it."
@@ -350,10 +353,9 @@
           "Valida um CEP: exatamente 8 dígitos.",
           "",
           "- `cep` pode ser uma string ou um número. Um CEP que começa com `0` precisa ser uma string.",
-          "- Letras ou outros caracteres tornam o valor inválido.",
           "- Decisão pendente (findings §2 #1): a referência (JS) ignora espaços, pontos e hífens (`01310-200` é válido). As outras bibliotecas aceitam só dígitos.",
           "- Espaços, pontos, hífens e barras são ignorados, onde quer que apareçam. Qualquer outro caractere torna o valor inválido.",
-          "- Um número só é lido quando é um inteiro seguro não negativo: `-20040020` e `2004002.1` são inválidos. `isValid` e `getState` leem o número `1310100` como 7 dígitos e o rejeitam, enquanto `getAddress` e `format` com `pad` o completam com zeros."
+          "- Um número só é lido quando é um inteiro seguro não negativo: `-20040020` e `2004002.1` são inválidos. `isValid` e `getState` leem o número `1310100` como 7 dígitos e o rejeitam, enquanto `getAddressInfo` e `format` com `pad` o completam com zeros."
         ]
       },
       "references": [
