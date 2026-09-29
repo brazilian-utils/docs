@@ -33,7 +33,8 @@
   ],
   "boleto.isValid": [
     "dotnet | go,javascript,ruby,rust",
-    "dotnet,go,ruby,rust | javascript"
+    "dotnet,go,ruby,rust | javascript",
+    "dotnet,javascript | go,ruby,rust"
   ],
   "boleto.parse": [
     "dotnet,ruby | javascript",
@@ -214,12 +215,10 @@
     "dotnet,javascript,ruby | go,rust"
   ],
   "cst.isValid": [
-    "dotnet | javascript | ruby",
     "dotnet | javascript,ruby",
     "dotnet,javascript | ruby",
     "dotnet,javascript,rust | ruby",
     "dotnet,ruby | javascript",
-    "dotnet,rust | javascript | ruby",
     "go | javascript,ruby",
     "go,javascript | ruby",
     "go,ruby | javascript",
@@ -266,6 +265,7 @@
   ],
   "email.isValid": [
     "dotnet | go,javascript,python,ruby,rust",
+    "dotnet,go,python,ruby,rust | javascript",
     "dotnet,javascript | go,python,ruby,rust",
     "dotnet,javascript,ruby | go,python,rust",
     "dotnet,javascript,ruby,rust | go,python"
@@ -310,9 +310,11 @@
     "dotnet | go,javascript,python,ruby,rust",
     "dotnet,go,javascript,python,rust | ruby",
     "dotnet,go,javascript,ruby,rust | python",
+    "dotnet,go,python,ruby,rust | javascript",
     "dotnet,go,python,rust | javascript,ruby",
     "dotnet,go,ruby,rust | javascript,python",
-    "javascript,python | ruby"
+    "javascript,python | ruby",
+    "javascript,ruby | python"
   ],
   "legalNature.list": [
     "dotnet | javascript | ruby",
@@ -358,6 +360,7 @@
   ],
   "licensePlate.getFormat": [
     "dotnet,erlang,javascript,python,ruby,rust | go",
+    "dotnet,erlang,javascript,python,rust | go,ruby",
     "dotnet,erlang,python,ruby,rust | go | javascript",
     "dotnet,erlang,python,ruby,rust | go,javascript",
     "dotnet,erlang,python,rust | go,javascript,ruby",
@@ -367,6 +370,7 @@
     "dotnet,erlang,go,python,ruby,rust | javascript",
     "dotnet,go,javascript | erlang,python,ruby,rust",
     "dotnet,go,javascript,ruby | erlang,python,rust",
+    "dotnet,go,ruby | erlang,javascript,python,rust",
     "erlang | javascript | python,ruby",
     "erlang | javascript,python,ruby",
     "erlang | javascript,ruby | python"
@@ -399,7 +403,8 @@
     "go,ruby | javascript"
   ],
   "nfeKey.format": [
-    "dotnet,go,ruby,rust | javascript"
+    "dotnet,go,ruby,rust | javascript",
+    "javascript | ruby"
   ],
   "nfeKey.getInfo": [
     "dotnet | go | javascript | ruby",
@@ -429,30 +434,34 @@
   ],
   "phone.format": [
     "dotnet,go,javascript,ruby,rust | erlang,python",
+    "dotnet,go,ruby,rust | erlang,python | javascript",
     "dotnet,javascript,ruby,rust | erlang,python | go",
+    "dotnet,ruby,rust | erlang,python | go | javascript",
     "erlang | javascript | python | ruby",
     "javascript | ruby"
   ],
   "phone.isValid": [
     "dotnet | erlang,go,javascript,ruby",
     "dotnet,erlang | go,javascript,ruby",
-    "dotnet,erlang,go | javascript,ruby",
+    "dotnet,erlang,go,javascript | ruby",
     "dotnet,erlang,go,ruby | javascript",
     "dotnet,erlang,ruby | go,javascript",
     "dotnet,go,javascript,ruby | erlang",
     "dotnet,javascript | erlang,go,ruby",
     "dotnet,javascript,ruby | erlang,go",
+    "dotnet,ruby | erlang,go,javascript",
     "erlang | javascript | ruby",
     "erlang | javascript,ruby"
   ],
   "phone.isValidLandline": [
-    "dotnet,javascript,ruby,rust | go",
-    "dotnet,ruby | go,javascript,rust"
+    "dotnet,ruby | go,javascript,rust",
+    "dotnet,ruby,rust | go,javascript"
   ],
   "phone.isValidMobile": [
     "dotnet | go,javascript,ruby",
     "dotnet,javascript | go,ruby",
     "dotnet,javascript,ruby | go",
+    "dotnet,ruby | go,javascript",
     "javascript,ruby | rust",
     "javascript,rust | ruby"
   ],
@@ -461,12 +470,13 @@
     "dotnet,go,javascript,rust | ruby",
     "dotnet,go,ruby,rust | javascript",
     "dotnet,go,rust | javascript,ruby",
-    "dotnet,javascript,ruby,rust | go",
+    "dotnet,ruby,rust | go,javascript",
     "dotnet,rust | go,javascript,ruby"
   ],
   "phone.parse": [
-    "dotnet | go,javascript,ruby,rust",
-    "dotnet,go | javascript,ruby,rust",
+    "dotnet,go,javascript | ruby,rust",
+    "dotnet,go,ruby,rust | javascript",
+    "dotnet,javascript | go,ruby,rust",
     "javascript | ruby"
   ],
   "phone.removeInternationalDialingCode": [
@@ -514,7 +524,6 @@
     "dotnet,go | javascript,ruby",
     "dotnet,go,javascript | ruby",
     "dotnet,go,ruby | javascript",
-    "dotnet,javascript | go | ruby",
     "dotnet,javascript,ruby | go",
     "dotnet,ruby | go | javascript"
   ],
@@ -559,6 +568,7 @@
     "dotnet,go,ruby | javascript",
     "dotnet,javascript | go,ruby",
     "dotnet,javascript,ruby | go",
+    "dotnet,ruby | go | javascript",
     "dotnet,ruby | go,javascript",
     "javascript | ruby"
   ],

@@ -1,7 +1,7 @@
 {
   "library": "brazilian-utils-javascript",
   "language": "typescript",
-  "revision": "1f82b5663c14f5a208d8329be09514e0e627f966",
+  "revision": "d294baa588659a398337d742887944f10f5b3984",
   "symbols": [
     {
       "name": "addBusinessDays",
@@ -43,7 +43,7 @@
       "doc": "Adds a number of Brazilian business days (dias úteis) to a date.",
       "location": {
         "file": "src/add-business-days/add-business-days.ts",
-        "line": 80
+        "line": 81
       }
     },
     {
@@ -76,7 +76,7 @@
       "doc": "Capitalizes a given string according to the way a Brazilian name, company name or address is written, with no configuration needed: `\"jose da silva\"` becomes `\"Jose da Silva\"`, `\"empresa ltda\"` becomes `\"Empresa LTDA\"` and `\"santana/rs\"` becomes `\"Santana/RS\"`.",
       "location": {
         "file": "src/capitalize/capitalize.ts",
-        "line": 285
+        "line": 329
       }
     },
     {
@@ -169,7 +169,7 @@
       "doc": "Formats an integer as its Brazilian Portuguese cardinal number words (\"por extenso\"), e.g. `1235` becomes `\"mil duzentos e trinta e cinco\"`.",
       "location": {
         "file": "src/convert-number-to-words/convert-number-to-words.ts",
-        "line": 47
+        "line": 49
       }
     },
     {
@@ -212,7 +212,7 @@
       "doc": "Counts the number of Brazilian business days (dias úteis) between two dates.",
       "location": {
         "file": "src/difference-in-business-days/difference-in-business-days.ts",
-        "line": 77
+        "line": 78
       }
     },
     {
@@ -265,10 +265,38 @@
         }
       ],
       "returns": "string",
-      "doc": "Formats a CAEPF (Cadastro de Atividade Econômica da Pessoa Física) number according to the official mask.",
+      "doc": "Formats a CAEPF (Cadastro de Atividade Econômica da Pessoa Física) number according to the usual mask.",
       "location": {
         "file": "src/format-caepf/format-caepf.ts",
         "line": 41
+      }
+    },
+    {
+      "name": "formatCbo",
+      "params": [
+        {
+          "name": "value",
+          "type": "string | number",
+          "optional": false
+        },
+        {
+          "name": "options",
+          "type": "FormatCboOptions",
+          "optional": true,
+          "fields": [
+            {
+              "name": "pad",
+              "type": "boolean",
+              "optional": true
+            }
+          ]
+        }
+      ],
+      "returns": "string",
+      "doc": "Formats a CBO (Classificação Brasileira de Ocupações) code into the `NNNN-NN` mask the classification prints.",
+      "location": {
+        "file": "src/format-cbo/format-cbo.ts",
+        "line": 51
       }
     },
     {
@@ -353,7 +381,7 @@
       "deprecated": true,
       "location": {
         "file": "src/index.ts",
-        "line": 386
+        "line": 390
       },
       "aliasOf": "formatCep"
     },
@@ -411,6 +439,34 @@
       "location": {
         "file": "src/format-cest/format-cest.ts",
         "line": 54
+      }
+    },
+    {
+      "name": "formatCfop",
+      "params": [
+        {
+          "name": "value",
+          "type": "string | number",
+          "optional": false
+        },
+        {
+          "name": "options",
+          "type": "FormatCfopOptions",
+          "optional": true,
+          "fields": [
+            {
+              "name": "pad",
+              "type": "boolean",
+              "optional": true
+            }
+          ]
+        }
+      ],
+      "returns": "string",
+      "doc": "Formats a CFOP (Código Fiscal de Operações e Prestações) code into the `N.NNN` form the annex prints.",
+      "location": {
+        "file": "src/format-cfop/format-cfop.ts",
+        "line": 50
       }
     },
     {
@@ -512,7 +568,7 @@
         }
       ],
       "returns": "string",
-      "doc": "Formats a CNO (Cadastro Nacional de Obras) number according to the official mask.",
+      "doc": "Formats a CNO (Cadastro Nacional de Obras) number according to the usual mask.",
       "location": {
         "file": "src/format-cno/format-cno.ts",
         "line": 44
@@ -553,7 +609,7 @@
       "doc": "Formats a given CNPJ (Cadastro Nacional da Pessoa Jurídica) value according to the specified options.",
       "location": {
         "file": "src/format-cnpj/format-cnpj.ts",
-        "line": 69
+        "line": 72
       }
     },
     {
@@ -592,7 +648,7 @@
       "deprecated": true,
       "location": {
         "file": "src/index.ts",
-        "line": 392
+        "line": 396
       },
       "aliasOf": "formatCnpj"
     },
@@ -621,7 +677,7 @@
       "doc": "Formats a CNS (Cartão Nacional de Saúde) number into the common display groups of 3-4-4-4 digits separated by spaces.",
       "location": {
         "file": "src/format-cns/format-cns.ts",
-        "line": 48
+        "line": 49
       }
     },
     {
@@ -688,7 +744,7 @@
       "deprecated": true,
       "location": {
         "file": "src/index.ts",
-        "line": 398
+        "line": 402
       },
       "aliasOf": "formatCpf"
     },
@@ -722,7 +778,7 @@
       "doc": "Formats a given value as a currency string in Brazilian Real (BRL).",
       "location": {
         "file": "src/format-currency/format-currency.ts",
-        "line": 85
+        "line": 96
       }
     },
     {
@@ -808,13 +864,25 @@
           "name": "value",
           "type": "string | number",
           "optional": false
+        },
+        {
+          "name": "options",
+          "type": "FormatNbsOptions",
+          "optional": true,
+          "fields": [
+            {
+              "name": "pad",
+              "type": "boolean",
+              "optional": true
+            }
+          ]
         }
       ],
       "returns": "string",
       "doc": "Formats an NBS (Nomenclatura Brasileira de Serviços, Intangíveis e Outras Operações que Produzam Variações no Patrimônio) code into the `N.NNNN.NN.NN` mask the nomenclature prints.",
       "location": {
         "file": "src/format-nbs/format-nbs.ts",
-        "line": 33
+        "line": 44
       }
     },
     {
@@ -870,7 +938,7 @@
       "doc": "Formats a DF-e (Documento Fiscal eletrônico) access key (chave de acesso) into groups of 4 characters separated by spaces, the form every auxiliary document prints it in: the DANFE of the NF-e and the NFC-e, the DACTE of the CT-e, the CT-e OS and the GTV-e, the DAMDFE of the MDF-e, the DABPE of the BP-e, the DANF3E of the NF3e and the DANFE-COM of the NFCom.",
       "location": {
         "file": "src/format-nfe-key/format-nfe-key.ts",
-        "line": 60
+        "line": 70
       }
     },
     {
@@ -886,7 +954,7 @@
       "doc": "Formats a Brazilian passport number for display. Converts to uppercase and removes all non-alphanumeric characters.",
       "location": {
         "file": "src/format-passport/format-passport.ts",
-        "line": 19
+        "line": 20
       }
     },
     {
@@ -919,7 +987,7 @@
       "doc": "Formats a phone number according to Brazilian phone number patterns.",
       "location": {
         "file": "src/format-phone/format-phone.ts",
-        "line": 200
+        "line": 215
       }
     },
     {
@@ -1008,7 +1076,7 @@
       "doc": "Formats an Inscrição SUFRAMA with the `SS.NNNN.LLD` mask: sector of activity, sequential number, locality and check digit.",
       "location": {
         "file": "src/format-suframa/format-suframa.ts",
-        "line": 40
+        "line": 41
       }
     },
     {
@@ -1064,7 +1132,7 @@
       "doc": "Generates a valid random Brazilian bank slip (boleto) number.",
       "location": {
         "file": "src/generate-boleto/generate-boleto.ts",
-        "line": 85
+        "line": 84
       }
     },
     {
@@ -1074,7 +1142,7 @@
       "doc": "Generates a random Brazilian CEP (postal code).",
       "location": {
         "file": "src/generate-cep/generate-cep.ts",
-        "line": 19
+        "line": 28
       }
     },
     {
@@ -1100,7 +1168,7 @@
       "doc": "Generates a valid random CNPJ (Cadastro Nacional da Pessoa Jurídica).",
       "location": {
         "file": "src/generate-cnpj/generate-cnpj.ts",
-        "line": 136
+        "line": 133
       }
     },
     {
@@ -1117,7 +1185,7 @@
       "deprecated": true,
       "location": {
         "file": "src/index.ts",
-        "line": 404
+        "line": 408
       },
       "aliasOf": "generateCnpj"
     },
@@ -1151,7 +1219,7 @@
       "deprecated": true,
       "location": {
         "file": "src/index.ts",
-        "line": 410
+        "line": 414
       },
       "aliasOf": "generateCpf"
     },
@@ -1178,7 +1246,7 @@
       "doc": "Generates a valid random Brazilian license plate (placa de carro ou moto).",
       "location": {
         "file": "src/generate-license-plate/generate-license-plate.ts",
-        "line": 46
+        "line": 57
       }
     },
     {
@@ -1188,7 +1256,7 @@
       "doc": "Generates a random valid Brazilian passport number.",
       "location": {
         "file": "src/generate-passport/generate-passport.ts",
-        "line": 18
+        "line": 19
       }
     },
     {
@@ -1204,7 +1272,7 @@
       "doc": "Generates a random, structurally-valid Brazilian phone number (DDD + subscriber number, no formatting/mask applied, see `formatPhone` to format the result).",
       "location": {
         "file": "src/generate-phone/generate-phone.ts",
-        "line": 56
+        "line": 57
       }
     },
     {
@@ -1265,14 +1333,14 @@
       "doc": "Generates the payload of a Pix BR Code, the string behind a Pix QR Code and behind \"Pix copia e cola\".",
       "location": {
         "file": "src/generate-pix-payload/generate-pix-payload.ts",
-        "line": 215
+        "line": 210
       }
     },
     {
       "name": "generateProcessoJuridico",
       "params": [
         {
-          "name": "options",
+          "name": "params",
           "type": "GenerateProcessoJuridicoParams",
           "optional": true,
           "fields": [
@@ -1367,7 +1435,7 @@
       "doc": "Fetches address information for a given CEP using multiple providers simultaneously. Returns the result from the first provider that responds successfully.",
       "location": {
         "file": "src/get-address-info-by-cep/get-address-info-by-cep.ts",
-        "line": 421
+        "line": 454
       }
     },
     {
@@ -1383,7 +1451,7 @@
       "doc": "Looks up the DDD (area code, the Código Nacional of the Plano Geral de Numeração) in force for a Brazilian municipality, given its 7 digit IBGE code.",
       "location": {
         "file": "src/get-area-code-by-municipality-code/get-area-code-by-municipality-code.ts",
-        "line": 33
+        "line": 34
       }
     },
     {
@@ -1399,7 +1467,7 @@
       "doc": "Retrieves the state (and its region) a Brazilian DDD (area code) belongs to.",
       "location": {
         "file": "src/get-area-code-info/get-area-code-info.ts",
-        "line": 81
+        "line": 78
       }
     },
     {
@@ -1431,7 +1499,7 @@
       "doc": "Looks up a Brazilian bank by its compensation code (COMPE), published by Banco Central do Brasil in the STR (Sistema de Transferência de Reservas) participants list.",
       "location": {
         "file": "src/get-bank-by-code/get-bank-by-code.ts",
-        "line": 29
+        "line": 30
       }
     },
     {
@@ -1447,7 +1515,7 @@
       "doc": "Looks up a Brazilian bank by its ISPB (Identificador do Sistema de Pagamentos Brasileiro), the 8 digit code that identifies every participant of the SPB, published by Banco Central do Brasil in the STR (Sistema de Transferência de Reservas) participants list. Every SPB participant has an ISPB, but this dataset only carries the institutions that also have a COMPE code, so an ISPB whose institution has no COMPE code of its own returns `null`.",
       "location": {
         "file": "src/get-bank-by-ispb/get-bank-by-ispb.ts",
-        "line": 45
+        "line": 46
       }
     },
     {
@@ -1457,7 +1525,7 @@
       "doc": "Returns every Brazilian bank with a compensation code (COMPE), published by Banco Central do Brasil in the STR (Sistema de Transferência de Reservas) participants list.",
       "location": {
         "file": "src/get-banks/get-banks.ts",
-        "line": 23
+        "line": 24
       }
     },
     {
@@ -1485,7 +1553,7 @@
       "doc": "Extracts information from a Brazilian bank slip (boleto).",
       "location": {
         "file": "src/get-boleto-info/get-boleto-info.ts",
-        "line": 161
+        "line": 189
       }
     },
     {
@@ -1501,7 +1569,7 @@
       "doc": "Looks a CBO (Classificação Brasileira de Ocupações) code up in the official CBO 2002 table.",
       "location": {
         "file": "src/get-cbo/get-cbo.ts",
-        "line": 60
+        "line": 55
       }
     },
     {
@@ -1528,10 +1596,10 @@
         }
       ],
       "returns": "Promise<CepAddressInfo[]>",
-      "doc": "Looks every CEP of a Brazilian street up on the ViaCEP API.",
+      "doc": "Looks every CEP of a Brazilian street up on the ViaCEP API. ViaCEP caps the list at 50 addresses, so a short street name that matches more streets returns only the first 50.",
       "location": {
         "file": "src/get-cep-info-by-address/get-cep-info-by-address.ts",
-        "line": 128
+        "line": 140
       }
     },
     {
@@ -1563,7 +1631,7 @@
       "doc": "Looks a CEST (Código Especificador da Substituição Tributária) up in the annexes of Convênio ICMS 142/18.",
       "location": {
         "file": "src/get-cest/get-cest.ts",
-        "line": 64
+        "line": 65
       }
     },
     {
@@ -1579,7 +1647,7 @@
       "doc": "Looks a CFOP (Código Fiscal de Operações e Prestações) code up in the official table.",
       "location": {
         "file": "src/get-cfop/get-cfop.ts",
-        "line": 62
+        "line": 63
       }
     },
     {
@@ -1595,7 +1663,7 @@
       "doc": "Looks a CID-10 (Classificação Estatística Internacional de Doenças e Problemas Relacionados à Saúde, 10th revision) code up in the Brazilian Portuguese tables DATASUS publishes.",
       "location": {
         "file": "src/get-cid10/get-cid10.ts",
-        "line": 79
+        "line": 77
       }
     },
     {
@@ -1612,7 +1680,7 @@
       "deprecated": true,
       "location": {
         "file": "src/get-cities/get-cities.ts",
-        "line": 43
+        "line": 44
       }
     },
     {
@@ -1644,7 +1712,7 @@
       "doc": "Looks a CNAE (Classificação Nacional de Atividades Econômicas) subclass code up in the official CNAE-Subclasses 2.3 table, the current subclass revision of CNAE 2.0.",
       "location": {
         "file": "src/get-cnae/get-cnae.ts",
-        "line": 58
+        "line": 59
       }
     },
     {
@@ -1672,7 +1740,7 @@
       "doc": "Parses a CNPJ (Cadastro Nacional da Pessoa Jurídica) into the fields the number encodes.",
       "location": {
         "file": "src/get-cnpj-info/get-cnpj-info.ts",
-        "line": 90
+        "line": 88
       }
     },
     {
@@ -1698,7 +1766,7 @@
       "doc": "Looks up the 7 digit IBGE code of a Brazilian municipality by its name and the code of its state, in the offline IBGE \"localidades\" dataset.",
       "location": {
         "file": "src/get-code-by-municipality-name/get-code-by-municipality-name.ts",
-        "line": 46
+        "line": 65
       }
     },
     {
@@ -1714,7 +1782,7 @@
       "doc": "Reads the fields a CPF (Cadastro de Pessoas Físicas) encodes: the 8 digit base, the Região Fiscal digit with the states it covers, and the 2 check digits.",
       "location": {
         "file": "src/get-cpf-info/get-cpf-info.ts",
-        "line": 64
+        "line": 76
       }
     },
     {
@@ -1762,7 +1830,7 @@
       "doc": "Parses a GTIN (Global Trade Item Number, the number under an EAN/UPC barcode) into its fields.",
       "location": {
         "file": "src/get-gtin-info/get-gtin-info.ts",
-        "line": 104
+        "line": 97
       }
     },
     {
@@ -1778,7 +1846,7 @@
       "doc": "Retrieves all Brazilian holidays for a given year.",
       "location": {
         "file": "src/get-holidays/get-holidays.ts",
-        "line": 379
+        "line": 228
       }
     },
     {
@@ -1805,7 +1873,7 @@
       "doc": "Retrieves all Brazilian holidays for a given year.",
       "location": {
         "file": "src/get-holidays/get-holidays.ts",
-        "line": 379
+        "line": 228
       }
     },
     {
@@ -1821,7 +1889,7 @@
       "doc": "Parses a Brazilian IBAN (International Bank Account Number) into its fields.",
       "location": {
         "file": "src/get-iban-info/get-iban-info.ts",
-        "line": 97
+        "line": 87
       }
     },
     {
@@ -1837,7 +1905,7 @@
       "doc": "Splits a valid ISBN-13 into its elements, following the ranges the International ISBN Agency publishes: the GS1 prefix, the registration group, the registrant, the publication and the check digit.",
       "location": {
         "file": "src/get-isbn-info/get-isbn-info.ts",
-        "line": 74
+        "line": 77
       }
     },
     {
@@ -1853,7 +1921,7 @@
       "doc": "Looks a Brazilian legal nature (natureza jurídica) code up.",
       "location": {
         "file": "src/get-legal-nature/get-legal-nature.ts",
-        "line": 122
+        "line": 112
       }
     },
     {
@@ -1876,7 +1944,7 @@
       "doc": "Returns every Brazilian legal nature (natureza jurídica) published by the CONCLA.",
       "location": {
         "file": "src/get-legal-natures/get-legal-natures.ts",
-        "line": 41
+        "line": 38
       }
     },
     {
@@ -1920,7 +1988,7 @@
       "doc": "Returns Brazilian municipalities published by the IBGE, optionally filtered by state.",
       "location": {
         "file": "src/get-municipalities/get-municipalities.ts",
-        "line": 49
+        "line": 53
       }
     },
     {
@@ -1936,7 +2004,7 @@
       "doc": "Lists the Brazilian municipalities that dial a given DDD (area code, the Código Nacional of the Plano Geral de Numeração).",
       "location": {
         "file": "src/get-municipalities-by-area-code/get-municipalities-by-area-code.ts",
-        "line": 35
+        "line": 42
       }
     },
     {
@@ -1959,7 +2027,7 @@
       "deprecated": true,
       "location": {
         "file": "src/get-municipality/get-municipality.ts",
-        "line": 93
+        "line": 66
       }
     },
     {
@@ -1986,7 +2054,7 @@
       "deprecated": true,
       "location": {
         "file": "src/get-municipality/get-municipality.ts",
-        "line": 93
+        "line": 66
       }
     },
     {
@@ -2003,7 +2071,7 @@
       "deprecated": true,
       "location": {
         "file": "src/get-municipality/get-municipality.ts",
-        "line": 93
+        "line": 66
       }
     },
     {
@@ -2019,7 +2087,7 @@
       "doc": "Looks up a Brazilian municipality by its 7 digit IBGE code, published by the IBGE.",
       "location": {
         "file": "src/get-municipality-by-code/get-municipality-by-code.ts",
-        "line": 30
+        "line": 33
       }
     },
     {
@@ -2035,7 +2103,7 @@
       "doc": "Looks an NBS (Nomenclatura Brasileira de Serviços, Intangíveis e Outras Operações que Produzam Variações no Patrimônio) code up in the official NBS 2.0 table, the code the national NFS-e carries in `cNBS`.",
       "location": {
         "file": "src/get-nbs/get-nbs.ts",
-        "line": 56
+        "line": 57
       }
     },
     {
@@ -2051,7 +2119,7 @@
       "doc": "Parses a DF-e (Documento Fiscal eletrônico) access key (chave de acesso) into its fields.",
       "location": {
         "file": "src/get-nfe-key-info/get-nfe-key-info.ts",
-        "line": 147
+        "line": 141
       }
     },
     {
@@ -2067,7 +2135,7 @@
       "doc": "Parses the access key (chave de acesso) of a national NFS-e, the Nota Fiscal de Serviço eletrônica of the Sistema Nacional NFS-e, into its fields.",
       "location": {
         "file": "src/get-nfse-key-info/get-nfse-key-info.ts",
-        "line": 129
+        "line": 128
       }
     },
     {
@@ -2099,7 +2167,23 @@
       "doc": "Parses a Pix BR Code payload, the string behind a Pix QR Code and behind \"Pix copia e cola\".",
       "location": {
         "file": "src/get-pix-payload-info/get-pix-payload-info.ts",
-        "line": 151
+        "line": 145
+      }
+    },
+    {
+      "name": "getProcessoJuridicoInfo",
+      "params": [
+        {
+          "name": "value",
+          "type": "string",
+          "optional": false
+        }
+      ],
+      "returns": "ProcessoJuridicoInfo | null",
+      "doc": "Reads the fields of a Número Único de Processo (`NNNNNNN-DD.AAAA.J.TR.OOOO`) of Resolução CNJ nº 65/2008: the sequential number, the check digits, the year of filing, the segment of the Judiciary, the tribunal and the unit of origin.",
+      "location": {
+        "file": "src/get-processo-juridico-info/get-processo-juridico-info.ts",
+        "line": 94
       }
     },
     {
@@ -2141,7 +2225,7 @@
       "doc": "Retrieves the Brazilian state a CEP (postal code) belongs to, from the CEP ranges the Correios assign to each state. It runs offline: the answer comes from the range table, not from a CEP API, so it says which state owns the range and not whether the CEP is in use.",
       "location": {
         "file": "src/get-state-by-cep/get-state-by-cep.ts",
-        "line": 43
+        "line": 44
       }
     },
     {
@@ -2189,7 +2273,7 @@
       "doc": "Retrieves the two-letter code (sigla) of a Brazilian state given its full name.",
       "location": {
         "file": "src/get-state-code-by-name/get-state-code-by-name.ts",
-        "line": 36
+        "line": 48
       }
     },
     {
@@ -2215,7 +2299,7 @@
       "doc": "Retrieves a list of all Brazilian states with their codes and names.",
       "location": {
         "file": "src/get-states/get-states.ts",
-        "line": 26
+        "line": 27
       }
     },
     {
@@ -2247,7 +2331,23 @@
       "doc": "Retrieves the IANA time zone database name (tzdata zone) for a Brazilian state, chosen as the zone of the state capital. The match is case-insensitive and ignores leading/trailing whitespace.",
       "location": {
         "file": "src/get-timezone-by-state/get-timezone-by-state.ts",
-        "line": 39
+        "line": 43
+      }
+    },
+    {
+      "name": "getVoterIdInfo",
+      "params": [
+        {
+          "name": "value",
+          "type": "string",
+          "optional": false
+        }
+      ],
+      "returns": "VoterIdInfo | null",
+      "doc": "Reads the fields of a voter id (título de eleitor): the sequential number, the federative union code with the state it stands for, and the 2 check digits.",
+      "location": {
+        "file": "src/get-voter-id-info/get-voter-id-info.ts",
+        "line": 65
       }
     },
     {
@@ -2285,7 +2385,7 @@
       "doc": "Checks whether a given date is a Brazilian business day (dia útil).",
       "location": {
         "file": "src/is-business-day/is-business-day.ts",
-        "line": 174
+        "line": 170
       }
     },
     {
@@ -2312,7 +2412,7 @@
       "doc": "Checks whether a given date is a Brazilian holiday.",
       "location": {
         "file": "src/is-holiday/is-holiday.ts",
-        "line": 92
+        "line": 97
       }
     },
     {
@@ -2346,7 +2446,7 @@
       "doc": "Validates a Brazilian bank account. The bank code must belong to the Banco Central do Brasil STR participants list, otherwise the account is rejected.",
       "location": {
         "file": "src/is-valid-bank-account/is-valid-bank-account.ts",
-        "line": 341
+        "line": 350
       }
     },
     {
@@ -2362,7 +2462,7 @@
       "doc": "Validates if a Brazilian bank slip (boleto) number is valid.",
       "location": {
         "file": "src/is-valid-boleto/is-valid-boleto.ts",
-        "line": 96
+        "line": 115
       }
     },
     {
@@ -2378,7 +2478,7 @@
       "doc": "Validates a CAEPF (Cadastro de Atividade Econômica da Pessoa Física) number.",
       "location": {
         "file": "src/is-valid-caepf/is-valid-caepf.ts",
-        "line": 75
+        "line": 76
       }
     },
     {
@@ -2394,7 +2494,7 @@
       "doc": "Validates if a CBO (Classificação Brasileira de Ocupações) code exists in the official CBO 2002 table.",
       "location": {
         "file": "src/is-valid-cbo/is-valid-cbo.ts",
-        "line": 47
+        "line": 41
       }
     },
     {
@@ -2410,7 +2510,7 @@
       "doc": "Validates a CEI (Cadastro Específico do INSS) number.",
       "location": {
         "file": "src/is-valid-cei/is-valid-cei.ts",
-        "line": 62
+        "line": 63
       }
     },
     {
@@ -2426,7 +2526,7 @@
       "doc": "Validates if a CEP (Brazilian postal code) is valid.",
       "location": {
         "file": "src/is-valid-cep/is-valid-cep.ts",
-        "line": 31
+        "line": 33
       }
     },
     {
@@ -2443,7 +2543,7 @@
       "deprecated": true,
       "location": {
         "file": "src/index.ts",
-        "line": 416
+        "line": 420
       },
       "aliasOf": "isValidCep"
     },
@@ -2472,7 +2572,7 @@
       "doc": "Validates the matrícula of a certidão de registro civil (nascimento, casamento, óbito and the other acts kept by a serventia de registro civil das pessoas naturais).",
       "location": {
         "file": "src/is-valid-certidao/is-valid-certidao.ts",
-        "line": 110
+        "line": 112
       }
     },
     {
@@ -2548,7 +2648,7 @@
       "doc": "Validates if a cClassTrib (Código de Classificação Tributária do IBS e da CBS) exists in the official table, the check behind the rejection 1023 \"Classificação Tributária do IBS/CBS informada inexistente\" of the NF-e.",
       "location": {
         "file": "src/is-valid-class-trib/is-valid-class-trib.ts",
-        "line": 74
+        "line": 72
       }
     },
     {
@@ -2596,7 +2696,7 @@
       "doc": "Validates a CNO (Cadastro Nacional de Obras) number, the registration of a construction work with the Receita Federal.",
       "location": {
         "file": "src/is-valid-cno/is-valid-cno.ts",
-        "line": 59
+        "line": 60
       }
     },
     {
@@ -2621,10 +2721,10 @@
         }
       ],
       "returns": "boolean",
-      "doc": "Validates if a CNPJ (Cadastro Nacional da Pessoa Jurídica) is valid. Supports both numeric (version 1) and alphanumeric (version 2) CNPJ formats. Accepts the usual mask characters (`.`, `-`, `/`) and whitespace around and between groups.",
+      "doc": "Validates if a CNPJ (Cadastro Nacional da Pessoa Jurídica) is valid. Supports both numeric (version 1) and alphanumeric (version 2) CNPJ formats. Accepts the usual mask characters (`.`, `-`, `/`) and whitespace around and between groups. Since July 2026 new CNPJs may be alphanumeric, which the default `version: 1` rejects: pass `version: 2` to accept them.",
       "location": {
         "file": "src/is-valid-cnpj/is-valid-cnpj.ts",
-        "line": 86
+        "line": 88
       }
     },
     {
@@ -2653,7 +2753,7 @@
       "deprecated": true,
       "location": {
         "file": "src/index.ts",
-        "line": 422
+        "line": 426
       },
       "aliasOf": "isValidCnpj"
     },
@@ -2686,7 +2786,7 @@
       "doc": "Validates if a CPF (Cadastro de Pessoas Físicas) is valid. Accepts the usual mask characters (`.`, `-`) and whitespace around and between groups.",
       "location": {
         "file": "src/is-valid-cpf/is-valid-cpf.ts",
-        "line": 52
+        "line": 54
       }
     },
     {
@@ -2703,7 +2803,7 @@
       "deprecated": true,
       "location": {
         "file": "src/index.ts",
-        "line": 428
+        "line": 432
       },
       "aliasOf": "isValidCpf"
     },
@@ -2764,7 +2864,7 @@
       "doc": "Validates if a CST (Código de Situação Tributária) code is valid for a given tax.",
       "location": {
         "file": "src/is-valid-cst/is-valid-cst.ts",
-        "line": 126
+        "line": 128
       }
     },
     {
@@ -2796,7 +2896,7 @@
       "doc": "Validates if an email address is valid.",
       "location": {
         "file": "src/is-valid-email/is-valid-email.ts",
-        "line": 29
+        "line": 39
       }
     },
     {
@@ -2866,7 +2966,7 @@
       "doc": "Validates a Brazilian state tax registration number (IE).",
       "location": {
         "file": "src/is-valid-ie/is-valid-ie.ts",
-        "line": 728
+        "line": 747
       }
     },
     {
@@ -2887,7 +2987,7 @@
       "doc": "Validates a Brazilian state tax registration number (IE).",
       "location": {
         "file": "src/is-valid-ie/is-valid-ie.ts",
-        "line": 728
+        "line": 747
       }
     },
     {
@@ -2914,7 +3014,7 @@
       "deprecated": true,
       "location": {
         "file": "src/index.ts",
-        "line": 434
+        "line": 438
       },
       "aliasOf": "isValidIe"
     },
@@ -2937,7 +3037,7 @@
       "deprecated": true,
       "location": {
         "file": "src/index.ts",
-        "line": 434
+        "line": 438
       },
       "aliasOf": "isValidIe"
     },
@@ -2970,7 +3070,7 @@
       "doc": "Validates if a phone number is a valid Brazilian landline phone.",
       "location": {
         "file": "src/is-valid-landline-phone/is-valid-landline-phone.ts",
-        "line": 38
+        "line": 42
       }
     },
     {
@@ -2978,7 +3078,7 @@
       "params": [
         {
           "name": "code",
-          "type": "string",
+          "type": "string | number",
           "optional": false
         }
       ],
@@ -2986,7 +3086,7 @@
       "doc": "Validates if a Brazilian legal nature (natureza jurídica) code exists.",
       "location": {
         "file": "src/is-valid-legal-nature/is-valid-legal-nature.ts",
-        "line": 36
+        "line": 41
       }
     },
     {
@@ -3014,7 +3114,7 @@
       "doc": "Validates if a Brazilian license plate (placa de carro ou moto) is valid.",
       "location": {
         "file": "src/is-valid-license-plate/is-valid-license-plate.ts",
-        "line": 61
+        "line": 66
       }
     },
     {
@@ -3042,7 +3142,7 @@
       "doc": "Validates if a phone number is a valid Brazilian mobile phone.",
       "location": {
         "file": "src/is-valid-mobile-phone/is-valid-mobile-phone.ts",
-        "line": 71
+        "line": 75
       }
     },
     {
@@ -3090,7 +3190,7 @@
       "doc": "Validates a DF-e (Documento Fiscal eletrônico) access key (chave de acesso).",
       "location": {
         "file": "src/is-valid-nfe-key/is-valid-nfe-key.ts",
-        "line": 131
+        "line": 137
       }
     },
     {
@@ -3106,7 +3206,7 @@
       "doc": "Validates the access key (chave de acesso) of a national NFS-e, the Nota Fiscal de Serviço eletrônica of the Sistema Nacional NFS-e.",
       "location": {
         "file": "src/is-valid-nfse-key/is-valid-nfse-key.ts",
-        "line": 118
+        "line": 117
       }
     },
     {
@@ -3122,7 +3222,7 @@
       "doc": "Checks if a Brazilian passport number is valid. To be considered valid, the sanitized input must contain exactly two alphabetical characters followed by exactly six numerical digits. The input is case-insensitive and any non-alphanumeric characters (spaces, dots, hyphens, etc.) are ignored, mirroring the sanitization performed by `formatPassport`/`parsePassport`. This function does not verify if the input is a real passport number, as there are no checksums for the Brazilian passport. A number is accepted for symmetry with `formatPassport`/`parsePassport` but is never valid: the decimal form of a number never starts with the two letters a passport number needs.",
       "location": {
         "file": "src/is-valid-passport/is-valid-passport.ts",
-        "line": 34
+        "line": 35
       }
     },
     {
@@ -3155,7 +3255,7 @@
       "doc": "Validates a Brazilian phone number.",
       "location": {
         "file": "src/is-valid-phone/is-valid-phone.ts",
-        "line": 63
+        "line": 70
       }
     },
     {
@@ -3188,7 +3288,7 @@
       "deprecated": true,
       "location": {
         "file": "src/index.ts",
-        "line": 440
+        "line": 444
       },
       "aliasOf": "isValidPis"
     },
@@ -3217,7 +3317,7 @@
       "doc": "Validates a Pix key (chave Pix) against the DICT key formats.",
       "location": {
         "file": "src/is-valid-pix-key/is-valid-pix-key.ts",
-        "line": 44
+        "line": 46
       }
     },
     {
@@ -3233,7 +3333,7 @@
       "doc": "Validates a Pix BR Code payload, the string behind a Pix QR Code and behind \"Pix copia e cola\", against the Manual de Padrões para Iniciação do Pix and, where the manual is silent, the EMV® QRCPS-MPM it builds on.",
       "location": {
         "file": "src/is-valid-pix-payload/is-valid-pix-payload.ts",
-        "line": 210
+        "line": 212
       }
     },
     {
@@ -3280,7 +3380,7 @@
       "doc": "Checks the structure of a professional council registration number (registro/inscrição profissional).",
       "location": {
         "file": "src/is-valid-registro-profissional/is-valid-registro-profissional.ts",
-        "line": 161
+        "line": 167
       }
     },
     {
@@ -3296,7 +3396,7 @@
       "doc": "Validates if a RENAVAM (Registro Nacional de Veículos Automotores) is valid.",
       "location": {
         "file": "src/is-valid-renavam/is-valid-renavam.ts",
-        "line": 56
+        "line": 58
       }
     },
     {
@@ -3312,7 +3412,7 @@
       "doc": "Checks if a value is a subitem in force of the service list annexed to the Lei Complementar 116/2003, the list of the services the ISS is levied on.",
       "location": {
         "file": "src/is-valid-service-item/is-valid-service-item.ts",
-        "line": 39
+        "line": 40
       }
     },
     {
@@ -3328,7 +3428,7 @@
       "doc": "Validates if a phone number is a valid Brazilian service number.",
       "location": {
         "file": "src/is-valid-service-phone/is-valid-service-phone.ts",
-        "line": 56
+        "line": 58
       }
     },
     {
@@ -3344,7 +3444,7 @@
       "doc": "Validates an Inscrição SUFRAMA, the registration number the Superintendência da Zona Franca de Manaus gives to companies with tax incentives, carried by the `ISUF` field of the NF-e. Accepts the mask characters `isValidCpf` reads (whitespace, `.`, `-` and `/`, alone or in a run) between the fields of `SS.NNNN.LLD` (the check digit included, as in `20.5678.10-6`), and surrounding whitespace. Any other character, or a separator inside a field, makes the value invalid.",
       "location": {
         "file": "src/is-valid-suframa/is-valid-suframa.ts",
-        "line": 51
+        "line": 47
       }
     },
     {
@@ -3372,7 +3472,7 @@
       "doc": "Validates a VIN (Vehicle Identification Number / chassi).",
       "location": {
         "file": "src/is-valid-vin/is-valid-vin.ts",
-        "line": 86
+        "line": 83
       }
     },
     {
@@ -3388,7 +3488,7 @@
       "doc": "Validates if a Brazilian voter id (título de eleitor) is valid.",
       "location": {
         "file": "src/is-valid-voter-id/is-valid-voter-id.ts",
-        "line": 67
+        "line": 66
       }
     },
     {
@@ -3436,7 +3536,7 @@
       "doc": "Removes CBO (Classificação Brasileira de Ocupações) formatting characters and returns only digits.",
       "location": {
         "file": "src/parse-cbo/parse-cbo.ts",
-        "line": 33
+        "line": 30
       }
     },
     {
@@ -3608,7 +3708,7 @@
       "doc": "Removes CNPJ formatting characters and returns a normalized value.",
       "location": {
         "file": "src/parse-cnpj/parse-cnpj.ts",
-        "line": 41
+        "line": 46
       }
     },
     {
@@ -3668,7 +3768,7 @@
       "doc": "Parses a string representing Brazilian currency format into a number.",
       "location": {
         "file": "src/parse-currency/parse-currency.ts",
-        "line": 46
+        "line": 48
       }
     },
     {
@@ -3736,6 +3836,22 @@
       }
     },
     {
+      "name": "parseNbs",
+      "params": [
+        {
+          "name": "value",
+          "type": "string | number",
+          "optional": false
+        }
+      ],
+      "returns": "string",
+      "doc": "Removes NBS (Nomenclatura Brasileira de Serviços, Intangíveis e Outras Operações que Produzam Variações no Patrimônio) formatting characters and returns only digits.",
+      "location": {
+        "file": "src/parse-nbs/parse-nbs.ts",
+        "line": 30
+      }
+    },
+    {
       "name": "parseNcm",
       "params": [
         {
@@ -3796,7 +3912,7 @@
       "doc": "Removes non-alphanumeric characters from a passport number, uppercases it, and caps it to 8 characters.",
       "location": {
         "file": "src/parse-passport/parse-passport.ts",
-        "line": 19
+        "line": 20
       }
     },
     {
@@ -3812,7 +3928,7 @@
       "doc": "Removes phone formatting characters, returns only digits, and caps the result to 11 digits.",
       "location": {
         "file": "src/parse-phone/parse-phone.ts",
-        "line": 33
+        "line": 36
       }
     },
     {
@@ -3947,7 +4063,7 @@
           "optional": false
         },
         {
-          "name": "config",
+          "name": "options",
           "type": "ToStandardSchemaOptions<Options>",
           "optional": true,
           "fields": [
