@@ -1,8 +1,110 @@
 {
   "library": "brazilian-utils-dotnet",
   "language": "dotnet",
-  "revision": "8d8846d38d9eab2f805ba4324ecbe0e19b833335",
+  "revision": "1c6e9d56a74f39fabdc5e69a539888b7729a8a06",
   "symbols": [
+    {
+      "name": "AreaCode.GetInfo",
+      "params": [
+        {
+          "name": "areaCode",
+          "type": "obj"
+        }
+      ],
+      "returns": "AreaCodeInfo option",
+      "location": {
+        "file": "BrazilianUtils/AreaCode.fs",
+        "line": 88
+      }
+    },
+    {
+      "name": "AreaCode.ListByState",
+      "params": [
+        {
+          "name": "stateCode",
+          "type": "string"
+        }
+      ],
+      "returns": "int list",
+      "location": {
+        "file": "BrazilianUtils/AreaCode.fs",
+        "line": 102
+      }
+    },
+    {
+      "name": "Bank.GetByCode",
+      "params": [
+        {
+          "name": "code",
+          "type": "obj"
+        }
+      ],
+      "returns": "BankInfo option",
+      "location": {
+        "file": "BrazilianUtils/Bank.fs",
+        "line": 95
+      }
+    },
+    {
+      "name": "Bank.GetByIspb",
+      "params": [
+        {
+          "name": "value",
+          "type": "obj"
+        }
+      ],
+      "returns": "BankInfo option",
+      "location": {
+        "file": "BrazilianUtils/Bank.fs",
+        "line": 102
+      }
+    },
+    {
+      "name": "Bank.List",
+      "params": [],
+      "returns": "BankInfo list",
+      "location": {
+        "file": "BrazilianUtils/Bank.fs",
+        "line": 108
+      }
+    },
+    {
+      "name": "BankAccount.IsValid",
+      "params": [
+        {
+          "name": "parametros",
+          "type": "IsValidBankAccountParams"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "BrazilianUtils/BankAccount.fs",
+        "line": 103
+      }
+    },
+    {
+      "name": "Boleto.Format",
+      "params": [
+        {
+          "name": "value",
+          "type": "obj"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Boleto.fs",
+        "line": 114
+      }
+    },
+    {
+      "name": "Boleto.Generate",
+      "params": [],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Boleto.fs",
+        "line": 136
+      }
+    },
     {
       "name": "Boleto.IsValid",
       "params": [
@@ -14,7 +116,147 @@
       "returns": "bool",
       "location": {
         "file": "BrazilianUtils/Boleto.fs",
-        "line": 83
+        "line": 84
+      }
+    },
+    {
+      "name": "Boleto.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "obj"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Boleto.fs",
+        "line": 103
+      }
+    },
+    {
+      "name": "Caepf.Format",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Caepf.fs",
+        "line": 23
+      }
+    },
+    {
+      "name": "Caepf.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "BrazilianUtils/Caepf.fs",
+        "line": 39
+      }
+    },
+    {
+      "name": "Caepf.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Caepf.fs",
+        "line": 52
+      }
+    },
+    {
+      "name": "Cbo.Get",
+      "params": [
+        {
+          "name": "value",
+          "type": "obj"
+        }
+      ],
+      "returns": "CboInfo option",
+      "location": {
+        "file": "BrazilianUtils/Cbo.fs",
+        "line": 52
+      }
+    },
+    {
+      "name": "Cbo.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "obj"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "BrazilianUtils/Cbo.fs",
+        "line": 60
+      }
+    },
+    {
+      "name": "Cbo.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "obj"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Cbo.fs",
+        "line": 66
+      }
+    },
+    {
+      "name": "Cei.Format",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Cei.fs",
+        "line": 27
+      }
+    },
+    {
+      "name": "Cei.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "BrazilianUtils/Cei.fs",
+        "line": 41
+      }
+    },
+    {
+      "name": "Cei.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Cei.fs",
+        "line": 50
       }
     },
     {
@@ -28,7 +270,44 @@
       "returns": "string",
       "location": {
         "file": "BrazilianUtils/Cep.fs",
-        "line": 14
+        "line": 17
+      }
+    },
+    {
+      "name": "Cep.Generate",
+      "params": [],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Cep.fs",
+        "line": 41
+      }
+    },
+    {
+      "name": "Cep.GetAddressInfo",
+      "params": [
+        {
+          "name": "cep",
+          "type": "string"
+        }
+      ],
+      "returns": "AddressInfo",
+      "location": {
+        "file": "BrazilianUtils/Cep.fs",
+        "line": 71
+      }
+    },
+    {
+      "name": "Cep.GetInfoByAddress",
+      "params": [
+        {
+          "name": "parametros",
+          "type": "GetInfoByAddressParams"
+        }
+      ],
+      "returns": "AddressInfo list",
+      "location": {
+        "file": "BrazilianUtils/Cep.fs",
+        "line": 97
       }
     },
     {
@@ -42,7 +321,216 @@
       "returns": "bool",
       "location": {
         "file": "BrazilianUtils/Cep.fs",
-        "line": 10
+        "line": 13
+      }
+    },
+    {
+      "name": "Cep.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Cep.fs",
+        "line": 34
+      }
+    },
+    {
+      "name": "Cep.RemoveSymbols",
+      "params": [
+        {
+          "name": "cep",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Cep.fs",
+        "line": 27
+      }
+    },
+    {
+      "name": "Certidao.Format",
+      "params": [
+        {
+          "name": "value",
+          "type": "obj"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Certidao.fs",
+        "line": 62
+      }
+    },
+    {
+      "name": "Certidao.GetInfo",
+      "params": [
+        {
+          "name": "value",
+          "type": "obj"
+        }
+      ],
+      "returns": "CertidaoInfo option",
+      "location": {
+        "file": "BrazilianUtils/Certidao.fs",
+        "line": 134
+      }
+    },
+    {
+      "name": "Certidao.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "obj"
+        },
+        {
+          "name": "aceitar",
+          "type": "int list option"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "BrazilianUtils/Certidao.fs",
+        "line": 115
+      }
+    },
+    {
+      "name": "Certidao.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "obj"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Certidao.fs",
+        "line": 55
+      }
+    },
+    {
+      "name": "Cfop.Get",
+      "params": [
+        {
+          "name": "value",
+          "type": "obj"
+        }
+      ],
+      "returns": "CfopInfo option",
+      "location": {
+        "file": "BrazilianUtils/Cfop.fs",
+        "line": 49
+      }
+    },
+    {
+      "name": "Cfop.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "obj"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "BrazilianUtils/Cfop.fs",
+        "line": 58
+      }
+    },
+    {
+      "name": "Cfop.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "obj"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Cfop.fs",
+        "line": 63
+      }
+    },
+    {
+      "name": "Cnae.Format",
+      "params": [
+        {
+          "name": "value",
+          "type": "obj"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Cnae.fs",
+        "line": 50
+      }
+    },
+    {
+      "name": "Cnae.Get",
+      "params": [
+        {
+          "name": "value",
+          "type": "obj"
+        }
+      ],
+      "returns": "CnaeInfo option",
+      "location": {
+        "file": "BrazilianUtils/Cnae.fs",
+        "line": 58
+      }
+    },
+    {
+      "name": "Cnae.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "obj"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "BrazilianUtils/Cnae.fs",
+        "line": 66
+      }
+    },
+    {
+      "name": "Cnae.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "obj"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Cnae.fs",
+        "line": 70
+      }
+    },
+    {
+      "name": "Cnh.Format",
+      "params": [
+        {
+          "name": "value",
+          "type": "obj"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Cnh.fs",
+        "line": 97
+      }
+    },
+    {
+      "name": "Cnh.Generate",
+      "params": [],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Cnh.fs",
+        "line": 103
       }
     },
     {
@@ -57,6 +545,62 @@
       "location": {
         "file": "BrazilianUtils/Cnh.fs",
         "line": 51
+      }
+    },
+    {
+      "name": "Cnh.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "obj"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Cnh.fs",
+        "line": 91
+      }
+    },
+    {
+      "name": "Cno.Format",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Cno.fs",
+        "line": 26
+      }
+    },
+    {
+      "name": "Cno.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "BrazilianUtils/Cno.fs",
+        "line": 38
+      }
+    },
+    {
+      "name": "Cno.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Cno.fs",
+        "line": 47
       }
     },
     {
@@ -88,7 +632,7 @@
       "returns": "string",
       "location": {
         "file": "BrazilianUtils/Cnpj.fs",
-        "line": 86
+        "line": 101
       }
     },
     {
@@ -103,6 +647,76 @@
       "location": {
         "file": "BrazilianUtils/Cnpj.fs",
         "line": 64
+      }
+    },
+    {
+      "name": "Cnpj.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Cnpj.fs",
+        "line": 97
+      }
+    },
+    {
+      "name": "Cnpj.RemoveSymbols",
+      "params": [
+        {
+          "name": "cnpj",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Cnpj.fs",
+        "line": 90
+      }
+    },
+    {
+      "name": "Cns.Format",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Cns.fs",
+        "line": 37
+      }
+    },
+    {
+      "name": "Cns.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "BrazilianUtils/Cns.fs",
+        "line": 51
+      }
+    },
+    {
+      "name": "Cns.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Cns.fs",
+        "line": 62
       }
     },
     {
@@ -125,7 +739,7 @@
       "returns": "string",
       "location": {
         "file": "BrazilianUtils/Cpf.fs",
-        "line": 52
+        "line": 67
       }
     },
     {
@@ -143,31 +757,259 @@
       }
     },
     {
-      "name": "Currency.convertRealToText",
+      "name": "Cpf.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Cpf.fs",
+        "line": 63
+      }
+    },
+    {
+      "name": "Cpf.RemoveSymbols",
+      "params": [
+        {
+          "name": "cpf",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Cpf.fs",
+        "line": 56
+      }
+    },
+    {
+      "name": "CreditCard.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "obj"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "BrazilianUtils/CreditCard.fs",
+        "line": 29
+      }
+    },
+    {
+      "name": "Csosn.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "BrazilianUtils/Csosn.fs",
+        "line": 15
+      }
+    },
+    {
+      "name": "Cst.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "obj"
+        },
+        {
+          "name": "tax",
+          "type": "string option"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "BrazilianUtils/Cst.fs",
+        "line": 55
+      }
+    },
+    {
+      "name": "Currency.ConvertToWords",
       "params": [
         {
           "name": "amount",
           "type": "decimal"
         }
       ],
-      "returns": "string option",
+      "returns": "string",
       "location": {
         "file": "BrazilianUtils/Currency.fs",
-        "line": 122
+        "line": 175
       }
     },
     {
-      "name": "Currency.formatCurrency",
+      "name": "Currency.Format",
       "params": [
         {
           "name": "value",
-          "type": "decimal"
+          "type": "obj"
         }
       ],
-      "returns": "string option",
+      "returns": "string",
       "location": {
         "file": "BrazilianUtils/Currency.fs",
-        "line": 8
+        "line": 66
+      }
+    },
+    {
+      "name": "Currency.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "float",
+      "location": {
+        "file": "BrazilianUtils/Currency.fs",
+        "line": 82
+      }
+    },
+    {
+      "name": "Date.AddBusinessDays",
+      "params": [
+        {
+          "name": "date",
+          "type": "DateTime"
+        },
+        {
+          "name": "amount",
+          "type": "int"
+        },
+        {
+          "name": "options",
+          "type": "BusinessDayOptions option"
+        }
+      ],
+      "returns": "DateTime option",
+      "location": {
+        "file": "BrazilianUtils/Date.fs",
+        "line": 114
+      }
+    },
+    {
+      "name": "Date.ConvertToWords",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Date.fs",
+        "line": 172
+      }
+    },
+    {
+      "name": "Date.DifferenceInBusinessDays",
+      "params": [
+        {
+          "name": "laterDate",
+          "type": "DateTime"
+        },
+        {
+          "name": "earlierDate",
+          "type": "DateTime"
+        },
+        {
+          "name": "options",
+          "type": "BusinessDayOptions option"
+        }
+      ],
+      "returns": "int option",
+      "location": {
+        "file": "BrazilianUtils/Date.fs",
+        "line": 139
+      }
+    },
+    {
+      "name": "Date.GetHolidays",
+      "params": [
+        {
+          "name": "year",
+          "type": "int"
+        }
+      ],
+      "returns": "Holiday list",
+      "location": {
+        "file": "BrazilianUtils/Date.fs",
+        "line": 51
+      }
+    },
+    {
+      "name": "Date.IsBusinessDay",
+      "params": [
+        {
+          "name": "value",
+          "type": "DateTime"
+        },
+        {
+          "name": "options",
+          "type": "BusinessDayOptions option"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "BrazilianUtils/Date.fs",
+        "line": 98
+      }
+    },
+    {
+      "name": "Date.IsHoliday",
+      "params": [
+        {
+          "name": "options",
+          "type": "IsHolidayParams option"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "BrazilianUtils/Date.fs",
+        "line": 86
+      }
+    },
+    {
+      "name": "Date.SubBusinessDays",
+      "params": [
+        {
+          "name": "date",
+          "type": "DateTime"
+        },
+        {
+          "name": "amount",
+          "type": "int"
+        },
+        {
+          "name": "options",
+          "type": "BusinessDayOptions option"
+        }
+      ],
+      "returns": "DateTime option",
+      "location": {
+        "file": "BrazilianUtils/Date.fs",
+        "line": 132
+      }
+    },
+    {
+      "name": "Email.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "BrazilianUtils/Email.fs",
+        "line": 24
       }
     },
     {
@@ -182,6 +1024,191 @@
       "location": {
         "file": "BrazilianUtils/Helpers.fs",
         "line": 30
+      }
+    },
+    {
+      "name": "Iban.Format",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Iban.fs",
+        "line": 30
+      }
+    },
+    {
+      "name": "Iban.GetInfo",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "IbanInfo option",
+      "location": {
+        "file": "BrazilianUtils/Iban.fs",
+        "line": 95
+      }
+    },
+    {
+      "name": "Iban.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "BrazilianUtils/Iban.fs",
+        "line": 86
+      }
+    },
+    {
+      "name": "Iban.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Iban.fs",
+        "line": 20
+      }
+    },
+    {
+      "name": "Ie.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        },
+        {
+          "name": "state",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "BrazilianUtils/Ie.fs",
+        "line": 67
+      }
+    },
+    {
+      "name": "LegalNature.Format",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/LegalNature.fs",
+        "line": 163
+      }
+    },
+    {
+      "name": "LegalNature.Generate",
+      "params": [],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/LegalNature.fs",
+        "line": 206
+      }
+    },
+    {
+      "name": "LegalNature.Get",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "LegalNatureInfo option",
+      "location": {
+        "file": "BrazilianUtils/LegalNature.fs",
+        "line": 174
+      }
+    },
+    {
+      "name": "LegalNature.GetDescription",
+      "params": [
+        {
+          "name": "code",
+          "type": "string"
+        }
+      ],
+      "returns": "string option",
+      "location": {
+        "file": "BrazilianUtils/LegalNature.fs",
+        "line": 180
+      }
+    },
+    {
+      "name": "LegalNature.IsValid",
+      "params": [
+        {
+          "name": "code",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "BrazilianUtils/LegalNature.fs",
+        "line": 184
+      }
+    },
+    {
+      "name": "LegalNature.List",
+      "params": [
+        {
+          "name": "incluirAposentados",
+          "type": "bool option"
+        }
+      ],
+      "returns": "FSharpMap<string, string>",
+      "location": {
+        "file": "BrazilianUtils/LegalNature.fs",
+        "line": 213
+      }
+    },
+    {
+      "name": "LegalNature.ListByCategory",
+      "params": [
+        {
+          "name": "category",
+          "type": "obj"
+        },
+        {
+          "name": "incluirAposentados",
+          "type": "bool option"
+        }
+      ],
+      "returns": "LegalNatureInfo list",
+      "location": {
+        "file": "BrazilianUtils/LegalNature.fs",
+        "line": 190
+      }
+    },
+    {
+      "name": "LegalNature.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/LegalNature.fs",
+        "line": 169
       }
     },
     {
@@ -202,18 +1229,14 @@
       "name": "LegalProcess.generate",
       "params": [
         {
-          "name": "year",
-          "type": "int option"
-        },
-        {
-          "name": "orgao",
-          "type": "int option"
+          "name": "options",
+          "type": "GenerateLegalProcessOptions option"
         }
       ],
       "returns": "string option",
       "location": {
         "file": "BrazilianUtils/LegalProcess.fs",
-        "line": 277
+        "line": 291
       }
     },
     {
@@ -227,7 +1250,21 @@
       "returns": "bool",
       "location": {
         "file": "BrazilianUtils/LegalProcess.fs",
-        "line": 237
+        "line": 245
+      }
+    },
+    {
+      "name": "LegalProcess.parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/LegalProcess.fs",
+        "line": 216
       }
     },
     {
@@ -252,10 +1289,10 @@
           "type": "string"
         }
       ],
-      "returns": "string option",
+      "returns": "string",
       "location": {
         "file": "BrazilianUtils/LicensePlate.fs",
-        "line": 38
+        "line": 47
       }
     },
     {
@@ -269,7 +1306,7 @@
       "returns": "string option",
       "location": {
         "file": "BrazilianUtils/LicensePlate.fs",
-        "line": 55
+        "line": 67
       }
     },
     {
@@ -283,7 +1320,7 @@
       "returns": "string option",
       "location": {
         "file": "BrazilianUtils/LicensePlate.fs",
-        "line": 118
+        "line": 145
       }
     },
     {
@@ -297,7 +1334,7 @@
       "returns": "string option",
       "location": {
         "file": "BrazilianUtils/LicensePlate.fs",
-        "line": 84
+        "line": 95
       }
     },
     {
@@ -306,16 +1343,26 @@
         {
           "name": "licensePlate",
           "type": "string"
-        },
-        {
-          "name": "plateType",
-          "type": "string option"
         }
       ],
       "returns": "bool",
       "location": {
         "file": "BrazilianUtils/LicensePlate.fs",
-        "line": 99
+        "line": 110
+      }
+    },
+    {
+      "name": "LicensePlate.parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/LicensePlate.fs",
+        "line": 123
       }
     },
     {
@@ -329,7 +1376,240 @@
       "returns": "string",
       "location": {
         "file": "BrazilianUtils/LicensePlate.fs",
-        "line": 74
+        "line": 85
+      }
+    },
+    {
+      "name": "Municipality.GetByCode",
+      "params": [
+        {
+          "name": "code",
+          "type": "obj"
+        }
+      ],
+      "returns": "MunicipalityInfo option",
+      "location": {
+        "file": "BrazilianUtils/Municipality.fs",
+        "line": 32
+      }
+    },
+    {
+      "name": "Municipality.List",
+      "params": [
+        {
+          "name": "stateCode",
+          "type": "string option"
+        }
+      ],
+      "returns": "MunicipalityInfo list",
+      "location": {
+        "file": "BrazilianUtils/Municipality.fs",
+        "line": 47
+      }
+    },
+    {
+      "name": "Ncm.Format",
+      "params": [
+        {
+          "name": "value",
+          "type": "obj"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Ncm.fs",
+        "line": 46
+      }
+    },
+    {
+      "name": "Ncm.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "obj"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "BrazilianUtils/Ncm.fs",
+        "line": 54
+      }
+    },
+    {
+      "name": "Ncm.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "obj"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Ncm.fs",
+        "line": 60
+      }
+    },
+    {
+      "name": "NfeKey.Format",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/NfeKey.fs",
+        "line": 47
+      }
+    },
+    {
+      "name": "NfeKey.GetInfo",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "NfeKeyInfo option",
+      "location": {
+        "file": "BrazilianUtils/NfeKey.fs",
+        "line": 162
+      }
+    },
+    {
+      "name": "NfeKey.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "BrazilianUtils/NfeKey.fs",
+        "line": 145
+      }
+    },
+    {
+      "name": "NfeKey.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/NfeKey.fs",
+        "line": 36
+      }
+    },
+    {
+      "name": "Number.ConvertToWords",
+      "params": [
+        {
+          "name": "value",
+          "type": "float"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/NumberWords.fs",
+        "line": 79
+      }
+    },
+    {
+      "name": "Passport.Format",
+      "params": [
+        {
+          "name": "value",
+          "type": "obj"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Passport.fs",
+        "line": 28
+      }
+    },
+    {
+      "name": "Passport.Generate",
+      "params": [],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Passport.fs",
+        "line": 45
+      }
+    },
+    {
+      "name": "Passport.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "obj"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "BrazilianUtils/Passport.fs",
+        "line": 36
+      }
+    },
+    {
+      "name": "Passport.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "obj"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Passport.fs",
+        "line": 19
+      }
+    },
+    {
+      "name": "Passport.RemoveSymbols",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Passport.fs",
+        "line": 24
+      }
+    },
+    {
+      "name": "Phone.Format",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Phone.fs",
+        "line": 160
+      }
+    },
+    {
+      "name": "Phone.Generate",
+      "params": [
+        {
+          "name": "tipo",
+          "type": "string option"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Phone.fs",
+        "line": 213
       }
     },
     {
@@ -343,7 +1623,91 @@
       "returns": "bool",
       "location": {
         "file": "BrazilianUtils/Phone.fs",
-        "line": 103
+        "line": 104
+      }
+    },
+    {
+      "name": "Phone.IsValidLandline",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "BrazilianUtils/Phone.fs",
+        "line": 174
+      }
+    },
+    {
+      "name": "Phone.IsValidMobile",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "BrazilianUtils/Phone.fs",
+        "line": 184
+      }
+    },
+    {
+      "name": "Phone.IsValidService",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "BrazilianUtils/Phone.fs",
+        "line": 194
+      }
+    },
+    {
+      "name": "Phone.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Phone.fs",
+        "line": 141
+      }
+    },
+    {
+      "name": "Phone.RemoveInternationalDialingCode",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Phone.fs",
+        "line": 123
+      }
+    },
+    {
+      "name": "Phone.RemoveSymbols",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Phone.fs",
+        "line": 116
       }
     },
     {
@@ -357,7 +1721,7 @@
       "returns": "string option",
       "location": {
         "file": "BrazilianUtils/Pis.fs",
-        "line": 68
+        "line": 71
       }
     },
     {
@@ -366,7 +1730,7 @@
       "returns": "string",
       "location": {
         "file": "BrazilianUtils/Pis.fs",
-        "line": 87
+        "line": 98
       }
     },
     {
@@ -384,6 +1748,20 @@
       }
     },
     {
+      "name": "Pis.parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Pis.fs",
+        "line": 94
+      }
+    },
+    {
       "name": "Pis.removeSymbols",
       "params": [
         {
@@ -398,6 +1776,89 @@
       }
     },
     {
+      "name": "PixKey.GetInfo",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "PixKeyInfo option",
+      "location": {
+        "file": "BrazilianUtils/PixKey.fs",
+        "line": 24
+      }
+    },
+    {
+      "name": "PixKey.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        },
+        {
+          "name": "allowedTypes",
+          "type": "string list option"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "BrazilianUtils/PixKey.fs",
+        "line": 55
+      }
+    },
+    {
+      "name": "PixPayload.GetInfo",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "PixPayloadInfo option",
+      "location": {
+        "file": "BrazilianUtils/PixPayload.fs",
+        "line": 151
+      }
+    },
+    {
+      "name": "PixPayload.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "BrazilianUtils/PixPayload.fs",
+        "line": 134
+      }
+    },
+    {
+      "name": "RegistroProfissional.IsValid",
+      "params": [
+        {
+          "name": "parametros",
+          "type": "IsValidRegistroProfissionalParams"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "BrazilianUtils/RegistroProfissional.fs",
+        "line": 32
+      }
+    },
+    {
+      "name": "Renavam.Generate",
+      "params": [],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Renavam.fs",
+        "line": 70
+      }
+    },
+    {
       "name": "Renavam.isValidRenavam",
       "params": [
         {
@@ -409,6 +1870,113 @@
       "location": {
         "file": "BrazilianUtils/Renavam.fs",
         "line": 60
+      }
+    },
+    {
+      "name": "State.GetByIbgeCode",
+      "params": [
+        {
+          "name": "code",
+          "type": "obj"
+        }
+      ],
+      "returns": "StateInfo option",
+      "location": {
+        "file": "BrazilianUtils/State.fs",
+        "line": 57
+      }
+    },
+    {
+      "name": "State.GetCodeByName",
+      "params": [
+        {
+          "name": "name",
+          "type": "string"
+        }
+      ],
+      "returns": "string option",
+      "location": {
+        "file": "BrazilianUtils/State.fs",
+        "line": 71
+      }
+    },
+    {
+      "name": "State.GetNameByCode",
+      "params": [
+        {
+          "name": "code",
+          "type": "string"
+        }
+      ],
+      "returns": "string option",
+      "location": {
+        "file": "BrazilianUtils/State.fs",
+        "line": 82
+      }
+    },
+    {
+      "name": "State.GetTimezone",
+      "params": [
+        {
+          "name": "stateCode",
+          "type": "string"
+        }
+      ],
+      "returns": "string option",
+      "location": {
+        "file": "BrazilianUtils/State.fs",
+        "line": 93
+      }
+    },
+    {
+      "name": "State.List",
+      "params": [],
+      "returns": "StateInfo list",
+      "location": {
+        "file": "BrazilianUtils/State.fs",
+        "line": 102
+      }
+    },
+    {
+      "name": "Text.Capitalize",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Text.fs",
+        "line": 43
+      }
+    },
+    {
+      "name": "Text.RemoveAccents",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/Text.fs",
+        "line": 63
+      }
+    },
+    {
+      "name": "Vin.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "BrazilianUtils/Vin.fs",
+        "line": 46
       }
     },
     {
@@ -451,6 +2019,34 @@
       "location": {
         "file": "BrazilianUtils/VoterId.fs",
         "line": 67
+      }
+    },
+    {
+      "name": "VoterId.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "obj"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/VoterId.fs",
+        "line": 194
+      }
+    },
+    {
+      "name": "VoterId.RemoveSymbols",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "BrazilianUtils/VoterId.fs",
+        "line": 203
       }
     }
   ],
