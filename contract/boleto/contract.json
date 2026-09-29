@@ -1,0 +1,375 @@
+{
+  "$schema": "../../schema/contract.schema.json",
+  "domain": "boleto",
+  "title": { "en": "Boleto", "pt-BR": "Boleto" },
+  "summary": {
+    "en": "Boleto de cobrança bancária and boleto de arrecadação: linha digitável and barcode validation, formatting, parsing and decoding.",
+    "pt-BR": "Boleto de cobrança e de arrecadação: validação, formatação, leitura e decodificação da linha digitável e do código de barras."
+  },
+  "category": "finance",
+  "order": 2,
+  "related": ["bank"],
+  "functions": {
+    "format": {
+      "summary": { "en": "Formats a value as a Brazilian boleto.", "pt-BR": "Formata um valor como boleto." },
+      "description": {
+        "en": [
+          "Formats a boleto linha digitável with its printed mask.",
+          "",
+          "- The function groups the 47-digit cobrança bancária linha digitável as `00000.00000 00000.000000 00000.000000 0 00000000000000`.",
+          "- A 48-digit linha digitável starting with `8` (boleto de arrecadação) gets four blocks of 11 digits, each followed by its check digit. The 44-digit arrecadação barcode keeps the cobrança bancária mask, and a 44-digit value starting with `8` is always read as an arrecadação barcode.",
+          "- Every character that is not a digit is removed first, so a masked value is accepted. Digits beyond the length of the pattern are dropped.",
+          "- Without `options.pad` a short value is masked only as far as its digits go (`104914` gives `10491.4`).",
+          "- A value with no digits (an empty string, `abc`, `null`) gives an empty string, even with `options.pad`. Until 2.4.0 `pad: true` returned the full zero mask for an empty string or one without digits.",
+          "- `options.pad` left-pads the value with zeros to the length of the pattern before masking.",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number)."
+        ],
+        "pt-BR": [
+          "Formata a linha digitável de um boleto com a máscara impressa.",
+          "",
+          "- A função agrupa a linha digitável de cobrança bancária de 47 dígitos como `00000.00000 00000.000000 00000.000000 0 00000000000000`.",
+          "- Uma linha digitável de 48 dígitos que começa com `8` (boleto de arrecadação) recebe quatro blocos de 11 dígitos, cada um seguido do seu dígito verificador. O código de barras de arrecadação de 44 dígitos mantém a máscara de cobrança bancária, e um valor de 44 dígitos que começa com `8` é sempre lido como código de barras de arrecadação.",
+          "- Todo caractere que não é dígito é removido antes, então um valor com máscara é aceito. Os dígitos além do tamanho do padrão são descartados.",
+          "- Sem `options.pad`, um valor curto recebe a máscara só até onde vão os seus dígitos (`104914` dá `10491.4`).",
+          "- Um valor sem dígitos (string vazia, `abc`, `null`) retorna uma string vazia, mesmo com `options.pad`. Até a 2.4.0 `pad: true` retornava a máscara inteira de zeros para uma string vazia ou sem dígitos.",
+          "- `options.pad` completa o valor com zeros à esquerda até o tamanho do padrão, antes de aplicar a máscara.",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia (a 2.4.0 lia os dígitos de qualquer número)."
+        ]
+      },
+      "references": [
+        "https://www.bcb.gov.br/pre/normativos/c_circ/2000/pdf/c_circ_2926_v1_O.pdf",
+        "https://cmsarquivos.febraban.org.br/Arquivos/documentos/PDF/Conven%C3%A7%C3%A3o%20da%20Cobran%C3%A7a%20-%2005_02_2021_f.pdf",
+        "https://cmsarquivos.febraban.org.br/Arquivos/documentos/PDF/Layout%20-%20C%C3%B3digo%20de%20Barras%20-%20Vers%C3%A3o%208%20-%2011_05_2026.pdf",
+        "https://portal.febraban.org.br/pagina/3425/33/pt-br/layout-febraban"
+      ],
+      "params": [
+        { "name": "value", "type": "string | number" },
+        { "name": "options", "type": "FormatBoletoOptions", "optional": true, "fields": [{ "name": "pad", "type": "boolean", "optional": true }] }
+      ],
+      "returns": "string",
+      "tests": [
+        { "name": "full", "args": ["10491443385511900000200000000141325230000093423"], "returns": "10491.44338 55119.000002 00000.000141 3 25230000093423" },
+        { "name": "partial", "args": ["104914"], "returns": "10491.4" },
+        { "name": "empty", "args": [""], "returns": "" },
+        { "args": ["1"], "returns": "1", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["10"], "returns": "10", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["104"], "returns": "104", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["1049"], "returns": "1049", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["10491"], "returns": "10491", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["1049144"], "returns": "10491.44", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["10491443"], "returns": "10491.443", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["104914433"], "returns": "10491.4433", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["1049144338"], "returns": "10491.44338", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["10491443385"], "returns": "10491.44338 5", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["104914433855"], "returns": "10491.44338 55", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["1049144338551"], "returns": "10491.44338 551", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["10491443385511"], "returns": "10491.44338 5511", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["104914433855119"], "returns": "10491.44338 55119", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["1049144338551190"], "returns": "10491.44338 55119.0", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["10491443385511900"], "returns": "10491.44338 55119.00", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["104914433855119000"], "returns": "10491.44338 55119.000", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["1049144338551190000"], "returns": "10491.44338 55119.0000", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["10491443385511900000"], "returns": "10491.44338 55119.00000", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["104914433855119000002"], "returns": "10491.44338 55119.000002", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["1049144338551190000020"], "returns": "10491.44338 55119.000002 0", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["10491443385511900000200"], "returns": "10491.44338 55119.000002 00", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["104914433855119000002000"], "returns": "10491.44338 55119.000002 000", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["1049144338551190000020000"], "returns": "10491.44338 55119.000002 0000", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["10491443385511900000200000"], "returns": "10491.44338 55119.000002 00000", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["104914433855119000002000000"], "returns": "10491.44338 55119.000002 00000.0", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["1049144338551190000020000000"], "returns": "10491.44338 55119.000002 00000.00", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["10491443385511900000200000000"], "returns": "10491.44338 55119.000002 00000.000", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["104914433855119000002000000001"], "returns": "10491.44338 55119.000002 00000.0001", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["1049144338551190000020000000014"], "returns": "10491.44338 55119.000002 00000.00014", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["10491443385511900000200000000141"], "returns": "10491.44338 55119.000002 00000.000141", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["104914433855119000002000000001413"], "returns": "10491.44338 55119.000002 00000.000141 3", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["1049144338551190000020000000014132"], "returns": "10491.44338 55119.000002 00000.000141 3 2", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["10491443385511900000200000000141325"], "returns": "10491.44338 55119.000002 00000.000141 3 25", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["104914433855119000002000000001413252"], "returns": "10491.44338 55119.000002 00000.000141 3 252", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["1049144338551190000020000000014132523"], "returns": "10491.44338 55119.000002 00000.000141 3 2523", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["10491443385511900000200000000141325230"], "returns": "10491.44338 55119.000002 00000.000141 3 25230", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["104914433855119000002000000001413252300"], "returns": "10491.44338 55119.000002 00000.000141 3 252300", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["1049144338551190000020000000014132523000"], "returns": "10491.44338 55119.000002 00000.000141 3 2523000", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["10491443385511900000200000000141325230000"], "returns": "10491.44338 55119.000002 00000.000141 3 25230000", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["104914433855119000002000000001413252300000"], "returns": "10491.44338 55119.000002 00000.000141 3 252300000", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["1049144338551190000020000000014132523000009"], "returns": "10491.44338 55119.000002 00000.000141 3 2523000009", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["10491443385511900000200000000141325230000093"], "returns": "10491.44338 55119.000002 00000.000141 3 25230000093", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["104914433855119000002000000001413252300000934"], "returns": "10491.44338 55119.000002 00000.000141 3 252300000934", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["1049144338551190000020000000014132523000009342"], "returns": "10491.44338 55119.000002 00000.000141 3 2523000009342", "note": "JavaScript's own test: should format boleto with mask" },
+        { "args": ["10491443385511900000200000000141325230000093423123123123"], "returns": "10491.44338 55119.000002 00000.000141 3 25230000093423", "note": "JavaScript's own test" },
+        { "args": ["10491.44A338 55119.000002? ABC00000.000?141 3 25230000093423"], "returns": "10491.44338 55119.000002 00000.000141 3 25230000093423", "note": "JavaScript's own test: should remove all non numeric characters boleto" },
+        { "args": ["846100000005246100291102005460339004695895061080"], "returns": "84610000000-5 24610029110-2 00546033900-4 69589506108-0", "note": "JavaScript's own test: arrecadação should use the arrecadação mask when it starts with 8" },
+        { "args": ["858900004609524601791605607593050865831483000010"], "returns": "85890000460-9 52460179160-5 60759305086-5 83148300001-0", "note": "JavaScript's own test: arrecadação should use the arrecadação mask when it starts with 8" },
+        { "args": ["8"], "returns": "8", "note": "JavaScript's own test: arrecadação should keep the cobrança bancária mask for partial values" },
+        { "args": ["84610000000"], "returns": "84610.00000 0", "note": "JavaScript's own test: arrecadação should keep the cobrança bancária mask for partial values" },
+        { "args": ["846100000005"], "returns": "84610.00000 05", "note": "JavaScript's own test: arrecadação should keep the cobrança bancária mask for partial values" },
+        { "args": ["8461000000052"], "returns": "84610.00000 052", "note": "JavaScript's own test: arrecadação should keep the cobrança bancária mask for partial values" },
+        { "args": ["84610000000246100291100054603390069589506108"], "returns": "84610.00000 02461.002911 00054.603390 0 69589506108", "note": "JavaScript's own test: arrecadação should keep the cobrança bancária mask for the 44 digit barcode" },
+        { "args": ["846100000005246100291102005460339004695895061080123"], "returns": "84610.00000 05246.100291 10200.546033 9 00469589506108", "note": "JavaScript's own test: arrecadação" },
+        { "args": ["84610000000-5 24610029110-2 00546033900-4 69589506108-0"], "returns": "84610000000-5 24610029110-2 00546033900-4 69589506108-0", "note": "JavaScript's own test: arrecadação should remove all non numeric characters" },
+        { "args": [-1], "returns": "", "note": "#593 number rule. JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number" },
+        { "args": [1.5], "returns": "", "note": "#593 number rule. JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number" },
+        { "args": [9007199254740992], "returns": "", "note": "#593 number rule (2 ** 53 is not a safe integer). JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number" },
+        { "args": [1e+21, { "pad": true }], "returns": "", "note": "#593 number rule (even with pad). JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number" },
+        { "args": [123], "returns": "123", "note": "a safe non-negative integer is read as its digits" },
+        { "args": ["", { "pad": true }], "returns": "", "note": "should return an empty string for an empty value or one without digits" },
+        { "args": ["abc", { "pad": true }], "returns": "", "note": "should return an empty string for an empty value or one without digits" },
+        { "args": [null, { "pad": true }], "returns": "", "note": "should return an empty string instead of a zero-filled document" },
+        { "args": ["1900000901149", { "pad": true }], "returns": "00000.00000 00000.000000 00000.000000 0 01900000901149", "note": "JavaScript docs example" },
+        { "args": [123456, { "pad": true }], "returns": "00000.00000 00000.000000 00000.000000 0 00000000123456", "note": "should pad a short value up to the bank slip length" },
+        { "args": ["00190000090114971860168524522114675860000102656"], "returns": "00190.00009 01149.718601 68524.522114 6 75860000102656", "note": "JavaScript docs example" },
+        { "args": [null], "returns": "", "note": "JavaScript's own test: should return an empty string when the value is nullish" }
+      ]
+    },
+    "generate": {
+      "summary": {
+        "en": "Generates a valid random boleto number.",
+        "pt-BR": "Gera um número de boleto aleatório e válido."
+      },
+      "description": {
+        "en": [
+          "Generates a valid random boleto number.",
+          "",
+          "- By default, the function generates a 47-digit cobrança bancária linha digitável. With `params.type` set to arrecadação, it generates a 48-digit boleto de arrecadação instead.",
+          "- A cobrança bancária slip gets a random 3-digit bank code, the código de moeda `9` (real) and a fator de vencimento of `0000` (no due date) or `1000` to `9999`. Factors `0001` to `0999` denote no date and are never drawn.",
+          "- A boleto de arrecadação draws its segment from 1 to 7 (segment 9 is the banks' own) and its value identifier from all four values (`6` and `8` for an effective amount, `7` and `9` for a reference quantity), so `hasEffectiveValue` can be `true` or false.",
+          "- `boleto.isValid` accepts the result.",
+          "- It draws with `Math.random()`, so it is not cryptographically secure. Do not use it for security purposes."
+        ],
+        "pt-BR": [
+          "Gera um número de boleto aleatório e válido.",
+          "",
+          "- Por padrão, a função gera uma linha digitável de cobrança bancária com 47 dígitos. Com `params.type` definido como arrecadação, ela gera um boleto de arrecadação com 48 dígitos.",
+          "- Um boleto de cobrança bancária recebe um código de banco aleatório de 3 dígitos, o código de moeda `9` (real) e um fator de vencimento `0000` (sem vencimento) ou de `1000` a `9999`. Os fatores `0001` a `0999` não indicam data e nunca são sorteados.",
+          "- Um boleto de arrecadação sorteia o segmento de 1 a 7 (o segmento 9 é de uso dos próprios bancos) e o identificador de valor entre os quatro valores (`6` e `8` para valor efetivo, `7` e `9` para quantidade de referência), então `hasEffectiveValue` pode ser verdadeiro ou falso.",
+          "- `boleto.isValid` aceita o resultado.",
+          "- O sorteio usa `Math.random()`, então não é criptograficamente seguro. Não use para fins de segurança."
+        ]
+      },
+      "references": [
+        "https://www.bcb.gov.br/pre/normativos/c_circ/2000/pdf/c_circ_2926_v1_O.pdf",
+        "https://cmsarquivos.febraban.org.br/Arquivos/documentos/PDF/Conven%C3%A7%C3%A3o%20da%20Cobran%C3%A7a%20-%2005_02_2021_f.pdf",
+        "https://cmsarquivos.febraban.org.br/Arquivos/documentos/PDF/Layout%20-%20C%C3%B3digo%20de%20Barras%20-%20Vers%C3%A3o%208%20-%2011_05_2026.pdf",
+        "https://portal.febraban.org.br/pagina/3425/33/pt-br/layout-febraban"
+      ],
+      "params": [
+        { "name": "params", "type": "GenerateBoletoParams", "optional": true, "fields": [{ "name": "type", "type": "\"bancario\" | \"arrecadacao\"", "optional": true }] }
+      ],
+      "returns": "string",
+      "tests": [
+        { "name": "generated-is-valid", "args": [], "satisfies": "boleto.isValid", "repeat": 5, "note": "every generated value must pass the lib's own validator" },
+        { "args": [{ "type": "arrecadacao" }], "matches": "^8\\d{47}$", "note": "JavaScript docs example: a 48-digit boleto de arrecadação" },
+        { "args": [{ "type": "bancario" }], "matches": "^\\d{47}$", "note": "JavaScript's own test: should keep generating bancário bank slips by default" }
+      ]
+    },
+    "getInfo": {
+      "summary": { "en": "Extracts information from a boleto.", "pt-BR": "Extrai informações de um boleto." },
+      "description": {
+        "en": [
+          "Extracts the amount, due date and bank code from a boleto: the 47-digit linha digitável or the 44-digit barcode of a cobrança bancária slip, or a boleto de arrecadação. Returns `null` when the value is not a valid boleto.",
+          "",
+          "- The result has `amount` (in cents), `expirationDate` and `bankCode` (the 3-digit COMPE code).",
+          "- The due date is `null` when the boleto carries no fator de vencimento (a factor below 1000).",
+          "- The fator de vencimento cycle reset on 2025-02-22, so a factor maps to two dates 9000 days apart. No FEBRABAN or Banco Central publication tells the cycles apart; the rule comes from bank manuals. `options.referenceDate` resolves the cycle as of that date instead of today. Pass it whenever the answer has to stay stable, since the same slip can resolve to the other date as time passes.",
+          "- The window around `referenceDate` is 3000 days back and 5500 days ahead, and the nearer candidate wins when neither falls inside it. A slip due up to 3499 days (about 9.5 years) before `referenceDate` keeps its date. One due 3500 days (about 9.6 years) or more before it is read as the next cycle (a date in the future). To read an old slip, pass a `referenceDate` near its issue date. The search never goes below the first cycle, so an older `referenceDate` still resolves a factor to the oldest date it can denote, never one before the 1997-10-07 base date.",
+          "- A `referenceDate` that is not a valid `Date` (an invalid Date, a string, a number, `null`) is ignored and today is used. The call never throws. Until 2.4.0 an invalid Date gave the 1997 base date and a string or a number threw.",
+          "- The 44-digit barcode is read for the same fields as the linha digitável: the amount from positions 10 to 19 and the fator de vencimento from positions 6 to 9. Until 2.4.0 a cobrança bancária barcode gave `null`. A value that is not a string gives `null`.",
+          "- A 44-digit value that starts with `8` is always read as an arrecadação barcode, never as a cobrança bancária one: it gives the arrecadação result when it is a valid arrecadação barcode and `null` otherwise, even when it would be a valid barcode of a bank `8xx`.",
+          "- A boleto de arrecadação has no bank code and no due date: `bankCode` is `\"\"` and `expirationDate` is `null`. It also has `type` (`\"arrecadacao\"`), `segment` (1 to 7, or 9 for the banks' own use), `value` (the amount in reais, `amount` divided by 100) and `hasEffectiveValue` (whether the amount is an effective value or a reference quantity).",
+          "- A FEBRABAN \"Situação 2\" slip (bank `988`, código de moeda `0`, see `boleto.isValid`) carries the issuer's 8-digit ISPB where the amount would be. The result has `ispb` set to that ISPB, `amount` set to 0 and `expirationDate` `null`. `ispb` is new in 2.5.0 and is absent on every other slip.",
+          "- It returns `null` exactly when `boleto.isValid` returns `false`, so a slip with a código de moeda other than `9` gives `null` (2.4.0 decoded it)."
+        ],
+        "pt-BR": [
+          "Interpreta um boleto e retorna o valor, a data de vencimento e o código do banco: da linha digitável de 47 dígitos ou do código de barras de 44 dígitos de um boleto de cobrança bancária, ou de um boleto de arrecadação. Retorna `null` quando a entrada não é um boleto válido.",
+          "",
+          "- O resultado traz `amount` (em centavos), `expirationDate` e `bankCode` (o código COMPE de 3 dígitos).",
+          "- A data de vencimento é `null` quando o boleto não traz fator de vencimento (um fator abaixo de 1000).",
+          "- O ciclo do fator de vencimento reiniciou em 2025-02-22, então um fator corresponde a duas datas com 9000 dias de diferença. Nenhuma publicação da FEBRABAN ou do Banco Central diferencia os ciclos; a regra vem de manuais de bancos. `options.referenceDate` resolve o ciclo com base nessa data, em vez de hoje. Passe-a sempre que a resposta precisar ser estável, pois o mesmo boleto pode passar a resolver para a outra data com o tempo.",
+          "- A janela em torno de `referenceDate` é de 3000 dias para trás e 5500 dias para frente, e o candidato mais próximo vence quando nenhum cai dentro dela. Um boleto que vence até 3499 dias (cerca de 9,5 anos) antes de `referenceDate` mantém a sua data. Um que vence 3500 dias (cerca de 9,6 anos) ou mais antes dela é lido como o próximo ciclo (uma data no futuro). Para ler um boleto antigo, passe uma `referenceDate` perto da data de emissão. A busca nunca desce abaixo do primeiro ciclo, então uma `referenceDate` mais antiga ainda resolve o fator para a data mais antiga que ele pode indicar, nunca uma anterior à data-base 1997-10-07.",
+          "- Uma `referenceDate` que não é um `Date` válido (um Date inválido, uma string, um número, `null`) é ignorada e usa-se hoje. A chamada nunca lança erro. Até a 2.4.0 um Date inválido dava a data-base de 1997 e uma string ou um número lançavam erro.",
+          "- O código de barras de 44 dígitos é lido para os mesmos campos da linha digitável: o valor nas posições 10 a 19 e o fator de vencimento nas posições 6 a 9. Até a 2.4.0 o código de barras de cobrança bancária dava `null`. Um valor que não é string retorna `null`.",
+          "- Um valor de 44 dígitos que começa com `8` é sempre lido como código de barras de arrecadação, nunca de cobrança bancária: retorna o resultado de arrecadação quando é um código de barras de arrecadação válido e `null` caso contrário, mesmo que fosse um código de barras válido de um banco `8xx`.",
+          "- Um boleto de arrecadação não tem código do banco nem data de vencimento: `bankCode` é `\"\"` e `expirationDate` é `null`. Ele também traz `type` (`\"arrecadacao\"`), `segment` (de 1 a 7, ou 9 para uso dos próprios bancos), `value` (o valor em reais, `amount` dividido por 100) e `hasEffectiveValue` (se o valor é efetivo ou uma quantidade de referência).",
+          "- Um boleto da \"Situação 2\" da FEBRABAN (banco `988`, código de moeda `0`, ver `boleto.isValid`) traz o ISPB de 8 dígitos do emissor no lugar do valor. O resultado tem `ispb` com esse ISPB, `amount` igual a 0 e `expirationDate` `null`. O campo `ispb` é novo na 2.5.0 e não aparece em nenhum outro boleto.",
+          "- Retorna `null` exatamente quando `boleto.isValid` retorna `false`, então um boleto com código de moeda diferente de `9` retorna `null` (a 2.4.0 o decodificava)."
+        ]
+      },
+      "references": [
+        "https://www.bcb.gov.br/pre/normativos/c_circ/2000/pdf/c_circ_2926_v1_O.pdf",
+        "https://cmsarquivos.febraban.org.br/Arquivos/documentos/PDF/Conven%C3%A7%C3%A3o%20da%20Cobran%C3%A7a%20-%2005_02_2021_f.pdf",
+        "https://cmsarquivos.febraban.org.br/Arquivos/documentos/PDF/Layout%20-%20C%C3%B3digo%20de%20Barras%20-%20Vers%C3%A3o%208%20-%2011_05_2026.pdf",
+        "https://portal.febraban.org.br/pagina/3425/33/pt-br/layout-febraban"
+      ],
+      "flatName": "getBoletoInfo",
+      "params": [
+        { "name": "value", "type": "string" },
+        { "name": "options", "type": "GetBoletoInfoOptions", "optional": true, "fields": [{ "name": "referenceDate", "type": "date", "optional": true }] }
+      ],
+      "returns": "BoletoInfo?",
+      "tests": [
+        { "args": [""], "returns": null, "note": "JavaScript's own test: should return null when boleto is empty string" },
+        { "args": ["00190000090114971860168524522114775860000102656"], "returns": null, "note": "JavaScript's own test: should return null when boleto is invalid" },
+        { "args": ["00170000010114971860168524522114275860000102656"], "returns": null, "note": "changed in 2.5.0 (#593): código de moeda 7 is not valid (only 9, Carta-Circular BCB 2.926/2000), so the getter returns null. 2.4.0 decoded this slip" },
+        { "args": ["98800000060114971860168524522114100000018236120"], "returns": { "amount": 0, "expirationDate": null, "bankCode": "988", "ispb": "18236120" }, "note": "JavaScript's own test: should read the ISPB of a FEBRABAN Convenção da Cobrança Situação 2 slip (bank 988, moeda 0, factor 0000) instead of an amount" },
+        { "args": ["abc"], "returns": null },
+        { "args": ["846100000005246100291102005460339004695895061080"], "returns": { "amount": 2461, "expirationDate": null, "bankCode": "", "type": "arrecadacao", "segment": 4, "value": 24.61, "hasEffectiveValue": true }, "note": "JavaScript's own test: arrecadação (FEBRABAN Layout Padrão de Arrecadação §11 Formulário Padrão fixture: R$ 24,61, segment 4) should parse the linha digitável" },
+        { "args": ["80491758600001026560000001149718606852452211"], "returns": null, "note": "JavaScript's own test: when a 44 digit value starting with 8 is not an arrecadação barcode (bank 804 cobrança bancária)" },
+        { "args": ["84610000000246100291100054603390069589506109"], "returns": null, "note": "JavaScript's own test (isValidBoleto): a 44 digit value starting with 8 that fits neither layout is read as an arrecadação barcode and is not a boleto" },
+        { "args": ["abc00190000090114971860168524522114675860000102656zzz"], "returns": null, "note": "JavaScript's own test: isValidBoleto rejects letters around the digits, so there is no info" },
+        { "args": ["00191000000001026560000001149718606852452211"], "returns": { "amount": 102656, "expirationDate": null, "bankCode": "001" }, "note": "JavaScript's own test: when it is a cobrança bancária barcode with no factor" },
+        { "args": ["98801000000182361200000001149718606852452211"], "returns": { "amount": 0, "expirationDate": null, "bankCode": "988", "ispb": "18236120" }, "note": "JavaScript's own test: when it is a Situação 2 barcode, reading the ISPB from positions 12 to 19" },
+        { "args": ["84610000000246100291100054603390069589506108"], "returns": { "amount": 2461, "expirationDate": null, "bankCode": "", "type": "arrecadacao", "segment": 4, "value": 24.61, "hasEffectiveValue": true }, "note": "JavaScript's own test: arrecadação: should parse the código de barras" },
+        { "args": ["84610000000-5 24610029110-2 00546033900-4 69589506108-0"], "returns": { "amount": 2461, "expirationDate": null, "bankCode": "", "type": "arrecadacao", "segment": 4, "value": 24.61, "hasEffectiveValue": true }, "note": "JavaScript's own test: arrecadação: should parse a formatted linha digitável" },
+        { "args": ["847900000005246100291102005460339004695895061080"], "returns": { "amount": 2461, "expirationDate": null, "bankCode": "", "type": "arrecadacao", "segment": 4, "value": 24.61, "hasEffectiveValue": false }, "note": "JavaScript's own test: arrecadação: should flag a reference value" },
+        { "args": [123], "returns": null, "note": "JavaScript's own test: when boleto is not a string, never undefined, as every other getter answers" },
+        { "args": [null], "returns": null, "note": "JavaScript's own test: when boleto is not a string, never undefined, as every other getter answers" }
+      ]
+    },
+    "isValid": {
+      "summary": {
+        "en": "Checks whether a boleto number is valid.",
+        "pt-BR": "Verifica se um número de boleto é válido."
+      },
+      "description": {
+        "en": [
+          "Validates a boleto: the 47-digit cobrança bancária linha digitável or its 44-digit barcode, or a boleto de arrecadação as its 48-digit linha digitável or 44-digit barcode.",
+          "",
+          "- The function verifies every check digit of the chosen layout (per Carta-Circular BCB 2.926/2000 and the FEBRABAN arrecadação layout).",
+          "- The código de moeda (position 4 of the barcode and of the linha digitável) must be `9` (real), the only code Carta-Circular BCB 2.926/2000 assigns. 2.4.0 accepted any digit there.",
+          "- The one exception is the FEBRABAN Convenção da Cobrança \"Situação 2\" slip of an institution identified only by its ISPB: bank code `988`, código de moeda `0`, fator de vencimento `0000`, and the ISPB padded with zeros to 10 digits in barcode positions 10 to 19, where the amount would be. Bank `988` with código de moeda `9` is an ordinary slip.",
+          "- The cobrança bancária barcode has 44 digits: bank code, código de moeda `9`, the módulo 11 check digit in position 5, fator de vencimento, amount and free field. It is checked by the same rules as the linha digitável. Until 2.4.0 this barcode was rejected.",
+          "- A 44-digit value that starts with `8` is only ever an arrecadação barcode (the `8` is its product identifier). A cobrança bancária barcode of a bank code `8xx` is not accepted, because the two layouts could not be told apart.",
+          "- The mask characters (whitespace, `.`, `-` and `/`) are accepted between digits, a run of them included, and whitespace around the value. Any other character makes the value invalid: letters, punctuation or a mask character leading or trailing the digits. So a linha digitável wrapped in letters is rejected. Until 2.4.0 every non-digit was dropped.",
+          "- A value that is not a string is invalid."
+        ],
+        "pt-BR": [
+          "Valida um boleto: a linha digitável de cobrança bancária com 47 dígitos ou o seu código de barras com 44 dígitos, ou um boleto de arrecadação na forma de linha digitável com 48 dígitos ou de código de barras com 44 dígitos.",
+          "",
+          "- A função verifica todos os dígitos verificadores do leiaute escolhido (conforme a Carta-Circular BCB 2.926/2000 e o leiaute de arrecadação da FEBRABAN).",
+          "- O código de moeda (posição 4 do código de barras e da linha digitável) precisa ser `9` (real), o único código que a Carta-Circular BCB 2.926/2000 define. A 2.4.0 aceitava qualquer dígito nessa posição.",
+          "- A única exceção é o boleto da \"Situação 2\" da Convenção da Cobrança da FEBRABAN, emitido por uma instituição identificada só pelo ISPB: código do banco `988`, código de moeda `0`, fator de vencimento `0000` e o ISPB completado com zeros até 10 dígitos nas posições 10 a 19 do código de barras, no lugar do valor. O banco `988` com código de moeda `9` é um boleto comum.",
+          "- O código de barras de cobrança bancária tem 44 dígitos: código do banco, código de moeda `9`, o dígito verificador módulo 11 na posição 5, fator de vencimento, valor e campo livre. Ele é conferido pelas mesmas regras da linha digitável. Até a 2.4.0 esse código de barras era rejeitado.",
+          "- Um valor de 44 dígitos que começa com `8` é sempre um código de barras de arrecadação (o `8` é o seu identificador de produto). Um código de barras de cobrança bancária de um banco `8xx` não é aceito, porque os dois leiautes não poderiam ser distinguidos.",
+          "- Os caracteres de máscara (espaço em branco, `.`, `-` e `/`) são aceitos entre os dígitos, inclusive uma sequência deles, e espaços nas pontas. Qualquer outro caractere torna o valor inválido: letras, pontuação ou um caractere de máscara no início ou no fim dos dígitos. Então uma linha digitável cercada de letras é rejeitada. Até a 2.4.0 todo caractere que não era dígito era descartado.",
+          "- Um valor que não é string é inválido."
+        ]
+      },
+      "references": [
+        "https://www.bcb.gov.br/pre/normativos/c_circ/2000/pdf/c_circ_2926_v1_O.pdf",
+        "https://cmsarquivos.febraban.org.br/Arquivos/documentos/PDF/Conven%C3%A7%C3%A3o%20da%20Cobran%C3%A7a%20-%2005_02_2021_f.pdf",
+        "https://cmsarquivos.febraban.org.br/Arquivos/documentos/PDF/Layout%20-%20C%C3%B3digo%20de%20Barras%20-%20Vers%C3%A3o%208%20-%2011_05_2026.pdf",
+        "https://portal.febraban.org.br/pagina/3425/33/pt-br/layout-febraban"
+      ],
+      "level": "core",
+      "params": [{ "name": "value", "type": "string" }],
+      "returns": "boolean",
+      "tests": [
+        { "args": ["60757135008571297205909229083648919190488862573"], "returns": false, "note": "changed in 2.5.0 (#593): the check digits are right, but the código de moeda in position 4 is 7; only 9 (real) is valid (Carta-Circular BCB 2.926/2000). 2.4.0 accepted any digit there, and the go, ruby and rust libs still do" },
+        { "args": ["60757135008571297205909229083648919190488862574"], "returns": false, "note": "consensus of 4 libs (go, javascript, ruby, rust)" },
+        { "args": ["00000000000000000000000000000000000000000000000"], "returns": false, "note": "consensus of 4 libs (go, javascript, ruby, rust)" },
+        { "args": ["52410567606343146479903680440595729289409535291"], "returns": false, "note": "changed in 2.5.0 (#593): the check digits are right, but the código de moeda in position 4 is 0 and the slip is not a FEBRABAN Situação 2 slip (bank 988); only 9 (real) is valid (Carta-Circular BCB 2.926/2000). 2.4.0 accepted any digit there, and the go, ruby and rust libs still do" },
+        { "args": ["52410567606343146479903680440595729289409535292"], "returns": false, "note": "consensus of 4 libs (go, javascript, ruby, rust)" },
+        { "args": ["74348924801607065591119728853342723148482264669"], "returns": false, "note": "changed in 2.5.0 (#593): the check digits are right, but the código de moeda in position 4 is 8; only 9 (real) is valid (Carta-Circular BCB 2.926/2000). 2.4.0 accepted any digit there, and the go, ruby and rust libs still do" },
+        { "args": ["74348924801607065591119728853342723148482264660"], "returns": false, "note": "consensus of 4 libs (go, javascript, ruby, rust)" },
+        { "args": ["60757.13500 85712.972059 09229.083648 9 19190488862573"], "returns": false, "note": "changed in 2.5.0 (#593): the check digits are right, but the código de moeda in position 4 is 7; only 9 (real) is valid (Carta-Circular BCB 2.926/2000). 2.4.0 accepted any digit there, and the go, ruby and rust libs still do" },
+        { "args": ["52410.56760 63431.464799 03680.440595 7 29289409535291"], "returns": false, "note": "changed in 2.5.0 (#593): the check digits are right, but the código de moeda in position 4 is 0 and the slip is not a FEBRABAN Situação 2 slip (bank 988); only 9 (real) is valid (Carta-Circular BCB 2.926/2000). 2.4.0 accepted any digit there, and the go, ruby and rust libs still do" },
+        { "args": ["74348.92480 16070.655911 19728.853342 7 23148482264669"], "returns": false, "note": "changed in 2.5.0 (#593): the check digits are right, but the código de moeda in position 4 is 8; only 9 (real) is valid (Carta-Circular BCB 2.926/2000). 2.4.0 accepted any digit there, and the go, ruby and rust libs still do" },
+        { "args": [""], "returns": false, "note": "consensus of 4 libs (go, javascript, ruby, rust)" },
+        { "args": ["   "], "returns": false, "note": "consensus of 4 libs (go, javascript, ruby, rust)" },
+        { "args": ["abc"], "returns": false, "note": "consensus of 4 libs (go, javascript, ruby, rust)" },
+        { "args": ["123456789"], "returns": false, "note": "JavaScript's own test: should return false" },
+        { "args": ["00190000020114971860168524522114675860000102656"], "returns": false, "note": "JavaScript's own test: should return false when check digit mod10 is invalid" },
+        { "args": ["00190000090114971860168524522114975860000102656"], "returns": false, "note": "JavaScript's own test: should return false check digit mod11 is invalid" },
+        { "args": ["00190000090114971860168524522114675860000102656999"], "returns": false, "note": "JavaScript's own test: should return false" },
+        { "args": ["00190000090114971860168524522114675860000102656"], "returns": true, "note": "JavaScript's own test: should return true when is a boleto valid without mask" },
+        { "args": ["0019000009 01149.718601 68524.522114 6 75860000102656"], "returns": true, "note": "JavaScript's own test: should return true when is a boleto valid with mask" },
+        { "args": ["00170000010114971860168524522114275860000102656"], "returns": false, "note": "changed in 2.5.0 (#593). JavaScript's own test: should return false when the código de moeda is not 9 (moeda 7, check digits recalculated); Carta-Circular BCB 2.926/2000 assigns only 9 (real). 2.4.0 returned true" },
+        { "args": ["00180000000114971860168524522114475860000102656"], "returns": false, "note": "JavaScript's own test: should return false when the código de moeda is not 9 (moeda 8, check digits recalculated)" },
+        { "args": ["0017000001 01149.718601 68524.522114 2 75860000102656"], "returns": false, "note": "JavaScript's own test: should return false when the código de moeda is not 9 (moeda 7, masked)" },
+        { "args": ["00100000080114971860168524522114175860000102656"], "returns": false, "note": "JavaScript's own test: should return false when the código de moeda is 0 outside the FEBRABAN Situação 2 layout" },
+        { "args": ["00100000080114971860168524522114800000018236120"], "returns": false, "note": "JavaScript's own test: should return false for moeda 0 with bank 001 instead of 988 (Situação 2 layout not followed)" },
+        { "args": ["98800000060114971860168524522114775860018236120"], "returns": false, "note": "JavaScript's own test: should return false for bank 988, moeda 0 with factor 7586 instead of 0000 (Situação 2 layout not followed)" },
+        { "args": ["98800000060114971860168524522114700001018236120"], "returns": false, "note": "JavaScript's own test: should return false for bank 988, moeda 0 when barcode positions 10 and 11 are not the zeros that pad the ISPB" },
+        { "args": ["98800000060114971860168524522114100000018236120"], "returns": true, "note": "JavaScript's own test: should return true for a FEBRABAN Convenção da Cobrança Situação 2 slip: bank 988, moeda 0, factor 0000 and ISPB 18236120 padded with zeros" },
+        { "args": ["98890000070114971860168524522114975860000102656"], "returns": true, "note": "JavaScript's own test: should return true when bank 988 uses the código de moeda 9" },
+        { "args": ["836200000005667800481000180975657313001589636081"], "returns": true, "note": "JavaScript's own test: arrecadação should return true for the mcrvaz/boleto-brasileiro-validator modulus 10 linha digitável fixture" },
+        { "args": ["846300000003299902962024004101360008002006441147"], "returns": true, "note": "JavaScript's own test: arrecadação should return true for the mrmgomes/boleto-utils modulus 10 linha digitável fixture" },
+        { "args": ["858900004609524601791605607593050865831483000010"], "returns": true, "note": "JavaScript's own test: arrecadação should return true when it is a valid modulo 11 linha digitável" },
+        { "args": ["848900000002404201622015806051904292586034111220"], "returns": true, "note": "JavaScript's own test: arrecadação should return true when it is a valid modulo 11 linha digitável" },
+        { "args": ["858000000070438403281922630720192528304729600523"], "returns": true, "note": "JavaScript's own test: arrecadação should return true when it is a valid modulo 11 linha digitável" },
+        { "args": ["838600000050096000190009000801782309000343062712"], "returns": true, "note": "JavaScript's own test: arrecadação should return true when it is a valid modulo 11 linha digitável" },
+        { "args": ["858200000007572503282030560708202107539591904460"], "returns": true, "note": "JavaScript's own test: arrecadação should return true when it is a valid modulo 11 linha digitável" },
+        { "args": ["85890000460524601791606075930508683148300001"], "returns": true, "note": "JavaScript's own test: arrecadação should return true for the barcode form of the FEBRABAN §11 modulus 10 example" },
+        { "args": ["84610000000-5 24610029110-2 00546033900-4 69589506108-0"], "returns": true, "note": "JavaScript's own test: arrecadação should return true when it has a mask" },
+        { "args": ["abc00190000090114971860168524522114675860000102656zzz"], "returns": false, "note": "JavaScript's own test: should return false when letters or other stray characters surround or split an otherwise valid value" },
+        { "args": ["00190000090114971860168524522114675860000102656x"], "returns": false, "note": "JavaScript's own test: should return false when letters or other stray characters surround or split an otherwise valid value" },
+        { "args": ["00190.00009 01149.718601 68524.522114 6 7586000010265,6"], "returns": false, "note": "JavaScript's own test: should return false when letters or other stray characters surround or split an otherwise valid value" },
+        { "args": ["(00190000090114971860168524522114675860000102656)"], "returns": false, "note": "JavaScript's own test: should return false when letters or other stray characters surround or split an otherwise valid value" },
+        { "args": ["846100000005246100291102005460339004695895061080\n!"], "returns": false, "note": "JavaScript's own test: should return false when letters or other stray characters surround or split an otherwise valid value" },
+        { "args": ["8461000000a05246100291102005460339004695895061080"], "returns": false, "note": "JavaScript's own test: should return false when letters or other stray characters surround or split an otherwise valid value" },
+        { "args": [".00190000090114971860168524522114675860000102656"], "returns": false, "note": "JavaScript's own test: should return false when a mask character leads or trails the digits, or is the whole value" },
+        { "args": ["00190000090114971860168524522114675860000102656-"], "returns": false, "note": "JavaScript's own test: should return false when a mask character leads or trails the digits, or is the whole value" },
+        { "args": [" . - / "], "returns": false, "note": "JavaScript's own test: should return false when a mask character leads or trails the digits, or is the whole value" },
+        { "args": ["  00190.00009 - 01149.718601 / 68524.522114 . 6 - 75860000102656\n"], "returns": true, "note": "JavaScript's own test: should return true when the mask uses any of the mask characters, a run of them or surrounding whitespace" },
+        { "args": ["00190/00009/01149/718601/68524/522114/6/75860000102656"], "returns": true, "note": "JavaScript's own test: should return true when the mask uses any of the mask characters, a run of them or surrounding whitespace" },
+        { "args": ["00196758600001026560000001149718606852452211"], "returns": true, "note": "JavaScript's own test: cobrança bancária barcode: should return true when it is the barcode of the boleto valid without mask (new in 2.5.0, rejected until 2.4.0)" },
+        { "args": ["00192100000001026560000001149718606852452211"], "returns": true, "note": "JavaScript's own test: cobrança bancária barcode: should return true when it has other check digits, from the same fields" },
+        { "args": ["00191000000001026560000001149718606852452211"], "returns": true, "note": "JavaScript's own test: cobrança bancária barcode: should return true when it has other check digits, from the same fields" },
+        { "args": ["00196758600000000000000001149718606852452211"], "returns": true, "note": "JavaScript's own test: cobrança bancária barcode: should return true when it has other check digits, from the same fields" },
+        { "args": ["0019.6 75860000102656 0000001149718606852452211"], "returns": true, "note": "JavaScript's own test: cobrança bancária barcode: should return true when it has a mask" },
+        { "args": ["98801000000182361200000001149718606852452211"], "returns": true, "note": "JavaScript's own test: cobrança bancária barcode: should return true when it is a Situação 2 barcode (bank 988, moeda 0, factor 0000, ISPB 18236120)" },
+        { "args": ["00191758600001026560000001149718606852452211"], "returns": false, "note": "JavaScript's own test: cobrança bancária barcode: should return false when the check digit is wrong" },
+        { "args": ["00190758600001026560000001149718606852452211"], "returns": false, "note": "JavaScript's own test: cobrança bancária barcode: should return false when the check digit is wrong" },
+        { "args": ["00196758600001026570000001149718606852452211"], "returns": false, "note": "JavaScript's own test: cobrança bancária barcode: should return false when a field changed and the check digit did not" },
+        { "args": ["00196758600001026560000001149718606852452212"], "returns": false, "note": "JavaScript's own test: cobrança bancária barcode: should return false when a field changed and the check digit did not" },
+        { "args": ["00172758600001026560000001149718606852452211"], "returns": false, "note": "JavaScript's own test: cobrança bancária barcode: should return false when the código de moeda is not 9 (moeda 7 with its own check digit)" },
+        { "args": ["98801000100182361200000001149718606852452211"], "returns": false, "note": "JavaScript's own test: cobrança bancária barcode: should return false when the Situação 2 layout is broken (the factor is not zeros)" },
+        { "args": ["0019675860000102656000000114971860685245221"], "returns": false, "note": "JavaScript's own test: cobrança bancária barcode: should return false when the length is 43 or 45" },
+        { "args": ["001967586000010265600000011497186068524522110"], "returns": false, "note": "JavaScript's own test: cobrança bancária barcode: should return false when the length is 43 or 45" },
+        { "args": ["80491758600001026560000001149718606852452211"], "returns": false, "note": "JavaScript's own test: cobrança bancária barcode: should return false when it starts with 8, since a 44-digit value starting with 8 is an arrecadação barcode only (bank 804 with a valid check digit)" },
+        { "args": ["84610000000246100291100054603390069589506109"], "returns": false, "note": "JavaScript's own test: cobrança bancária barcode: should return false when it is a 44-digit value starting with 8 that fits neither layout" },
+        { "args": ["84610000000246100291100054603390069589506108"], "returns": true, "note": "JavaScript's own test: arrecadação: should return true for the barcode form of the FEBRABAN §11 modulus 10 example" }
+      ]
+    },
+    "parse": {
+      "summary": {
+        "en": "Removes the formatting characters of a boleto and returns only the digits.",
+        "pt-BR": "Remove os caracteres de formatação de um boleto e retorna só os dígitos."
+      },
+      "description": {
+        "en": [
+          "Removes every character that is not a digit from a boleto (mask, spaces, letters) and returns the digits, without checking that the boleto is valid.",
+          "",
+          "- The result is cut to 47 digits, or to 48 when the digits start with `8` (boleto de arrecadação). Digits beyond that are dropped.",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number)."
+        ],
+        "pt-BR": [
+          "Remove de um boleto todo caractere que não é dígito (máscara, espaços, letras) e retorna os dígitos, sem conferir se o boleto é válido.",
+          "",
+          "- O resultado é cortado em 47 dígitos, ou em 48 quando os dígitos começam com `8` (boleto de arrecadação). Os dígitos além disso são descartados.",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia (a 2.4.0 lia os dígitos de qualquer número)."
+        ]
+      },
+      "references": [
+        "https://www.bcb.gov.br/pre/normativos/c_circ/2000/pdf/c_circ_2926_v1_O.pdf",
+        "https://cmsarquivos.febraban.org.br/Arquivos/documentos/PDF/Conven%C3%A7%C3%A3o%20da%20Cobran%C3%A7a%20-%2005_02_2021_f.pdf",
+        "https://cmsarquivos.febraban.org.br/Arquivos/documentos/PDF/Layout%20-%20C%C3%B3digo%20de%20Barras%20-%20Vers%C3%A3o%208%20-%2011_05_2026.pdf",
+        "https://portal.febraban.org.br/pagina/3425/33/pt-br/layout-febraban"
+      ],
+      "params": [{ "name": "value", "type": "string | number" }],
+      "returns": "string",
+      "tests": [
+        { "name": "masked", "args": ["10491.44338 55119.000002 00000.000141 3 25230000093423"], "returns": "10491443385511900000200000000141325230000093423" },
+        { "name": "arrecadacao-masked", "args": ["84610000000-5 24610029110-2 00546033900-4 69589506108-0"], "returns": "846100000005246100291102005460339004695895061080" },
+        { "name": "empty", "args": [""], "returns": "" },
+        { "args": ["10491.44A338 55119.000002? ABC00000.000?141 3 25230000093423"], "returns": "10491443385511900000200000000141325230000093423", "note": "JavaScript's own test: should remove non numeric characters" },
+        { "args": ["10491443385511900000200000000141325230000093423123"], "returns": "10491443385511900000200000000141325230000093423", "note": "JavaScript's own test: should ignore digits after the boleto length" },
+        { "args": ["846100000005246100291102005460339004695895061080123"], "returns": "846100000005246100291102005460339004695895061080", "note": "JavaScript's own test: arrecadação should ignore digits after the arrecadação length" },
+        { "args": [-1], "returns": "", "note": "#593 number rule. JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number" },
+        { "args": [1.5], "returns": "", "note": "#593 number rule. JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number" },
+        { "args": [9007199254740992], "returns": "", "note": "#593 number rule (2 ** 53 is not a safe integer). JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number" },
+        { "args": [1e+21], "returns": "", "note": "#593 number rule. JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number" }
+      ]
+    }
+  }
+}

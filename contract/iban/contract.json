@@ -1,0 +1,235 @@
+{
+  "$schema": "../../schema/contract.schema.json",
+  "domain": "iban",
+  "title": { "en": "IBAN", "pt-BR": "IBAN" },
+  "summary": {
+    "en": "Brazilian IBANs (International Bank Account Number, country code BR): validation, formatting, parsing and decoding.",
+    "pt-BR": "IBANs (International Bank Account Number) brasileiros, com código de país BR: validação, formatação, leitura e decodificação."
+  },
+  "category": "finance",
+  "order": 7,
+  "related": ["bank"],
+  "functions": {
+    "format": {
+      "summary": {
+        "en": "Formats an IBAN in the ISO 13616 print grouping, with blocks of 4 characters.",
+        "pt-BR": "Formata um IBAN no agrupamento de impressão da ISO 13616, em blocos de 4 caracteres."
+      },
+      "description": {
+        "en": [
+          "Formats an IBAN in the ISO 13616 print grouping: blocks of 4 characters separated by spaces, upper-cased. It does not validate the IBAN (use `iban.isValid`).",
+          "",
+          "Statements and bank forms show the IBAN in this form.",
+          "",
+          "- The function reads only letters and digits. The result is capped at the 29 characters of a Brazilian IBAN.",
+          "- Every other character (a hyphen, a dot, extra whitespace) is dropped, so `BR15 0000-0000.0000/1093 2840 814P-2` gives the same result as the compact form. A value that is not a string gives an empty string.",
+          "- A partial value is grouped as far as it goes (`BR15` gives `BR15`), so the function works as an input mask. The check digits and the layout are not checked, and an IBAN of another country is grouped the same way."
+        ],
+        "pt-BR": [
+          "Formata um IBAN no agrupamento de impressão da ISO 13616: blocos de 4 caracteres separados por espaços, em maiúsculas. Não valida o IBAN (use `iban.isValid`).",
+          "",
+          "Extratos e formulários bancários mostram o IBAN nessa forma.",
+          "",
+          "- A função lê apenas letras e dígitos. O resultado é limitado aos 29 caracteres de um IBAN brasileiro.",
+          "- Todo outro caractere (hífen, ponto, espaço em branco extra) é descartado, então `BR15 0000-0000.0000/1093 2840 814P-2` dá o mesmo resultado da forma compacta. Um valor que não é string retorna uma string vazia.",
+          "- Um valor parcial é agrupado até onde vai (`BR15` dá `BR15`), então a função serve como máscara de entrada. Os dígitos verificadores e o leiaute não são conferidos, e um IBAN de outro país é agrupado do mesmo jeito."
+        ]
+      },
+      "references": [
+        "https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20BCB&numero=585",
+        "https://www.bcb.gov.br/pre/normativos/circ/2013/pdf/circ_3625_v1_O.pdf",
+        "https://www.bcb.gov.br/content/estabilidadefinanceira/Documents/sistema_pagamentos_brasileiro/IBAN-Guidelines_%20port.pdf"
+      ],
+      "params": [{ "name": "value", "type": "string" }],
+      "returns": "string",
+      "tests": [
+        { "args": ["BR1500000000000010932840814P2"], "returns": "BR15 0000 0000 0000 1093 2840 814P 2" },
+        { "name": "lowercase", "args": ["br1500000000000010932840814p2"], "returns": "BR15 0000 0000 0000 1093 2840 814P 2" },
+        { "name": "partial", "args": ["BR150"], "returns": "BR15 0" },
+        { "name": "empty", "args": [""], "returns": "" },
+        { "args": ["B"], "returns": "B", "note": "JavaScript's own test: should format a partial value as far as it goes" },
+        { "args": ["BR"], "returns": "BR", "note": "JavaScript's own test: should format a partial value as far as it goes" },
+        { "args": ["BR1"], "returns": "BR1", "note": "JavaScript's own test: should format a partial value as far as it goes" },
+        { "args": ["BR15"], "returns": "BR15", "note": "JavaScript's own test: should format a partial value as far as it goes" },
+        { "args": ["BR1500000000000010932840814P"], "returns": "BR15 0000 0000 0000 1093 2840 814P", "note": "JavaScript's own test: should format a partial value as far as it goes" },
+        { "args": ["BR1500 000000000010 932840814P2"], "returns": "BR15 0000 0000 0000 1093 2840 814P 2", "note": "JavaScript's own test: should regroup a value that is already written in the print format" },
+        { "args": ["  BR15 0000 0000 0000 1093 2840 814P 2  "], "returns": "BR15 0000 0000 0000 1093 2840 814P 2", "note": "JavaScript's own test: should trim the surrounding whitespace" },
+        { "args": ["BR1500000000000010932840814P-2"], "returns": "BR15 0000 0000 0000 1093 2840 814P 2", "note": "JavaScript's own test: should read only the letters and digits of a value with other characters, like formatCpf" },
+        { "args": ["BR15 0000-0000.0000/1093 2840 814P 2"], "returns": "BR15 0000 0000 0000 1093 2840 814P 2", "note": "JavaScript's own test: should read only the letters and digits of a value with other characters, like formatCpf" },
+        { "args": ["BR15  0000"], "returns": "BR15 0000", "note": "JavaScript's own test: should read only the letters and digits of a value with other characters, like formatCpf" },
+        { "args": ["BR1500000000000010932840814P2EXTRACHARS"], "returns": "BR15 0000 0000 0000 1093 2840 814P 2", "note": "JavaScript's own test: should cap the result to 29 characters" },
+        { "args": [null], "returns": "", "note": "JavaScript's own test: when the value is not a string" },
+        { "args": ["  BR15  0000 "], "returns": "BR15 0000", "note": "extra whitespace is dropped" }
+      ]
+    },
+    "getInfo": {
+      "summary": {
+        "en": "Splits a Brazilian IBAN into its fields.",
+        "pt-BR": "Decompõe um IBAN brasileiro em seus campos."
+      },
+      "description": {
+        "en": [
+          "Parses a Brazilian IBAN into its fields. Returns `null` whenever `iban.isValid` would return `false`.",
+          "",
+          "- Fields, all strings: `countryCode` (always `BR`), `checkDigits` (2 digits), `bankIspb` (8 characters, uppercase letters allowed since Resolução BCB 585/2026), `branch` (5 digits), `account` (10 digits), `accountType` (1 letter, usually `C` or `P`) and `owner` (`1` to `9`, then `A` to `Z`). Letters come upper-cased and the zero padding is kept.",
+          "- The input rules are those of `iban.isValid`: the compact or grouped form, a run of mask characters between groups, any case. A value that is not a string gives `null`."
+        ],
+        "pt-BR": [
+          "Decompõe um IBAN brasileiro em seus campos. Retorna `null` sempre que `iban.isValid` retornaria false.",
+          "",
+          "- Campos, todos strings: `countryCode` (sempre `BR`), `checkDigits` (2 dígitos), `bankIspb` (8 caracteres, com letras maiúsculas permitidas desde a Resolução BCB 585/2026), `branch` (5 dígitos), `account` (10 dígitos), `accountType` (1 letra, em geral `C` ou `P`) e `owner` (`1` a `9`, depois `A` a `Z`). As letras vêm em maiúsculas e os zeros de preenchimento são mantidos.",
+          "- As regras de entrada são as de `iban.isValid`: a forma compacta ou agrupada, uma sequência de caracteres de máscara entre os grupos, qualquer caixa. Um valor que não é string retorna `null`."
+        ]
+      },
+      "references": [
+        "https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20BCB&numero=585",
+        "https://www.bcb.gov.br/pre/normativos/circ/2013/pdf/circ_3625_v1_O.pdf",
+        "https://www.bcb.gov.br/content/estabilidadefinanceira/Documents/sistema_pagamentos_brasileiro/IBAN-Guidelines_%20port.pdf",
+        "https://www.iso.org/standard/81090.html",
+        "https://www.iso.org/standard/31531.html"
+      ],
+      "flatName": "getIbanInfo",
+      "params": [{ "name": "value", "type": "string" }],
+      "returns": "IbanInfo?",
+      "tests": [
+        { "args": ["BR1500000000000010932840814P2"], "returns": { "countryCode": "BR", "checkDigits": "15", "bankIspb": "00000000", "branch": "00001", "account": "0932840814", "accountType": "P", "owner": "2" } },
+        { "name": "masked", "args": ["BR15 0000 0000 0000 1093 2840 814P 2"], "returns": { "countryCode": "BR", "checkDigits": "15", "bankIspb": "00000000", "branch": "00001", "account": "0932840814", "accountType": "P", "owner": "2" } },
+        { "args": ["BR3860701190000010000012345C1"], "returns": { "countryCode": "BR", "checkDigits": "38", "bankIspb": "60701190", "branch": "00001", "account": "0000012345", "accountType": "C", "owner": "1" } },
+        { "name": "wrong-check", "args": ["BR1500000000000010932840814P3"], "returns": null },
+        { "name": "not-brazilian", "args": ["DE89370400440532013000"], "returns": null },
+        { "name": "empty", "args": [""], "returns": null },
+        { "args": ["br1500000000000010932840814p2"], "returns": { "countryCode": "BR", "checkDigits": "15", "bankIspb": "00000000", "branch": "00001", "account": "0932840814", "accountType": "P", "owner": "2" }, "note": "JavaScript's own test: should return the parsed iban for a lowercase value" },
+        { "args": ["BR1460746948000020001234567P2"], "returns": { "countryCode": "BR", "checkDigits": "14", "bankIspb": "60746948", "branch": "00002", "account": "0001234567", "accountType": "P", "owner": "2" }, "note": "JavaScript's own test: should return the parsed iban for a valid IBAN with a poupança (P) account type and a non zero branch" },
+        { "args": ["BR5400000000000010932840814D2"], "returns": { "countryCode": "BR", "checkDigits": "54", "bankIspb": "00000000", "branch": "00001", "account": "0932840814", "accountType": "D", "owner": "2" }, "note": "JavaScript's own test: should return the parsed iban for a valid IBAN with an account type letter other than C or P" },
+        { "args": ["BR15000000000000109328408"], "returns": null, "note": "JavaScript's own test: should return null when it is shorter than 29 characters" },
+        { "args": ["BR1500000000000010932840814P2000"], "returns": null, "note": "JavaScript's own test: should return null when it is longer than 29 characters" },
+        { "args": ["BR150000000000001093284081412"], "returns": null, "note": "JavaScript's own test: should return null when the account type is not a letter" },
+        { "args": ["BR6900000000000010932840814P0"], "returns": null, "note": "JavaScript's own test: should return null when the owner indicator is 0, which Resolução BCB 585/2026 art. 2 § 1 does not assign, even though the check digits match" },
+        { "args": ["BR1500000000000010932840814X2"], "returns": null, "note": "JavaScript's own test: should return null when the account type letter does not match the check digits" },
+        { "args": ["BR1500000000000010932840814P_2"], "returns": null, "note": "JavaScript's own test: should return null when it carries a character outside the print format" },
+        { "args": ["BR15,0000,0000,0000,1093,2840,814P2"], "returns": null, "note": "JavaScript's own test: should return null when it carries a character outside the print format" },
+        { "args": ["BR15 000 00000 0000 1093 2840 814P 2"], "returns": null, "note": "JavaScript's own test: should return null when a separator falls inside a group instead of at its boundary" },
+        { "args": ["BR10 12AB 34CD 0000 1093 2840 814P 2"], "returns": { "countryCode": "BR", "checkDigits": "10", "bankIspb": "12AB34CD", "branch": "00001", "account": "0932840814", "accountType": "P", "owner": "2" }, "note": "JavaScript's own test: should return the fields for an ISPB with letters, which Resolução BCB 585/2026 allows" },
+        { "args": ["BR15 0000 0000 0000 1093 2840  814P 2"], "returns": { "countryCode": "BR", "checkDigits": "15", "bankIspb": "00000000", "branch": "00001", "account": "0932840814", "accountType": "P", "owner": "2" }, "note": "a run of mask characters between groups reads as isValid does (new in 2.5.0, #615)" },
+        { "args": ["BR15 0000 0000 0000 1093 2840 .-814P 2"], "returns": { "countryCode": "BR", "checkDigits": "15", "bankIspb": "00000000", "branch": "00001", "account": "0932840814", "accountType": "P", "owner": "2" }, "note": "a run of mask characters between groups reads as isValid does (new in 2.5.0, #615)" },
+        { "args": ["BR15-0000-0000-0000-1093-2840-814P-2"], "returns": { "countryCode": "BR", "checkDigits": "15", "bankIspb": "00000000", "branch": "00001", "account": "0932840814", "accountType": "P", "owner": "2" }, "note": "JavaScript docs example: any of the mask characters" },
+        { "args": [null], "returns": null, "note": "JavaScript's own test: when it is null" }
+      ]
+    },
+    "isValid": {
+      "summary": {
+        "en": "Checks whether a Brazilian IBAN is valid.",
+        "pt-BR": "Verifica se um IBAN brasileiro é válido."
+      },
+      "description": {
+        "en": [
+          "Validates a Brazilian IBAN. Any other country is invalid.",
+          "",
+          "- Layout, 29 characters: `BR`, 2 check digits (ISO 7064 MOD 97-10), 8-character ISPB (digits or letters), 5-digit branch, 10-digit account, 1-letter account type (usually `C` or `P`), 1 owner indicator (`1` to `9`, then `A` to `Z`).",
+          "- Accepts the compact form or groups of 4 split by whitespace, `.`, `-` or `/`, in any case, with optional whitespace around the value. The separator is optional at each group boundary, so `BR15 000000000000 1093 2840 814P 2` is also valid. The separators are the interchangeable mask characters of the CPF and CNPJ, alone or in a run (ISO 13616 prints one space), so `BR1500000000000010932840814P-2` and `BR15 0000 0000 0000 1093 2840  814P 2` are the same IBAN. Until 2.4.0 a run of separators between two groups made the IBAN invalid.",
+          "- A separator away from a group boundary, or any character outside letters, digits and those separators, makes the IBAN invalid (`BR15 000 00000 0000 1093 2840 814P 2`). The character is not stripped. A value that is not a string is invalid.",
+          "- The layout is set by Resolução BCB 585/2026, art. 2º, which revoked Circular BCB 3.625/2013 and kept its layout. Art. 2º, III, makes the ISPB \"oito caracteres alfanuméricos\", so a letter in the ISPB is accepted, in any case. 2.4.0 accepted only digits there. Every other digit position still rejects a letter.",
+          "- The account type follows the ISO 13616 registry pattern (a letter). Art. 2º, VI, calls it \"um caractere alfanumérico\"; the registry form is kept, so a digit there is rejected."
+        ],
+        "pt-BR": [
+          "Valida um IBAN brasileiro. Um IBAN de qualquer outro país é inválido.",
+          "",
+          "- Leiaute, 29 caracteres: `BR`, 2 dígitos verificadores (ISO 7064 MOD 97-10), ISPB de 8 caracteres (dígitos ou letras), agência de 5 dígitos, conta de 10 dígitos, tipo de conta de 1 letra (em geral `C` ou `P`), 1 indicador de titular (`1` a `9`, depois `A` a `Z`).",
+          "- Aceita a forma compacta ou grupos de 4 separados por espaço em branco, `.`, `-` ou `/`, em maiúsculas ou minúsculas, com espaços opcionais nas pontas do valor. O separador é opcional em cada fronteira de grupo, então `BR15 000000000000 1093 2840 814P 2` também é válido. Os separadores são os caracteres de máscara intercambiáveis do CPF e do CNPJ, sozinhos ou em sequência (a ISO 13616 imprime um espaço), então `BR1500000000000010932840814P-2` e `BR15 0000 0000 0000 1093 2840  814P 2` são o mesmo IBAN. Até a 2.4.0 uma sequência de separadores entre dois grupos tornava o IBAN inválido.",
+          "- Um separador fora da fronteira de um grupo, ou qualquer caractere que não seja letra, dígito ou um desses separadores, torna o IBAN inválido (`BR15 000 00000 0000 1093 2840 814P 2`). O caractere não é descartado. Um valor que não é string é inválido.",
+          "- O leiaute é definido pela Resolução BCB 585/2026, art. 2º, que revogou a Circular BCB 3.625/2013 e manteve o leiaute. O art. 2º, III, define o ISPB como \"oito caracteres alfanuméricos\", então uma letra no ISPB é aceita, em qualquer caixa. A 2.4.0 só aceitava dígitos ali. As demais posições numéricas continuam rejeitando letra.",
+          "- O tipo de conta segue o padrão do registro ISO 13616 (uma letra). O art. 2º, VI, o chama de \"um caractere alfanumérico\"; a forma do registro é mantida, então um dígito nessa posição é rejeitado."
+        ]
+      },
+      "references": [
+        "https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20BCB&numero=585",
+        "https://www.bcb.gov.br/pre/normativos/circ/2013/pdf/circ_3625_v1_O.pdf",
+        "https://www.bcb.gov.br/content/estabilidadefinanceira/Documents/sistema_pagamentos_brasileiro/IBAN-Guidelines_%20port.pdf",
+        "https://www.iso.org/standard/81090.html",
+        "https://www.iso.org/standard/31531.html"
+      ],
+      "params": [{ "name": "value", "type": "string" }],
+      "returns": "boolean",
+      "tests": [
+        { "args": ["BR1500000000000010932840814P2"], "returns": true },
+        { "name": "masked", "args": ["BR15 0000 0000 0000 1093 2840 814P 2"], "returns": true },
+        { "name": "lowercase", "args": ["br1500000000000010932840814p2"], "returns": true },
+        { "name": "wrong-check", "args": ["BR1500000000000010932840814P3"], "returns": false },
+        { "name": "not-brazilian", "args": ["DE89370400440532013000"], "returns": false },
+        { "name": "too-short", "args": ["BR15000000000000109328408"], "returns": false },
+        { "name": "empty", "args": [""], "returns": false },
+        { "args": ["BR15.0000.0000.0000.1093.2840.814P.2"], "returns": true, "note": "JavaScript's own test: should return true for a value whose ISO 13616 groups are split by any of the mask characters" },
+        { "args": ["BR15-0000-0000-0000-1093-2840-814P-2"], "returns": true, "note": "JavaScript's own test: should return true for a value whose ISO 13616 groups are split by any of the mask characters" },
+        { "args": ["BR15/0000/0000/0000/1093/2840/814P/2"], "returns": true, "note": "JavaScript's own test: should return true for a value whose ISO 13616 groups are split by any of the mask characters" },
+        { "args": ["BR15.0000-0000/0000 1093 2840 814P2"], "returns": true, "note": "JavaScript's own test: should return true for a value whose ISO 13616 groups are split by any of the mask characters" },
+        { "args": ["BR1500000000000010932840814P-2"], "returns": true, "note": "JavaScript's own test: should return true for a value split at one group boundary only" },
+        { "args": ["  BR15 0000 0000 0000 1093 2840 814P 2  "], "returns": true, "note": "JavaScript's own test: should return true for a value with surrounding whitespace" },
+        { "args": ["BR1460746948000020001234567P2"], "returns": true, "note": "JavaScript's own test: should return true for a valid IBAN with a poupança (P) account type" },
+        { "args": ["BR3860701190000010000012345C1"], "returns": true, "note": "JavaScript's own test: should return true for a valid IBAN with a corrente (C) account type" },
+        { "args": ["BR5400000000000010932840814D2"], "returns": true, "note": "JavaScript's own test: should return true for a valid IBAN whose account type is a letter other than C or P" },
+        { "args": ["BR7800000000000010932840814S2"], "returns": true, "note": "JavaScript's own test: should return true for a valid IBAN whose account type is a letter other than C or P" },
+        { "args": ["BR4500000000000010000012345CA"], "returns": true, "note": "JavaScript's own test: should return true for a valid IBAN whose owner indicator is the letter A (the LETTER_CODE_A boundary)" },
+        { "args": ["BR4900000000000010000012345CZ"], "returns": true, "note": "JavaScript's own test: should return true for a valid IBAN whose owner indicator is the letter Z (the highest transliterated letter)" },
+        { "args": ["BR1500000000000010932840814P2000"], "returns": false, "note": "JavaScript's own test: should return false when it is longer than 29 characters" },
+        { "args": ["BR150000000000001093284081412"], "returns": false, "note": "JavaScript's own test: should return false when the account type is not a letter" },
+        { "args": ["BR6900000000000010932840814P0"], "returns": false, "note": "JavaScript's own test: should return false when the owner indicator is 0, which Resolução BCB 585/2026 art. 2 § 1 does not assign, even though the check digits match" },
+        { "args": ["BR1500000000000010932840814X2"], "returns": false, "note": "JavaScript's own test: should return false when the account type letter does not match the check digits" },
+        { "args": ["BR170000000A000010000012345C2"], "returns": true, "note": "changed in 2.5.0 (#593): the letter is in the ISPB, which Resolução BCB 585/2026 art. 2º III makes alphanumeric; 2.4.0 rejected it. JavaScript's own test: should return true for an ISPB with letters" },
+        { "args": ["BR1500000000000010932840814P_2"], "returns": false, "note": "JavaScript's own test: should return false when it carries a character outside the print format" },
+        { "args": ["BR15,0000,0000,0000,1093,2840,814P,2"], "returns": false, "note": "JavaScript's own test: should return false when it carries a character outside the print format" },
+        { "args": ["BR1500000000000010932840814P#2"], "returns": false, "note": "JavaScript's own test: should return false when it carries a character outside the print format" },
+        { "args": ["BR15 000 00000 0000 1093 2840 814P 2"], "returns": false, "note": "JavaScript's own test: should return false when a separator falls inside a group instead of at its boundary" },
+        { "args": ["BR1 50000000000001093 2840 814P 2"], "returns": false, "note": "JavaScript's own test: should return false when a separator falls inside a group instead of at its boundary" },
+        { "args": ["BR15 0000 0000 0000 1093 2840 814 P2"], "returns": false, "note": "JavaScript's own test: should return false when a separator falls inside a group instead of at its boundary" },
+        { "args": ["BR15 0000 0000 0000 1093 2840  814P 2"], "returns": true, "note": "changed in 2.5.0 (#615): a run of mask characters between groups is accepted, as isValidCpf reads its mask. JavaScript's own test: for groups separated by a run of mask characters" },
+        { "args": ["BR15 0000 0000 0000 1093 2840 .-814P 2"], "returns": true, "note": "changed in 2.5.0 (#615): a run of mask characters between groups is accepted, as isValidCpf reads its mask. JavaScript's own test: for groups separated by a run of mask characters" },
+        { "args": ["   "], "returns": false, "note": "JavaScript's own test: should return false when it contains only whitespace" },
+        { "args": ["BR1012AB34CD000010932840814P2"], "returns": true, "note": "JavaScript's own test: should return true for an ISPB with letters, the 'oito caracteres alfanuméricos' of Resolução BCB 585/2026 art. 2 III" },
+        { "args": ["br1012ab34cd000010932840814p2"], "returns": true, "note": "JavaScript's own test: should return true for an ISPB with letters, the 'oito caracteres alfanuméricos' of Resolução BCB 585/2026 art. 2 III" },
+        { "args": ["BR32000000000000A0000012345C2"], "returns": false, "note": "JavaScript's own test: should return false when a digit position (the branch) holds a letter instead, even if the check digits happen to match" },
+        { "args": ["BR320000000000001000001234AC2"], "returns": false, "note": "JavaScript's own test: should return false when a digit position (the account) holds a letter instead, even if the check digits happen to match" },
+        { "args": [null], "returns": false, "note": "JavaScript's own test: when it is null (not a string)" }
+      ]
+    },
+    "parse": {
+      "summary": {
+        "en": "Removes IBAN formatting characters, upper-cases the result and returns the compact IBAN.",
+        "pt-BR": "Remove os caracteres de formatação de um IBAN, converte o resultado para maiúsculas e retorna o IBAN compacto."
+      },
+      "description": {
+        "en": [
+          "Removes IBAN formatting and keeps letters and digits upper-cased, capped at 29 characters.",
+          "",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the characters of any number, sign and decimal point dropped).",
+          "- Every character that is not a letter or a digit is dropped and the letters are upper-cased.",
+          "- A string is read as it is, so a value with no letter or digit, and a value that is neither a string nor a number, give an empty string."
+        ],
+        "pt-BR": [
+          "Remove a formatação do IBAN e mantém letras e dígitos em maiúsculas, limitados a 29 caracteres.",
+          "",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia (a 2.4.0 lia os caracteres de qualquer número, descartando sinal e ponto decimal).",
+          "- Todo caractere que não é letra nem dígito é descartado e as letras viram maiúsculas.",
+          "- Uma string é lida como está, então um valor sem letra nem dígito, e um valor que não é string nem número, retornam uma string vazia."
+        ]
+      },
+      "references": [
+        "https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?tipo=Resolu%C3%A7%C3%A3o%20BCB&numero=585",
+        "https://www.bcb.gov.br/pre/normativos/circ/2013/pdf/circ_3625_v1_O.pdf",
+        "https://www.bcb.gov.br/content/estabilidadefinanceira/Documents/sistema_pagamentos_brasileiro/IBAN-Guidelines_%20port.pdf"
+      ],
+      "params": [{ "name": "value", "type": "string | number" }],
+      "returns": "string",
+      "tests": [
+        { "name": "masked", "args": ["BR15 0000 0000 0000 1093 2840 814P 2"], "returns": "BR1500000000000010932840814P2", "note": "JavaScript docs example" },
+        { "name": "lowercase-mixed-separators", "args": ["br15-0000.0000/0000 1093 2840 814p-2"], "returns": "BR1500000000000010932840814P2" },
+        { "name": "caps-length", "args": ["BR1500000000000010932840814P2EXTRA"], "returns": "BR1500000000000010932840814P2", "note": "reference truncates to 29 characters; asserted by the reference (JS) unit tests" },
+        { "name": "empty", "args": [""], "returns": "" },
+        { "args": ["BR15"], "returns": "BR15", "note": "JavaScript's own test: should keep a partial IBAN as written" },
+        { "args": [-1], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [1.5], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [null], "returns": "", "note": "a value that is not a string or number gives an empty string" }
+      ]
+    }
+  }
+}

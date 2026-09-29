@@ -1,0 +1,103 @@
+{
+  "$schema": "../../schema/contract.schema.json",
+  "domain": "email",
+  "title": { "en": "Email", "pt-BR": "E-mail" },
+  "summary": { "en": "Email address validation.", "pt-BR": "Validação de endereços de e-mail." },
+  "category": "telecom",
+  "order": 3,
+  "related": ["pixKey"],
+  "functions": {
+    "isValid": {
+      "summary": {
+        "en": "Checks whether an email address is valid.",
+        "pt-BR": "Verifica se um endereço de e-mail é válido."
+      },
+      "description": {
+        "en": [
+          "Validates an email address: a practical subset of the WHATWG HTML \"valid e-mail address\".",
+          "",
+          "- Local part: letters, digits and `_'+-.`, with no leading or trailing dot, no trailing apostrophe and no two dots in a row, at most 64 characters. The whole address is capped at 254 characters (RFC 5321, section 4.5.3.1). Until 2.4.0 there was no cap on either.",
+          "- Domain: at least one dot, labels of up to 63 characters that neither start nor end with a hyphen, the final label 2 to 63 letters or a punycode label (`xn--`, up to 63 characters, so `user@example.xn--p1ai` is valid). A punycode label with nothing after `xn--`, ending in a hyphen or over 63 characters is rejected. Until 2.4.0 a punycode final label was rejected.",
+          "- Quoted local parts, address literals, single-label domains such as `user@localhost` and the local part characters `! # $ % & * = ? ^ { | } ~`, the slash and the backtick are rejected, although WHATWG allows some of them.",
+          "- The check ignores case. A value that is not a string is invalid.",
+          "- A Pix email key does not use this function. `pixKey.isValid` follows the pattern of the DICT API, which is wider in some places: it accepts `fulano@example`, `a@localhost` and `a{b}@example.com`, which this function rejects."
+        ],
+        "pt-BR": [
+          "Valida um endereço de e-mail: um subconjunto prático do \"valid e-mail address\" do WHATWG HTML.",
+          "",
+          "- Parte local: letras, dígitos e `_'+-.`, sem ponto no início ou no fim, sem apóstrofo no fim e sem dois pontos seguidos, com no máximo 64 caracteres. O endereço inteiro tem no máximo 254 caracteres (RFC 5321, seção 4.5.3.1). Até a 2.4.0 não havia limite em nenhum dos dois.",
+          "- Domínio: pelo menos um ponto, rótulos de até 63 caracteres que não começam nem terminam com hífen, o último rótulo com 2 a 63 letras ou um rótulo punycode (`xn--`, até 63 caracteres, então `user@example.xn--p1ai` é válido). Um rótulo punycode sem nada depois de `xn--`, terminado em hífen ou com mais de 63 caracteres é rejeitado. Até a 2.4.0 um último rótulo punycode era rejeitado.",
+          "- Partes locais entre aspas, literais de endereço, domínios de um só rótulo como `user@localhost` e os caracteres de parte local `! # $ % & * = ? ^ { | } ~`, a barra e o acento grave são rejeitados, embora o WHATWG permita alguns deles.",
+          "- A verificação ignora maiúsculas e minúsculas. Um valor que não é string é inválido.",
+          "- Uma chave Pix de e-mail não usa esta função. `pixKey.isValid` segue o padrão da API do DICT, que é mais amplo em alguns pontos: aceita `fulano@example`, `a@localhost` e `a{b}@example.com`, que esta função rejeita."
+        ]
+      },
+      "references": [
+        "https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address",
+        "https://www.rfc-editor.org/rfc/rfc5322"
+      ],
+      "level": "core",
+      "params": [{ "name": "value", "type": "string" }],
+      "returns": "boolean",
+      "tests": [
+        { "args": [""], "returns": false, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["   "], "returns": false, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["abc"], "returns": false, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["invalid.email"], "returns": false, "note": "JavaScript's own test: should return false when it is missing @" },
+        { "args": ["user@"], "returns": false, "note": "JavaScript's own test: should return false when it is missing domain" },
+        { "args": ["@domain.com"], "returns": false, "note": "JavaScript's own test: should return false when it is missing user" },
+        { "args": ["!!!user@example.com"], "returns": false, "note": "JavaScript's own test: should return false when there is garbage before an otherwise valid email" },
+        { "args": ["user@example.com!!!"], "returns": false, "note": "JavaScript's own test: should return false when there is garbage after an otherwise valid email" },
+        { "args": ["ab..c@example.com"], "returns": false, "note": "JavaScript's own test: should return false when the local part has consecutive dots that are not at the very start" },
+        { "args": ["user@example-.com"], "returns": false, "note": "JavaScript's own test: should return false when a domain label ends with a hyphen" },
+        { "args": ["user@-example.com"], "returns": false, "note": "JavaScript's own test: should return false when a domain label starts with a hyphen" },
+        { "args": ["user@example.com"], "returns": true, "note": "JavaScript's own test: should return true when is a valid email" },
+        { "args": ["user__@example.com"], "returns": true, "note": "JavaScript's own test: should return true when is a valid email" },
+        { "args": ["user__user@example.com"], "returns": true, "note": "JavaScript's own test: should return true when is a valid email" },
+        { "args": ["test@subdomain.example.com"], "returns": true, "note": "JavaScript's own test: should return true when is a valid email with subdomain" },
+        { "args": ["user@ex-ample.com"], "returns": true, "note": "JavaScript's own test: should return true when a domain label carries an inner hyphen" },
+        { "args": ["user+tag@example.co.uk"], "returns": true, "note": "JavaScript's own test: should return true when is a valid email with special characters" },
+        { "args": ["fulano@example"], "returns": false, "note": "a single-label domain is rejected here, although it is a Pix email key (#593, pixKey.isValid)" },
+        { "args": ["a@localhost"], "returns": false, "note": "a single-label domain is rejected here, although it is a Pix email key (#593, pixKey.isValid)" },
+        { "args": ["a{b}@example.com"], "returns": false, "note": "outside the local-part characters of this function, although it is a Pix email key (#593, pixKey.isValid)" },
+        { "args": [".ab@example.com"], "returns": false, "note": "a leading dot is rejected" },
+        { "args": ["ab.@example.com"], "returns": false, "note": "a trailing dot in the local part is rejected" },
+        { "args": ["a&b@example.com"], "returns": false, "note": "& is outside the local-part characters of this function" },
+        { "args": ["user@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.com"], "returns": false, "note": "JavaScript's own test: when a domain label is longer than the 63 characters WHATWG allows" },
+        { "args": ["user@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.com"], "returns": true, "note": "JavaScript's own test: when a domain label is exactly 63 characters long" },
+        { "args": ["user@example.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"], "returns": false, "note": "JavaScript's own test: when the final domain label is longer than the 63 characters WHATWG allows" },
+        { "args": ["User@Example.COM"], "returns": true, "note": "the check ignores case" },
+        { "args": ["aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@example.com"], "returns": false, "note": "JavaScript's own test: when the local part is longer than 64 characters" },
+        {
+          "args": [
+            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@a.com"
+          ],
+          "returns": false,
+          "note": "JavaScript's own test: when the local part is longer than 64 characters"
+        },
+        { "args": ["aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@example.com"], "returns": true, "note": "JavaScript's own test: when the local part has exactly 64 characters" },
+        { "args": ["user@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.com"], "returns": false, "note": "JavaScript's own test: when the whole address is longer than 254 characters" },
+        { "args": ["user@aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.com"], "returns": true, "note": "JavaScript's own test: when the address has exactly 254 characters" },
+        { "args": ["user@example.xn--p1ai"], "returns": true, "note": "when the final label is punycode (JavaScript docs example)" },
+        { "args": ["user@example.XN--P1AI"], "returns": true, "note": "JavaScript's own test: when the final label is punycode" },
+        { "args": ["user@example.xn--aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"], "returns": true, "note": "JavaScript's own test: when the final label is punycode" },
+        { "args": ["user@example.xn--"], "returns": false, "note": "JavaScript's own test: when the punycode final label is malformed" },
+        { "args": ["user@example.xn---"], "returns": false, "note": "JavaScript's own test: when the punycode final label is malformed" },
+        { "args": ["user@example.xn--p1ai-"], "returns": false, "note": "JavaScript's own test: when the punycode final label is malformed" },
+        { "args": ["user@example.xn--aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"], "returns": false, "note": "JavaScript's own test: when the punycode final label is malformed" },
+        { "args": ["a%b@example.com"], "returns": false, "note": "when the local part holds a character outside the accepted set (JavaScript docs example)" },
+        { "args": ["a=b@a.com"], "returns": false, "note": "JavaScript's own test: when the local part holds a character outside the accepted set" },
+        { "args": ["a?b@a.com"], "returns": false, "note": "JavaScript's own test: when the local part holds a character outside the accepted set" },
+        { "args": ["a/b@a.com"], "returns": false, "note": "JavaScript's own test: when the local part holds a character outside the accepted set" },
+        { "args": ["a!b@a.com"], "returns": false, "note": "JavaScript's own test: when the local part holds a character outside the accepted set" },
+        { "args": ["a#b@a.com"], "returns": false, "note": "JavaScript's own test: when the local part holds a character outside the accepted set" },
+        { "args": ["a$b@a.com"], "returns": false, "note": "JavaScript's own test: when the local part holds a character outside the accepted set" },
+        { "args": ["a*b@a.com"], "returns": false, "note": "JavaScript's own test: when the local part holds a character outside the accepted set" },
+        { "args": ["x'@a.com"], "returns": false, "note": "JavaScript's own test: when the local part holds a character outside the accepted set (a trailing apostrophe)" },
+        { "args": ["user@localhost"], "returns": false, "note": "JavaScript's own test: when the domain has a single label" },
+        { "args": ["john.doe@hotmail.com"], "returns": true, "note": "JavaScript docs example" },
+        { "args": ["test@domain.co.uk"], "returns": true, "note": "JavaScript's own test: should return true when is a valid email with subdomain" }
+      ]
+    }
+  }
+}

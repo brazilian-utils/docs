@@ -1,0 +1,319 @@
+{
+  "$schema": "../../schema/contract.schema.json",
+  "domain": "legalProcess",
+  "title": { "en": "Court case number", "pt-BR": "Processo judicial" },
+  "summary": {
+    "en": "Court case numbers in the unified numbering of Resolução CNJ nº 65/2008 (NUP).",
+    "pt-BR": "Números de processo na numeração única (NUP) da Resolução CNJ nº 65/2008."
+  },
+  "category": "legal",
+  "order": 1,
+  "aliases": ["processoJuridico"],
+  "functions": {
+    "format": {
+      "summary": {
+        "en": "Formats a court case number with the CNJ mask.",
+        "pt-BR": "Formata um número de processo judicial com a máscara do CNJ."
+      },
+      "description": {
+        "en": [
+          "Formats a court case number with the CNJ mask `NNNNNNN-DD.AAAA.J.TR.OOOO`.",
+          "",
+          "- Every character that is not a digit is dropped first, and only the first 20 digits are kept. The mask is applied as far as the digits go, so a value being typed is masked progressively (`00020802` gives `0002080-2`).",
+          "- `options.pad` first left-pads the value with zeros to 20 digits.",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number returns an empty string (2.4.0 read the digits of any number, sign and decimal point dropped).",
+          "- An empty value, or one without digits, returns an empty string even with `pad`. Until 2.4.0 `pad` returned the whole zero mask.",
+          "- Pending decision (findings §2 #2, #3): the reference (JS) formats only the characters an incomplete value has. It returns an empty string for empty or invalid input. The other libraries return `null`."
+        ],
+        "pt-BR": [
+          "Formata um número de processo judicial com a máscara do CNJ `NNNNNNN-DD.AAAA.J.TR.OOOO`.",
+          "",
+          "- Todo caractere que não é dígito é descartado antes, e só os 20 primeiros dígitos ficam. A máscara é aplicada até onde os dígitos vão, então um valor sendo digitado é mascarado progressivamente (`00020802` dá `0002080-2`).",
+          "- `options.pad` primeiro completa o valor com zeros à esquerda até 20 dígitos.",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal).",
+          "- Um valor vazio, ou sem dígitos, retorna uma string vazia mesmo com `pad`. Até a 2.4.0 o `pad` retornava a máscara toda de zeros.",
+          "- Decisão pendente (findings §2 #2, #3): a referência (JS) formata só os caracteres que um valor incompleto tem. Ela retorna uma string vazia para entrada vazia ou inválida. As outras bibliotecas retornam `null`."
+        ]
+      },
+      "references": ["https://atos.cnj.jus.br/atos/detalhar/119"],
+      "level": "core",
+      "params": [
+        { "name": "value", "type": "string | number" },
+        { "name": "options", "type": "FormatProcessoJuridicoOptions", "optional": true, "fields": [{ "name": "pad", "type": "boolean", "optional": true }] }
+      ],
+      "returns": "string",
+      "tests": [
+        { "args": ["16669239820269264931"], "returns": "1666923-98.2026.9.26.4931", "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["16669239820269264932"], "returns": "1666923-98.2026.9.26.4932", "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["00000000000000000000"], "returns": "0000000-00.0000.0.00.0000", "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["55079546820269134836"], "returns": "5507954-68.2026.9.13.4836", "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["55079546820269134837"], "returns": "5507954-68.2026.9.13.4837", "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["47097579520263005802"], "returns": "4709757-95.2026.3.00.5802", "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["47097579520263005803"], "returns": "4709757-95.2026.3.00.5803", "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": [""], "returns": "", "note": "JavaScript's own test: should format processo juridico with mask" },
+        { "args": ["0"], "returns": "0", "note": "JavaScript's own test: should format processo juridico with mask" },
+        { "args": ["00"], "returns": "00", "note": "JavaScript's own test: should format processo juridico with mask" },
+        { "args": ["000"], "returns": "000", "note": "JavaScript's own test: should format processo juridico with mask" },
+        { "args": ["0002"], "returns": "0002", "note": "JavaScript's own test: should format processo juridico with mask" },
+        { "args": ["00020"], "returns": "00020", "note": "JavaScript's own test: should format processo juridico with mask" },
+        { "args": ["000208"], "returns": "000208", "note": "JavaScript's own test: should format processo juridico with mask" },
+        { "args": ["0002080"], "returns": "0002080", "note": "JavaScript's own test: should format processo juridico with mask" },
+        { "args": ["00020802"], "returns": "0002080-2", "note": "JavaScript's own test: should format processo juridico with mask" },
+        { "args": ["000208025"], "returns": "0002080-25", "note": "JavaScript's own test: should format processo juridico with mask" },
+        { "args": ["0002080252"], "returns": "0002080-25.2", "note": "JavaScript's own test: should format processo juridico with mask" },
+        { "args": ["00020802520"], "returns": "0002080-25.20", "note": "JavaScript's own test: should format processo juridico with mask" },
+        { "args": ["000208025201"], "returns": "0002080-25.201", "note": "JavaScript's own test: should format processo juridico with mask" },
+        { "args": ["0002080252012"], "returns": "0002080-25.2012", "note": "JavaScript's own test: should format processo juridico with mask" },
+        { "args": ["00020802520125"], "returns": "0002080-25.2012.5", "note": "JavaScript's own test: should format processo juridico with mask" },
+        { "args": ["000208025201251"], "returns": "0002080-25.2012.5.1", "note": "JavaScript's own test: should format processo juridico with mask" },
+        { "args": ["0002080252012515"], "returns": "0002080-25.2012.5.15", "note": "JavaScript's own test: should format processo juridico with mask" },
+        { "args": ["00020802520125150"], "returns": "0002080-25.2012.5.15.0", "note": "JavaScript's own test: should format processo juridico with mask" },
+        { "args": ["000208025201251500"], "returns": "0002080-25.2012.5.15.00", "note": "JavaScript's own test: should format processo juridico with mask" },
+        { "args": ["0002080252012515004"], "returns": "0002080-25.2012.5.15.004", "note": "JavaScript's own test: should format processo juridico with mask" },
+        { "args": ["00020802520125150049"], "returns": "0002080-25.2012.5.15.0049", "note": "JavaScript's own test: should format processo juridico with mask" },
+        { "args": ["00020802520125150049123123"], "returns": "0002080-25.2012.5.15.0049", "note": "JavaScript's own test" },
+        { "args": ["0002080@$25201%!@2515.%0049123123"], "returns": "0002080-25.2012.5.15.0049", "note": "JavaScript's own test: should remove all non numeric characters" },
+        { "args": [-1], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [1.5], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "name": "pad", "args": ["20802520125150049", { "pad": true }], "returns": "0002080-25.2012.5.15.0049", "note": "JavaScript docs example" },
+        { "name": "empty-with-pad", "args": ["", { "pad": true }], "returns": "", "note": "changed in 2.5.0 (#615): a value with no digits gives an empty string even with pad" },
+        { "name": "no-digits-with-pad", "args": ["abc", { "pad": true }], "returns": "", "note": "changed in 2.5.0 (#615): a value with no digits gives an empty string even with pad" }
+      ]
+    },
+    "generate": {
+      "summary": {
+        "en": "Generates a random valid Brazilian court case number.",
+        "pt-BR": "Gera um número de processo judicial aleatório e válido."
+      },
+      "description": {
+        "en": [
+          "Generates a random valid court case number (20 digits, unformatted) in the `NNNNNNNDDAAAAJTROOOO` layout of Resolução CNJ nº 65/2008.",
+          "",
+          "- `options.year` sets the `AAAA` field: an integer from the current year to 9999 (default: the current year). `options.court` sets the segment `J`: an integer from 1 to 9 (default: random).",
+          "- The function picks `TR` among the tribunals of the chosen segment, so the pair always names a court that exists. The sequence number and the unidade de origem are random and the check digits are computed.",
+          "- Returns `null` when the year or the segment is out of range or not an integer, or when the options are not an object."
+        ],
+        "pt-BR": [
+          "Gera um número de processo judicial aleatório e válido (20 dígitos, sem formatação) no formato `NNNNNNNDDAAAAJTROOOO` da Resolução CNJ nº 65/2008.",
+          "",
+          "- `options.year` define o campo `AAAA`: um inteiro do ano atual até 9999 (padrão: o ano atual). `options.court` define o segmento `J`: um inteiro de 1 a 9 (padrão: aleatório).",
+          "- A função escolhe `TR` entre os tribunais do segmento escolhido, então o par sempre indica um tribunal que existe. O número sequencial e a unidade de origem são aleatórios e os dígitos verificadores são calculados.",
+          "- Retorna `null` quando o ano ou o segmento está fora do intervalo ou não é inteiro, ou quando as opções não são um objeto."
+        ]
+      },
+      "references": ["https://atos.cnj.jus.br/atos/detalhar/119"],
+      "level": "core",
+      "params": [
+        { "name": "options", "type": "GenerateProcessoJuridicoParams", "optional": true, "fields": [{ "name": "year", "type": "integer", "optional": true }, { "name": "court", "type": "integer", "optional": true }] }
+      ],
+      "returns": "string?",
+      "tests": [
+        { "name": "generated-is-valid", "args": [], "satisfies": "legalProcess.isValid", "repeat": 5, "note": "every generated value must pass the lib's own validator" },
+        { "args": [{ "year": 10000 }], "returns": null, "note": "JavaScript's own test: should return null for years above 9999" },
+        { "args": [{ "year": 99999 }], "returns": null, "note": "JavaScript's own test: should return null for years above 9999" },
+        { "args": [{ "court": 0 }], "returns": null, "note": "JavaScript's own test: should return null for invalid courts" },
+        { "args": [{ "court": 10 }], "returns": null, "note": "JavaScript's own test: should return null for invalid courts" },
+        { "args": [{ "court": 1.5 }], "returns": null, "note": "JavaScript's own test: should return null for invalid courts" },
+        { "args": [{ "court": -1 }], "returns": null, "note": "JavaScript's own test: should return null for invalid courts" },
+        { "name": "year-in-range", "args": [{ "year": 2099 }], "matches": "^\\d{20}$", "note": "JavaScript docs: year sets the AAAA field, from the current year to 9999" },
+        { "name": "court-5", "args": [{ "year": 2099, "court": 5 }], "matches": "^\\d{13}5\\d{6}$", "repeat": 5, "note": "JavaScript docs example: court sets the órgão J" }
+      ]
+    },
+    "isValid": {
+      "summary": {
+        "en": "Checks whether a Brazilian court case number (NUP) is valid.",
+        "pt-BR": "Verifica se um número de processo judicial (NUP) é válido."
+      },
+      "description": {
+        "en": [
+          "Validates a court case number (Resolução CNJ nº 65/2008). It checks the `NNNNNNN-DD.AAAA.J.TR.OOOO` layout, the `DD` check digits (ISO 7064 MOD 97-10) and the `J`/`TR` pair.",
+          "",
+          "- `J` and `TR` must name a segment and a tribunal that exist (art. 1º, §§ 4º and 5º). `J` is 1 (STF), 2 (CNJ), 3 (STJ), 4 (Justiça Federal), 5 (Justiça do Trabalho), 6 (Justiça Eleitoral), 7 (Justiça Militar da União), 8 (Justiça Estadual) or 9 (Justiça Militar Estadual). `TR` is `00` for `J` 1, 2 and 3; for `J` 4, `01` to `06` (TRF) or `90` (CJF); for `J` 5, `00` (TST), `01` to `24` (TRT) or `90` (CSJT); for `J` 6, `00` (TSE) or `01` to `27` (TRE); for `J` 7, `00` (STM) or `01` to `12` (CJM); for `J` 8, `01` to `27` (TJ); for `J` 9, `13`, `21` or `26` (TJM of MG, RS and SP).",
+          "- The unidade de origem `OOOO` is only checked as four digits, because art. 1º, § 6º leaves its codification to each tribunal.",
+          "- Accepts the 20 digits bare or with the CNJ mask, and only a string (a number is invalid). Whitespace, `.`, `-` and `/` (the mask characters `cpf.isValid` reads), in any run, are accepted between the `NNNNNNN`, `DD`, `AAAA`, `J`, `TR` and `OOOO` fields, or omitted, so `0002080-25.2012.515.0049` (`J` and `TR` fused) is valid. Whitespace around the value is ignored. A separator inside a field (`000208-0252012.5.15.0049`), at the start or the end of the value, any other character (`_`) and a letter make it invalid. Until 2.4.0 a slash between the fields made it invalid, so `0002080/25.2012.5.15.0049` was `false`.",
+          "- The check digits follow art. 1º § 2º and Anexo VIII (\"Cálculo do dígito verificador\") of Resolução CNJ 65/2008. The TRF da 6ª Região (`4.06`) is valid per Resolução CNJ 477/2022.",
+          "- The TRF6 example printed in Anexo II, `0000100-15.2008.406.0000`, is fictitious, as the Anexo says. Written in the `NNNNNNN-DD.AAAA.J.TR.OOOO` form its check digits are 68, not 15, so the function accepts `0000100-68.2008.4.06.0000` and rejects the printed one.",
+          "- Pending decision (findings §2 #7): Go, Python, Ruby and Rust reject numbers that the reference (JS) generates for the current year. The segment/tribunal rules need to be reconciled."
+        ],
+        "pt-BR": [
+          "Valida um número de processo judicial (Resolução CNJ nº 65/2008). Verifica o formato `NNNNNNN-DD.AAAA.J.TR.OOOO`, os dígitos verificadores `DD` (ISO 7064 MOD 97-10) e o par `J`/`TR`.",
+          "",
+          "- `J` e `TR` precisam indicar um segmento e um tribunal que existem (art. 1º, §§ 4º e 5º). `J` é 1 (STF), 2 (CNJ), 3 (STJ), 4 (Justiça Federal), 5 (Justiça do Trabalho), 6 (Justiça Eleitoral), 7 (Justiça Militar da União), 8 (Justiça Estadual) ou 9 (Justiça Militar Estadual). `TR` é `00` para `J` 1, 2 e 3; para `J` 4, `01` a `06` (TRF) ou `90` (CJF); para `J` 5, `00` (TST), `01` a `24` (TRT) ou `90` (CSJT); para `J` 6, `00` (TSE) ou `01` a `27` (TRE); para `J` 7, `00` (STM) ou `01` a `12` (CJM); para `J` 8, `01` a `27` (TJ); para `J` 9, `13`, `21` ou `26` (TJM de MG, RS e SP).",
+          "- A unidade de origem `OOOO` só é verificada como quatro dígitos, porque o art. 1º, § 6º deixa a codificação dela a cargo de cada tribunal.",
+          "- Aceita os 20 dígitos sem máscara ou com a máscara do CNJ, e só string (um número é inválido). Espaço em branco, `.`, `-` e `/` (os caracteres de máscara que `cpf.isValid` lê), em qualquer sequência, são aceitos entre os campos `NNNNNNN`, `DD`, `AAAA`, `J`, `TR` e `OOOO`, ou omitidos, então `0002080-25.2012.515.0049` (`J` e `TR` juntos) é válido. Espaços nas pontas são ignorados. Um separador dentro de um campo (`000208-0252012.5.15.0049`), no começo ou no fim do valor, qualquer outro caractere (`_`) e uma letra tornam o valor inválido. Até a 2.4.0 uma barra entre os campos o tornava inválido, então `0002080/25.2012.5.15.0049` era `false`.",
+          "- Os dígitos verificadores seguem o art. 1º § 2º e o Anexo VIII (\"Cálculo do dígito verificador\") da Resolução CNJ 65/2008. O TRF da 6ª Região (`4.06`) é válido conforme a Resolução CNJ 477/2022.",
+          "- O exemplo do TRF6 impresso no Anexo II, `0000100-15.2008.406.0000`, é fictício, como o próprio Anexo diz. Escrito na forma `NNNNNNN-DD.AAAA.J.TR.OOOO`, os dígitos verificadores dele são 68, não 15, então a função aceita `0000100-68.2008.4.06.0000` e rejeita o impresso.",
+          "- Decisão pendente (findings §2 #7): Go, Python, Ruby e Rust rejeitam números que a referência (JS) gera para o ano atual. As regras de segmento/tribunal precisam ser conciliadas."
+        ]
+      },
+      "references": ["https://atos.cnj.jus.br/atos/detalhar/119", "https://atos.cnj.jus.br/atos/detalhar/4781"],
+      "level": "core",
+      "params": [{ "name": "value", "type": "string" }],
+      "returns": "boolean",
+      "tests": [
+        { "args": ["16669239820269264932"], "returns": false, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["00000000000000000000"], "returns": false, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["55079546820269134837"], "returns": false, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["47097579520263005803"], "returns": false, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": [""], "returns": false, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["   "], "returns": false, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["abc"], "returns": false, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["123"], "returns": false, "note": "JavaScript's own test: should return false" },
+        { "args": ["0002080252012515004999"], "returns": false, "note": "JavaScript's own test: should return false when it sanitizes to more digits than the expected length, even if the check digit still matches" },
+        { "args": ["00020802520125150050"], "returns": false, "note": "JavaScript's own test: should return false when it is a 20 digit value with a mismatched check digit" },
+        { "args": ["-00020802520125150049"], "returns": false, "note": "JavaScript's own test: should return false when a mask character leads or trails an otherwise valid value" },
+        { "args": ["00020802520125150049."], "returns": false, "note": "JavaScript's own test: should return false when a mask character leads or trails an otherwise valid value" },
+        { "args": [".0002080-25.2012.5.15.0049-"], "returns": false, "note": "JavaScript's own test: should return false when a mask character leads or trails an otherwise valid value" },
+        { "args": ["ab00020802520125150049"], "returns": false, "note": "JavaScript's own test: should return false when a letter is attached to the digits" },
+        { "args": ["00020802520125150049ab"], "returns": false, "note": "JavaScript's own test: should return false when a letter is attached to the digits" },
+        { "args": ["0002080/25.2012.5.15.0049"], "returns": true, "note": "changed in 2.5.0 (#615): the mask accepts a slash between the fields, as isValidCpf reads it (2.4.0 rejected it); JavaScript's own test: should accept a generated number whatever mask separates its fields" },
+        { "args": ["000208-0252012.5.15.0049"], "returns": false, "note": "JavaScript's own test: should return false when a mask separator falls outside the CNJ field boundaries" },
+        { "args": ["0000100-69.2008.0.00.0000"], "returns": false, "note": "JavaScript's own test: should return false when the órgão (J) is not one of the nine segments of art. 1º, § 4º" },
+        { "args": ["0000100-41.2008.4.07.0000"], "returns": false, "note": "JavaScript's own test: should return false when the Justiça Federal carries a region beyond the sixth (art. 1º, § 5º, III)" },
+        { "args": ["0000100-23.2008.8.28.0000"], "returns": false, "note": "JavaScript's own test: should return false when the Justiça Estadual carries a tribunal beyond the twenty seventh (art. 1º, § 5º, VII)" },
+        { "args": ["0000100-03.2008.8.00.0000"], "returns": false, "note": "JavaScript's own test: should return false when the Justiça Estadual zeroes the tribunal, which has no superior court of its own" },
+        { "args": ["0000100-89.2008.9.01.0000"], "returns": false, "note": "JavaScript's own test: should return false when the Justiça Militar Estadual names a state without a military court (art. 1º, § 5º, VIII)" },
+        { "args": ["0000100-58.2008.1.01.0000"], "returns": false, "note": "JavaScript's own test: should return false when a superior court carries a tribunal instead of the zeroed field (art. 1º, § 5º, I)" },
+        { "args": ["0000100-14.2008.9.90.0000"], "returns": false, "note": "JavaScript's own test: should return false when a segment without a council carries the council code (art. 1º, § 5º, II)" },
+        { "args": ["00020802520125150049"], "returns": true, "note": "JavaScript's own test: should return true when is a processo juridico valid without mask" },
+        { "args": ["0002080-25.2012.5.15.0049"], "returns": true, "note": "JavaScript's own test: should return true when is a processo juridico valid with the CNJ mask" },
+        { "args": [" 0002080-25.2012.5.15.0049 "], "returns": true, "note": "JavaScript's own test: should return true when a masked processo juridico is surrounded by whitespace" },
+        { "args": ["\n00020802520125150049\t"], "returns": true, "note": "JavaScript's own test: should return true when a masked processo juridico is surrounded by whitespace" },
+        { "args": ["0002080-25.2012.515.0049"], "returns": true, "note": "JavaScript's own test: should return true when is a processo juridico valid with the legacy fused mask" },
+        { "args": ["0000100-85.2008.1.00.0000"], "returns": true, "note": "JavaScript's own test: should return true when the órgão is the Supremo Tribunal Federal (art. 1º, § 4º, I)" },
+        { "args": ["0000100-04.2008.2.00.0000"], "returns": true, "note": "JavaScript's own test: should return true when the órgão is the Conselho Nacional de Justiça (art. 1º, § 4º, II)" },
+        { "args": ["0000100-20.2008.3.00.0000"], "returns": true, "note": "JavaScript's own test: should return true when the órgão is the Superior Tribunal de Justiça (art. 1º, § 4º, III)" },
+        { "args": ["0000100-09.2008.4.01.0000"], "returns": true, "note": "JavaScript's own test: should return true when the órgão is the Justiça Federal and the tribunal a TRF (art. 1º, § 5º, III)" },
+        { "args": ["0000100-35.2008.5.15.0000"], "returns": true, "note": "JavaScript's own test: should return true when the órgão is the Justiça do Trabalho and the tribunal a TRT (art. 1º, § 5º, IV)" },
+        { "args": ["0000100-18.2008.6.27.0000"], "returns": true, "note": "JavaScript's own test: should return true when the órgão is the Justiça Eleitoral and the tribunal a TRE (art. 1º, § 5º, V)" },
+        { "args": ["0000100-51.2008.7.12.0000"], "returns": true, "note": "JavaScript's own test: should return true when the órgão is the Justiça Militar da União and the tribunal a CJM (art. 1º, § 5º, VI)" },
+        { "args": ["0000100-73.2008.8.01.0000"], "returns": true, "note": "JavaScript's own test: should return true when the órgão is the Justiça Estadual and the tribunal a TJ (art. 1º, § 5º, VII)" },
+        { "args": ["0000100-56.2008.9.13.0000"], "returns": true, "note": "JavaScript's own test: should return true when the órgão is the Justiça Militar Estadual and the tribunal a TJM (art. 1º, § 5º, VIII)" },
+        { "args": ["0000100-34.2008.9.21.0000"], "returns": true, "note": "JavaScript's own test: should return true when the órgão is the Justiça Militar Estadual and the tribunal a TJM (art. 1º, § 5º, VIII)" },
+        { "args": ["0000100-93.2008.9.26.0000"], "returns": true, "note": "JavaScript's own test: should return true when the órgão is the Justiça Militar Estadual and the tribunal a TJM (art. 1º, § 5º, VIII)" },
+        { "args": ["0000100-68.2008.4.06.0000"], "returns": true, "note": "JavaScript's own test: should return true when the Justiça Federal names the TRF da 6ª Região, added by Resolução CNJ nº 477/2022" },
+        { "args": ["0000100-31.2008.4.90.0000"], "returns": true, "note": "JavaScript's own test: should return true when the number originates in the CJF or in the CSJT, whose tribunal is 90 (art. 1º, § 5º, II)" },
+        { "args": ["0000100-47.2008.5.90.0000"], "returns": true, "note": "JavaScript's own test: should return true when the number originates in the CJF or in the CSJT, whose tribunal is 90 (art. 1º, § 5º, II)" },
+        { "args": ["0000100-52.2008.5.00.0000"], "returns": true, "note": "JavaScript's own test: should return true when the TST, the TSE or the STM zeroes the tribunal (art. 1º, § 5º, I)" },
+        { "args": ["0000100-68.2008.6.00.0000"], "returns": true, "note": "JavaScript's own test: should return true when the TST, the TSE or the STM zeroes the tribunal (art. 1º, § 5º, I)" },
+        { "args": ["0000100-84.2008.7.00.0000"], "returns": true, "note": "JavaScript's own test: should return true when the TST, the TSE or the STM zeroes the tribunal (art. 1º, § 5º, I)" },
+        { "args": ["0000100-15.2008.4.06.0000"], "returns": false, "note": "#593 citation fix: the Anexo II TRF6 example has fictitious check digits 15; the right ones are 68" },
+        { "args": ["0002080_25.2012.5.15.0049"], "returns": false, "note": "JavaScript's own test: when the mask uses a character outside whitespace, `.`, `-` and `/`" },
+        { "name": "space-separated-fields", "args": ["0002080 25 2012 5 15 0049"], "returns": true, "note": "JavaScript's own test: should accept a generated number whatever mask separates its fields" },
+        { "name": "mixed-separators", "args": ["0002080.25-2012 5/15.0049"], "returns": true, "note": "JavaScript's own test: should accept a generated number whatever mask separates its fields" },
+        { "args": [null], "returns": false, "note": "JavaScript's own test: when it is null" }
+      ]
+    },
+    "parse": {
+      "summary": {
+        "en": "Removes the formatting characters of a court case number and returns only the digits.",
+        "pt-BR": "Remove os caracteres de formatação de um número de processo judicial e retorna só os dígitos."
+      },
+      "description": {
+        "en": [
+          "Removes court case number formatting and keeps only digits, capped at 20 digits.",
+          "",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number returns an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
+        ],
+        "pt-BR": [
+          "Remove a formatação do processo judicial e mantém somente os dígitos, limitados a 20 dígitos.",
+          "",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
+        ]
+      },
+      "references": ["https://atos.cnj.jus.br/atos/detalhar/119"],
+      "params": [{ "name": "value", "type": "string | number" }],
+      "returns": "string",
+      "tests": [
+        { "name": "masked", "args": ["0002080-25.2012.5.15.0049"], "returns": "00020802520125150049" },
+        { "name": "unmasked", "args": ["00020802520125150049"], "returns": "00020802520125150049" },
+        { "name": "strips-non-digits", "args": ["0002080@$25201%!@2515.%0049"], "returns": "00020802520125150049" },
+        { "name": "empty", "args": [""], "returns": "" },
+        { "name": "caps-length", "args": ["00020802520125150049123"], "returns": "00020802520125150049", "note": "reference truncates to the 20 characters of the document; asserted by the reference (JS) unit tests" },
+        { "args": ["16669239820269264931"], "returns": "16669239820269264931", "note": "consensus of 3 libs (python, ruby, rust)" },
+        { "args": ["16669239820269264932"], "returns": "16669239820269264932", "note": "consensus of 3 libs (python, ruby, rust)" },
+        { "args": ["00000000000000000000"], "returns": "00000000000000000000", "note": "consensus of 3 libs (python, ruby, rust)" },
+        { "args": ["55079546820269134836"], "returns": "55079546820269134836", "note": "consensus of 3 libs (python, ruby, rust)" },
+        { "args": ["55079546820269134837"], "returns": "55079546820269134837", "note": "consensus of 3 libs (python, ruby, rust)" },
+        { "args": ["47097579520263005802"], "returns": "47097579520263005802", "note": "consensus of 3 libs (python, ruby, rust)" },
+        { "args": ["47097579520263005803"], "returns": "47097579520263005803", "note": "consensus of 3 libs (python, ruby, rust)" },
+        { "args": ["1666923-98.2026.9.26.4931"], "returns": "16669239820269264931", "note": "consensus of 3 libs (python, ruby, rust)" },
+        { "args": ["5507954-68.2026.9.13.4836"], "returns": "55079546820269134836", "note": "consensus of 3 libs (python, ruby, rust)" },
+        { "args": ["4709757-95.2026.3.00.5802"], "returns": "47097579520263005802", "note": "consensus of 3 libs (python, ruby, rust)" },
+        { "args": ["0002080-25.2012.515.0049"], "returns": "00020802520125150049", "note": "JavaScript's own test: should also accept the legacy fused mask" },
+        { "args": [-1], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [1.5], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" }
+      ]
+    },
+    "getInfo": {
+      "summary": {
+        "en": "Reads the fields of a processo jurídico number (NNNNNNN-DD.AAAA.J.TR.OOOO).",
+        "pt-BR": "Lê os campos de um número de processo jurídico (NNNNNNN-DD.AAAA.J.TR.OOOO)."
+      },
+      "description": {
+        "en": [
+          "Reads the fields of a processo jurídico number: the sequential number, the check digits, the year, the segment of the Judiciary (órgão `J`), the tribunal and the unit of origin.",
+          "",
+          "- Returns `null` exactly when `legalProcess.isValid` returns `false`; the input rules are the same (the 20 digits, masked or not, as a string).",
+          "- The result has `sequentialNumber` (`NNNNNNN`), `checkDigits` (`DD`), `year` (`AAAA`, a number), `segment`, `segmentCode` (`J`, `'1'` to `'9'`), `tribunalCode` (`TR`, two digits) and `originUnit` (`OOOO`). Codes are strings that keep their leading zeros.",
+          "- `segment` names the órgão `J`: `supreme-federal-court` (1), `national-council-of-justice` (2), `superior-court-of-justice` (3), `federal` (4), `labor` (5), `electoral` (6), `military` (7), `state` (8) or `state-military` (9).",
+          "- `tribunalCode` is `00` for the processes of the STF, the CNJ, the STJ, the TST, the TSE and the STM, `90` for the Conselho da Justiça Federal and the Conselho Superior da Justiça do Trabalho, and the number of the region or state otherwise. The result has no tribunal name.",
+          "- The unit of origin is not checked: each tribunal codifies its own.",
+          "- Each call returns a new object."
+        ],
+        "pt-BR": [
+          "Lê os campos de um número de processo jurídico: o número sequencial, os dígitos verificadores, o ano, o segmento do Judiciário (órgão `J`), o tribunal e a unidade de origem.",
+          "",
+          "- Retorna `null` exatamente quando `legalProcess.isValid` retorna `false`; as regras de entrada são as mesmas (os 20 dígitos, com ou sem máscara, como string).",
+          "- O resultado tem `sequentialNumber` (`NNNNNNN`), `checkDigits` (`DD`), `year` (`AAAA`, um número), `segment`, `segmentCode` (`J`, de `'1'` a `'9'`), `tribunalCode` (`TR`, dois dígitos) e `originUnit` (`OOOO`). Os códigos são strings e mantêm os zeros à esquerda.",
+          "- `segment` dá nome ao órgão `J`: `supreme-federal-court` (1), `national-council-of-justice` (2), `superior-court-of-justice` (3), `federal` (4), `labor` (5), `electoral` (6), `military` (7), `state` (8) ou `state-military` (9).",
+          "- `tribunalCode` é `00` para os processos do STF, do CNJ, do STJ, do TST, do TSE e do STM, `90` para o Conselho da Justiça Federal e o Conselho Superior da Justiça do Trabalho, e o número da região ou do estado nos outros casos. O resultado não traz o nome do tribunal.",
+          "- A unidade de origem não é conferida: cada tribunal codifica a sua.",
+          "- Cada chamada retorna um objeto novo."
+        ]
+      },
+      "references": ["https://atos.cnj.jus.br/atos/detalhar/119"],
+      "flatName": "getLegalProcessInfo",
+      "params": [{ "name": "value", "type": "string" }],
+      "returns": "ProcessoJuridicoInfo?",
+      "tests": [
+        { "name": "docs-example", "args": ["0002080-25.2012.5.15.0049"], "returns": { "sequentialNumber": "0002080", "checkDigits": "25", "year": 2012, "segment": "labor", "segmentCode": "5", "tribunalCode": "15", "originUnit": "0049" }, "note": "JavaScript docs example" },
+        { "name": "no-28th-tribunal-de-justica", "args": ["0000100-23.2008.8.28.0000"], "returns": null, "note": "JavaScript docs example: there is no 28th Tribunal de Justiça" },
+        { "name": "empty", "args": [""], "returns": null, "note": "JavaScript's own test: when it is an empty string" },
+        { "args": ["0000100-85.2008.1.00.0000"], "returns": { "sequentialNumber": "0000100", "checkDigits": "85", "year": 2008, "segment": "supreme-federal-court", "segmentCode": "1", "tribunalCode": "00", "originUnit": "0000" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000100"], "returns": null, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000"], "returns": null, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000100-04.2008.2.00.0000"], "returns": { "sequentialNumber": "0000100", "checkDigits": "04", "year": 2008, "segment": "national-council-of-justice", "segmentCode": "2", "tribunalCode": "00", "originUnit": "0000" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000100-20.2008.3.00.0000"], "returns": { "sequentialNumber": "0000100", "checkDigits": "20", "year": 2008, "segment": "superior-court-of-justice", "segmentCode": "3", "tribunalCode": "00", "originUnit": "0000" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000100-09.2008.4.01.0000"], "returns": { "sequentialNumber": "0000100", "checkDigits": "09", "year": 2008, "segment": "federal", "segmentCode": "4", "tribunalCode": "01", "originUnit": "0000" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0002080"], "returns": null, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0049"], "returns": null, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000100-18.2008.6.27.0000"], "returns": { "sequentialNumber": "0000100", "checkDigits": "18", "year": 2008, "segment": "electoral", "segmentCode": "6", "tribunalCode": "27", "originUnit": "0000" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000100-51.2008.7.12.0000"], "returns": { "sequentialNumber": "0000100", "checkDigits": "51", "year": 2008, "segment": "military", "segmentCode": "7", "tribunalCode": "12", "originUnit": "0000" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000100-73.2008.8.01.0000"], "returns": { "sequentialNumber": "0000100", "checkDigits": "73", "year": 2008, "segment": "state", "segmentCode": "8", "tribunalCode": "01", "originUnit": "0000" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000100-93.2008.9.26.0000"], "returns": { "sequentialNumber": "0000100", "checkDigits": "93", "year": 2008, "segment": "state-military", "segmentCode": "9", "tribunalCode": "26", "originUnit": "0000" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["00020802520125150049"], "returns": { "sequentialNumber": "0002080", "checkDigits": "25", "year": 2012, "segment": "labor", "segmentCode": "5", "tribunalCode": "15", "originUnit": "0049" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0002080/25.2012.5.15.0049"], "returns": { "sequentialNumber": "0002080", "checkDigits": "25", "year": 2012, "segment": "labor", "segmentCode": "5", "tribunalCode": "15", "originUnit": "0049" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0002080-25.2012.515.0049"], "returns": { "sequentialNumber": "0002080", "checkDigits": "25", "year": 2012, "segment": "labor", "segmentCode": "5", "tribunalCode": "15", "originUnit": "0049" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": [" 0002080-25.2012.5.15.0049\\n"], "returns": null, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000100-68.2008.4.06.0000"], "returns": { "sequentialNumber": "0000100", "checkDigits": "68", "year": 2008, "segment": "federal", "segmentCode": "4", "tribunalCode": "06", "originUnit": "0000" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000100-31.2008.4.90.0000"], "returns": { "sequentialNumber": "0000100", "checkDigits": "31", "year": 2008, "segment": "federal", "segmentCode": "4", "tribunalCode": "90", "originUnit": "0000" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000100-47.2008.5.90.0000"], "returns": { "sequentialNumber": "0000100", "checkDigits": "47", "year": 2008, "segment": "labor", "segmentCode": "5", "tribunalCode": "90", "originUnit": "0000" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000100-52.2008.5.00.0000"], "returns": { "sequentialNumber": "0000100", "checkDigits": "52", "year": 2008, "segment": "labor", "segmentCode": "5", "tribunalCode": "00", "originUnit": "0000" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000100-68.2008.6.00.0000"], "returns": { "sequentialNumber": "0000100", "checkDigits": "68", "year": 2008, "segment": "electoral", "segmentCode": "6", "tribunalCode": "00", "originUnit": "0000" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000100-84.2008.7.00.0000"], "returns": { "sequentialNumber": "0000100", "checkDigits": "84", "year": 2008, "segment": "military", "segmentCode": "7", "tribunalCode": "00", "originUnit": "0000" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000100-56.2008.9.13.0000"], "returns": { "sequentialNumber": "0000100", "checkDigits": "56", "year": 2008, "segment": "state-military", "segmentCode": "9", "tribunalCode": "13", "originUnit": "0000" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000100-34.2008.9.21.0000"], "returns": { "sequentialNumber": "0000100", "checkDigits": "34", "year": 2008, "segment": "state-military", "segmentCode": "9", "tribunalCode": "21", "originUnit": "0000" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0002080-26.2012.5.15.0049"], "returns": null, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000100-68.2008.4.07.0000"], "returns": null, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0002080252012515004"], "returns": null, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["000208025201251500490"], "returns": null, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["ab00020802520125150049"], "returns": null, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0002080_25.2012.5.15.0049"], "returns": null, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": [" "], "returns": null, "note": "JavaScript's own test (getProcessoJuridicoInfo)" }
+      ]
+    }
+  }
+}

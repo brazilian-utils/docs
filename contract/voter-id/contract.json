@@ -1,0 +1,326 @@
+{
+  "$schema": "../../schema/contract.schema.json",
+  "domain": "voterId",
+  "title": { "en": "Voter ID", "pt-BR": "Título de eleitor" },
+  "summary": {
+    "en": "The Brazilian voter registration number.",
+    "pt-BR": "O número de inscrição eleitoral (título de eleitor)."
+  },
+  "category": "documents",
+  "order": 3,
+  "functions": {
+    "format": {
+      "summary": {
+        "en": "Formats a Brazilian voter ID for display.",
+        "pt-BR": "Formata um título de eleitor para exibição."
+      },
+      "description": {
+        "en": [
+          "Formats a voter ID with the grouping `0000 0000 00 00`.",
+          "",
+          "- A voter ID has at most 12 digits (Resolução TSE nº 23.659/2021, art. 36), so the function drops the digits after the 12th and has no 13-digit grouping. 2.4.0 grouped a 13-digit SP/MG value as `0000 0000 0 00 00`.",
+          "- The TSE drops the leading zeros of the sequential number when it issues the ID. By default a shorter value is formatted from the left, as a partial value. `options.pad` first left-pads it with zeros to 12 digits: `123450159` gives `0001 2345 01 59`.",
+          "- `options.obfuscate` (default `false`) hides the first 3 digits and the 2 check digits with `*`: `***4 5678 01 **`. The UF code stays visible.",
+          "- No authority publishes a masking rule for the voter ID. The rule is an analogy with the one the Leis de Diretrizes Orçamentárias set for publishing a CPF (\"ocultar os três primeiros dígitos e os dois dígitos verificadores\", Lei nº 12.309/2010, art. 87, § 5º, repeated up to the LDO 2026, Lei nº 15.321/2025, art. 163), not a published norm.",
+          "- The mask hides by position. A voter ID given as a number has lost its leading zeros, so pass `pad` together with `obfuscate` for it.",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number).",
+          "- Pending decision (findings §2 #2, #3): the reference (JS) formats only the characters an incomplete value has and returns an empty string for empty or invalid input. Other libraries return `null`.",
+          "- A value with no digits (empty, or only letters and symbols) returns an empty string, even with `pad`.",
+          "- `options.obfuscate` is applied after `pad`, and is read for truthiness like `pad`: a non-boolean such as `1` hides the digits too, and `0` does not. The two can be combined (`123450159` gives `***1 2345 01 **`)."
+        ],
+        "pt-BR": [
+          "Formata um título de eleitor com o agrupamento `0000 0000 00 00`.",
+          "",
+          "- Um título tem no máximo 12 dígitos (Resolução TSE nº 23.659/2021, art. 36), então a função descarta os dígitos depois do 12º e não tem agrupamento de 13 dígitos. A 2.4.0 agrupava um valor de 13 dígitos de SP/MG como `0000 0000 0 00 00`.",
+          "- O TSE omite os zeros à esquerda do número sequencial na emissão. Por padrão, um valor mais curto é formatado a partir da esquerda, como um valor parcial. `options.pad` primeiro completa o valor com zeros à esquerda até 12 dígitos: `123450159` dá `0001 2345 01 59`.",
+          "- `options.obfuscate` (padrão `false`) oculta com `*` os 3 primeiros dígitos e os 2 dígitos verificadores: `***4 5678 01 **`. O código da UF continua visível.",
+          "- Nenhuma autoridade publica uma regra de mascaramento para o título de eleitor. A regra é uma analogia com a que as Leis de Diretrizes Orçamentárias fixam para publicar um CPF (\"ocultar os três primeiros dígitos e os dois dígitos verificadores\", Lei nº 12.309/2010, art. 87, § 5º, repetida até a LDO 2026, Lei nº 15.321/2025, art. 163), não uma norma publicada.",
+          "- A máscara oculta por posição. Um título passado como número perdeu os zeros à esquerda, então passe `pad` junto com `obfuscate` nesse caso.",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia (a 2.4.0 lia os dígitos de qualquer número).",
+          "- Decisão pendente (findings §2 #2, #3): a referência (JS) formata só os caracteres que um valor incompleto tem e retorna uma string vazia para entrada vazia ou inválida. Outras bibliotecas retornam `null`.",
+          "- Um valor sem dígitos (vazio, ou só letras e símbolos) retorna uma string vazia, mesmo com `pad`.",
+          "- `options.obfuscate` é aplicado depois de `pad`, e é lido como verdadeiro ou falso, como `pad`: um não booleano como `1` também oculta os dígitos, e `0` não oculta. Os dois podem ser combinados (`123450159` dá `***1 2345 01 **`)."
+        ]
+      },
+      "references": [
+        "https://www.tse.jus.br/legislacao/compilada/res/2021/resolucao-no-23-659-de-26-de-outubro-de-2021",
+        "https://www.planalto.gov.br/ccivil_03/_ato2007-2010/2010/lei/l12309.htm",
+        "https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2025/lei/L15321.htm#art163"
+      ],
+      "level": "core",
+      "params": [
+        { "name": "value", "type": "string | number" },
+        { "name": "options", "type": "FormatVoterIdOptions", "optional": true, "fields": [{ "name": "pad", "type": "boolean", "optional": true }, { "name": "obfuscate", "type": "boolean", "optional": true }] }
+      ],
+      "returns": "string",
+      "tests": [
+        { "args": ["652688902801"], "returns": "6526 8890 28 01", "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["051401322801"], "returns": "0514 0132 28 01", "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["859962902836"], "returns": "8599 6290 28 36", "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": [""], "returns": "", "note": "JavaScript's own test: should format voter ids" },
+        { "args": ["1"], "returns": "1", "note": "JavaScript's own test: should format voter ids" },
+        { "args": ["12"], "returns": "12", "note": "JavaScript's own test: should format voter ids" },
+        { "args": ["123"], "returns": "123", "note": "JavaScript's own test: should format voter ids" },
+        { "args": ["1234"], "returns": "1234", "note": "JavaScript's own test: should format voter ids" },
+        { "args": ["12345"], "returns": "1234 5", "note": "JavaScript's own test: should format voter ids" },
+        { "args": ["123456"], "returns": "1234 56", "note": "JavaScript's own test: should format voter ids" },
+        { "args": ["1234567"], "returns": "1234 567", "note": "JavaScript's own test: should format voter ids" },
+        { "args": ["12345678"], "returns": "1234 5678", "note": "JavaScript's own test: should format voter ids" },
+        { "args": ["123456780"], "returns": "1234 5678 0", "note": "JavaScript's own test: should format voter ids" },
+        { "args": ["1234567801"], "returns": "1234 5678 01", "note": "JavaScript's own test: should format voter ids" },
+        { "args": ["12345678012"], "returns": "1234 5678 01 2", "note": "JavaScript's own test: should format voter ids" },
+        { "args": ["123456780124"], "returns": "1234 5678 01 24", "note": "JavaScript's own test: should format voter ids" },
+        { "args": ["1234567880191"], "returns": "1234 5678 80 19", "note": "changed in 2.5.0 (#593): a voter ID has at most 12 digits (Resolução TSE nº 23.659/2021, art. 36), so the 13-digit SP/MG grouping is gone and the digits after the 12th are dropped. 2.4.0 returned \"1234 5678 8 01 91\"" },
+        { "args": ["1234567880299"], "returns": "1234 5678 80 29", "note": "changed in 2.5.0 (#593): a voter ID has at most 12 digits (Resolução TSE nº 23.659/2021, art. 36), so the 13-digit SP/MG grouping is gone and the digits after the 12th are dropped. 2.4.0 returned \"1234 5678 8 02 99\"" },
+        { "args": ["12345678801912"], "returns": "1234 5678 80 19", "note": "changed in 2.5.0 (#593): a voter ID has at most 12 digits (Resolução TSE nº 23.659/2021, art. 36), so the 13-digit SP/MG grouping is gone and the digits after the 12th are dropped. 2.4.0 returned \"1234 5678 8 01 91\"" },
+        { "args": ["123456788019123"], "returns": "1234 5678 80 19", "note": "changed in 2.5.0 (#593): a voter ID has at most 12 digits (Resolução TSE nº 23.659/2021, art. 36), so the 13-digit SP/MG grouping is gone and the digits after the 12th are dropped. 2.4.0 returned \"1234 5678 8 01 91\"" },
+        { "args": ["12345678803991"], "returns": "1234 5678 80 39", "note": "JavaScript's own test: should drop the digits past the 12th" },
+        { "args": ["1234567880399"], "returns": "1234 5678 80 39", "note": "JavaScript's own test: should drop the digits past the 12th" },
+        { "args": ["123456788"], "returns": "1234 5678 8", "note": "JavaScript's own test: should format voter ids" },
+        { "args": ["123456788019"], "returns": "1234 5678 80 19", "note": "JavaScript's own test: should format voter ids" },
+        { "args": ["123456780175", { "obfuscate": true }], "returns": "***4 5678 01 **", "note": "from the maintainer briefing, #567" },
+        { "args": ["123456780124", { "obfuscate": true }], "returns": "***4 5678 01 **", "note": "JavaScript's own test: should hide the first 3 digits and the 2 check digits when obfuscate is truthy" },
+        { "args": [123456780124, { "obfuscate": true }], "returns": "***4 5678 01 **", "note": "JavaScript's own test: should hide the first 3 digits and the 2 check digits when obfuscate is truthy" },
+        { "args": ["1234567880191", { "obfuscate": true }], "returns": "***4 5678 80 **", "note": "JavaScript's own test: should hide the first 3 digits and the 2 check digits when obfuscate is truthy" },
+        { "args": ["12345", { "obfuscate": true }], "returns": "***4 5", "note": "JavaScript's own test: should hide the first 3 digits and the 2 check digits when obfuscate is truthy" },
+        { "args": ["123456780124", { "obfuscate": false }], "returns": "1234 5678 01 24", "note": "JavaScript's own test: should behave exactly as without the option when obfuscate is falsy" },
+        { "args": ["123456780124", {}], "returns": "1234 5678 01 24", "note": "JavaScript's own test: should behave exactly as without the option when obfuscate is falsy" },
+        { "args": ["123450159", { "pad": true }], "returns": "0001 2345 01 59", "note": "JavaScript's own test: should restore the leading zeros of a voter id issued without them when pad is true" },
+        { "args": [123450159, { "pad": true }], "returns": "0001 2345 01 59", "note": "JavaScript's own test: should restore the leading zeros of a voter id issued without them when pad is true" },
+        { "args": ["10191", { "pad": true }], "returns": "0000 0001 01 91", "note": "JavaScript's own test: should restore the leading zeros of a voter id issued without them when pad is true" },
+        { "args": ["123456780124", { "pad": true }], "returns": "1234 5678 01 24", "note": "JavaScript's own test: should restore the leading zeros of a voter id issued without them when pad is true" },
+        { "args": ["123450159", { "pad": true, "obfuscate": true }], "returns": "***1 2345 01 **", "note": "JavaScript's own test: should restore the leading zeros of a voter id issued without them when pad is true" },
+        { "args": ["123450159", { "pad": false }], "returns": "1234 5015 9", "note": "JavaScript's own test: should restore the leading zeros of a voter id issued without them when pad is true" },
+        { "args": ["123450159"], "returns": "1234 5015 9", "note": "JavaScript docs example" },
+        { "args": [123450159, { "obfuscate": true }], "returns": "***4 5015 9", "note": "the mask hides by position: without pad a number that lost its leading zeros shows the wrong digits" },
+        { "args": [-123456780124], "returns": "", "note": "changed in 2.5.0 (#593): a negative number is not a safe non-negative integer. 2.4.0 returned \"1234 5678 01 24\". JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": [1.5], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number (2^53)" },
+        { "args": ["", { "pad": true }], "returns": "", "note": "JavaScript's own test: should return an empty string for a value without digits even when padding" },
+        { "args": ["abc", { "pad": true }], "returns": "", "note": "JavaScript's own test: should return an empty string for a value without digits even when padding" },
+        { "args": ["123456780175"], "returns": "1234 5678 01 75", "note": "JavaScript docs example" }
+      ]
+    },
+    "generate": {
+      "summary": {
+        "en": "Generates a valid random Brazilian voter ID.",
+        "pt-BR": "Gera um título de eleitor aleatório e válido."
+      },
+      "description": {
+        "en": [
+          "Generates a valid random voter ID: 12 digits, unformatted, with the leading zeros of the sequential number kept.",
+          "",
+          "- `state` (a state code, or `ZZ` for a voter ID issued abroad) sets the UF code. Letter case and surrounding whitespace are ignored (`\" sp \"` is `SP`); 2.4.0 read a lowercase code as unknown. An unknown value falls back to `ZZ` (UF `28`).",
+          "- The result always has 12 digits. The same ID without the leading zeros of its sequential number is valid too (`voterId.isValid` reads it).",
+          "- A value that is not a string also falls back to `ZZ`; the function never throws for `state`."
+        ],
+        "pt-BR": [
+          "Gera um título de eleitor aleatório e válido: 12 dígitos, sem máscara, com os zeros à esquerda do número sequencial mantidos.",
+          "",
+          "- `state` (um código de estado, ou `ZZ` para um título emitido no exterior) define o código da UF. Maiúsculas, minúsculas e espaços nas pontas são ignorados (`\" sp \"` é `SP`); a 2.4.0 lia um código em minúsculas como desconhecido. Com um valor desconhecido, a função usa `ZZ` (UF `28`).",
+          "- O resultado sempre tem 12 dígitos. O mesmo título sem os zeros à esquerda do número sequencial também é válido (`voterId.isValid` o lê).",
+          "- Um valor que não é string também usa `ZZ`; a função nunca lança exceção por causa de `state`."
+        ]
+      },
+      "references": [
+        "https://www.tse.jus.br/legislacao/compilada/res/2021/resolucao-no-23-659-de-26-de-outubro-de-2021"
+      ],
+      "level": "core",
+      "params": [{ "name": "state", "type": "string", "optional": true }],
+      "returns": "string",
+      "tests": [
+        { "name": "generated-is-valid", "args": [], "satisfies": "voterId.isValid", "repeat": 5, "note": "every generated value must pass the lib's own validator" }
+      ]
+    },
+    "isValid": {
+      "summary": {
+        "en": "Checks whether a Brazilian voter ID is valid.",
+        "pt-BR": "Verifica se um título de eleitor é válido."
+      },
+      "description": {
+        "en": [
+          "Validates a voter ID: an 8-digit sequential number, a 2-digit UF code (`01` to `28`) and 2 modulus 11 check digits, at most 12 digits (Resolução TSE nº 23.659/2021, art. 36).",
+          "",
+          "- A 13-digit value is rejected. 2.4.0 accepted a 13-digit SP/MG form with a 9-digit sequential number.",
+          "- The TSE drops the leading zeros of the sequential number when it issues the ID. A shorter value is left-padded with zeros to 12 digits before the check: `123450159` is checked as `000123450159`. At least one sequential digit is required, so the shortest accepted value has 5 digits. 2.4.0 rejected these shorter values.",
+          "- No official source gives the weights of the check digits or the SP/MG rule that turns a remainder of 0 into 1. They follow community references.",
+          "- Pending decision (findings §2 #1): the reference (JS) accepts whitespace, dots, hyphens and slashes around and between the groups, with a shortened sequential number grouped from the right (`123 4567 01 91`). Until 2.4.0 it accepted whitespace and dots only. Other libraries accept digits only.",
+          "- Mask characters: whitespace, `.`, `-` and `/`, alone or in a run, around and between the `0000 0000 00 00` groups (the same ones `cpf.isValid` reads). Any other character, a letter in particular, makes the value invalid. A separator inside a group is rejected, except between the digits of a sequential number written without its leading zeros, grouped from the right (`123 4567 01 91`).",
+          "- Only a string is read. Any other type returns `false`."
+        ],
+        "pt-BR": [
+          "Valida um título de eleitor: um número sequencial de 8 dígitos, um código de UF de 2 dígitos (`01` a `28`) e 2 dígitos verificadores por módulo 11, com no máximo 12 dígitos (Resolução TSE nº 23.659/2021, art. 36).",
+          "",
+          "- Um valor de 13 dígitos é rejeitado. A 2.4.0 aceitava uma forma de 13 dígitos de SP/MG com número sequencial de 9 dígitos.",
+          "- O TSE omite os zeros à esquerda do número sequencial na emissão. Um valor mais curto é completado com zeros à esquerda até 12 dígitos antes da validação: `123450159` é validado como `000123450159`. É preciso ao menos um dígito sequencial, então o menor valor aceito tem 5 dígitos. A 2.4.0 rejeitava esses valores mais curtos.",
+          "- Nenhuma fonte oficial dá os pesos dos dígitos verificadores nem a regra de SP/MG que transforma resto 0 em 1. Eles seguem referências da comunidade.",
+          "- Decisão pendente (findings §2 #1): a referência (JS) aceita espaços, pontos, hífens e barras em volta e entre os grupos, com o número sequencial encurtado agrupado da direita (`123 4567 01 91`). Até a 2.4.0 aceitava só espaços e pontos. Outras bibliotecas aceitam só dígitos.",
+          "- Caracteres de máscara: espaço em branco, `.`, `-` e `/`, sozinhos ou em sequência, em volta e entre os grupos `0000 0000 00 00` (os mesmos que `cpf.isValid` lê). Qualquer outro caractere, em particular uma letra, torna o valor inválido. Um separador dentro de um grupo é rejeitado, exceto entre os dígitos de um número sequencial escrito sem os zeros à esquerda, agrupado da direita (`123 4567 01 91`).",
+          "- Só uma string é lida. Qualquer outro tipo retorna `false`."
+        ]
+      },
+      "references": [
+        "https://www.tse.jus.br/legislacao/compilada/res/2021/resolucao-no-23-659-de-26-de-outubro-de-2021"
+      ],
+      "level": "core",
+      "params": [{ "name": "value", "type": "string" }],
+      "returns": "boolean",
+      "tests": [
+        { "args": ["652688902801"], "returns": true, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["652688902802"], "returns": false, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["000000000000"], "returns": false, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["051401322801"], "returns": true, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["051401322802"], "returns": false, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["859962902836"], "returns": true, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["859962902837"], "returns": false, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": [""], "returns": false, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["   "], "returns": false, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["abc"], "returns": false, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["102385010671"], "returns": true, "note": "JavaScript's own test: should validate a real 12-digit voter id" },
+        { "args": ["1234567880191"], "returns": false, "note": "changed in 2.5.0 (#593): a voter ID has at most 12 digits (Resolução TSE nº 23.659/2021, art. 36), so a 13-digit value is rejected. 2.4.0 returned true. JavaScript's own test: should reject a 13-digit value, since a voter id has at most 12 digits" },
+        { "args": ["1234567880192"], "returns": false, "note": "a 13-digit value: still false in 2.5.0, now because a voter ID has at most 12 digits (Resolução TSE nº 23.659/2021, art. 36)" },
+        { "args": ["1234567890396"], "returns": false, "note": "a 13-digit value: still false in 2.5.0, now because a voter ID has at most 12 digits (Resolução TSE nº 23.659/2021, art. 36)" },
+        { "args": ["123456780396"], "returns": true, "note": "a 12-digit value whose check digits match (UF 03)" },
+        { "args": ["12345678980191"], "returns": false, "note": "JavaScript's own test: should reject a value longer than 12 digits" },
+        { "args": ["123456789900"], "returns": false, "note": "JavaScript's own test: should return false when the UF code is outside 01-28" },
+        { "args": ["1234567890345"], "returns": false, "note": "a 13-digit value: still false in 2.5.0, now because a voter ID has at most 12 digits (Resolução TSE nº 23.659/2021, art. 36)" },
+        { "args": ["ab102385010671"], "returns": false, "note": "JavaScript's own test: should reject a value with a letter attached to the digits" },
+        { "args": ["102385010671ab"], "returns": false, "note": "JavaScript's own test: should reject a value with a letter attached to the digits" },
+        { "args": ["1023-8501-06-71"], "returns": true, "note": "changed in 2.5.0 (#615): hyphens and slashes are mask characters, like in cpf.isValid. 2.4.0 returned false. JavaScript's own test: should reject a mask character outside whitespace, `.`, `-` and `/`" },
+        { "args": ["1023 8501 06 71"], "returns": true, "note": "JavaScript's own test: should accept the documented whitespace and dot masks" },
+        { "args": ["1023.8501.06.71"], "returns": true, "note": "JavaScript's own test: should accept the documented whitespace and dot masks" },
+        { "args": ["1234 5678 8 01 91"], "returns": false, "note": "changed in 2.5.0 (#593): a voter ID has at most 12 digits (Resolução TSE nº 23.659/2021, art. 36), so a 13-digit value is rejected. 2.4.0 returned true. JavaScript's own test: should reject a 13-digit value, since a voter id has at most 12 digits" },
+        { "args": ["000010191"], "returns": true, "note": "changed in 2.5.0 (#593): a value shorter than 12 digits is the ID without the leading zeros of its sequential number (Resolução TSE nº 23.659/2021, art. 36), so it is checked as 000000010191, which is valid. 2.4.0 required 12 or 13 digits and returned false. JavaScript's own test: should read a 9-digit value as the id without its leading zeros" },
+        { "args": ["1234567890370"], "returns": false, "note": "JavaScript's own test: should reject a value longer than 12 digits, even when its checksum would otherwise match" },
+        { "args": ["000000002909"], "returns": false, "note": "JavaScript's own test: should reject the UF code boundaries 0 and 29, even when the checksum would otherwise match" },
+        { "args": ["000000010191"], "returns": true, "note": "JavaScript's own test: should accept the UF code boundaries 1 and 28" },
+        { "args": ["000000002801"], "returns": true, "note": "JavaScript's own test: should accept the UF code boundaries 1 and 28" },
+        { "args": ["123450159"], "returns": true, "note": "changed in 2.5.0 (#593): checked as 000123450159. 2.4.0 returned false. JavaScript's own test: should accept a voter id issued without the leading zeros of its sequential number" },
+        { "args": ["000123450159"], "returns": true, "note": "JavaScript's own test: should accept a voter id issued without the leading zeros of its sequential number" },
+        { "args": ["00123450159"], "returns": true, "note": "JavaScript's own test: should accept a voter id issued without the leading zeros of its sequential number" },
+        { "args": ["1 2345 01 59"], "returns": true, "note": "JavaScript's own test: should accept a voter id issued without the leading zeros of its sequential number" },
+        { "args": ["12345 01 59"], "returns": true, "note": "JavaScript's own test: should accept a voter id issued without the leading zeros of its sequential number" },
+        { "args": ["123450158"], "returns": false, "note": "JavaScript's own test: should accept a voter id issued without the leading zeros of its sequential number (wrong check digit)" },
+        { "args": ["122844"], "returns": true, "note": "JavaScript's own test: should accept a sequential number of every length from 1 to 8 digits once its zeros are dropped" },
+        { "args": ["12340639"], "returns": true, "note": "JavaScript's own test: should accept a sequential number of every length from 1 to 8 digits once its zeros are dropped" },
+        { "args": ["1234 06 39"], "returns": true, "note": "JavaScript's own test: should accept a sequential number of every length from 1 to 8 digits once its zeros are dropped" },
+        { "args": ["10191"], "returns": true, "note": "JavaScript's own test: should accept the shortest form, a single sequential digit, and nothing shorter" },
+        { "args": ["000000000116"], "returns": true, "note": "JavaScript's own test: should accept the shortest form, a single sequential digit, and nothing shorter" },
+        { "args": ["0116"], "returns": false, "note": "JavaScript's own test: should accept the shortest form, a single sequential digit, and nothing shorter" },
+        { "args": ["0123456780191"], "returns": false, "note": "JavaScript's own test: should reject a 13-digit value, since a voter id has at most 12 digits" },
+        { "args": ["123456780191"], "returns": true, "note": "JavaScript's own test: should reject a 13-digit value, since a voter id has at most 12 digits" },
+        { "args": ["0000000000191"], "returns": false, "note": "JavaScript's own test: should reject a value longer than 12 digits, even when its checksum would otherwise match" },
+        { "args": ["0001.2345.01.59"], "returns": true, "note": "JavaScript's own test: should accept the documented whitespace and dot masks" },
+        { "args": ["123 4567 01 91"], "returns": true, "note": "JavaScript's own test: should only accept separators between the groups of a sequential number grouped from the right" },
+        { "args": ["1234 567 01 91"], "returns": false, "note": "JavaScript's own test: should only accept separators between the groups of a sequential number grouped from the right" },
+        { "args": ["1234 5678 0 1 91"], "returns": false, "note": "JavaScript's own test: should only accept separators between the groups of a sequential number grouped from the right" },
+        { "args": ["1023-8501/06-71"], "returns": true, "note": "JavaScript's own test: should accept the documented whitespace and dot masks" },
+        { "args": [" 1023  8501 06 71 "], "returns": true, "note": "a run of whitespace around and between the groups is accepted" },
+        { "args": ["1023_8501_06_71"], "returns": false, "note": "an underscore is not a mask character" },
+        { "args": ["1023(8501)0671"], "returns": false, "note": "parentheses are not mask characters" }
+      ]
+    },
+    "parse": {
+      "summary": {
+        "en": "Removes the formatting characters of a voter ID and returns only the digits.",
+        "pt-BR": "Remove os caracteres de formatação de um título de eleitor e retorna só os dígitos."
+      },
+      "description": {
+        "en": [
+          "Removes voter ID formatting and keeps only digits, capped at 12 digits for every UF.",
+          "",
+          "- A voter ID has at most 12 digits (Resolução TSE nº 23.659/2021, art. 36). 2.4.0 kept 13 digits when the UF digits were SP or MG.",
+          "- A shorter value is returned as it is, not padded. `voterId.isValid` accepts that form, and `voterId.format` with `pad` restores the zeros.",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number)."
+        ],
+        "pt-BR": [
+          "Remove a formatação do título de eleitor e mantém apenas os dígitos, com no máximo 12 dígitos para toda UF.",
+          "",
+          "- Um título tem no máximo 12 dígitos (Resolução TSE nº 23.659/2021, art. 36). A 2.4.0 mantinha 13 dígitos quando os dígitos da UF eram de SP ou MG.",
+          "- Um valor mais curto é retornado como está, sem zeros à esquerda. `voterId.isValid` aceita essa forma, e `voterId.format` com `pad` restaura os zeros.",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia (a 2.4.0 lia os dígitos de qualquer número)."
+        ]
+      },
+      "references": [
+        "https://www.tse.jus.br/legislacao/compilada/res/2021/resolucao-no-23-659-de-26-de-outubro-de-2021"
+      ],
+      "params": [{ "name": "value", "type": "string | number" }],
+      "returns": "string",
+      "tests": [
+        { "name": "masked", "args": ["1234 5678 01 24"], "returns": "123456780124" },
+        { "name": "unmasked", "args": ["123456780124"], "returns": "123456780124" },
+        { "name": "empty", "args": [""], "returns": "" },
+        { "name": "13-digit-sp-mg", "args": ["1234 5678 8 01 91"], "returns": "123456788019", "note": "changed in 2.5.0 (#593): 12 digits at most for every UF (Resolução TSE nº 23.659/2021, art. 36). 2.4.0 returned \"1234567880191\". JavaScript's own test: should keep 12 digits at most, São Paulo (01) and Minas Gerais (02) included" },
+        { "args": ["12345678032499"], "returns": "123456780324", "note": "JavaScript's own test: should ignore digits after the voter id length (non SP/MG)" },
+        { "args": ["1234567880299"], "returns": "123456788029", "note": "changed in 2.5.0 (#593): 12 digits at most for every UF (Resolução TSE nº 23.659/2021, art. 36). 2.4.0 returned \"1234567880299\". JavaScript's own test: should keep 12 digits at most, São Paulo (01) and Minas Gerais (02) included" },
+        { "args": ["123456788019199"], "returns": "123456788019", "note": "changed in 2.5.0 (#593): 12 digits at most for every UF (Resolução TSE nº 23.659/2021, art. 36). 2.4.0 returned \"1234567880191\". JavaScript's own test: should keep 12 digits at most, São Paulo (01) and Minas Gerais (02) included" },
+        { "args": ["12345678905999"], "returns": "123456789059", "note": "JavaScript's own test: should ignore digits after the 12-digit length when the 9th/10th digits are not SP/MG, even with extra digits" },
+        { "args": ["12345 01 59"], "returns": "123450159", "note": "JavaScript's own test: should keep a voter id issued without its leading zeros as it is" },
+        { "args": ["0001 2345 01 59"], "returns": "000123450159", "note": "JavaScript's own test: should keep a voter id issued without its leading zeros as it is" },
+        { "args": [-123456780124], "returns": "", "note": "changed in 2.5.0 (#593): a negative number gives an empty string. 2.4.0 returned \"123456780124\". JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": [1.5], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": [123456780124], "returns": "123456780124", "note": "a safe non-negative integer is read as before" }
+      ]
+    },
+    "getInfo": {
+      "summary": {
+        "en": "Reads the fields of a voter ID (título de eleitor).",
+        "pt-BR": "Lê os campos de um título de eleitor."
+      },
+      "description": {
+        "en": [
+          "Reads the fields of a voter ID: the sequential number, the federative union of the registration and the check digits.",
+          "",
+          "- Returns `null` exactly when `voterId.isValid` returns `false`; the input rules are the same.",
+          "- The result has `sequentialNumber` (8 digits), `federativeUnion` (the code `01` to `28`), `stateCode` (the state code, or `null` for `28`, the voters abroad) and `checkDigits` (2 digits). Codes are strings that keep their leading zeros.",
+          "- A voter ID issued without the leading zeros of its sequential number is read as `voterId.isValid` reads it, left-padded with zeros to 12 digits: `123450159` gives the `sequentialNumber` `00012345`.",
+          "- `stateCode` is the federative union of the registration, not necessarily where the voter lives today.",
+          "- Each call returns a new object."
+        ],
+        "pt-BR": [
+          "Lê os campos de um título de eleitor: o número sequencial, a unidade da federação da inscrição e os dígitos verificadores.",
+          "",
+          "- Retorna `null` exatamente quando `voterId.isValid` retorna `false`; as regras de entrada são as mesmas.",
+          "- O resultado tem `sequentialNumber` (8 dígitos), `federativeUnion` (o código de `01` a `28`), `stateCode` (a sigla do estado, ou `null` para `28`, os eleitores no exterior) e `checkDigits` (2 dígitos). Os códigos são strings e mantêm os zeros à esquerda.",
+          "- Um título emitido sem os zeros à esquerda do número sequencial é lido como `voterId.isValid` o lê, completado com zeros à esquerda até 12 dígitos: `123450159` dá o `sequentialNumber` `00012345`.",
+          "- `stateCode` é a unidade da federação da inscrição, não necessariamente onde o eleitor mora hoje.",
+          "- Cada chamada retorna um objeto novo."
+        ]
+      },
+      "references": [
+        "https://www.tse.jus.br/legislacao/compilada/res/2021/resolucao-no-23-659-de-26-de-outubro-de-2021"
+      ],
+      "flatName": "getVoterIdInfo",
+      "params": [{ "name": "value", "type": "string" }],
+      "returns": "VoterIdInfo?",
+      "tests": [
+        { "name": "docs-example", "args": ["1023 8501 06 71"], "returns": { "sequentialNumber": "10238501", "federativeUnion": "06", "stateCode": "PR", "checkDigits": "71" }, "note": "JavaScript docs example" },
+        { "name": "abroad", "args": ["000000002801"], "returns": { "sequentialNumber": "00000000", "federativeUnion": "28", "stateCode": null, "checkDigits": "01" }, "note": "JavaScript docs example: 28 is the voters abroad (ZZ), with no state" },
+        { "name": "invalid-check-digits", "args": ["123456780124"], "returns": null, "note": "JavaScript docs example: invalid check digits" },
+        { "name": "empty", "args": [""], "returns": null, "note": "JavaScript's own test: when it is an empty string" },
+        { "args": ["102385010671"], "returns": { "sequentialNumber": "10238501", "federativeUnion": "06", "stateCode": "PR", "checkDigits": "71" }, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["10238501"], "returns": null, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["123456780191"], "returns": { "sequentialNumber": "12345678", "federativeUnion": "01", "stateCode": "SP", "checkDigits": "91" }, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": [" 1234 5678 01 91\\n"], "returns": null, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["1234.5678-01/91"], "returns": { "sequentialNumber": "12345678", "federativeUnion": "01", "stateCode": "SP", "checkDigits": "91" }, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["12345678"], "returns": null, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["00012345"], "returns": null, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["000123450159"], "returns": { "sequentialNumber": "00012345", "federativeUnion": "01", "stateCode": "SP", "checkDigits": "59" }, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["123450159"], "returns": { "sequentialNumber": "00012345", "federativeUnion": "01", "stateCode": "SP", "checkDigits": "59" }, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["12345 01 59"], "returns": { "sequentialNumber": "00012345", "federativeUnion": "01", "stateCode": "SP", "checkDigits": "59" }, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["12340639"], "returns": { "sequentialNumber": "00001234", "federativeUnion": "06", "stateCode": "PR", "checkDigits": "39" }, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["00001234"], "returns": null, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["000000000116"], "returns": { "sequentialNumber": "00000000", "federativeUnion": "01", "stateCode": "SP", "checkDigits": "16" }, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["00000000"], "returns": null, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["122844"], "returns": { "sequentialNumber": "00000012", "federativeUnion": "28", "stateCode": null, "checkDigits": "44" }, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["00000012"], "returns": null, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["123456780013"], "returns": null, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["123456782913"], "returns": null, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["1234567880191"], "returns": null, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["0191"], "returns": null, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["ab102385010671"], "returns": null, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["1023_8501_06_71"], "returns": null, "note": "JavaScript's own test (getVoterIdInfo)" }
+      ]
+    }
+  }
+}

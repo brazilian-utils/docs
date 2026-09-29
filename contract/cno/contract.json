@@ -1,0 +1,152 @@
+{
+  "$schema": "../../schema/contract.schema.json",
+  "domain": "cno",
+  "title": { "en": "CNO", "pt-BR": "CNO" },
+  "summary": {
+    "en": "Cadastro Nacional de Obras, the registration of construction works with the Receita Federal (replaced the CEI for them, same numbering).",
+    "pt-BR": "Cadastro Nacional de Obras, o cadastro de obras de construção civil na Receita Federal (substituiu o CEI para elas, com a mesma numeração)."
+  },
+  "category": "companies",
+  "order": 7,
+  "related": ["cei", "caepf"],
+  "functions": {
+    "format": {
+      "summary": {
+        "en": "Formats a CNO number with the official mask.",
+        "pt-BR": "Formata um número CNO com a máscara oficial."
+      },
+      "description": {
+        "en": [
+          "Formats a CNO with the mask `00.000.00000/00` (the CEI numbering).",
+          "",
+          "- Same rules as `cei.format`: the mask is applied as far as the digits go, and digits beyond the 12th are dropped. `options.pad` first left-pads with zeros to 12 digits.",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped).",
+          "- `options.pad` on a value with no digits (`\"\"`, `\"---\"`, `null`) still gives an empty string. Until 2.4.0 `\"\"` and `\"---\"` gave the whole zero mask."
+        ],
+        "pt-BR": [
+          "Formata um CNO com a máscara `00.000.00000/00` (a numeração do CEI).",
+          "",
+          "- Mesmas regras de `cei.format`: a máscara é aplicada até onde os dígitos vão, e os dígitos além do 12º são descartados. `options.pad` primeiro completa com zeros à esquerda até 12 dígitos.",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal).",
+          "- `options.pad` num valor sem dígitos (`\"\"`, `\"---\"`, `null`) continua retornando uma string vazia. Até a 2.4.0 `\"\"` e `\"---\"` retornavam a máscara inteira de zeros."
+        ]
+      },
+      "references": ["https://www.gov.br/receitafederal/pt-br/assuntos/orientacao-tributaria/cadastros/cno"],
+      "params": [
+        { "name": "value", "type": "string | number" },
+        { "name": "options", "type": "FormatCnoOptions", "optional": true, "fields": [{ "name": "pad", "type": "boolean", "optional": true }] }
+      ],
+      "returns": "string",
+      "tests": [
+        { "args": ["111130137368"], "returns": "11.113.01373/68" },
+        { "name": "already-formatted", "args": ["11.084.01680/62"], "returns": "11.084.01680/62" },
+        { "name": "partial", "args": ["11113"], "returns": "11.113" },
+        { "name": "empty", "args": [""], "returns": "" },
+        { "args": [401800097960], "returns": "40.180.00979/60", "note": "JavaScript's own test: should format a number input" },
+        { "args": ["1"], "returns": "1", "note": "JavaScript's own test: should format progressively as digits are typed" },
+        { "args": ["11"], "returns": "11", "note": "JavaScript's own test: should format progressively as digits are typed" },
+        { "args": ["111"], "returns": "11.1", "note": "JavaScript's own test: should format progressively as digits are typed" },
+        { "args": ["1111"], "returns": "11.11", "note": "JavaScript's own test: should format progressively as digits are typed" },
+        { "args": ["111130"], "returns": "11.113.0", "note": "JavaScript's own test: should format progressively as digits are typed" },
+        { "args": ["1111301373680000"], "returns": "11.113.01373/68", "note": "JavaScript's own test: should truncate values longer than 12 digits" },
+        { "args": ["979", { "pad": true }], "returns": "00.000.00009/79", "note": "JavaScript's own test: should pad the value with leading zeros when options.pad is true" },
+        { "args": [-1], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [1.5], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": ["", { "pad": true }], "returns": "", "note": "changed in 2.5.0 (#615): should return an empty string for a value without digits even when padding; 2.4.0 returned the zero mask" },
+        { "args": ["---", { "pad": true }], "returns": "", "note": "changed in 2.5.0 (#615): a value with no digits gives an empty string even with pad" },
+        { "args": [null, { "pad": true }], "returns": "", "note": "a null value gives an empty string even with pad (2.4.0 did the same)" },
+        { "args": [-249859674386], "returns": "", "note": "JavaScript docs example: not a non-negative safe integer" },
+        { "args": ["979"], "returns": "97.9", "note": "JavaScript docs example: no padding by default" }
+      ]
+    },
+    "isValid": {
+      "summary": {
+        "en": "Validates a CNO number, the registration of a construction work with the Receita Federal.",
+        "pt-BR": "Valida um número CNO, o registro de uma obra de construção civil na Receita Federal."
+      },
+      "description": {
+        "en": [
+          "Validates a CNO. The CNO replaced the CEI for construction works and kept its numbering.",
+          "",
+          "- Same rules as `cei.isValid`.",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number is invalid.",
+          "- No official source publishes the check digit rule. Only the 12 positions and the CNO keeping the CEI number (Manual de Orientação do eSocial S-1.3, item 9.1) are official. The IN RFB 2.061/2021 has no check digit, and the eSocial only checks that the number exists in the Receita Federal base. The rule comes from third-party reference implementations, cross-checked against the CNO open data and SERPRO's example `000000336854`.",
+          "- A number loses its leading zeros, so a value that starts with `0` is only accepted as a string: `\"000000336854\"` is valid and `336854` is not."
+        ],
+        "pt-BR": [
+          "Valida um CNO. O CNO substituiu o CEI para obras de construção civil e manteve a numeração dele.",
+          "",
+          "- Mesmas regras de `cei.isValid`.",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro é inválido.",
+          "- Nenhuma fonte oficial publica a regra do dígito verificador. Só as 12 posições e a manutenção do número do CEI no CNO (Manual de Orientação do eSocial S-1.3, item 9.1) são oficiais. A IN RFB 2.061/2021 não traz dígito verificador, e o eSocial só verifica se o número existe na base da Receita. A regra vem de implementações de referência de terceiros, conferidas com os dados abertos do CNO e com o exemplo do SERPRO, `000000336854`.",
+          "- Um número perde os zeros à esquerda, então um valor que começa com `0` só é aceito como string: `\"000000336854\"` é válido e `336854` não é."
+        ]
+      },
+      "references": [
+        "https://www.gov.br/receitafederal/pt-br/assuntos/orientacao-tributaria/cadastros/cno",
+        "https://dados.gov.br/dados/conjuntos-dados/cadastro-nacional-de-obras-cno",
+        "https://bcadastros.serpro.gov.br/documentacao/cadastro_cno/",
+        "https://www.gov.br/esocial/pt-br/documentacao-tecnica/manuais/mos-s-1-3-consolidada-ate-a-no-s-1-3-07-2026.pdf"
+      ],
+      "params": [{ "name": "value", "type": "string | number" }],
+      "returns": "boolean",
+      "tests": [
+        { "args": ["110840168062"], "returns": true },
+        { "name": "masked", "args": ["11.084.01680/62"], "returns": true },
+        { "args": ["401800097960"], "returns": true },
+        { "name": "wrong-check-digit", "args": ["110840168063"], "returns": false },
+        { "name": "zeros", "args": ["000000000000"], "returns": false },
+        { "name": "too-short", "args": ["1234567890"], "returns": false },
+        { "name": "empty", "args": [""], "returns": false },
+        { "args": ["1234567890123"], "returns": false, "note": "JavaScript's own test: should return false when it does not have 12 digits" },
+        { "args": ["11#084#01680#62"], "returns": false, "note": "JavaScript's own test: should return false when it has 12 digits but an unsupported separator" },
+        { "args": ["110.840.16806/2"], "returns": false, "note": "JavaScript's own test: should return false when it has 12 digits grouped outside the 2-3-5-2 mask" },
+        { "args": ["401800097961"], "returns": false, "note": "JavaScript's own test: should return false when a check digit of 0 is replaced by another digit (401800097960 of the Receita Federal CNO dataset)" },
+        { "args": ["111130137368"], "returns": true, "note": "JavaScript's own test: should return true for 111130137368, an obra in Campo do Meio/MG of the Receita Federal CNO open dataset" },
+        { "args": ["112772388267"], "returns": true, "note": "JavaScript's own test: should return true for 112772388267 and 113381018769 of the Receita Federal CNO open dataset" },
+        { "args": ["113381018769"], "returns": true, "note": "JavaScript's own test: should return true for 112772388267 and 113381018769 of the Receita Federal CNO open dataset" },
+        { "args": [401800097960], "returns": true, "note": "JavaScript's own test: should return true for 401800097960, whose check digit is 0 (Receita Federal CNO open dataset, Frutal/MG)" },
+        { "args": ["512070915160"], "returns": true, "note": "JavaScript's own test: should return true for 512070915160, whose check digit is 0 (Receita Federal CNO open dataset, Capitólio/MG)" },
+        { "args": ["11.583.00249/85"], "returns": true, "note": "JavaScript's own test: should return true for a legacy CEI number kept by the CNO (11.583.00249/85, yiibr/yii2-br-validator)" },
+        { "args": [" 11 084 01680 62 "], "returns": true, "note": "JavaScript's own test: should return true for a whitespace mask and surrounding whitespace" },
+        { "args": [-110840168062], "returns": false, "note": "JavaScript's own test: should return false when it is a negative or fractional number (#593 number rule)" },
+        { "args": [1108401680.62], "returns": false, "note": "JavaScript's own test: should return false when it is a negative or fractional number (#593 number rule)" },
+        { "args": ["000000336854"], "returns": true, "note": "JavaScript's own test: should return true for 000000336854, the example of SERPRO's documentation of the Receita Federal's CNO cadastro" },
+        { "args": [336854], "returns": false, "note": "JavaScript docs example: a number loses its leading zeros" }
+      ]
+    },
+    "parse": {
+      "summary": {
+        "en": "Removes the formatting characters of a CNO and returns only the digits.",
+        "pt-BR": "Remove os caracteres de formatação de um CNO e retorna só os dígitos."
+      },
+      "description": {
+        "en": [
+          "Removes CNO formatting and keeps only digits, capped at 12 digits.",
+          "",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number gives an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
+        ],
+        "pt-BR": [
+          "Remove a formatação do CNO e mantém somente os dígitos, limitados a 12 dígitos.",
+          "",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
+        ]
+      },
+      "references": ["https://www.gov.br/receitafederal/pt-br/assuntos/orientacao-tributaria/cadastros/cno"],
+      "params": [{ "name": "value", "type": "string | number" }],
+      "returns": "string",
+      "tests": [
+        { "name": "masked", "args": ["11.113.01373/68"], "returns": "111130137368" },
+        { "name": "unmasked", "args": ["111130137368"], "returns": "111130137368" },
+        { "name": "strips-non-digits", "args": ["11.?ABC113.01373/68abc"], "returns": "111130137368" },
+        { "name": "empty", "args": [""], "returns": "" },
+        { "name": "caps-length", "args": ["111130137368999"], "returns": "111130137368", "note": "reference truncates to the 12 characters of the document; asserted by the reference (JS) unit tests" },
+        { "args": [111130137368], "returns": "111130137368", "note": "JavaScript's own test: should read a number as the string of its digits" },
+        { "args": [-1], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [1.5], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" }
+      ]
+    }
+  }
+}

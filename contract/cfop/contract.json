@@ -1,0 +1,226 @@
+{
+  "$schema": "../../schema/contract.schema.json",
+  "domain": "cfop",
+  "title": { "en": "CFOP", "pt-BR": "CFOP" },
+  "summary": {
+    "en": "Código Fiscal de Operações e Prestações: the fiscal operation codes of Anexo II of Convênio SINIEF s/nº 1970.",
+    "pt-BR": "Código Fiscal de Operações e Prestações: os códigos do Anexo II do Convênio SINIEF s/nº 1970."
+  },
+  "category": "tax",
+  "order": 2,
+  "functions": {
+    "format": {
+      "summary": {
+        "en": "Formats a CFOP code with the mask `N.NNN`.",
+        "pt-BR": "Formata um código CFOP com a máscara `N.NNN`."
+      },
+      "description": {
+        "en": [
+          "Formats a CFOP code with the mask `N.NNN`. Only the structure changes (use `cfop.isValid` to check the code against the table).",
+          "",
+          "- The mask is applied as far as the digits go, so a value being typed is masked progressively.",
+          "- `options.pad` (default `false`) first left-pads the value with zeros to 4 digits. A number is treated as the string of its digits, so it is padded only with `pad`.",
+          "- A string is read for its digits: other characters are dropped and digits after the last one of the mask are ignored.",
+          "- An empty value, or one without digits, returns an empty string even with `pad`. `null` and `undefined` return an empty string too.",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number returns an empty string.",
+          "- No CFOP starts with a zero, so `pad` only serves a caller that wants a fixed width.",
+          "- New in 2.5.0 (#615), so every masked classification code has its formatter."
+        ],
+        "pt-BR": [
+          "Formata um código CFOP com a máscara `N.NNN`. Só a estrutura muda (use `cfop.isValid` para verificar o código na tabela).",
+          "",
+          "- A máscara é aplicada até onde os dígitos vão, então um valor sendo digitado é mascarado progressivamente.",
+          "- `options.pad` (padrão `false`) primeiro completa o valor com zeros à esquerda até 4 dígitos. Um número é tratado como a string dos seus dígitos, então só é completado com `pad`.",
+          "- Uma string é lida pelos seus dígitos: os outros caracteres são descartados e dígitos depois do último da máscara são ignorados.",
+          "- Um valor vazio, ou sem dígitos, retorna uma string vazia mesmo com `pad`. `null` e `undefined` também retornam uma string vazia.",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia.",
+          "- Nenhum CFOP começa com zero, então `pad` só serve a quem quer largura fixa.",
+          "- Nova na 2.5.0 (#615), para que todo código com máscara tenha o seu formatador."
+        ]
+      },
+      "references": ["https://www.confaz.fazenda.gov.br/legislacao/ajustes/sinief/cfop_cvsn_1-6.24"],
+      "flatName": "formatCfop",
+      "params": [
+        { "name": "value", "type": "string | number" },
+        { "name": "options", "type": "FormatCfopOptions", "optional": true, "fields": [{ "name": "pad", "type": "boolean", "optional": true }] }
+      ],
+      "returns": "string",
+      "tests": [
+        { "args": ["5102"], "returns": "5.102", "note": "JavaScript's own test: should format a CFOP code given as digits" },
+        { "args": [5102], "returns": "5.102", "note": "JavaScript's own test: should format a CFOP code given as a number" },
+        { "args": ["5.102"], "returns": "5.102", "note": "JavaScript's own test: should format a CFOP code that already has the mask" },
+        { "args": ["51"], "returns": "5.1", "note": "JavaScript docs example" },
+        { "args": ["5"], "returns": "5", "note": "JavaScript's own test: should mask a partial value progressively by default" },
+        { "args": [""], "returns": "", "note": "JavaScript's own test: should return an empty string for an empty value" },
+        { "args": ["", { "pad": true }], "returns": "", "note": "JavaScript's own test: pad option should left pad a short code with zeros up to the full CFOP length" },
+        { "args": ["2", { "pad": true }], "returns": "0.002", "note": "JavaScript's own test: pad option should left pad a short code with zeros up to the full CFOP length" },
+        { "args": ["102", { "pad": true }], "returns": "0.102", "note": "JavaScript's own test: pad option should left pad a short code with zeros up to the full CFOP length" },
+        { "args": ["5102", { "pad": true }], "returns": "5.102", "note": "JavaScript's own test: pad option should left pad a short code with zeros up to the full CFOP length" },
+        { "args": [102, { "pad": true }], "returns": "0.102", "note": "JavaScript's own test: pad option should left pad a number the same way as its digits" },
+        { "args": [null], "returns": "", "note": "JavaScript's own test: should return an empty string for null and undefined, even under pad" },
+        { "args": [null, { "pad": true }], "returns": "", "note": "JavaScript's own test: should return an empty string for null and undefined, even under pad" },
+        { "args": ["abc5102"], "returns": "5.102", "note": "JavaScript docs example" },
+        { "args": ["5102999"], "returns": "5.102" },
+        { "args": [-5102], "returns": "", "note": "JavaScript docs example" },
+        { "args": [5102.5], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" },
+        { "args": [-5102, { "pad": true }], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" }
+      ]
+    },
+    "get": {
+      "summary": {
+        "en": "Looks up a CFOP code in the official table.",
+        "pt-BR": "Consulta um código CFOP na tabela oficial."
+      },
+      "description": {
+        "en": [
+          "Looks up a CFOP code in the official table and returns its code and description.",
+          "",
+          "- Same input rules as `cfop.isValid`, including a run of separators between the groups (`5..102` gives the entry; until 2.4.0 it gave `null`). Returns `null` for a heading, an unknown code or a value not in an accepted form.",
+          "- It returns `null` exactly when `cfop.isValid` returns `false`."
+        ],
+        "pt-BR": [
+          "Consulta um código CFOP na tabela oficial e retorna o código e a descrição.",
+          "",
+          "- Mesmas regras de entrada de `cfop.isValid`, inclusive uma sequência de separadores entre os grupos (`5..102` retorna o registro; até a 2.4.0 retornava `null`). Retorna `null` para um título, um código desconhecido ou um valor fora das formas aceitas.",
+          "- Retorna `null` exatamente quando `cfop.isValid` retorna `false`."
+        ]
+      },
+      "references": [
+        "https://www.confaz.fazenda.gov.br/legislacao/ajustes/sinief/cfop_cvsn_1-6.24",
+        "https://www.confaz.fazenda.gov.br/legislacao/ajustes/sinief/cvsn_70",
+        "https://www.confaz.fazenda.gov.br/legislacao/ajustes/2025/AJ039_25",
+        "https://www.confaz.fazenda.gov.br/legislacao/ajustes/2001/AJ_007_01"
+      ],
+      "params": [{ "name": "value", "type": "string | number" }],
+      "returns": "Cfop?",
+      "tests": [
+        { "args": ["5102"], "returns": { "code": "5102", "description": "Venda de mercadoria adquirida ou recebida de terceiros, ou qualquer venda de mercadoria efetuada pelo MEI com exceção das saídas classificadas nos códigos 5.501, 5.502, 5.504 e 5.505" } },
+        { "name": "masked", "args": ["5.102"], "returns": { "code": "5102", "description": "Venda de mercadoria adquirida ou recebida de terceiros, ou qualquer venda de mercadoria efetuada pelo MEI com exceção das saídas classificadas nos códigos 5.501, 5.502, 5.504 e 5.505" } },
+        { "name": "group-heading", "args": ["1100"], "returns": null },
+        { "name": "too-short", "args": ["510"], "returns": null },
+        { "name": "empty", "args": [""], "returns": null },
+        { "args": [5102], "returns": { "code": "5102", "description": "Venda de mercadoria adquirida ou recebida de terceiros, ou qualquer venda de mercadoria efetuada pelo MEI com exceção das saídas classificadas nos códigos 5.501, 5.502, 5.504 e 5.505" }, "note": "JavaScript's own test: should return the CFOP entry for a known code as a number" },
+        { "args": ["1255"], "returns": { "code": "1255", "description": "Compra de energia elétrica por estabelecimento prestador de serviço de comunicação" }, "note": "JavaScript's own test: should return one entry per code even when the annex glues the body into the code line (1255 and 1256)" },
+        { "args": ["1256"], "returns": { "code": "1256", "description": "Compra de energia elétrica por estabelecimento de produtor rural" }, "note": "JavaScript's own test: should return one entry per code even when the annex glues the body into the code line (1255 and 1256)" },
+        { "args": ["7504"], "returns": { "code": "7504", "description": "Exportação de mercadoria que foi objeto de formação de lote de exportação" }, "note": "JavaScript's own test: should resolve the codes the 2022 and 2024 rewrites of the annex added (7504, 6360, 2128 and 1934)" },
+        { "args": ["6360"], "returns": { "code": "6360", "description": "Prestação de serviço de transporte a contribuinte substituto em relação ao serviço de transporte" }, "note": "JavaScript's own test: should resolve the codes the 2022 and 2024 rewrites of the annex added (7504, 6360, 2128 and 1934)" },
+        { "args": ["2128"], "returns": { "code": "2128", "description": "Compra para utilização na prestação de serviço sujeita ao ISSQN" }, "note": "JavaScript's own test: should resolve the codes the 2022 and 2024 rewrites of the annex added (7504, 6360, 2128 and 1934)" },
+        { "args": ["1934"], "returns": { "code": "1934", "description": "Entrada simbólica de mercadoria recebida para depósito em depósito fechado ou armazém geral" }, "note": "JavaScript's own test: should resolve the codes the 2022 and 2024 rewrites of the annex added (7504, 6360, 2128 and 1934)" },
+        { "args": ["0000"], "returns": null, "note": "JavaScript's own test: should return null for an unknown 4 digit code" },
+        { "args": ["5300"], "returns": null, "note": "JavaScript's own test: should return null for a group heading (a code ending in 00)" },
+        { "args": ["1150"], "returns": null, "note": "JavaScript's own test: should return null for a subgroup heading (a code ending in 50)" },
+        { "args": ["5350"], "returns": null, "note": "JavaScript's own test: should return null for a subgroup heading (a code ending in 50)" },
+        { "args": ["1151"], "returns": { "code": "1151", "description": "Transferência para industrialização ou produção rural" }, "note": "JavaScript's own test: should still resolve the operable codes a subgroup heading heads (1151 and 5351)" },
+        { "args": ["5351"], "returns": { "code": "5351", "description": "Prestação de serviço de transporte para execução de serviço da mesma natureza" }, "note": "JavaScript's own test: should still resolve the operable codes a subgroup heading heads (1151 and 5351)" },
+        { "args": ["abc5102"], "returns": null, "note": "JavaScript's own test: should return null for a string that is not a documented form" },
+        {
+          "args": ["5..102"],
+          "returns": {
+            "code": "5102",
+            "description": "Venda de mercadoria adquirida ou recebida de terceiros, ou qualquer venda de mercadoria efetuada pelo MEI com exceção das saídas classificadas nos códigos 5.501, 5.502, 5.504 e 5.505"
+          },
+          "note": "changed in 2.5.0 (#615): a run of separators between the groups is accepted (2.4.0 gave null). JavaScript's own test: should accept a group boundary written with a run of separators"
+        },
+        { "args": [-5102], "returns": null, "note": "JavaScript's own test: should return null for a number that is not a non-negative safe integer" },
+        { "args": [51.02], "returns": null, "note": "JavaScript's own test: should return null for a number that is not a non-negative safe integer" }
+      ]
+    },
+    "isValid": {
+      "summary": {
+        "en": "Checks whether a CFOP code exists in the official table.",
+        "pt-BR": "Verifica se um código CFOP existe na tabela oficial."
+      },
+      "description": {
+        "en": [
+          "Checks whether a CFOP code exists in the consolidated Anexo II of Convênio SINIEF s/nº 1970 in force.",
+          "",
+          "- Only operable codes count: the function rejects group and subgroup headings (codes ending in `00` and `50`).",
+          "- Accepts the 4 digits, the `N.NNN` form or a safe non-negative integer. A masked string may have any run of separators (space, `.`, `-` or `/`) between the groups: `5..102` is valid. Until 2.4.0 the form had a single separator and `5..102` was rejected. Any other string is rejected.",
+          "- Whitespace around the value is ignored.",
+          "- No CFOP starts with a zero, so the function pads nothing."
+        ],
+        "pt-BR": [
+          "Verifica se um código CFOP existe no Anexo II consolidado do Convênio SINIEF s/nº 1970 em vigor.",
+          "",
+          "- Só contam os códigos operáveis: a função rejeita títulos de grupo e de subgrupo (códigos terminados em `00` e `50`).",
+          "- Aceita os 4 dígitos, a forma `N.NNN` ou um inteiro seguro não negativo. Uma string com máscara pode ter qualquer sequência de separadores (espaço, `.`, `-` ou `/`) entre os grupos: `5..102` é válido. Até a 2.4.0 a forma tinha um único separador e `5..102` era rejeitado. Qualquer outra string é rejeitada.",
+          "- Espaços nas pontas são ignorados.",
+          "- Nenhum CFOP começa com zero, então a função não completa nada com zeros."
+        ]
+      },
+      "references": [
+        "https://www.confaz.fazenda.gov.br/legislacao/ajustes/sinief/cfop_cvsn_1-6.24",
+        "https://www.confaz.fazenda.gov.br/legislacao/ajustes/sinief/cvsn_70",
+        "https://www.confaz.fazenda.gov.br/legislacao/ajustes/2025/AJ039_25",
+        "https://www.confaz.fazenda.gov.br/legislacao/ajustes/2001/AJ_007_01"
+      ],
+      "params": [{ "name": "value", "type": "string | number" }],
+      "returns": "boolean",
+      "tests": [
+        { "args": ["5102"], "returns": true },
+        { "name": "masked", "args": ["5.102"], "returns": true },
+        { "args": ["7504"], "returns": true },
+        { "args": ["0000"], "returns": false },
+        { "name": "group-heading", "args": ["1100"], "returns": false },
+        { "name": "too-short", "args": ["510"], "returns": false },
+        { "name": "letters", "args": ["abcd"], "returns": false },
+        { "name": "empty", "args": [""], "returns": false },
+        { "args": [5102], "returns": true, "note": "JavaScript's own test: should return true for a known CFOP code as a number" },
+        { "args": [" 5102 "], "returns": true, "note": "JavaScript's own test: should return true for a code with surrounding whitespace" },
+        { "args": ["6360"], "returns": true, "note": "JavaScript's own test: should accept the codes the 2022 and 2024 rewrites of the annex added (7504, 6360, 2128 and 1934)" },
+        { "args": ["2128"], "returns": true, "note": "JavaScript's own test: should accept the codes the 2022 and 2024 rewrites of the annex added (7504, 6360, 2128 and 1934)" },
+        { "args": ["1934"], "returns": true, "note": "JavaScript's own test: should accept the codes the 2022 and 2024 rewrites of the annex added (7504, 6360, 2128 and 1934)" },
+        { "args": ["1131"], "returns": true, "note": "JavaScript's own test: should accept the ato cooperativo and Sistema de Integração e Parceria Rural series (1131 and 1453)" },
+        { "args": ["1453"], "returns": true, "note": "JavaScript's own test: should accept the ato cooperativo and Sistema de Integração e Parceria Rural series (1131 and 1453)" },
+        { "args": ["1255"], "returns": true, "note": "JavaScript's own test: should accept a code whose body the annex glues into the code line (1255)" },
+        { "args": ["5300"], "returns": false, "note": "JavaScript's own test: should return false for a group heading (a code ending in 00)" },
+        { "args": ["1150"], "returns": false, "note": "JavaScript's own test: should return false for a subgroup heading (a code ending in 50)" },
+        { "args": ["5350"], "returns": false, "note": "JavaScript's own test: should return false for a subgroup heading (a code ending in 50)" },
+        { "args": ["1151"], "returns": true, "note": "JavaScript's own test: should still accept the operable codes a subgroup heading heads (1151 and 5351)" },
+        { "args": ["5351"], "returns": true, "note": "JavaScript's own test: should still accept the operable codes a subgroup heading heads (1151 and 5351)" },
+        { "args": ["51020"], "returns": false, "note": "JavaScript's own test: should return false for a code with a length different from 4" },
+        { "args": ["abc5102"], "returns": false, "note": "JavaScript's own test: should return false for a string that is not a documented form" },
+        { "args": ["5..102"], "returns": true, "note": "changed in 2.5.0 (#615): a run of separators between the groups is accepted (2.4.0 rejected it). JavaScript's own test: should accept a group boundary written with a run of separators" },
+        { "args": [-5102], "returns": false, "note": "JavaScript's own test: should return false for a number that is not a non-negative safe integer" },
+        { "args": [51.02], "returns": false, "note": "JavaScript's own test: should return false for a number that is not a non-negative safe integer" }
+      ]
+    },
+    "parse": {
+      "summary": {
+        "en": "Removes the formatting characters of a CFOP code and returns only the digits.",
+        "pt-BR": "Remove os caracteres de formatação de um código CFOP e retorna só os dígitos."
+      },
+      "description": {
+        "en": [
+          "Removes CFOP formatting and keeps only digits, capped at 4 digits.",
+          "",
+          "- The function does not pad the result.",
+          "- Returns an empty string when there is no digit at all (`null` and `undefined` included).",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number returns an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
+        ],
+        "pt-BR": [
+          "Remove a formatação do CFOP e mantém apenas os dígitos, limitados a 4.",
+          "",
+          "- A função não completa o resultado com zeros.",
+          "- Retorna string vazia quando não há nenhum dígito (`null` e `undefined` incluídos).",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
+        ]
+      },
+      "references": ["https://www.confaz.fazenda.gov.br/legislacao/ajustes/sinief/cfop_cvsn_1-6.24"],
+      "params": [{ "name": "value", "type": "string | number" }],
+      "returns": "string",
+      "tests": [
+        { "name": "masked", "args": ["5.102"], "returns": "5102" },
+        { "name": "unmasked", "args": ["5102"], "returns": "5102" },
+        { "name": "strips-non-digits", "args": ["5?ABC.102abc"], "returns": "5102" },
+        { "name": "empty", "args": [""], "returns": "" },
+        { "name": "caps-length", "args": ["5102999"], "returns": "5102", "note": "reference truncates to the 4 characters of the document; asserted by the reference (JS) unit tests" },
+        { "args": [5102], "returns": "5102", "note": "JavaScript's own test: should read a number as the string of its digits" },
+        { "args": [51.02], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [-1], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" }
+      ]
+    }
+  }
+}

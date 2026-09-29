@@ -1,0 +1,214 @@
+{
+  "$schema": "../../schema/contract.schema.json",
+  "domain": "cnae",
+  "title": { "en": "CNAE", "pt-BR": "CNAE" },
+  "summary": {
+    "en": "Classificação Nacional de Atividades Econômicas: the economic activity subclass codes of the CNAE-Subclasses 2.3 table.",
+    "pt-BR": "Classificação Nacional de Atividades Econômicas: os códigos de subclasse da tabela CNAE-Subclasses 2.3."
+  },
+  "category": "companies",
+  "order": 4,
+  "related": ["cnpj"],
+  "functions": {
+    "format": {
+      "summary": { "en": "Formats a CNAE subclass code.", "pt-BR": "Formata um código de subclasse CNAE." },
+      "description": {
+        "en": [
+          "Formats a CNAE subclass code with the mask `NNNN-N/NN`. Only the structure changes (use `cnae.isValid` to check the code).",
+          "",
+          "- The mask is applied as far as the digits go, so a value being typed is masked progressively.",
+          "- `options.pad` (default `false`) first left-pads the value with zeros to 7 digits. A number is treated as the string of its digits, so it is padded only with `pad`.",
+          "- A string is read for its digits: other characters are dropped and digits after the last one of the mask are ignored.",
+          "- An empty value, or one without digits, returns an empty string even with `pad`. `null` and `undefined` return an empty string too. Until 2.4.0 `pad` returned the whole zero mask (`0000-0/00`).",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number returns an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
+        ],
+        "pt-BR": [
+          "Formata um código de subclasse CNAE com a máscara `NNNN-N/NN`. Só a estrutura muda (use `cnae.isValid` para verificar o código).",
+          "",
+          "- A máscara é aplicada até onde os dígitos vão, então um valor sendo digitado é mascarado progressivamente.",
+          "- `options.pad` (padrão `false`) primeiro completa o valor com zeros à esquerda até 7 dígitos. Um número é tratado como a string dos seus dígitos, então só é completado com `pad`.",
+          "- Uma string é lida pelos seus dígitos: os outros caracteres são descartados e dígitos depois do último da máscara são ignorados.",
+          "- Um valor vazio, ou sem dígitos, retorna uma string vazia mesmo com `pad`. `null` e `undefined` também retornam uma string vazia. Até a 2.4.0 o `pad` retornava a máscara toda de zeros (`0000-0/00`).",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
+        ]
+      },
+      "references": ["https://servicodados.ibge.gov.br/api/v2/cnae/subclasses"],
+      "params": [
+        { "name": "value", "type": "string | number" },
+        { "name": "options", "type": "FormatCnaeOptions", "optional": true, "fields": [{ "name": "pad", "type": "boolean", "optional": true }] }
+      ],
+      "returns": "string",
+      "tests": [
+        { "args": ["6201501"], "returns": "6201-5/01" },
+        { "name": "already-formatted", "args": ["6201-5/01"], "returns": "6201-5/01" },
+        { "name": "partial", "args": ["62015"], "returns": "6201-5" },
+        { "name": "empty", "args": [""], "returns": "" },
+        { "args": [6201501], "returns": "6201-5/01", "note": "JavaScript's own test: should format a CNAE code given as a number" },
+        { "args": ["0000000"], "returns": "0000-0/00", "note": "JavaScript's own test: should not validate whether the code exists in the official table" },
+        { "args": ["6"], "returns": "6", "note": "JavaScript's own test: should mask a partial value progressively by default" },
+        { "args": ["62"], "returns": "62", "note": "JavaScript's own test: should mask a partial value progressively by default" },
+        { "args": ["620"], "returns": "620", "note": "JavaScript's own test: should mask a partial value progressively by default" },
+        { "args": ["6201"], "returns": "6201", "note": "JavaScript's own test: should mask a partial value progressively by default" },
+        { "args": ["620150"], "returns": "6201-5/0", "note": "JavaScript's own test: should mask a partial value progressively by default" },
+        { "args": [62], "returns": "62", "note": "JavaScript's own test: should mask a partial number progressively by default" },
+        { "args": [111301], "returns": "1113-0/1", "note": "JavaScript's own test: should mask a partial number progressively by default" },
+        { "args": ["62015010000"], "returns": "6201-5/01", "note": "JavaScript's own test: should not add digits after the CNAE length" },
+        { "args": ["", { "pad": true }], "returns": "", "note": "changed in 2.5.0 (#615): a value without digits gives an empty string even with pad (2.4.0: \"0000-0/00\"). JavaScript's own test: pad option should left pad a short code with zeros up to the full CNAE length" },
+        { "args": ["1", { "pad": true }], "returns": "0000-0/01", "note": "JavaScript's own test: pad option should left pad a short code with zeros up to the full CNAE length" },
+        { "args": ["62", { "pad": true }], "returns": "0000-0/62", "note": "JavaScript's own test: pad option should left pad a short code with zeros up to the full CNAE length" },
+        { "args": ["501", { "pad": true }], "returns": "0000-5/01", "note": "JavaScript's own test: pad option should left pad a short code with zeros up to the full CNAE length" },
+        { "args": ["62015", { "pad": true }], "returns": "0062-0/15", "note": "JavaScript's own test: pad option should left pad a short code with zeros up to the full CNAE length" },
+        { "args": ["6201501", { "pad": true }], "returns": "6201-5/01", "note": "JavaScript's own test: pad option should left pad a short code with zeros up to the full CNAE length" },
+        { "args": [62, { "pad": true }], "returns": "0000-0/62", "note": "JavaScript's own test: pad option should left pad a number the same way as its digits" },
+        { "args": [111301, { "pad": true }], "returns": "0111-3/01", "note": "JavaScript's own test: pad option should left pad a number the same way as its digits" },
+        { "args": ["62", { "pad": false }], "returns": "62", "note": "JavaScript's own test: pad option should mask progressively for an explicit false" },
+        { "args": ["abc6201501"], "returns": "6201-5/01", "note": "JavaScript's own test: should read only the digits of a value with other characters, like formatCpf" },
+        { "args": ["62.01-5/01"], "returns": "6201-5/01", "note": "JavaScript's own test: should read only the digits of a value with other characters, like formatCpf" },
+        { "args": [-6201501], "returns": "", "note": "changed in 2.5.0 (#593): a negative or fractional number is not a non-negative safe integer, so it gives \"\"; 2.4.0 read the digits of its string. JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number" },
+        { "args": [620150.1], "returns": "", "note": "changed in 2.5.0 (#593): a negative or fractional number is not a non-negative safe integer, so it gives \"\"; 2.4.0 read the digits of its string. JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number" },
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (2 ** 53; 2.4.0 gave \"9007-1/99\")" },
+        { "args": [-6201501, { "pad": true }], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number, even with pad" },
+        { "args": [null], "returns": "", "note": "JavaScript's own test: should return an empty string for null and undefined" },
+        { "args": [null, { "pad": true }], "returns": "", "note": "JavaScript's own test: should return an empty string for null and undefined even under pad, instead of a zero-filled code" },
+        { "args": ["abc", { "pad": true }], "returns": "", "note": "an input with no digit stays empty under pad" }
+      ]
+    },
+    "get": {
+      "summary": {
+        "en": "Looks up a CNAE subclass code in the official CNAE-Subclasses 2.3 table.",
+        "pt-BR": "Consulta um código de subclasse CNAE na tabela oficial CNAE-Subclasses 2.3."
+      },
+      "description": {
+        "en": [
+          "Looks up a CNAE subclass code in the CNAE-Subclasses 2.3 table and returns its code (7 bare digits) and official description.",
+          "",
+          "This table is the current subclass revision of CNAE 2.0.",
+          "",
+          "- Same input rules as `cbo.get`, with 7 digits and the `NNNN-N/NN` mask, including a run of separators between the groups (`6201--5//01` gives the entry).",
+          "- Returns `null` for an unknown code or a value not in an accepted form.",
+          "- It returns `null` exactly when `cnae.isValid` returns `false`."
+        ],
+        "pt-BR": [
+          "Consulta um código de subclasse CNAE na tabela CNAE-Subclasses 2.3 e retorna o código (7 dígitos sem máscara) e a descrição oficial.",
+          "",
+          "Essa tabela é a revisão atual das subclasses da CNAE 2.0.",
+          "",
+          "- Mesmas regras de entrada de `cbo.get`, com 7 dígitos e a máscara `NNNN-N/NN`, inclusive uma sequência de separadores entre os grupos (`6201--5//01` retorna o registro).",
+          "- Retorna `null` para um código desconhecido ou para um valor fora das formas aceitas.",
+          "- Retorna `null` exatamente quando `cnae.isValid` retorna `false`."
+        ]
+      },
+      "references": [
+        "https://servicodados.ibge.gov.br/api/v2/cnae/subclasses",
+        "https://concla.ibge.gov.br/busca-online-cnae.html"
+      ],
+      "params": [{ "name": "value", "type": "string | number" }],
+      "returns": "Cnae?",
+      "tests": [
+        { "args": ["6201501"], "returns": { "code": "6201501", "description": "DESENVOLVIMENTO DE PROGRAMAS DE COMPUTADOR SOB ENCOMENDA" } },
+        { "name": "masked", "args": ["6201-5/01"], "returns": { "code": "6201501", "description": "DESENVOLVIMENTO DE PROGRAMAS DE COMPUTADOR SOB ENCOMENDA" } },
+        { "name": "leading-zero", "args": ["0111-3/01"], "returns": { "code": "0111301", "description": "CULTIVO DE ARROZ" } },
+        { "args": ["0000000"], "returns": null },
+        { "name": "too-short", "args": ["620150"], "returns": null },
+        { "name": "empty", "args": [""], "returns": null },
+        { "args": [6201501], "returns": { "code": "6201501", "description": "DESENVOLVIMENTO DE PROGRAMAS DE COMPUTADOR SOB ENCOMENDA" }, "note": "JavaScript's own test: should return the CNAE entry for a known code as a number" },
+        { "args": ["111-3/01"], "returns": null, "note": "JavaScript's own test: should not pad a masked value, which already carries its separators" },
+        { "args": ["0111abc301"], "returns": null, "note": "JavaScript's own test: should return null for a string that is not written in a documented form" },
+        { "args": ["62-01501"], "returns": null, "note": "JavaScript's own test: should return null for a string that is not written in a documented form" },
+        { "args": [-111301], "returns": null, "note": "JavaScript's own test: should return null for a number that is not a non-negative safe integer" },
+        { "args": [6201.501], "returns": null, "note": "JavaScript's own test: should return null for a number that is not a non-negative safe integer" },
+        { "args": ["6201--5//01"], "returns": { "code": "6201501", "description": "DESENVOLVIMENTO DE PROGRAMAS DE COMPUTADOR SOB ENCOMENDA" }, "note": "changed in 2.5.0 (#615): a run of separators between the groups is accepted (2.4.0 gave null). same rule as cnae.isValid" }
+      ]
+    },
+    "isValid": {
+      "summary": {
+        "en": "Checks whether a CNAE subclass code exists in the official CNAE-Subclasses 2.3 table.",
+        "pt-BR": "Verifica se um código de subclasse CNAE existe na tabela oficial CNAE-Subclasses 2.3."
+      },
+      "description": {
+        "en": [
+          "Checks whether a CNAE subclass code exists in the CNAE-Subclasses 2.3 table (the current subclass revision of CNAE 2.0).",
+          "",
+          "- Same input rules as `cbo.isValid`, with 7 digits and the `NNNN-N/NN` mask. Bare digits are left-padded to 7, a masked value is read as written, and other strings are rejected.",
+          "- Any run of separators (space, `.`, `-` or `/`) is accepted at each boundary between the groups, or none: `6201--5//01` is valid. Whitespace around the value is ignored. Until 2.4.0 a single separator was accepted and `6201--5//01` was rejected.",
+          "- A number is read only when it is a safe non-negative integer, and is left-padded to 7 digits like bare digits (`111301` is `0111301`). A negative, fractional or unsafe number is rejected."
+        ],
+        "pt-BR": [
+          "Verifica se um código de subclasse CNAE existe na tabela CNAE-Subclasses 2.3 (a revisão atual das subclasses da CNAE 2.0).",
+          "",
+          "- Mesmas regras de entrada de `cbo.isValid`, com 7 dígitos e a máscara `NNNN-N/NN`. Dígitos sem máscara são completados com zeros à esquerda até 7, um valor com máscara é lido como está escrito, e outras strings são rejeitadas.",
+          "- Qualquer sequência de separadores (espaço, `.`, `-` ou `/`) é aceita em cada limite entre os grupos, ou nenhum: `6201--5//01` é válido. Espaços nas pontas são ignorados. Até a 2.4.0 um único separador era aceito e `6201--5//01` era rejeitado.",
+          "- Um número só é lido se for um inteiro seguro não negativo, e é completado com zeros à esquerda até 7 dígitos como os dígitos sem máscara (`111301` vira `0111301`). Número negativo, fracionário ou inseguro é rejeitado."
+        ]
+      },
+      "references": [
+        "https://servicodados.ibge.gov.br/api/v2/cnae/subclasses",
+        "https://concla.ibge.gov.br/busca-online-cnae.html"
+      ],
+      "params": [{ "name": "value", "type": "string | number" }],
+      "returns": "boolean",
+      "tests": [
+        { "args": ["6201501"], "returns": true },
+        { "name": "masked", "args": ["6201-5/01"], "returns": true },
+        { "name": "leading-zero", "args": ["0111301"], "returns": true },
+        { "name": "zeros", "args": ["0000000"], "returns": false },
+        { "name": "too-short", "args": ["620150"], "returns": false },
+        { "name": "too-long", "args": ["62015011"], "returns": false },
+        { "name": "letters", "args": ["abcdefg"], "returns": false },
+        { "name": "empty", "args": [""], "returns": false },
+        { "args": [6201501], "returns": true, "note": "JavaScript's own test: should validate a CNAE code given as a number" },
+        { "args": [111301], "returns": true, "note": "JavaScript's own test: should pad a value with leading zeros before looking it up, as a number or as a string" },
+        { "args": ["111301"], "returns": true, "note": "JavaScript's own test: should pad a value with leading zeros before looking it up, as a number or as a string" },
+        { "args": ["111-3/01"], "returns": false, "note": "JavaScript's own test: should not pad a masked value, which already carries its separators" },
+        { "args": ["0111-3/01"], "returns": true, "note": "JavaScript's own test: should not pad a masked value, which already carries its separators" },
+        { "args": [" 6201501 "], "returns": true, "note": "JavaScript's own test: should validate a CNAE code with surrounding whitespace" },
+        { "args": ["6201--5//01"], "returns": true, "note": "changed in 2.5.0 (#615): a run of separators between the groups is accepted (2.4.0 rejected it). JavaScript's own test: should accept a group boundary written with a run of separators (6201--5//01)" },
+        { "args": ["       "], "returns": false, "note": "JavaScript's own test: should return false for whitespace only" },
+        { "args": ["6201 5 01"], "returns": true, "note": "JavaScript's own test: should accept the separators the mask uses between the three groups" },
+        { "args": ["6201.5.01"], "returns": true, "note": "JavaScript's own test: should accept the separators the mask uses between the three groups" },
+        { "args": ["0111abc301"], "returns": false, "note": "JavaScript's own test: should return false for a string that is not written in a documented form" },
+        { "args": ["62-01501"], "returns": false, "note": "JavaScript's own test: should return false for a string that is not written in a documented form" },
+        { "args": ["+6201501"], "returns": false, "note": "JavaScript's own test: should return false for a string that is not written in a documented form" },
+        { "args": [-111301], "returns": false, "note": "JavaScript's own test: should return false for a number that is not a non-negative safe integer" },
+        { "args": [6201.501], "returns": false, "note": "JavaScript's own test: should return false for a number that is not a non-negative safe integer" }
+      ]
+    },
+    "parse": {
+      "summary": {
+        "en": "Removes the formatting characters of a CNAE code and returns only the digits.",
+        "pt-BR": "Remove os caracteres de formatação de um código CNAE e retorna só os dígitos."
+      },
+      "description": {
+        "en": [
+          "Removes CNAE formatting and keeps only digits, capped at 7 digits.",
+          "",
+          "- It does not left-pad anything. A partial code stays as written.",
+          "- Returns an empty string when there is no digit at all (`null` and `undefined` included).",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number returns an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
+        ],
+        "pt-BR": [
+          "Remove a formatação do CNAE e mantém somente os dígitos, limitados a 7 dígitos.",
+          "",
+          "- Não completa nada com zeros à esquerda. Um código parcial fica como está escrito.",
+          "- Retorna string vazia quando não há nenhum dígito (`null` e `undefined` incluídos).",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
+        ]
+      },
+      "references": ["https://servicodados.ibge.gov.br/api/v2/cnae/subclasses"],
+      "params": [{ "name": "value", "type": "string | number" }],
+      "returns": "string",
+      "tests": [
+        { "name": "masked", "args": ["6201-5/01"], "returns": "6201501" },
+        { "name": "unmasked", "args": ["6201501"], "returns": "6201501" },
+        { "name": "strips-non-digits", "args": ["62?ABC01-5/01abc"], "returns": "6201501" },
+        { "name": "empty", "args": [""], "returns": "" },
+        { "name": "caps-length", "args": ["6201501999"], "returns": "6201501", "note": "reference truncates to the 7 characters of the document; asserted by the reference (JS) unit tests" },
+        { "args": [6201501], "returns": "6201501", "note": "JavaScript's own test: should read a number as the string of its digits" },
+        { "args": ["62"], "returns": "62", "note": "JavaScript's own test: should keep a partial code as written, without padding it" },
+        { "args": [-1], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [1.5], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" }
+      ]
+    }
+  }
+}

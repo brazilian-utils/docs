@@ -1,0 +1,318 @@
+{
+  "$schema": "../../schema/contract.schema.json",
+  "domain": "municipality",
+  "title": { "en": "Municipalities", "pt-BR": "Municípios" },
+  "summary": {
+    "en": "Brazilian municipalities and their 7-digit IBGE codes.",
+    "pt-BR": "Municípios brasileiros e seus códigos de 7 dígitos do IBGE."
+  },
+  "category": "address",
+  "order": 3,
+  "related": ["state", "cep", "areaCode"],
+  "functions": {
+    "getByCode": {
+      "summary": {
+        "en": "Looks up a Brazilian municipality by its 7-digit IBGE code.",
+        "pt-BR": "Consulta um município pelo código IBGE de 7 dígitos."
+      },
+      "description": {
+        "en": [
+          "Looks up a municipality by its 7-digit IBGE code.",
+          "",
+          "- `code` may be a string or a non-negative integer.",
+          "- A string has every character that is not a digit removed first, as in 2.4.0: `\"355-030-8\"` and `\"3550308 SP\"` both find São Paulo.",
+          "- A negative or fractional number is not read as a code and returns `null`.",
+          "- The result has the code, the name and the state code. Each call returns a new object.",
+          "- Returns `null` when the digits are not 7 or match no municipality.",
+          "- JavaScript also keeps `getMunicipality({ code })`, deprecated, which returns a Promise of a `[name, stateCode]` pair (or `null`) instead of the object."
+        ],
+        "pt-BR": [
+          "Consulta um município pelo código IBGE de 7 dígitos.",
+          "",
+          "- `code` pode ser uma string ou um inteiro não negativo.",
+          "- De uma string, todo caractere que não é dígito é removido antes, como na 2.4.0: `\"355-030-8\"` e `\"3550308 SP\"` encontram São Paulo.",
+          "- Um número negativo ou fracionário não é lido como código e retorna `null`.",
+          "- O resultado tem o código, o nome e a sigla da UF. Cada chamada retorna um objeto novo.",
+          "- Retorna `null` quando os dígitos não são 7 ou não correspondem a nenhum município.",
+          "- O JavaScript ainda mantém `getMunicipality({ code })`, obsoleta, que retorna uma Promise de um par `[name, stateCode]` (ou `null`) em vez do objeto."
+        ]
+      },
+      "references": ["https://servicodados.ibge.gov.br/api/docs/localidades"],
+      "flatName": "getMunicipalityByCode",
+      "params": [{ "name": "code", "type": "string | number" }],
+      "returns": "Municipality?",
+      "tests": [
+        { "name": "sao-paulo", "args": ["3550308"], "returns": { "code": "3550308", "name": "São Paulo", "stateCode": "SP" } },
+        { "name": "number", "args": [3550308], "returns": { "code": "3550308", "name": "São Paulo", "stateCode": "SP" } },
+        { "name": "boa-esperanca-do-norte", "args": ["5101837"], "returns": { "code": "5101837", "name": "Boa Esperança do Norte", "stateCode": "MT" } },
+        { "name": "masked", "args": ["355-030-8"], "returns": { "code": "3550308", "name": "São Paulo", "stateCode": "SP" } },
+        { "args": ["0000000"], "returns": null },
+        { "name": "too-short", "args": ["123"], "returns": null },
+        { "name": "too-long", "args": ["12345678"], "returns": null },
+        { "name": "empty", "args": [""], "returns": null },
+        { "args": [-3550308], "returns": null, "note": "JavaScript's own test: should return null for a negative number, instead of dropping its sign" },
+        { "args": [355030.8], "returns": null, "note": "JavaScript's own test: should return null for a fractional number, instead of dropping its decimal point" },
+        { "args": [3550308.5], "returns": null, "note": "JavaScript's own test: should return null for a fractional number, instead of dropping its decimal point" },
+        { "args": ["3550308 SP"], "returns": { "code": "3550308", "name": "São Paulo", "stateCode": "SP" }, "note": "from the maintainer briefing, #596: every non-digit is removed from a string, as in 2.4.0" }
+      ]
+    },
+    "list": {
+      "summary": {
+        "en": "Returns Brazilian municipalities published by the IBGE, optionally filtered by state.",
+        "pt-BR": "Retorna os municípios publicados pelo IBGE, com filtro opcional por estado."
+      },
+      "description": {
+        "en": [
+          "Returns the Brazilian municipalities published by the IBGE, sorted by name (pt-BR collation). It returns all of them, or those of one state.",
+          "",
+          "- Each entry has the 7-digit IBGE code, the name and the state code.",
+          "- `stateCode` is matched ignoring case and surrounding whitespace: `\"sp\"` and `\" SP \"` return the 645 municipalities of São Paulo, as `\"SP\"` does. 2.4.0 matched case-sensitively and returned an empty list for `\"sp\"`.",
+          "- Only an omitted `stateCode` returns the full list. An empty or unknown code returns an empty list.",
+          "- Each call returns a new array of new objects.",
+          "- JavaScript also keeps `getCities(state)`, deprecated, which returns only the names. It reads any falsy argument as the full list, where `getMunicipalities` returns an empty list for `null` and an empty string."
+        ],
+        "pt-BR": [
+          "Retorna os municípios publicados pelo IBGE, ordenados por nome (ordenação pt-BR). Retorna todos eles ou os de um estado.",
+          "",
+          "- Cada item tem o código IBGE de 7 dígitos, o nome e a sigla da UF.",
+          "- A comparação de `stateCode` ignora maiúsculas e minúsculas e espaços nas pontas: `\"sp\"` e `\" SP \"` retornam os 645 municípios de São Paulo, como `\"SP\"`. A 2.4.0 diferenciava maiúsculas de minúsculas e retornava uma lista vazia para `\"sp\"`.",
+          "- Só a omissão de `stateCode` retorna a lista completa. Um código vazio ou desconhecido retorna uma lista vazia.",
+          "- Cada chamada retorna um array novo com objetos novos.",
+          "- O JavaScript ainda mantém `getCities(state)`, obsoleta, que retorna só os nomes. Ela lê qualquer argumento avaliado como falso (falsy) como a lista completa, enquanto `getMunicipalities` retorna lista vazia para `null` e string vazia."
+        ]
+      },
+      "references": ["https://servicodados.ibge.gov.br/api/docs/localidades"],
+      "flatName": "getMunicipalities",
+      "params": [{ "name": "stateCode", "type": "string", "optional": true }],
+      "returns": "Municipality[]",
+      "tests": [
+        { "name": "distrito-federal", "args": ["DF"], "returns": [{ "code": "5300108", "name": "Brasília", "stateCode": "DF" }], "note": "Brasília is the only municipality of the DF" },
+        { "name": "unknown-state", "args": ["ZZ"], "returns": [] },
+        { "name": "lowercase", "args": ["df"], "returns": [{ "code": "5300108", "name": "Brasília", "stateCode": "DF" }], "note": "changed in 2.5.0 (#604): the state code is read ignoring case and surrounding whitespace; 2.4.0 returned []" },
+        { "name": "padded", "args": ["  DF  "], "returns": [{ "code": "5300108", "name": "Brasília", "stateCode": "DF" }], "note": "changed in 2.5.0 (#604): the state code is read ignoring case and surrounding whitespace; 2.4.0 returned []" },
+        { "name": "mixed-case", "args": [" Df\t"], "returns": [{ "code": "5300108", "name": "Brasília", "stateCode": "DF" }], "note": "changed in 2.5.0 (#604): the state code is read ignoring case and surrounding whitespace; 2.4.0 returned []" },
+        {
+          "name": "roraima-lowercase",
+          "args": ["rr"],
+          "returns": [
+            { "code": "1400050", "name": "Alto Alegre", "stateCode": "RR" },
+            { "code": "1400027", "name": "Amajari", "stateCode": "RR" },
+            { "code": "1400100", "name": "Boa Vista", "stateCode": "RR" },
+            { "code": "1400159", "name": "Bonfim", "stateCode": "RR" },
+            { "code": "1400175", "name": "Cantá", "stateCode": "RR" },
+            { "code": "1400209", "name": "Caracaraí", "stateCode": "RR" },
+            { "code": "1400233", "name": "Caroebe", "stateCode": "RR" },
+            { "code": "1400282", "name": "Iracema", "stateCode": "RR" },
+            { "code": "1400308", "name": "Mucajaí", "stateCode": "RR" },
+            { "code": "1400407", "name": "Normandia", "stateCode": "RR" },
+            { "code": "1400456", "name": "Pacaraima", "stateCode": "RR" },
+            { "code": "1400472", "name": "Rorainópolis", "stateCode": "RR" },
+            { "code": "1400506", "name": "São João da Baliza", "stateCode": "RR" },
+            { "code": "1400605", "name": "São Luiz do Anauá", "stateCode": "RR" },
+            { "code": "1400704", "name": "Uiramutã", "stateCode": "RR" }
+          ],
+          "note": "changed in 2.5.0 (#604): the state code is read ignoring case and surrounding whitespace; 2.4.0 returned []; the 15 municipalities of Roraima"
+        },
+        { "name": "empty", "args": [""], "returns": [], "note": "JavaScript's own test: only an omitted state code asks for the full list" },
+        { "args": ["toString"], "returns": [], "note": "JavaScript's own test: should return an empty list for a name inherited from Object.prototype" },
+        { "args": ["constructor"], "returns": [], "note": "JavaScript's own test: should return an empty list for a name inherited from Object.prototype" },
+        { "args": [35], "returns": [], "note": "JavaScript's own test: should return an empty list for a state code that is not a string" }
+      ]
+    },
+    "listByAreaCode": {
+      "summary": {
+        "en": "Gets the Brazilian municipalities that dial a DDD (area code).",
+        "pt-BR": "Obtém os municípios que discam um DDD."
+      },
+      "description": {
+        "en": [
+          "Returns the municipalities that dial a DDD (area code, the Código Nacional of the Plano Geral de Numeração).",
+          "",
+          "- `areaCode` is read as `areaCode.getInfo` reads it: a string with every non-digit removed (`\"(61)\"` works), or a non-negative integer.",
+          "- Returns an empty list for a DDD outside the 67 in use, and for a negative or fractional number.",
+          "- Order: first the municipalities of the state the DDD is seated in, then those of the other states in `AreaCodeInfo.stateCodes`. Inside each state, by name (pt-BR collation).",
+          "- Four DDDs cross a state border: 61 also covers 12 municipalities of Goiás, 42 covers Porto União (SC), 47 covers Rio Negro (PR) and 49 covers Barracão (PR).",
+          "- Each entry has the 7-digit IBGE code, the name and the state code. Each call returns a new array of new objects."
+        ],
+        "pt-BR": [
+          "Retorna os municípios que discam um DDD (o Código Nacional do Plano Geral de Numeração).",
+          "",
+          "- `areaCode` é lido como em `areaCode.getInfo`: uma string da qual todo caractere que não é dígito é removido (`\"(61)\"` funciona), ou um inteiro não negativo.",
+          "- Retorna uma lista vazia para um DDD fora dos 67 em uso e para um número negativo ou fracionário.",
+          "- Ordem: primeiro os municípios do estado sede do DDD, depois os dos outros estados de `AreaCodeInfo.stateCodes`. Dentro de cada estado, por nome (ordenação pt-BR).",
+          "- Quatro DDDs cruzam uma divisa: o 61 também atende 12 municípios de Goiás, o 42 atende Porto União (SC), o 47 atende Rio Negro (PR) e o 49 atende Barracão (PR).",
+          "- Cada item tem o código IBGE de 7 dígitos, o nome e a sigla da UF. Cada chamada retorna um array novo com objetos novos."
+        ]
+      },
+      "references": [
+        "https://informacoes.anatel.gov.br/paineis/areas-tarifarias/codigos-nacionais",
+        "https://www.anatel.gov.br/dadosabertos/paineis_de_dados/areastarifarias/pgcn.zip",
+        "https://servicodados.ibge.gov.br/api/docs/localidades"
+      ],
+      "flatName": "getMunicipalitiesByAreaCode",
+      "params": [{ "name": "areaCode", "type": "string | number" }],
+      "returns": "Municipality[]",
+      "tests": [
+        {
+          "name": "brasilia-and-goias",
+          "args": ["(61)"],
+          "returns": [
+            { "code": "5300108", "name": "Brasília", "stateCode": "DF" },
+            { "code": "5200258", "name": "Águas Lindas de Goiás", "stateCode": "GO" },
+            { "code": "5204003", "name": "Cabeceiras", "stateCode": "GO" },
+            { "code": "5205497", "name": "Cidade Ocidental", "stateCode": "GO" },
+            { "code": "5206206", "name": "Cristalina", "stateCode": "GO" },
+            { "code": "5208004", "name": "Formosa", "stateCode": "GO" },
+            { "code": "5212501", "name": "Luziânia", "stateCode": "GO" },
+            { "code": "5215231", "name": "Novo Gama", "stateCode": "GO" },
+            { "code": "5215603", "name": "Padre Bernardo", "stateCode": "GO" },
+            { "code": "5217609", "name": "Planaltina", "stateCode": "GO" },
+            { "code": "5219753", "name": "Santo Antônio do Descoberto", "stateCode": "GO" },
+            { "code": "5221858", "name": "Valparaíso de Goiás", "stateCode": "GO" },
+            { "code": "5222203", "name": "Vila Boa", "stateCode": "GO" }
+          ],
+          "note": "from the maintainer briefing, #597: 13 municipalities, Brasília and 12 of Goiás"
+        },
+        {
+          "name": "acre",
+          "args": [68],
+          "returns": [
+            { "code": "1200013", "name": "Acrelândia", "stateCode": "AC" },
+            { "code": "1200054", "name": "Assis Brasil", "stateCode": "AC" },
+            { "code": "1200104", "name": "Brasiléia", "stateCode": "AC" },
+            { "code": "1200138", "name": "Bujari", "stateCode": "AC" },
+            { "code": "1200179", "name": "Capixaba", "stateCode": "AC" },
+            { "code": "1200203", "name": "Cruzeiro do Sul", "stateCode": "AC" },
+            { "code": "1200252", "name": "Epitaciolândia", "stateCode": "AC" },
+            { "code": "1200302", "name": "Feijó", "stateCode": "AC" },
+            { "code": "1200328", "name": "Jordão", "stateCode": "AC" },
+            { "code": "1200336", "name": "Mâncio Lima", "stateCode": "AC" },
+            { "code": "1200344", "name": "Manoel Urbano", "stateCode": "AC" },
+            { "code": "1200351", "name": "Marechal Thaumaturgo", "stateCode": "AC" },
+            { "code": "1200385", "name": "Plácido de Castro", "stateCode": "AC" },
+            { "code": "1200807", "name": "Porto Acre", "stateCode": "AC" },
+            { "code": "1200393", "name": "Porto Walter", "stateCode": "AC" },
+            { "code": "1200401", "name": "Rio Branco", "stateCode": "AC" },
+            { "code": "1200427", "name": "Rodrigues Alves", "stateCode": "AC" },
+            { "code": "1200435", "name": "Santa Rosa do Purus", "stateCode": "AC" },
+            { "code": "1200500", "name": "Sena Madureira", "stateCode": "AC" },
+            { "code": "1200450", "name": "Senador Guiomard", "stateCode": "AC" },
+            { "code": "1200609", "name": "Tarauacá", "stateCode": "AC" },
+            { "code": "1200708", "name": "Xapuri", "stateCode": "AC" }
+          ],
+          "note": "from the maintainer briefing, #597: the 22 municipalities of Acre"
+        },
+        { "name": "unassigned", "args": ["20"], "returns": [], "note": "from the maintainer briefing, #597" },
+        {
+          "name": "roraima",
+          "args": ["95"],
+          "returns": [
+            { "code": "1400050", "name": "Alto Alegre", "stateCode": "RR" },
+            { "code": "1400027", "name": "Amajari", "stateCode": "RR" },
+            { "code": "1400100", "name": "Boa Vista", "stateCode": "RR" },
+            { "code": "1400159", "name": "Bonfim", "stateCode": "RR" },
+            { "code": "1400175", "name": "Cantá", "stateCode": "RR" },
+            { "code": "1400209", "name": "Caracaraí", "stateCode": "RR" },
+            { "code": "1400233", "name": "Caroebe", "stateCode": "RR" },
+            { "code": "1400282", "name": "Iracema", "stateCode": "RR" },
+            { "code": "1400308", "name": "Mucajaí", "stateCode": "RR" },
+            { "code": "1400407", "name": "Normandia", "stateCode": "RR" },
+            { "code": "1400456", "name": "Pacaraima", "stateCode": "RR" },
+            { "code": "1400472", "name": "Rorainópolis", "stateCode": "RR" },
+            { "code": "1400506", "name": "São João da Baliza", "stateCode": "RR" },
+            { "code": "1400605", "name": "São Luiz do Anauá", "stateCode": "RR" },
+            { "code": "1400704", "name": "Uiramutã", "stateCode": "RR" }
+          ]
+        },
+        {
+          "name": "masked",
+          "args": ["(0xx95)"],
+          "returns": [
+            { "code": "1400050", "name": "Alto Alegre", "stateCode": "RR" },
+            { "code": "1400027", "name": "Amajari", "stateCode": "RR" },
+            { "code": "1400100", "name": "Boa Vista", "stateCode": "RR" },
+            { "code": "1400159", "name": "Bonfim", "stateCode": "RR" },
+            { "code": "1400175", "name": "Cantá", "stateCode": "RR" },
+            { "code": "1400209", "name": "Caracaraí", "stateCode": "RR" },
+            { "code": "1400233", "name": "Caroebe", "stateCode": "RR" },
+            { "code": "1400282", "name": "Iracema", "stateCode": "RR" },
+            { "code": "1400308", "name": "Mucajaí", "stateCode": "RR" },
+            { "code": "1400407", "name": "Normandia", "stateCode": "RR" },
+            { "code": "1400456", "name": "Pacaraima", "stateCode": "RR" },
+            { "code": "1400472", "name": "Rorainópolis", "stateCode": "RR" },
+            { "code": "1400506", "name": "São João da Baliza", "stateCode": "RR" },
+            { "code": "1400605", "name": "São Luiz do Anauá", "stateCode": "RR" },
+            { "code": "1400704", "name": "Uiramutã", "stateCode": "RR" }
+          ]
+        },
+        { "name": "empty", "args": [""], "returns": [], "note": "JavaScript's own test: should return an empty array for a DDD not in use" },
+        { "args": ["DDD"], "returns": [], "note": "JavaScript's own test: should return an empty array for a DDD not in use" },
+        { "args": [-11], "returns": [], "note": "JavaScript's own test: should return an empty array for a DDD not in use" },
+        { "args": [1.1], "returns": [] }
+      ]
+    },
+    "getCodeByName": {
+      "summary": {
+        "en": "Looks up the 7-digit IBGE code of a municipality by its name and state.",
+        "pt-BR": "Consulta o código IBGE de 7 dígitos de um município pelo nome e pelo estado."
+      },
+      "description": {
+        "en": [
+          "Returns the 7-digit IBGE code of a municipality, given its name and the code of its state.",
+          "",
+          "- Takes one object with `municipalityName` and `stateCode`, both required. The same name can belong to municipalities of different states (`Bom Jesus` exists in PI, RS and other states), so the state is required.",
+          "- The name ignores accents, the cedilla and letter case (`ß` reads as `SS`). Runs of whitespace collapse into one space and the surrounding whitespace is trimmed, but a name written without a space the IBGE name has does not match (`saopaulo`). The hyphen of a name is kept.",
+          "- `stateCode` ignores letter case and surrounding whitespace, as every function that takes a state does.",
+          "- Returns the code as a string. Returns `null` when the state code is not a state, when no municipality of that state has that name, when the name is not a string or is empty, and when the parameters are missing or malformed.",
+          "- The JavaScript function is synchronous and offline: it reads the bundled table of 5,571 municipalities, the same as `municipality.getByCode`. The Python function of the same name (`get_code_by_municipality_name(municipality_name, uf)`) asks the IBGE API over the network.",
+          "- JavaScript also keeps `getMunicipality({ municipalityName, uf })`, deprecated, which answers the same way and returns a Promise."
+        ],
+        "pt-BR": [
+          "Retorna o código IBGE de 7 dígitos de um município, dados o nome e o código do estado.",
+          "",
+          "- Recebe um objeto com `municipalityName` e `stateCode`, os dois obrigatórios. O mesmo nome pode pertencer a municípios de estados diferentes (`Bom Jesus` existe em PI, RS e outros estados), então o estado é obrigatório.",
+          "- O nome ignora acentos, cedilha e diferença entre maiúsculas e minúsculas (`ß` é lido como `SS`). Sequências de espaços em branco viram um espaço e os espaços das pontas são removidos, mas um nome escrito sem um espaço que o nome do IBGE tem não casa (`saopaulo`). O hífen do nome é mantido.",
+          "- `stateCode` ignora maiúsculas e minúsculas e os espaços das pontas, como toda função que recebe um estado.",
+          "- Retorna o código como string. Retorna `null` quando o código do estado não é um estado, quando nenhum município desse estado tem esse nome, quando o nome não é string ou está vazio, e quando os parâmetros estão ausentes ou malformados.",
+          "- A função JavaScript é síncrona e offline: lê a tabela embutida de 5.571 municípios, a mesma de `municipality.getByCode`. A função Python de mesmo nome (`get_code_by_municipality_name(municipality_name, uf)`) consulta a API do IBGE pela rede.",
+          "- O JavaScript ainda mantém `getMunicipality({ municipalityName, uf })`, obsoleta, que responde da mesma forma e retorna uma Promise."
+        ]
+      },
+      "references": [
+        "https://servicodados.ibge.gov.br/api/docs/localidades",
+        "https://geoftp.ibge.gov.br/organizacao_do_territorio/estrutura_territorial/divisao_territorial/2025/DTB_2025.zip"
+      ],
+      "flatName": "getCodeByMunicipalityName",
+      "level": "core",
+      "params": [
+        { "name": "params", "type": "GetCodeByMunicipalityNameParams", "fields": [{ "name": "municipalityName", "type": "string" }, { "name": "stateCode", "type": "string" }] }
+      ],
+      "returns": "string?",
+      "tests": [
+        { "args": [{ "municipalityName": "Conceição do Coité", "stateCode": "Ba" }], "returns": "2908408", "note": "JavaScript docs example; JavaScript's own test: should return the code of Conceição do Coité, as the Python library's example does" },
+        { "args": [{ "municipalityName": "conceicao do coite", "stateCode": "BA" }], "returns": "2908408", "note": "JavaScript's own test: should ignore accents, the cedilla and casing in the name" },
+        { "args": [{ "municipalityName": "CONCEIÇÃO DO COITÉ", "stateCode": "BA" }], "returns": "2908408", "note": "JavaScript's own test: should ignore accents, the cedilla and casing in the name" },
+        { "args": [{ "municipalityName": "São Paulo", "stateCode": "SP" }], "returns": "3550308", "note": "JavaScript's own test: should ignore accents, the cedilla and casing in the name" },
+        { "args": [{ "municipalityName": "sao paulo", "stateCode": "sp" }], "returns": "3550308", "note": "JavaScript docs example" },
+        { "args": [{ "municipalityName": "  sao  paulo ", "stateCode": "SP" }], "returns": "3550308", "note": "JavaScript's own test: should collapse runs of whitespace and trim the name, but not join words" },
+        { "args": [{ "municipalityName": "sao\tpaulo", "stateCode": "SP" }], "returns": "3550308", "note": "JavaScript's own test: should collapse runs of whitespace and trim the name, but not join words" },
+        { "args": [{ "municipalityName": "saopaulo", "stateCode": "SP" }], "returns": null, "note": "JavaScript's own test: should collapse runs of whitespace and trim the name, but not join words" },
+        { "args": [{ "municipalityName": "Ceara-Mirim", "stateCode": "RN" }], "returns": "2402600", "note": "JavaScript's own test: should keep the hyphen of a name" },
+        { "args": [{ "municipalityName": "Paßos", "stateCode": "MG" }], "returns": "3147907", "note": "JavaScript's own test: should fold the casing to upper case, so ß reads as SS" },
+        { "args": [{ "municipalityName": "São Paulo", "stateCode": " Sp " }], "returns": "3550308", "note": "JavaScript's own test: should ignore casing and surrounding whitespace in the state code" },
+        { "args": [{ "municipalityName": "Bom Jesus", "stateCode": "PI" }], "returns": "2201903", "note": "JavaScript's own test: should tell apart municipalities of the same name in different states" },
+        { "args": [{ "municipalityName": "Bom Jesus", "stateCode": "RS" }], "returns": "4302303", "note": "JavaScript docs example; JavaScript's own test: should tell apart municipalities of the same name in different states" },
+        { "args": [{ "municipalityName": "São Paulo", "stateCode": "RJ" }], "returns": null, "note": "JavaScript docs example: no São Paulo in Rio de Janeiro" },
+        { "args": [{ "municipalityName": "Município Inexistente", "stateCode": "RS" }], "returns": null, "note": "JavaScript docs example" },
+        { "args": [{ "municipalityName": "São Paulo", "stateCode": "XX" }], "returns": null, "note": "JavaScript's own test: should return null for a state code that is not a state" },
+        { "args": [{ "municipalityName": "São Paulo", "stateCode": "" }], "returns": null, "note": "JavaScript's own test: should return null for a state code that is not a state" },
+        { "args": [{ "municipalityName": "São Paulo", "stateCode": "SPX" }], "returns": null, "note": "JavaScript's own test: should return null for a state code that is not a state" },
+        { "args": [{ "municipalityName": "", "stateCode": "SP" }], "returns": null, "note": "JavaScript's own test: should return null for an empty name" },
+        { "args": [{ "municipalityName": "   ", "stateCode": "SP" }], "returns": null, "note": "JavaScript's own test: should return null for an empty name" },
+        { "args": [{ "municipalityName": null, "stateCode": "SP" }], "returns": null, "note": "JavaScript's own test: should return null for arguments that are not strings" },
+        { "args": [{ "municipalityName": "São Paulo", "stateCode": null }], "returns": null, "note": "JavaScript's own test: should return null for arguments that are not strings" },
+        { "args": [{ "municipalityName": "São Paulo", "stateCode": 35 }], "returns": null, "note": "JavaScript's own test: should return null for arguments that are not strings" }
+      ]
+    }
+  }
+}
