@@ -165,6 +165,7 @@
           "Returns the full name of a state from its two-letter code (sigla).",
           "",
           "- The match ignores case and surrounding whitespace.",
+          "- The legal time of Brazil is the one of Decreto 2.784/1913, as amended by Lei 11.662/2008 (revoked) and Lei 12.876/2013, which restored the zones of Acre and the south-west of Amazonas. The zone names come from the IANA database. Daylight saving time (Decreto 8.112/2013) is not a source of this function.",
           "- Returns `null` when no state matches."
         ],
         "pt-BR": [
@@ -250,13 +251,15 @@
           "- Alguns estados atravessam mais de um fuso, e o fuso da capital não diz nada sobre o resto. O oeste do Amazonas (`America/Eirunepe`, UTC-5) e o oeste do Pará (`America/Santarem`, UTC-3) não são representados, e Fernando de Noronha (`America/Noronha`, UTC-2), um distrito de Pernambuco, resolve como Recife (`America/Recife`, UTC-3).",
           "- Os deslocamentos seguem as capitais: Acre UTC-5; Amazonas, Roraima, Rondônia, Mato Grosso e Mato Grosso do Sul UTC-4; os outros estados UTC-3. Um mesmo fuso do tzdata pode servir vários estados (`America/Sao_Paulo` também cobre DF, GO, MG, ES, RJ, PR, SC e RS, e `America/Fortaleza` também cobre MA, PI, RN e PB além do CE).",
           "- A comparação ignora maiúsculas e minúsculas e espaços nas pontas.",
+          "- A hora legal do Brasil é a do Decreto 2.784/1913, alterado pela Lei 11.662/2008 (revogada) e pela Lei 12.876/2013, que restabeleceu os fusos do Acre e do sudoeste do Amazonas. Os nomes dos fusos vêm da base IANA. O horário de verão (Decreto 8.112/2013) não é fonte desta função.",
           "- Retorna `null` quando nenhum estado corresponde."
         ]
       },
       "references": [
         "https://www.iana.org/time-zones",
-        "https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2013/lei/l12876.htm",
-        "https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2013/decreto/d8112.htm"
+        "https://www.planalto.gov.br/ccivil_03/decreto/historicos/dpl/dpl2784-1913.htm",
+        "https://www.planalto.gov.br/ccivil_03/_ato2007-2010/2008/lei/l11662.htm",
+        "https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2013/lei/l12876.htm"
       ],
       "flatName": "getTimezoneByState",
       "params": [{ "name": "stateCode", "type": "string" }],

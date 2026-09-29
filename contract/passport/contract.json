@@ -31,7 +31,6 @@
         ]
       },
       "references": [
-        "https://www.gov.br/pf/pt-br/assuntos/passaporte",
         "https://www.gov.br/pf/pt-br/assuntos/passaporte/ajuda/duvidas_/caderneta/caderneta-numero-onde-fica-e"
       ],
       "params": [{ "name": "passport", "type": "string" }],
@@ -68,7 +67,6 @@
         "pt-BR": ["Gera um número de passaporte aleatório e válido: 2 letras maiúsculas seguidas de 6 dígitos."]
       },
       "references": [
-        "https://www.gov.br/pf/pt-br/assuntos/passaporte",
         "https://www.gov.br/pf/pt-br/assuntos/passaporte/ajuda/duvidas_/caderneta/caderneta-numero-onde-fica-e"
       ],
       "params": [],
@@ -101,7 +99,6 @@
         ]
       },
       "references": [
-        "https://www.gov.br/pf/pt-br/assuntos/passaporte",
         "https://www.gov.br/pf/pt-br/assuntos/passaporte/ajuda/duvidas_/caderneta/caderneta-numero-onde-fica-e"
       ],
       "params": [{ "name": "passport", "type": "string | number" }],
@@ -139,7 +136,6 @@
         ]
       },
       "references": [
-        "https://www.gov.br/pf/pt-br/assuntos/passaporte",
         "https://www.gov.br/pf/pt-br/assuntos/passaporte/ajuda/duvidas_/caderneta/caderneta-numero-onde-fica-e"
       ],
       "params": [{ "name": "passport", "type": "string" }],
