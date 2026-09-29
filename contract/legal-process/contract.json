@@ -246,6 +246,74 @@
         { "args": [1.5], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
         { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" }
       ]
+    },
+    "getInfo": {
+      "summary": {
+        "en": "Reads the fields of a processo jurídico number (NNNNNNN-DD.AAAA.J.TR.OOOO).",
+        "pt-BR": "Lê os campos de um número de processo jurídico (NNNNNNN-DD.AAAA.J.TR.OOOO)."
+      },
+      "description": {
+        "en": [
+          "Reads the fields of a processo jurídico number: the sequential number, the check digits, the year, the segment of the Judiciary (órgão `J`), the tribunal and the unit of origin.",
+          "",
+          "- Returns `null` exactly when `legalProcess.isValid` returns `false`; the input rules are the same (the 20 digits, masked or not, as a string).",
+          "- The result has `sequentialNumber` (`NNNNNNN`), `checkDigits` (`DD`), `year` (`AAAA`, a number), `segment`, `segmentCode` (`J`, `'1'` to `'9'`), `tribunalCode` (`TR`, two digits) and `originUnit` (`OOOO`). Codes are strings that keep their leading zeros.",
+          "- `segment` names the órgão `J`: `supreme-federal-court` (1), `national-council-of-justice` (2), `superior-court-of-justice` (3), `federal` (4), `labor` (5), `electoral` (6), `military` (7), `state` (8) or `state-military` (9).",
+          "- `tribunalCode` is `00` for the processes of the STF, the CNJ, the STJ, the TST, the TSE and the STM, `90` for the Conselho da Justiça Federal and the Conselho Superior da Justiça do Trabalho, and the number of the region or state otherwise. The result has no tribunal name.",
+          "- The unit of origin is not checked: each tribunal codifies its own.",
+          "- Each call returns a new object."
+        ],
+        "pt-BR": [
+          "Lê os campos de um número de processo jurídico: o número sequencial, os dígitos verificadores, o ano, o segmento do Judiciário (órgão `J`), o tribunal e a unidade de origem.",
+          "",
+          "- Retorna `null` exatamente quando `legalProcess.isValid` retorna `false`; as regras de entrada são as mesmas (os 20 dígitos, com ou sem máscara, como string).",
+          "- O resultado tem `sequentialNumber` (`NNNNNNN`), `checkDigits` (`DD`), `year` (`AAAA`, um número), `segment`, `segmentCode` (`J`, de `'1'` a `'9'`), `tribunalCode` (`TR`, dois dígitos) e `originUnit` (`OOOO`). Os códigos são strings e mantêm os zeros à esquerda.",
+          "- `segment` dá nome ao órgão `J`: `supreme-federal-court` (1), `national-council-of-justice` (2), `superior-court-of-justice` (3), `federal` (4), `labor` (5), `electoral` (6), `military` (7), `state` (8) ou `state-military` (9).",
+          "- `tribunalCode` é `00` para os processos do STF, do CNJ, do STJ, do TST, do TSE e do STM, `90` para o Conselho da Justiça Federal e o Conselho Superior da Justiça do Trabalho, e o número da região ou do estado nos outros casos. O resultado não traz o nome do tribunal.",
+          "- A unidade de origem não é conferida: cada tribunal codifica a sua.",
+          "- Cada chamada retorna um objeto novo."
+        ]
+      },
+      "references": ["https://atos.cnj.jus.br/atos/detalhar/119"],
+      "flatName": "getLegalProcessInfo",
+      "params": [{ "name": "value", "type": "string" }],
+      "returns": "ProcessoJuridicoInfo?",
+      "tests": [
+        { "name": "docs-example", "args": ["0002080-25.2012.5.15.0049"], "returns": { "sequentialNumber": "0002080", "checkDigits": "25", "year": 2012, "segment": "labor", "segmentCode": "5", "tribunalCode": "15", "originUnit": "0049" }, "note": "JavaScript docs example" },
+        { "name": "no-28th-tribunal-de-justica", "args": ["0000100-23.2008.8.28.0000"], "returns": null, "note": "JavaScript docs example: there is no 28th Tribunal de Justiça" },
+        { "name": "empty", "args": [""], "returns": null, "note": "JavaScript's own test: when it is an empty string" },
+        { "args": ["0000100-85.2008.1.00.0000"], "returns": { "sequentialNumber": "0000100", "checkDigits": "85", "year": 2008, "segment": "supreme-federal-court", "segmentCode": "1", "tribunalCode": "00", "originUnit": "0000" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000100"], "returns": null, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000"], "returns": null, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000100-04.2008.2.00.0000"], "returns": { "sequentialNumber": "0000100", "checkDigits": "04", "year": 2008, "segment": "national-council-of-justice", "segmentCode": "2", "tribunalCode": "00", "originUnit": "0000" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000100-20.2008.3.00.0000"], "returns": { "sequentialNumber": "0000100", "checkDigits": "20", "year": 2008, "segment": "superior-court-of-justice", "segmentCode": "3", "tribunalCode": "00", "originUnit": "0000" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000100-09.2008.4.01.0000"], "returns": { "sequentialNumber": "0000100", "checkDigits": "09", "year": 2008, "segment": "federal", "segmentCode": "4", "tribunalCode": "01", "originUnit": "0000" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0002080"], "returns": null, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0049"], "returns": null, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000100-18.2008.6.27.0000"], "returns": { "sequentialNumber": "0000100", "checkDigits": "18", "year": 2008, "segment": "electoral", "segmentCode": "6", "tribunalCode": "27", "originUnit": "0000" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000100-51.2008.7.12.0000"], "returns": { "sequentialNumber": "0000100", "checkDigits": "51", "year": 2008, "segment": "military", "segmentCode": "7", "tribunalCode": "12", "originUnit": "0000" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000100-73.2008.8.01.0000"], "returns": { "sequentialNumber": "0000100", "checkDigits": "73", "year": 2008, "segment": "state", "segmentCode": "8", "tribunalCode": "01", "originUnit": "0000" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000100-93.2008.9.26.0000"], "returns": { "sequentialNumber": "0000100", "checkDigits": "93", "year": 2008, "segment": "state-military", "segmentCode": "9", "tribunalCode": "26", "originUnit": "0000" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["00020802520125150049"], "returns": { "sequentialNumber": "0002080", "checkDigits": "25", "year": 2012, "segment": "labor", "segmentCode": "5", "tribunalCode": "15", "originUnit": "0049" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0002080/25.2012.5.15.0049"], "returns": { "sequentialNumber": "0002080", "checkDigits": "25", "year": 2012, "segment": "labor", "segmentCode": "5", "tribunalCode": "15", "originUnit": "0049" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0002080-25.2012.515.0049"], "returns": { "sequentialNumber": "0002080", "checkDigits": "25", "year": 2012, "segment": "labor", "segmentCode": "5", "tribunalCode": "15", "originUnit": "0049" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": [" 0002080-25.2012.5.15.0049\\n"], "returns": null, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000100-68.2008.4.06.0000"], "returns": { "sequentialNumber": "0000100", "checkDigits": "68", "year": 2008, "segment": "federal", "segmentCode": "4", "tribunalCode": "06", "originUnit": "0000" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000100-31.2008.4.90.0000"], "returns": { "sequentialNumber": "0000100", "checkDigits": "31", "year": 2008, "segment": "federal", "segmentCode": "4", "tribunalCode": "90", "originUnit": "0000" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000100-47.2008.5.90.0000"], "returns": { "sequentialNumber": "0000100", "checkDigits": "47", "year": 2008, "segment": "labor", "segmentCode": "5", "tribunalCode": "90", "originUnit": "0000" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000100-52.2008.5.00.0000"], "returns": { "sequentialNumber": "0000100", "checkDigits": "52", "year": 2008, "segment": "labor", "segmentCode": "5", "tribunalCode": "00", "originUnit": "0000" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000100-68.2008.6.00.0000"], "returns": { "sequentialNumber": "0000100", "checkDigits": "68", "year": 2008, "segment": "electoral", "segmentCode": "6", "tribunalCode": "00", "originUnit": "0000" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000100-84.2008.7.00.0000"], "returns": { "sequentialNumber": "0000100", "checkDigits": "84", "year": 2008, "segment": "military", "segmentCode": "7", "tribunalCode": "00", "originUnit": "0000" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000100-56.2008.9.13.0000"], "returns": { "sequentialNumber": "0000100", "checkDigits": "56", "year": 2008, "segment": "state-military", "segmentCode": "9", "tribunalCode": "13", "originUnit": "0000" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000100-34.2008.9.21.0000"], "returns": { "sequentialNumber": "0000100", "checkDigits": "34", "year": 2008, "segment": "state-military", "segmentCode": "9", "tribunalCode": "21", "originUnit": "0000" }, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0002080-26.2012.5.15.0049"], "returns": null, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0000100-68.2008.4.07.0000"], "returns": null, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0002080252012515004"], "returns": null, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["000208025201251500490"], "returns": null, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["ab00020802520125150049"], "returns": null, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": ["0002080_25.2012.5.15.0049"], "returns": null, "note": "JavaScript's own test (getProcessoJuridicoInfo)" },
+        { "args": [" "], "returns": null, "note": "JavaScript's own test (getProcessoJuridicoInfo)" }
+      ]
     }
   }
 }

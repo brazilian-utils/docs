@@ -261,6 +261,66 @@
         { "args": [1.5], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number" },
         { "args": [123456780124], "returns": "123456780124", "note": "a safe non-negative integer is read as before" }
       ]
+    },
+    "getInfo": {
+      "summary": {
+        "en": "Reads the fields of a voter ID (título de eleitor).",
+        "pt-BR": "Lê os campos de um título de eleitor."
+      },
+      "description": {
+        "en": [
+          "Reads the fields of a voter ID: the sequential number, the federative union of the registration and the check digits.",
+          "",
+          "- Returns `null` exactly when `voterId.isValid` returns `false`; the input rules are the same.",
+          "- The result has `sequentialNumber` (8 digits), `federativeUnion` (the code `01` to `28`), `stateCode` (the state code, or `null` for `28`, the voters abroad) and `checkDigits` (2 digits). Codes are strings that keep their leading zeros.",
+          "- A voter ID issued without the leading zeros of its sequential number is read as `voterId.isValid` reads it, left-padded with zeros to 12 digits: `123450159` gives the `sequentialNumber` `00012345`.",
+          "- `stateCode` is the federative union of the registration, not necessarily where the voter lives today.",
+          "- Each call returns a new object."
+        ],
+        "pt-BR": [
+          "Lê os campos de um título de eleitor: o número sequencial, a unidade da federação da inscrição e os dígitos verificadores.",
+          "",
+          "- Retorna `null` exatamente quando `voterId.isValid` retorna `false`; as regras de entrada são as mesmas.",
+          "- O resultado tem `sequentialNumber` (8 dígitos), `federativeUnion` (o código de `01` a `28`), `stateCode` (a sigla do estado, ou `null` para `28`, os eleitores no exterior) e `checkDigits` (2 dígitos). Os códigos são strings e mantêm os zeros à esquerda.",
+          "- Um título emitido sem os zeros à esquerda do número sequencial é lido como `voterId.isValid` o lê, completado com zeros à esquerda até 12 dígitos: `123450159` dá o `sequentialNumber` `00012345`.",
+          "- `stateCode` é a unidade da federação da inscrição, não necessariamente onde o eleitor mora hoje.",
+          "- Cada chamada retorna um objeto novo."
+        ]
+      },
+      "references": [
+        "https://www.tse.jus.br/legislacao/compilada/res/2021/resolucao-no-23-659-de-26-de-outubro-de-2021"
+      ],
+      "flatName": "getVoterIdInfo",
+      "params": [{ "name": "value", "type": "string" }],
+      "returns": "VoterIdInfo?",
+      "tests": [
+        { "name": "docs-example", "args": ["1023 8501 06 71"], "returns": { "sequentialNumber": "10238501", "federativeUnion": "06", "stateCode": "PR", "checkDigits": "71" }, "note": "JavaScript docs example" },
+        { "name": "abroad", "args": ["000000002801"], "returns": { "sequentialNumber": "00000000", "federativeUnion": "28", "stateCode": null, "checkDigits": "01" }, "note": "JavaScript docs example: 28 is the voters abroad (ZZ), with no state" },
+        { "name": "invalid-check-digits", "args": ["123456780124"], "returns": null, "note": "JavaScript docs example: invalid check digits" },
+        { "name": "empty", "args": [""], "returns": null, "note": "JavaScript's own test: when it is an empty string" },
+        { "args": ["102385010671"], "returns": { "sequentialNumber": "10238501", "federativeUnion": "06", "stateCode": "PR", "checkDigits": "71" }, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["10238501"], "returns": null, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["123456780191"], "returns": { "sequentialNumber": "12345678", "federativeUnion": "01", "stateCode": "SP", "checkDigits": "91" }, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": [" 1234 5678 01 91\\n"], "returns": null, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["1234.5678-01/91"], "returns": { "sequentialNumber": "12345678", "federativeUnion": "01", "stateCode": "SP", "checkDigits": "91" }, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["12345678"], "returns": null, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["00012345"], "returns": null, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["000123450159"], "returns": { "sequentialNumber": "00012345", "federativeUnion": "01", "stateCode": "SP", "checkDigits": "59" }, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["123450159"], "returns": { "sequentialNumber": "00012345", "federativeUnion": "01", "stateCode": "SP", "checkDigits": "59" }, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["12345 01 59"], "returns": { "sequentialNumber": "00012345", "federativeUnion": "01", "stateCode": "SP", "checkDigits": "59" }, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["12340639"], "returns": { "sequentialNumber": "00001234", "federativeUnion": "06", "stateCode": "PR", "checkDigits": "39" }, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["00001234"], "returns": null, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["000000000116"], "returns": { "sequentialNumber": "00000000", "federativeUnion": "01", "stateCode": "SP", "checkDigits": "16" }, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["00000000"], "returns": null, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["122844"], "returns": { "sequentialNumber": "00000012", "federativeUnion": "28", "stateCode": null, "checkDigits": "44" }, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["00000012"], "returns": null, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["123456780013"], "returns": null, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["123456782913"], "returns": null, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["1234567880191"], "returns": null, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["0191"], "returns": null, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["ab102385010671"], "returns": null, "note": "JavaScript's own test (getVoterIdInfo)" },
+        { "args": ["1023_8501_06_71"], "returns": null, "note": "JavaScript's own test (getVoterIdInfo)" }
+      ]
     }
   }
 }

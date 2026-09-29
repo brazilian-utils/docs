@@ -5,6 +5,7 @@
   "notes": "Reference implementation.",
   "repo": "https://github.com/brazilian-utils/javascript",
   "entry": "src/index.ts",
+  "bindings": { "legalProcess.getInfo": "getProcessoJuridicoInfo" },
   "ignore": ["toStandardSchema"],
   "waivers": {
     "legalNature.getDescription": "getLegalNature(code)?.description gives the same text",
