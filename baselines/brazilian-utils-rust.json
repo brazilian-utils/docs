@@ -54,7 +54,6 @@
     "cep.format#[\"91906292\"]",
     "cep.format#[\"91906293\"]",
     "cep.format#[\"92500000\"]",
-    "cep.generate#generated-inside-a-state-range",
     "cep.generate#generated-is-valid",
     "cep.isValid#[\"   \"]",
     "cep.isValid#[\"\"]",

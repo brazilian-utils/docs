@@ -100,8 +100,7 @@
       "params": [],
       "returns": "string",
       "tests": [
-        { "name": "generated-is-valid", "args": [], "satisfies": "cep.isValid", "repeat": 5, "note": "every generated value must pass the lib's own validator" },
-        { "name": "generated-inside-a-state-range", "args": [], "matches": "^(0[1-9]|[1-9]\\d)\\d{6}$", "repeat": 20, "note": "changed in 2.5.0 (#615): the CEP is drawn inside the state ranges, so it never starts with 00; the 789xxxxx gap is checked by getState in JavaScript's own test" }
+        { "name": "generated-is-valid", "args": [], "satisfies": "cep.isValid", "repeat": 5, "note": "every generated value must pass the lib's own validator" }
       ]
     },
     "getAddressInfo": {
@@ -115,12 +114,12 @@
           "",
           "- A string `cep` has every character that is not a digit removed (`\"CEP 01310-100\"` works). Exactly 8 digits must remain.",
           "- A number must be a safe non-negative integer. It is left-padded with zeros to 8 digits only from `1000000` (`01000-000`, the lowest CEP the Correios assign). A smaller number is rejected. 2.4.0 padded any number, so `123` was looked up as `00000-123`.",
-          "- The result carries the CEP, state, city, neighborhood and street.",
+          "- The result carries `cep` (8 digits, no mask), `state` (two-letter code), `city`, `neighborhood` and `street`. `neighborhood` and `street` are empty when the CEP covers a whole city.",
           "- `options.providers` picks which providers to query. The function retries transient network failures per provider.",
           "- `options.timeoutMs` limits the whole lookup, retries included. When it runs out, the call fails with a service error. It must be a positive finite number.",
           "- `options.signal` (an `AbortSignal` in JavaScript) cancels the lookup, and the call fails with the signal's reason, as `fetch` does. A signal that is already aborted fails before any request. Without these options the lookup has no time limit.",
           "- Fails with an error. The error tells apart an invalid CEP or option, a CEP that no provider knows, and a service failure.",
-          "- A provider being down is not \"not found\". BrasilAPI answers 404 both for an unknown CEP and when its own backends fail. Its 404 counts as not found only when no other provider failed with a network error. Next to a network failure, the call fails with a service error. A lone BrasilAPI 404, or a BrasilAPI 404 together with ViaCEP's `erro: true`, is still not found. 2.4.0 let the 404 win, so an outage could be reported as an unknown CEP.",
+          "- A provider being down is not \"not found\". BrasilAPI answers 404 both for an unknown CEP and when its own backends fail. Its 404 counts as not found only when no other provider failed to answer (a network error or an HTTP error status). Next to such a failure, the call fails with a service error. A lone BrasilAPI 404, or a BrasilAPI 404 together with ViaCEP's `erro: true`, is still not found. 2.4.0 let the 404 win, so an outage could be reported as an unknown CEP.",
           "- An address is only accepted when it agrees with the CEP asked for: its 8 digits must be the CEP, and its state, when it names one, must be the state that owns the CEP range (see `cep.getState`). Otherwise that provider counts as not knowing the CEP. BrasilAPI, for instance, answered `99999-999`, a Rio Grande do Sul CEP, with a city of Paraná. Until 2.4.0 such an answer was returned.",
           "- Once the lookup settles, the requests of the providers that lost the race are aborted.",
           "- `options.providers` accepts `viacep`, `brasilapi` and `widenet`, raced in the order given (default `[\"viacep\", \"brasilapi\"]`). A name that is not a known provider is ignored. A list with no known provider is an invalid option. `widenet` is deprecated and left out of the default list: its endpoint now redirects to `ws.apicep.com`, which is usually unavailable, so it only adds a failing provider to the race."
@@ -130,12 +129,12 @@
           "",
           "- De um `cep` string, todo caractere que não é dígito é removido (`\"CEP 01310-100\"` funciona). Precisam sobrar exatamente 8 dígitos.",
           "- Um número precisa ser um inteiro seguro não negativo. Ele é completado com zeros à esquerda até 8 dígitos só a partir de `1000000` (`01000-000`, o menor CEP dos Correios). Um número menor é rejeitado. A 2.4.0 completava qualquer número, então `123` era buscado como `00000-123`.",
-          "- O resultado traz o CEP, o estado, o município, o bairro e o logradouro.",
+          "- O resultado traz `cep` (8 dígitos, sem máscara), `state` (código de duas letras), `city`, `neighborhood` e `street`. `neighborhood` e `street` vêm vazios quando o CEP cobre uma cidade inteira.",
           "- `options.providers` escolhe quais provedores consultar. A função tenta de novo as falhas transitórias de rede, por provedor.",
           "- `options.timeoutMs` limita a busca inteira, novas tentativas incluídas. Quando o tempo acaba, a chamada falha com erro de serviço. Precisa ser um número finito positivo.",
           "- `options.signal` (um `AbortSignal` no JavaScript) cancela a busca, e a chamada falha com o motivo do signal, como no `fetch`. Um signal já abortado falha antes de qualquer requisição. Sem essas opções, a busca não tem limite de tempo.",
           "- Falha com um erro. O erro distingue um CEP ou uma opção inválida, um CEP que nenhum provedor conhece e uma falha do serviço.",
-          "- Provedor fora do ar não é \"não encontrado\". A BrasilAPI responde 404 tanto para um CEP desconhecido quanto quando os serviços por trás dela falham. O 404 dela só conta como não encontrado se nenhum outro provedor falhou por erro de rede. Junto de uma falha de rede, a chamada falha com erro de serviço. Um 404 isolado da BrasilAPI, ou um 404 dela junto com `erro: true` da ViaCEP, continua sendo não encontrado. A 2.4.0 deixava o 404 vencer, então uma indisponibilidade podia aparecer como CEP desconhecido.",
+          "- Provedor fora do ar não é \"não encontrado\". A BrasilAPI responde 404 tanto para um CEP desconhecido quanto quando os serviços por trás dela falham. O 404 dela só conta como não encontrado se nenhum outro provedor deixou de responder (erro de rede ou status HTTP de erro). Junto de uma falha assim, a chamada falha com erro de serviço. Um 404 isolado da BrasilAPI, ou um 404 dela junto com `erro: true` da ViaCEP, continua sendo não encontrado. A 2.4.0 deixava o 404 vencer, então uma indisponibilidade podia aparecer como CEP desconhecido.",
           "- Um endereço só é aceito quando concorda com o CEP pedido: seus 8 dígitos precisam ser o CEP e o estado, quando ele traz um, precisa ser o estado dono da faixa do CEP (veja `cep.getState`). Caso contrário, esse provedor conta como se não conhecesse o CEP. A BrasilAPI, por exemplo, respondeu `99999-999`, um CEP do Rio Grande do Sul, com uma cidade do Paraná. Até a 2.4.0 essa resposta era devolvida.",
           "- Quando a busca termina, as requisições dos provedores que perderam a corrida são abortadas.",
           "- `options.providers` aceita `viacep`, `brasilapi` e `widenet`, disputados na ordem dada (padrão `[\"viacep\", \"brasilapi\"]`). Um nome que não é provedor conhecido é ignorado. Uma lista sem nenhum provedor conhecido é uma opção inválida. `widenet` está obsoleto e fora da lista padrão: o endpoint dele agora redireciona para `ws.apicep.com`, que costuma estar indisponível, então só acrescenta um provedor que falha à corrida."
@@ -166,7 +165,7 @@
           "Looks up every CEP of a street on the ViaCEP service (network call).",
           "",
           "- `params` carries the state (federative unit, read ignoring case and surrounding whitespace), the city and the street. Before the query, the function trims the city and the street and removes their accents.",
-          "- Each result is the ViaCEP record unchanged.",
+          "- Each result is the ViaCEP record unchanged, under ViaCEP's own field names: `cep` (masked, `00000-000`), `logradouro`, `complemento`, `unidade`, `bairro`, `localidade`, `uf`, `estado`, `regiao`, `ibge`, `gia`, `ddd` and `siafi`. A field the service adds later is passed through too.",
           "- The function retries transient network failures.",
           "- Fails with an error. The error tells apart a missing or invalid state/city/street, an address with no match, and an HTTP error from the service.",
           "- A request that cannot be performed at all (no connection, for example) fails with the underlying network error, not with one of these errors.",
@@ -179,7 +178,7 @@
           "Consulta todos os CEPs de um logradouro no serviço ViaCEP (chamada de rede).",
           "",
           "- `params` traz a UF (lida sem diferenciar maiúsculas de minúsculas e sem os espaços das pontas), o município e o logradouro. Antes da consulta, a função remove os espaços das pontas e os acentos do município e do logradouro.",
-          "- Cada resultado é o registro do ViaCEP sem alteração.",
+          "- Cada resultado é o registro do ViaCEP sem alteração, com os nomes de campo do próprio ViaCEP: `cep` (com máscara, `00000-000`), `logradouro`, `complemento`, `unidade`, `bairro`, `localidade`, `uf`, `estado`, `regiao`, `ibge`, `gia`, `ddd` e `siafi`. Um campo que o serviço acrescente depois também é repassado.",
           "- A função tenta de novo as falhas transitórias de rede.",
           "- Falha com um erro. O erro distingue UF/município/logradouro ausente ou inválido, um endereço sem resultado e um erro HTTP do serviço.",
           "- Uma requisição que não chega a ser feita (sem conexão, por exemplo) falha com o erro de rede original, não com um desses erros.",

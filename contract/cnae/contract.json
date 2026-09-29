@@ -130,13 +130,15 @@
           "Checks whether a CNAE subclass code exists in the CNAE-Subclasses 2.3 table (the current subclass revision of CNAE 2.0).",
           "",
           "- Same input rules as `cbo.isValid`, with 7 digits and the `NNNN-N/NN` mask. Bare digits are left-padded to 7, a masked value is read as written, and other strings are rejected.",
-          "- Any run of separators (space, `.`, `-` or `/`) is accepted at each boundary between the groups, or none: `6201--5//01` is valid. Whitespace around the value is ignored. Until 2.4.0 a single separator was accepted and `6201--5//01` was rejected."
+          "- Any run of separators (space, `.`, `-` or `/`) is accepted at each boundary between the groups, or none: `6201--5//01` is valid. Whitespace around the value is ignored. Until 2.4.0 a single separator was accepted and `6201--5//01` was rejected.",
+          "- A number is read only when it is a safe non-negative integer, and is left-padded to 7 digits like bare digits (`111301` is `0111301`). A negative, fractional or unsafe number is rejected."
         ],
         "pt-BR": [
           "Verifica se um código de subclasse CNAE existe na tabela CNAE-Subclasses 2.3 (a revisão atual das subclasses da CNAE 2.0).",
           "",
           "- Mesmas regras de entrada de `cbo.isValid`, com 7 dígitos e a máscara `NNNN-N/NN`. Dígitos sem máscara são completados com zeros à esquerda até 7, um valor com máscara é lido como está escrito, e outras strings são rejeitadas.",
-          "- Qualquer sequência de separadores (espaço, `.`, `-` ou `/`) é aceita em cada limite entre os grupos, ou nenhum: `6201--5//01` é válido. Espaços nas pontas são ignorados. Até a 2.4.0 um único separador era aceito e `6201--5//01` era rejeitado."
+          "- Qualquer sequência de separadores (espaço, `.`, `-` ou `/`) é aceita em cada limite entre os grupos, ou nenhum: `6201--5//01` é válido. Espaços nas pontas são ignorados. Até a 2.4.0 um único separador era aceito e `6201--5//01` era rejeitado.",
+          "- Um número só é lido se for um inteiro seguro não negativo, e é completado com zeros à esquerda até 7 dígitos como os dígitos sem máscara (`111301` vira `0111301`). Número negativo, fracionário ou inseguro é rejeitado."
         ]
       },
       "references": [

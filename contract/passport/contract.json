@@ -19,13 +19,15 @@
           "Formats a passport number: upper-cased, without symbols, capped at 8 characters (the same operation as `passport.parse`).",
           "",
           "- Pending decision (findings §1b, §2 #8): the reference (JS) upper-cases lowercase and masked input. Erlang and Python accept only the strict uppercase form.",
-          "- It is an alias of `passport.parse`: it does not check the number, so a partial value (`AB12`) is formatted as it is."
+          "- It is an alias of `passport.parse`: it does not check the number, so a partial value (`AB12`) is formatted as it is.",
+          "- A value that is not a string (for example a number) returns an empty string: a number is never a passport number, since the series is two letters."
         ],
         "pt-BR": [
           "Formata um número de passaporte: em maiúsculas, sem símbolos, com no máximo 8 caracteres (a mesma operação de `passport.parse`).",
           "",
           "- Decisão pendente (findings §1b, §2 #8): a referência (JS) converte para maiúsculas a entrada em minúsculas e com máscara. Erlang e Python aceitam apenas a forma estrita em maiúsculas.",
-          "- É um apelido de `passport.parse`: não confere o número, então um valor incompleto (`AB12`) é formatado como está."
+          "- É um apelido de `passport.parse`: não confere o número, então um valor incompleto (`AB12`) é formatado como está.",
+          "- Um valor que não é string (por exemplo, um número) retorna uma string vazia: um número nunca é um número de passaporte, pois a série são duas letras."
         ]
       },
       "references": [
@@ -126,10 +128,14 @@
       },
       "description": {
         "en": [
-          "Removes every non-alphanumeric character from a passport number, upper-cases it and caps it at 8 characters."
+          "Removes every non-alphanumeric character from a passport number, upper-cases it and caps it at 8 characters.",
+          "",
+          "- A value that is not a string (for example a number) returns an empty string."
         ],
         "pt-BR": [
-          "Remove todo caractere não alfanumérico de um número de passaporte, converte-o para maiúsculas e limita-o a 8 caracteres."
+          "Remove todo caractere não alfanumérico de um número de passaporte, converte-o para maiúsculas e limita-o a 8 caracteres.",
+          "",
+          "- Um valor que não é string (por exemplo, um número) retorna uma string vazia."
         ]
       },
       "references": [

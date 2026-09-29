@@ -49,7 +49,7 @@
         { "args": [""], "returns": "", "note": "JavaScript's own test: should return an empty string for a partial or invalid value, or a range not assigned yet" },
         { "name": "unassigned-registrant", "args": ["9786503000006"], "returns": "", "note": "978-65-03… is not assigned yet, although the check digit is valid" },
         { "args": ["979-10-90636-07-1"], "returns": "979-10-90636-07-1", "note": "a 979 ISBN, as in JavaScript's own test: should split a 979 ISBN" },
-        { "args": ["ISBN 978 85 333 0227 3"], "returns": "", "note": "the ISBN label is not accepted, so the value gives an empty string. JavaScript's own test: should read a value with other separators and give back the hyphenated form" },
+        { "args": ["ISBN 978 85 333 0227 3"], "returns": "", "note": "the ISBN label is not accepted, so the value gives an empty string, unlike the same digits without the label" },
         { "args": ["978 85 333 0227 3"], "returns": "978-85-333-0227-3", "note": "JavaScript's own test: should read a value with other separators and give back the hyphenated form" },
         { "args": ["978.85.333.0227.3"], "returns": "978-85-333-0227-3", "note": "separators other than a hyphen are read, as in isbn.isValid" }
       ]

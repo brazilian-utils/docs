@@ -136,7 +136,7 @@
           "Checks whether an NBS code exists in the NBS 2.0 table that the MDIC publishes (Portarias Conjuntas RFB/SCS 1.429/2018 and 2.000/2018).",
           "",
           "- A code has 9 digits, printed as `N.NNNN.NN.NN`: the digit 1, the chapter, the position, the two subposition levels, the item and the subitem.",
-          "- Accepts the 9 digits, the `N.NNNN.NN.NN` mask or a non-negative integer. The mask accepts any run of separators between the groups: space, `.`, `-` or `/` (`\"1..0101.11.00\"` is valid). Whitespace around the value is ignored.",
+          "- Accepts the 9 digits, the `N.NNNN.NN.NN` mask or a safe non-negative integer. The mask accepts any run of separators between the groups: space, `.`, `-` or `/` (`\"1..0101.11.00\"` is valid). Whitespace around the value is ignored.",
           "- Any other string is rejected (`\"1.0101abc11.00\"`). The function does not extract its digits. Nothing is padded: every code starts with 1.",
           "- Only complete codes are valid. The chapter, position and subposition headings (`\"1.01\"`, `\"1.0101\"`, `\"1.0101.1\"`) are not. The table has 920 complete codes.",
           "- The function follows the MDIC nomenclature. 1.0402.29.00, 1.0403.29.00 and 1.0904.40.00 are valid here, although the NFS-e refuses them. The placeholder `9.9999.99.99` of the NFS-e ANEXO B is not valid."
@@ -145,7 +145,7 @@
           "Verifica se um código NBS existe na tabela NBS 2.0 publicada pelo MDIC (Portarias Conjuntas RFB/SCS 1.429/2018 e 2.000/2018).",
           "",
           "- Um código tem 9 dígitos, impressos como `N.NNNN.NN.NN`: o dígito 1, o capítulo, a posição, os dois níveis de subposição, o item e o subitem.",
-          "- Aceita os 9 dígitos, a máscara `N.NNNN.NN.NN` ou um inteiro não negativo. A máscara aceita qualquer sequência de separadores entre os grupos: espaço, `.`, `-` ou `/` (`\"1..0101.11.00\"` é válido). Espaços nas pontas são ignorados.",
+          "- Aceita os 9 dígitos, a máscara `N.NNNN.NN.NN` ou um inteiro seguro não negativo. A máscara aceita qualquer sequência de separadores entre os grupos: espaço, `.`, `-` ou `/` (`\"1..0101.11.00\"` é válido). Espaços nas pontas são ignorados.",
           "- Qualquer outra string é rejeitada (`\"1.0101abc11.00\"`). A função não extrai os dígitos dela. Nada é completado com zeros: todo código começa com 1.",
           "- Só códigos completos são válidos. Os cabeçalhos de capítulo, posição e subposição (`\"1.01\"`, `\"1.0101\"`, `\"1.0101.1\"`) não são. A tabela tem 920 códigos completos.",
           "- A função segue a nomenclatura do MDIC. 1.0402.29.00, 1.0403.29.00 e 1.0904.40.00 são válidos aqui, embora a NFS-e os recuse. O placeholder `9.9999.99.99` do ANEXO B da NFS-e não é válido."

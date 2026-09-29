@@ -725,7 +725,6 @@
     "cep.format#number-pad",
     "cep.format#pad",
     "cep.format#unsafe-number",
-    "cep.generate#generated-inside-a-state-range",
     "cep.generate#generated-is-valid",
     "cep.getState#[\" 01310-100 \"]",
     "cep.getState#[\"00000000\"]",

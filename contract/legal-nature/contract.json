@@ -93,7 +93,7 @@
         "en": [
           "Looks up a legal nature code in the IBGE/CONCLA Natureza Jurídica 2021 table. Returns `null` for an unknown code.",
           "",
-          "- Same input rules as `legalNature.isValid`: the 4 digits, a safe non-negative integer or the `NNN-N` mask, with any run of separators (whitespace, `.`, `-` or `/`) between the third and the fourth digit. `\"206.2\"` finds 2062.",
+          "- Same input rules as `legalNature.isValid`: the 4 digits, a safe non-negative integer or the `NNN-N` mask, with any run of separators (whitespace, `.`, `-` or `/`) between the third and the fourth digit. `\"206.2\"` finds 2062. Surrounding whitespace is ignored.",
           "- A separator anywhere else (`\"2-0-6-2\"`) or any other character (`\"2062a\"`) returns `null`. Until 2.4.0 the separators were stripped from anywhere in the string.",
           "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number returns `null`. 2.4.0 stripped the sign and decimal point of a number too, so `206.2` found 2062.",
           "- No code starts with zero (the first digit is the category, 1 to 5), so nothing is padded: a number and the string of the same digits read the same.",
@@ -105,7 +105,7 @@
         "pt-BR": [
           "Consulta um código de natureza jurídica na tabela Natureza Jurídica 2021 do IBGE/CONCLA. Retorna `null` para um código desconhecido.",
           "",
-          "- Mesmas regras de entrada de `legalNature.isValid`: os 4 dígitos, um inteiro seguro não negativo ou a máscara `NNN-N`, com qualquer sequência de separadores (espaço, `.`, `-` ou `/`) entre o terceiro e o quarto dígito. `\"206.2\"` encontra o 2062.",
+          "- Mesmas regras de entrada de `legalNature.isValid`: os 4 dígitos, um inteiro seguro não negativo ou a máscara `NNN-N`, com qualquer sequência de separadores (espaço, `.`, `-` ou `/`) entre o terceiro e o quarto dígito. `\"206.2\"` encontra o 2062. Espaços nas pontas são ignorados.",
           "- Um separador em qualquer outro lugar (`\"2-0-6-2\"`) ou qualquer outro caractere (`\"2062a\"`) retorna `null`. Até a 2.4.0 os separadores eram removidos de qualquer posição da string.",
           "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna `null`. A 2.4.0 também removia o sinal e o ponto decimal de um número, então `206.2` encontrava o 2062.",
           "- Nenhum código começa com zero (o primeiro dígito é a categoria, de 1 a 5), então nada é completado com zeros: um número e a string dos mesmos dígitos são lidos do mesmo jeito.",

@@ -136,7 +136,7 @@
           "Checks whether a CFOP code exists in the consolidated Anexo II of Convênio SINIEF s/nº 1970 in force.",
           "",
           "- Only operable codes count: the function rejects group and subgroup headings (codes ending in `00` and `50`).",
-          "- Accepts the 4 digits, the `N.NNN` form or a non-negative integer. A masked string may have any run of separators (space, `.`, `-` or `/`) between the groups: `5..102` is valid. Until 2.4.0 the form had a single separator and `5..102` was rejected. Any other string is rejected.",
+          "- Accepts the 4 digits, the `N.NNN` form or a safe non-negative integer. A masked string may have any run of separators (space, `.`, `-` or `/`) between the groups: `5..102` is valid. Until 2.4.0 the form had a single separator and `5..102` was rejected. Any other string is rejected.",
           "- Whitespace around the value is ignored.",
           "- No CFOP starts with a zero, so the function pads nothing."
         ],
@@ -144,7 +144,7 @@
           "Verifica se um código CFOP existe no Anexo II consolidado do Convênio SINIEF s/nº 1970 em vigor.",
           "",
           "- Só contam os códigos operáveis: a função rejeita títulos de grupo e de subgrupo (códigos terminados em `00` e `50`).",
-          "- Aceita os 4 dígitos, a forma `N.NNN` ou um inteiro não negativo. Uma string com máscara pode ter qualquer sequência de separadores (espaço, `.`, `-` ou `/`) entre os grupos: `5..102` é válido. Até a 2.4.0 a forma tinha um único separador e `5..102` era rejeitado. Qualquer outra string é rejeitada.",
+          "- Aceita os 4 dígitos, a forma `N.NNN` ou um inteiro seguro não negativo. Uma string com máscara pode ter qualquer sequência de separadores (espaço, `.`, `-` ou `/`) entre os grupos: `5..102` é válido. Até a 2.4.0 a forma tinha um único separador e `5..102` era rejeitado. Qualquer outra string é rejeitada.",
           "- Espaços nas pontas são ignorados.",
           "- Nenhum CFOP começa com zero, então a função não completa nada com zeros."
         ]
