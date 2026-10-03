@@ -1,6 +1,305 @@
 {
   "library": "brazilian-utils-dotnet",
   "domains": {
+    "areacode": {
+      "functions": {
+        "alvo": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "AreaCode.alvo"
+            }
+          ]
+        },
+        "codigo": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "AreaCode.codigo"
+            }
+          ]
+        },
+        "getInfo": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "areaCode"
+                },
+                {
+                  "name": "obj"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "AreaCodeInfo"
+                },
+                {
+                  "name": "option"
+                }
+              ],
+              "implementationPath": "AreaCode.GetInfo"
+            }
+          ]
+        },
+        "listByState": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "stateCode"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "int"
+                },
+                {
+                  "name": "list"
+                }
+              ],
+              "implementationPath": "AreaCode.ListByState"
+            }
+          ]
+        }
+      }
+    },
+    "bank": {
+      "functions": {
+        "getByCode": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "code"
+                },
+                {
+                  "name": "obj"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "BankInfo"
+                },
+                {
+                  "name": "option"
+                }
+              ],
+              "implementationPath": "Bank.GetByCode"
+            }
+          ]
+        },
+        "getByIspb": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "obj"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "BankInfo"
+                },
+                {
+                  "name": "option"
+                }
+              ],
+              "implementationPath": "Bank.GetByIspb"
+            }
+          ]
+        },
+        "internal": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "bancos"
+                }
+              ],
+              "implementationPath": "Bank.internal"
+            }
+          ]
+        },
+        "list": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": ""
+                },
+                {
+                  "name": "BankInfo"
+                },
+                {
+                  "name": "list"
+                }
+              ],
+              "implementationPath": "Bank.List"
+            }
+          ]
+        },
+        "texto": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Bank.texto"
+            },
+            {
+              "params": [],
+              "implementationPath": "Bank.texto"
+            }
+          ]
+        }
+      }
+    },
+    "bankaccount": {
+      "functions": {
+        "agencia": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "BankAccount.agencia"
+            }
+          ]
+        },
+        "codigoBanco": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "BankAccount.codigoBanco"
+            }
+          ]
+        },
+        "conta": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "BankAccount.conta"
+            }
+          ]
+        },
+        "d1": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "BankAccount.d1"
+            }
+          ]
+        },
+        "d2": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "BankAccount.d2"
+            }
+          ]
+        },
+        "digito": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "BankAccount.digito"
+            },
+            {
+              "params": [],
+              "implementationPath": "BankAccount.digito"
+            }
+          ]
+        },
+        "digitos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "BankAccount.digitos"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "parametros"
+                },
+                {
+                  "name": "IsValidBankAccountParams"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "bool"
+                }
+              ],
+              "implementationPath": "BankAccount.IsValid"
+            }
+          ]
+        },
+        "mutable": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "c"
+                }
+              ],
+              "implementationPath": "BankAccount.mutable"
+            }
+          ]
+        },
+        "peso": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "BankAccount.peso"
+            }
+          ]
+        },
+        "pesos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "BankAccount.pesos"
+            }
+          ]
+        },
+        "produto": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "BankAccount.produto"
+            }
+          ]
+        },
+        "resto": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "BankAccount.resto"
+            }
+          ]
+        },
+        "soma": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "BankAccount.soma"
+            }
+          ]
+        }
+      }
+    },
     "boleto": {
       "functions": {
         "accumulatorRule": {
@@ -15,6 +314,45 @@
                 }
               ],
               "implementationPath": "Boleto.accumulatorRule"
+            }
+          ]
+        },
+        "apenasDigitos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Boleto.apenasDigitos"
+            }
+          ]
+        },
+        "aplicar": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "posicoes"
+                },
+                {
+                  "name": "separadores"
+                }
+              ],
+              "implementationPath": "Boleto.aplicar"
+            }
+          ]
+        },
+        "banco": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Boleto.banco"
+            }
+          ]
+        },
+        "baseParaDac": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Boleto.baseParaDac"
             }
           ]
         },
@@ -42,6 +380,30 @@
             }
           ]
         },
+        "campo1Parte": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Boleto.campo1Parte"
+            }
+          ]
+        },
+        "campo2": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Boleto.campo2"
+            }
+          ]
+        },
+        "campo3": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Boleto.campo3"
+            }
+          ]
+        },
         "clearValue": {
           "variants": [
             {
@@ -50,11 +412,27 @@
             }
           ]
         },
+        "dac": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Boleto.dac"
+            }
+          ]
+        },
         "digitableLineLength": {
           "variants": [
             {
               "params": [],
               "implementationPath": "Boleto.digitableLineLength"
+            }
+          ]
+        },
+        "digitos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Boleto.digitos"
             }
           ]
         },
@@ -67,6 +445,86 @@
                 }
               ],
               "implementationPath": "Boleto.digitRule"
+            }
+          ]
+        },
+        "dv1": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Boleto.dv1"
+            }
+          ]
+        },
+        "dv2": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Boleto.dv2"
+            }
+          ]
+        },
+        "dv3": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Boleto.dv3"
+            }
+          ]
+        },
+        "fatorVencimento": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Boleto.fatorVencimento"
+            }
+          ]
+        },
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "obj"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Boleto.Format"
+            }
+          ]
+        },
+        "generate": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Boleto.Generate"
+            }
+          ]
+        },
+        "gerarDigitos": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "n"
+                }
+              ],
+              "implementationPath": "Boleto.gerarDigitos"
             }
           ]
         },
@@ -87,6 +545,34 @@
                 }
               ],
               "implementationPath": "Boleto.IsValid"
+            }
+          ]
+        },
+        "limite": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Boleto.limite"
+            }
+          ]
+        },
+        "moeda": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Boleto.moeda"
+            }
+          ]
+        },
+        "mutable": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "resultado"
+                }
+              ],
+              "implementationPath": "Boleto.mutable"
             }
           ]
         },
@@ -114,11 +600,48 @@
             }
           ]
         },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "obj"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Boleto.Parse"
+            }
+          ]
+        },
+        "random": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Boleto.random"
+            }
+          ]
+        },
         "res": {
           "variants": [
             {
               "params": [],
               "implementationPath": "Boleto.res"
+            }
+          ]
+        },
+        "valor": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Boleto.valor"
             }
           ]
         },
@@ -140,25 +663,421 @@
         }
       }
     },
-    "cep": {
+    "caepf": {
       "functions": {
-        "cepLength": {
+        "apenasDigitos": {
           "variants": [
             {
               "params": [],
-              "implementationPath": "Cep.cepLength"
-            }
-          ]
-        },
-        "clearValue": {
-          "variants": [
-            {
-              "params": [],
-              "implementationPath": "Cep.clearValue"
+              "implementationPath": "Caepf.apenasDigitos"
             },
             {
               "params": [],
-              "implementationPath": "Cep.clearValue"
+              "implementationPath": "Caepf.apenasDigitos"
+            }
+          ]
+        },
+        "baseNumero": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Caepf.baseNumero"
+            }
+          ]
+        },
+        "digito1": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Caepf.digito1"
+            }
+          ]
+        },
+        "digito2": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Caepf.digito2"
+            }
+          ]
+        },
+        "digitos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Caepf.digitos"
+            }
+          ]
+        },
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Caepf.Format"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "bool"
+                }
+              ],
+              "implementationPath": "Caepf.IsValid"
+            }
+          ]
+        },
+        "parEsperado": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Caepf.parEsperado"
+            }
+          ]
+        },
+        "parEstiloCnpj": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Caepf.parEstiloCnpj"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Caepf.Parse"
+            }
+          ]
+        },
+        "sb": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Caepf.sb"
+            }
+          ]
+        }
+      }
+    },
+    "cbo": {
+      "functions": {
+        "apenasDigitos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cbo.apenasDigitos"
+            }
+          ]
+        },
+        "dicionario": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cbo.dicionario"
+            }
+          ]
+        },
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "obj"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "CboInfo"
+                },
+                {
+                  "name": "option"
+                }
+              ],
+              "implementationPath": "Cbo.Get"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "obj"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "bool"
+                }
+              ],
+              "implementationPath": "Cbo.IsValid"
+            }
+          ]
+        },
+        "json": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cbo.json"
+            }
+          ]
+        },
+        "m": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cbo.m"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "obj"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Cbo.Parse"
+            }
+          ]
+        },
+        "texto": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cbo.texto"
+            },
+            {
+              "params": [],
+              "implementationPath": "Cbo.texto"
+            }
+          ]
+        }
+      }
+    },
+    "cei": {
+      "functions": {
+        "apenasDigitos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cei.apenasDigitos"
+            },
+            {
+              "params": [],
+              "implementationPath": "Cei.apenasDigitos"
+            }
+          ]
+        },
+        "baseNumero": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cei.baseNumero"
+            }
+          ]
+        },
+        "dezenas": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cei.dezenas"
+            }
+          ]
+        },
+        "digitos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cei.digitos"
+            }
+          ]
+        },
+        "digitoUnidades": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cei.digitoUnidades"
+            }
+          ]
+        },
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Cei.Format"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "bool"
+                }
+              ],
+              "implementationPath": "Cei.IsValid"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Cei.Parse"
+            }
+          ]
+        },
+        "sb": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cei.sb"
+            }
+          ]
+        },
+        "soma": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cei.soma"
+            }
+          ]
+        },
+        "somaParcial": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cei.somaParcial"
+            }
+          ]
+        },
+        "unidades": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cei.unidades"
+            }
+          ]
+        }
+      }
+    },
+    "cep": {
+      "functions": {
+        "apenasDigitos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cep.apenasDigitos"
+            }
+          ]
+        },
+        "cepLimpo": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cep.cepLimpo"
+            }
+          ]
+        },
+        "cidade": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cep.cidade"
             }
           ]
         },
@@ -174,6 +1093,66 @@
             }
           ]
         },
+        "generate": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Cep.Generate"
+            }
+          ]
+        },
+        "getAddressInfo": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "cep"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "AddressInfo"
+                }
+              ],
+              "implementationPath": "Cep.GetAddressInfo"
+            }
+          ]
+        },
+        "getInfoByAddress": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "parametros"
+                },
+                {
+                  "name": "GetInfoByAddressParams"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "AddressInfo"
+                },
+                {
+                  "name": "list"
+                }
+              ],
+              "implementationPath": "Cep.GetInfoByAddress"
+            }
+          ]
+        },
         "isValid": {
           "variants": [
             {
@@ -185,16 +1164,638 @@
               "implementationPath": "Cep.IsValid"
             }
           ]
+        },
+        "logradouro": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cep.logradouro"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Cep.Parse"
+            }
+          ]
+        },
+        "raiz": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cep.raiz"
+            }
+          ]
+        },
+        "removeSymbols": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "cep"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Cep.RemoveSymbols"
+            }
+          ]
+        },
+        "resposta": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cep.resposta"
+            },
+            {
+              "params": [],
+              "implementationPath": "Cep.resposta"
+            }
+          ]
+        },
+        "sb": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cep.sb"
+            }
+          ]
+        },
+        "tamanhoCep": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cep.tamanhoCep"
+            }
+          ]
+        },
+        "temErro": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cep.temErro"
+            }
+          ]
+        },
+        "uf": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cep.uf"
+            }
+          ]
+        },
+        "url": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cep.url"
+            },
+            {
+              "params": [],
+              "implementationPath": "Cep.url"
+            }
+          ]
+        },
+        "valorLimpo": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cep.valorLimpo"
+            },
+            {
+              "params": [],
+              "implementationPath": "Cep.valorLimpo"
+            }
+          ]
+        }
+      }
+    },
+    "certidao": {
+      "functions": {
+        "apenasDigitos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Certidao.apenasDigitos"
+            }
+          ]
+        },
+        "base30": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Certidao.base30"
+            }
+          ]
+        },
+        "digitos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Certidao.digitos"
+            },
+            {
+              "params": [],
+              "implementationPath": "Certidao.digitos"
+            }
+          ]
+        },
+        "digitosEsperados": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Certidao.digitosEsperados"
+            }
+          ]
+        },
+        "dv1": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Certidao.dv1"
+            }
+          ]
+        },
+        "dv2": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Certidao.dv2"
+            }
+          ]
+        },
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "obj"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Certidao.Format"
+            }
+          ]
+        },
+        "getInfo": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "obj"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "CertidaoInfo"
+                },
+                {
+                  "name": "option"
+                }
+              ],
+              "implementationPath": "Certidao.GetInfo"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "obj"
+                },
+                {
+                  "name": "aceitar"
+                },
+                {
+                  "name": "int"
+                },
+                {
+                  "name": "list"
+                },
+                {
+                  "name": "option"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "bool"
+                }
+              ],
+              "implementationPath": "Certidao.IsValid"
+            }
+          ]
+        },
+        "listaDigitos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Certidao.listaDigitos"
+            }
+          ]
+        },
+        "mutable": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "resultado"
+                }
+              ],
+              "implementationPath": "Certidao.mutable"
+            }
+          ]
+        },
+        "n": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Certidao.n"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "obj"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Certidao.Parse"
+            }
+          ]
+        },
+        "resto": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Certidao.resto"
+            }
+          ]
+        },
+        "soma": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Certidao.soma"
+            }
+          ]
+        },
+        "tipoAceito": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Certidao.tipoAceito"
+            }
+          ]
+        },
+        "tipoLivroDigito": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Certidao.tipoLivroDigito"
+            }
+          ]
+        }
+      }
+    },
+    "cfop": {
+      "functions": {
+        "apenasDigitos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cfop.apenasDigitos"
+            }
+          ]
+        },
+        "dicionario": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cfop.dicionario"
+            }
+          ]
+        },
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "obj"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "CfopInfo"
+                },
+                {
+                  "name": "option"
+                }
+              ],
+              "implementationPath": "Cfop.Get"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "obj"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "bool"
+                }
+              ],
+              "implementationPath": "Cfop.IsValid"
+            }
+          ]
+        },
+        "json": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cfop.json"
+            }
+          ]
+        },
+        "m": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cfop.m"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "obj"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Cfop.Parse"
+            }
+          ]
+        },
+        "texto": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cfop.texto"
+            }
+          ]
+        }
+      }
+    },
+    "cnae": {
+      "functions": {
+        "apenasDigitos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cnae.apenasDigitos"
+            },
+            {
+              "params": [],
+              "implementationPath": "Cnae.apenasDigitos"
+            }
+          ]
+        },
+        "dicionario": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cnae.dicionario"
+            }
+          ]
+        },
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "obj"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Cnae.Format"
+            }
+          ]
+        },
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "obj"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "CnaeInfo"
+                },
+                {
+                  "name": "option"
+                }
+              ],
+              "implementationPath": "Cnae.Get"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "obj"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "bool"
+                }
+              ],
+              "implementationPath": "Cnae.IsValid"
+            }
+          ]
+        },
+        "json": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cnae.json"
+            }
+          ]
+        },
+        "m": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cnae.m"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "obj"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Cnae.Parse"
+            }
+          ]
+        },
+        "sb": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cnae.sb"
+            }
+          ]
+        },
+        "texto": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cnae.texto"
+            }
+          ]
         }
       }
     },
     "cnh": {
       "functions": {
+        "apenasDigitos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cnh.apenasDigitos"
+            }
+          ]
+        },
+        "baseDigitos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cnh.baseDigitos"
+            },
+            {
+              "params": [],
+              "implementationPath": "Cnh.baseDigitos"
+            }
+          ]
+        },
         "cleanedCnh": {
           "variants": [
             {
               "params": [],
               "implementationPath": "Cnh.cleanedCnh"
+            }
+          ]
+        },
+        "digitos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cnh.digitos"
             }
           ]
         },
@@ -211,6 +1812,42 @@
             {
               "params": [],
               "implementationPath": "Cnh.firstVerificator"
+            }
+          ]
+        },
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "obj"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Cnh.Format"
+            }
+          ]
+        },
+        "generate": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Cnh.Generate"
             }
           ]
         },
@@ -244,6 +1881,63 @@
                 }
               ],
               "implementationPath": "Cnh.mutable"
+            },
+            {
+              "params": [
+                {
+                  "name": "resto2"
+                }
+              ],
+              "implementationPath": "Cnh.mutable"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "obj"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Cnh.Parse"
+            }
+          ]
+        },
+        "primeiroDv": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cnh.primeiroDv"
+            }
+          ]
+        },
+        "random": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cnh.random"
+            }
+          ]
+        },
+        "rec": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "gerarBase"
+                }
+              ],
+              "implementationPath": "Cnh.rec"
             }
           ]
         },
@@ -252,6 +1946,14 @@
             {
               "params": [],
               "implementationPath": "Cnh.remainder"
+            }
+          ]
+        },
+        "resto1": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cnh.resto1"
             }
           ]
         },
@@ -271,6 +1973,22 @@
             }
           ]
         },
+        "soma1": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cnh.soma1"
+            }
+          ]
+        },
+        "soma2": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cnh.soma2"
+            }
+          ]
+        },
         "sum": {
           "variants": [
             {
@@ -285,8 +2003,159 @@
         }
       }
     },
+    "cno": {
+      "functions": {
+        "apenasDigitos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cno.apenasDigitos"
+            },
+            {
+              "params": [],
+              "implementationPath": "Cno.apenasDigitos"
+            }
+          ]
+        },
+        "baseNumero": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cno.baseNumero"
+            }
+          ]
+        },
+        "dezenas": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cno.dezenas"
+            }
+          ]
+        },
+        "digitos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cno.digitos"
+            }
+          ]
+        },
+        "digitoUnidades": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cno.digitoUnidades"
+            }
+          ]
+        },
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Cno.Format"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "bool"
+                }
+              ],
+              "implementationPath": "Cno.IsValid"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Cno.Parse"
+            }
+          ]
+        },
+        "sb": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cno.sb"
+            }
+          ]
+        },
+        "soma": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cno.soma"
+            }
+          ]
+        },
+        "somaParcial": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cno.somaParcial"
+            }
+          ]
+        },
+        "unidades": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cno.unidades"
+            }
+          ]
+        }
+      }
+    },
     "cnpj": {
       "functions": {
+        "apenasDigitos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cnpj.apenasDigitos"
+            }
+          ]
+        },
         "baseCnpj": {
           "variants": [
             {
@@ -411,11 +2280,61 @@
             }
           ]
         },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Cnpj.Parse"
+            }
+          ]
+        },
+        "removeSymbols": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "cnpj"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Cnpj.RemoveSymbols"
+            }
+          ]
+        },
         "rnd": {
           "variants": [
             {
               "params": [],
               "implementationPath": "Cnpj.rnd"
+            }
+          ]
+        },
+        "sb": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cnpj.sb"
             }
           ]
         },
@@ -433,8 +2352,183 @@
         }
       }
     },
+    "cns": {
+      "functions": {
+        "apenasDigitos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cns.apenasDigitos"
+            },
+            {
+              "params": [],
+              "implementationPath": "Cns.apenasDigitos"
+            }
+          ]
+        },
+        "digitos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cns.digitos"
+            }
+          ]
+        },
+        "dv": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cns.dv"
+            }
+          ]
+        },
+        "dv2": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cns.dv2"
+            }
+          ]
+        },
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Cns.Format"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "bool"
+                }
+              ],
+              "implementationPath": "Cns.IsValid"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Cns.Parse"
+            }
+          ]
+        },
+        "pesos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cns.pesos"
+            },
+            {
+              "params": [],
+              "implementationPath": "Cns.pesos"
+            }
+          ]
+        },
+        "pis": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cns.pis"
+            }
+          ]
+        },
+        "resto": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cns.resto"
+            }
+          ]
+        },
+        "resto2": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cns.resto2"
+            }
+          ]
+        },
+        "sb": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cns.sb"
+            }
+          ]
+        },
+        "soma": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cns.soma"
+            },
+            {
+              "params": [],
+              "implementationPath": "Cns.soma"
+            }
+          ]
+        },
+        "soma2": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cns.soma2"
+            }
+          ]
+        }
+      }
+    },
     "cpf": {
       "functions": {
+        "apenasDigitos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cpf.apenasDigitos"
+            }
+          ]
+        },
         "baseCpf": {
           "variants": [
             {
@@ -527,6 +2621,56 @@
             }
           ]
         },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Cpf.Parse"
+            }
+          ]
+        },
+        "removeSymbols": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "cpf"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Cpf.RemoveSymbols"
+            }
+          ]
+        },
+        "sb": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cpf.sb"
+            }
+          ]
+        },
         "secondCheckDigit": {
           "variants": [
             {
@@ -537,21 +2681,169 @@
         }
       }
     },
-    "currency": {
+    "creditcard": {
       "functions": {
-        "absAmount": {
+        "apenasDigitos": {
           "variants": [
             {
               "params": [],
-              "implementationPath": "Currency.absAmount"
+              "implementationPath": "CreditCard.apenasDigitos"
             }
           ]
         },
-        "capitalized": {
+        "dobrado": {
           "variants": [
             {
               "params": [],
-              "implementationPath": "Currency.capitalized"
+              "implementationPath": "CreditCard.dobrado"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "obj"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "bool"
+                }
+              ],
+              "implementationPath": "CreditCard.IsValid"
+            }
+          ]
+        },
+        "temCaractereInvalido": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "CreditCard.temCaractereInvalido"
+            }
+          ]
+        },
+        "texto": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "CreditCard.texto"
+            }
+          ]
+        }
+      }
+    },
+    "csosn": {
+      "functions": {
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "bool"
+                }
+              ],
+              "implementationPath": "Csosn.IsValid"
+            }
+          ]
+        }
+      }
+    },
+    "cst": {
+      "functions": {
+        "ehIcmsValido": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cst.ehIcmsValido"
+            }
+          ]
+        },
+        "ehIpiValido": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cst.ehIpiValido"
+            }
+          ]
+        },
+        "ehPisCofinsValido": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cst.ehPisCofinsValido"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "obj"
+                },
+                {
+                  "name": "tax"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": "option"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "bool"
+                }
+              ],
+              "implementationPath": "Cst.IsValid"
+            }
+          ]
+        },
+        "m": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Cst.m"
+            }
+          ]
+        }
+      }
+    },
+    "currency": {
+      "functions": {
+        "apenasDigitos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Currency.apenasDigitos"
+            }
+          ]
+        },
+        "candidatoDecimal": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Currency.candidatoDecimal"
             }
           ]
         },
@@ -563,35 +2855,35 @@
             }
           ]
         },
-        "centavosText": {
+        "centena": {
           "variants": [
             {
               "params": [],
-              "implementationPath": "Currency.centavosText"
+              "implementationPath": "Currency.centena"
             }
           ]
         },
-        "centavoWord": {
+        "centenas": {
           "variants": [
             {
               "params": [],
-              "implementationPath": "Currency.centavoWord"
+              "implementationPath": "Currency.centenas"
             }
           ]
         },
-        "connector": {
+        "conector": {
           "variants": [
             {
               "params": [],
-              "implementationPath": "Currency.connector"
+              "implementationPath": "Currency.conector"
             },
             {
               "params": [],
-              "implementationPath": "Currency.connector"
+              "implementationPath": "Currency.conector"
             }
           ]
         },
-        "convertRealToText": {
+        "convertToWords": {
           "variants": [
             {
               "params": [
@@ -606,44 +2898,41 @@
                 },
                 {
                   "name": "string"
-                },
-                {
-                  "name": "option"
                 }
               ],
-              "implementationPath": "Currency.convertRealToText"
+              "implementationPath": "Currency.ConvertToWords"
             }
           ]
         },
-        "culture": {
+        "cultura": {
           "variants": [
             {
               "params": [],
-              "implementationPath": "Currency.culture"
+              "implementationPath": "Currency.cultura"
             }
           ]
         },
-        "currencyText": {
+        "dezena": {
           "variants": [
             {
               "params": [],
-              "implementationPath": "Currency.currencyText"
+              "implementationPath": "Currency.dezena"
             }
           ]
         },
-        "currentPart": {
+        "dezenas": {
           "variants": [
             {
               "params": [],
-              "implementationPath": "Currency.currentPart"
+              "implementationPath": "Currency.dezenas"
             }
           ]
         },
-        "currentText": {
+        "dezenasEspeciais": {
           "variants": [
             {
               "params": [],
-              "implementationPath": "Currency.currentText"
+              "implementationPath": "Currency.dezenasEspeciais"
             }
           ]
         },
@@ -655,15 +2944,15 @@
             }
           ]
         },
-        "finalResult": {
+        "ehParteDecimal": {
           "variants": [
             {
               "params": [],
-              "implementationPath": "Currency.finalResult"
+              "implementationPath": "Currency.ehParteDecimal"
             }
           ]
         },
-        "formatCurrency": {
+        "format": {
           "variants": [
             {
               "params": [
@@ -671,59 +2960,24 @@
                   "name": "value"
                 },
                 {
-                  "name": "decimal"
+                  "name": "obj"
                 },
                 {
                   "name": ""
                 },
                 {
                   "name": "string"
-                },
-                {
-                  "name": "option"
                 }
               ],
-              "implementationPath": "Currency.formatCurrency"
+              "implementationPath": "Currency.Format"
             }
           ]
         },
-        "formatted": {
+        "indiceUltimoSeparador": {
           "variants": [
             {
               "params": [],
-              "implementationPath": "Currency.formatted"
-            }
-          ]
-        },
-        "higherParts": {
-          "variants": [
-            {
-              "params": [],
-              "implementationPath": "Currency.higherParts"
-            }
-          ]
-        },
-        "higherText": {
-          "variants": [
-            {
-              "params": [],
-              "implementationPath": "Currency.higherText"
-            }
-          ]
-        },
-        "hundred": {
-          "variants": [
-            {
-              "params": [],
-              "implementationPath": "Currency.hundred"
-            }
-          ]
-        },
-        "hundreds": {
-          "variants": [
-            {
-              "params": [],
-              "implementationPath": "Currency.hundreds"
+              "implementationPath": "Currency.indiceUltimoSeparador"
             }
           ]
         },
@@ -732,7 +2986,7 @@
             {
               "params": [
                 {
-                  "name": "maxScale"
+                  "name": "escalaMaxima"
                 }
               ],
               "implementationPath": "Currency.mutable"
@@ -747,35 +3001,124 @@
             }
           ]
         },
-        "negative": {
+        "negativo": {
           "variants": [
             {
               "params": [],
-              "implementationPath": "Currency.negative"
+              "implementationPath": "Currency.negativo"
+            },
+            {
+              "params": [],
+              "implementationPath": "Currency.negativo"
             }
           ]
         },
-        "parts": {
+        "nomeEscala": {
           "variants": [
             {
               "params": [],
-              "implementationPath": "Currency.parts"
+              "implementationPath": "Currency.nomeEscala"
             }
           ]
         },
-        "partText": {
+        "nomesEscala": {
           "variants": [
             {
               "params": [],
-              "implementationPath": "Currency.partText"
+              "implementationPath": "Currency.nomesEscala"
             }
           ]
         },
-        "quotient": {
+        "nomesEscalaPlural": {
           "variants": [
             {
               "params": [],
-              "implementationPath": "Currency.quotient"
+              "implementationPath": "Currency.nomesEscalaPlural"
+            }
+          ]
+        },
+        "numero": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Currency.numero"
+            }
+          ]
+        },
+        "palavraCentavo": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Currency.palavraCentavo"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "float"
+                }
+              ],
+              "implementationPath": "Currency.Parse"
+            }
+          ]
+        },
+        "parteAtual": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Currency.parteAtual"
+            }
+          ]
+        },
+        "parteInteira": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Currency.parteInteira"
+            }
+          ]
+        },
+        "parteInteiraFinal": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Currency.parteInteiraFinal"
+            }
+          ]
+        },
+        "partes": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Currency.partes"
+            }
+          ]
+        },
+        "partesSuperiores": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Currency.partesSuperiores"
+            }
+          ]
+        },
+        "quociente": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Currency.quociente"
             }
           ]
         },
@@ -787,20 +3130,12 @@
             }
           ]
         },
-        "reaisText": {
-          "variants": [
-            {
-              "params": [],
-              "implementationPath": "Currency.reaisText"
-            }
-          ]
-        },
         "rec": {
           "variants": [
             {
               "params": [
                 {
-                  "name": "convertBelow1000"
+                  "name": "converterAbaixoDeMil"
                 },
                 {
                   "name": "n"
@@ -820,7 +3155,7 @@
             {
               "params": [
                 {
-                  "name": "convert"
+                  "name": "converter"
                 },
                 {
                   "name": "n"
@@ -829,7 +3164,7 @@
                   "name": "int64"
                 },
                 {
-                  "name": "scale"
+                  "name": "escala"
                 },
                 {
                   "name": "int"
@@ -845,119 +3180,650 @@
             }
           ]
         },
-        "remainder": {
+        "resto": {
           "variants": [
             {
               "params": [],
-              "implementationPath": "Currency.remainder"
-            }
-          ]
-        },
-        "remainderText": {
-          "variants": [
-            {
-              "params": [],
-              "implementationPath": "Currency.remainderText"
-            }
-          ]
-        },
-        "rest": {
-          "variants": [
-            {
-              "params": [],
-              "implementationPath": "Currency.rest"
-            }
-          ]
-        },
-        "result": {
-          "variants": [
-            {
-              "params": [],
-              "implementationPath": "Currency.result"
+              "implementationPath": "Currency.resto"
             },
             {
               "params": [],
-              "implementationPath": "Currency.result"
+              "implementationPath": "Currency.resto"
             }
           ]
         },
-        "roundedAmount": {
+        "resultado": {
           "variants": [
             {
               "params": [],
-              "implementationPath": "Currency.roundedAmount"
+              "implementationPath": "Currency.resultado"
+            },
+            {
+              "params": [],
+              "implementationPath": "Currency.resultado"
             }
           ]
         },
-        "scaleName": {
+        "semSinal": {
           "variants": [
             {
               "params": [],
-              "implementationPath": "Currency.scaleName"
+              "implementationPath": "Currency.semSinal"
             }
           ]
         },
-        "scaleNames": {
+        "textoAparado": {
           "variants": [
             {
               "params": [],
-              "implementationPath": "Currency.scaleNames"
+              "implementationPath": "Currency.textoAparado"
             }
           ]
         },
-        "scalePlurals": {
+        "textoAtual": {
           "variants": [
             {
               "params": [],
-              "implementationPath": "Currency.scalePlurals"
+              "implementationPath": "Currency.textoAtual"
             }
           ]
         },
-        "teens": {
+        "textoCentavos": {
           "variants": [
             {
               "params": [],
-              "implementationPath": "Currency.teens"
+              "implementationPath": "Currency.textoCentavos"
             }
           ]
         },
-        "ten": {
+        "textoMoeda": {
           "variants": [
             {
               "params": [],
-              "implementationPath": "Currency.ten"
+              "implementationPath": "Currency.textoMoeda"
             }
           ]
         },
-        "tens": {
+        "textoNumero": {
           "variants": [
             {
               "params": [],
-              "implementationPath": "Currency.tens"
+              "implementationPath": "Currency.textoNumero"
             }
           ]
         },
-        "unit": {
+        "textoParte": {
           "variants": [
             {
               "params": [],
-              "implementationPath": "Currency.unit"
+              "implementationPath": "Currency.textoParte"
             }
           ]
         },
-        "units": {
+        "textoReais": {
           "variants": [
             {
               "params": [],
-              "implementationPath": "Currency.units"
+              "implementationPath": "Currency.textoReais"
             }
           ]
         },
-        "withoutSign": {
+        "textoResto": {
           "variants": [
             {
               "params": [],
-              "implementationPath": "Currency.withoutSign"
+              "implementationPath": "Currency.textoResto"
+            }
+          ]
+        },
+        "textoSuperior": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Currency.textoSuperior"
+            }
+          ]
+        },
+        "unidade": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Currency.unidade"
+            }
+          ]
+        },
+        "unidades": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Currency.unidades"
+            }
+          ]
+        },
+        "valorAbsoluto": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Currency.valorAbsoluto"
+            }
+          ]
+        },
+        "valorTruncado": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Currency.valorTruncado"
+            }
+          ]
+        }
+      }
+    },
+    "date": {
+      "functions": {
+        "a": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Date.a"
+            }
+          ]
+        },
+        "addBusinessDays": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "date"
+                },
+                {
+                  "name": "DateTime"
+                },
+                {
+                  "name": "amount"
+                },
+                {
+                  "name": "int"
+                },
+                {
+                  "name": "options"
+                },
+                {
+                  "name": "BusinessDayOptions"
+                },
+                {
+                  "name": "option"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "DateTime"
+                },
+                {
+                  "name": "option"
+                }
+              ],
+              "implementationPath": "Date.AddBusinessDays"
+            }
+          ]
+        },
+        "b": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Date.b"
+            }
+          ]
+        },
+        "c": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Date.c"
+            }
+          ]
+        },
+        "consci": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "ênciaNegra"
+                }
+              ],
+              "implementationPath": "Date.consci"
+            }
+          ]
+        },
+        "convertToWords": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Date.ConvertToWords"
+            }
+          ]
+        },
+        "d": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Date.d"
+            }
+          ]
+        },
+        "de": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": ","
+                },
+                {
+                  "name": "ate,"
+                },
+                {
+                  "name": "sinal"
+                }
+              ],
+              "implementationPath": "Date.de"
+            }
+          ]
+        },
+        "dia": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Date.dia"
+            }
+          ]
+        },
+        "diaTexto": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Date.diaTexto"
+            }
+          ]
+        },
+        "differenceInBusinessDays": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "laterDate"
+                },
+                {
+                  "name": "DateTime"
+                },
+                {
+                  "name": "earlierDate"
+                },
+                {
+                  "name": "DateTime"
+                },
+                {
+                  "name": "options"
+                },
+                {
+                  "name": "BusinessDayOptions"
+                },
+                {
+                  "name": "option"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "int"
+                },
+                {
+                  "name": "option"
+                }
+              ],
+              "implementationPath": "Date.DifferenceInBusinessDays"
+            }
+          ]
+        },
+        "e": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Date.e"
+            }
+          ]
+        },
+        "f": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Date.f"
+            }
+          ]
+        },
+        "fim": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Date.fim"
+            }
+          ]
+        },
+        "fixos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Date.fixos"
+            }
+          ]
+        },
+        "formatos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Date.formatos"
+            }
+          ]
+        },
+        "g": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Date.g"
+            }
+          ]
+        },
+        "getHolidays": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "year"
+                },
+                {
+                  "name": "int"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "Holiday"
+                },
+                {
+                  "name": "list"
+                }
+              ],
+              "implementationPath": "Date.GetHolidays"
+            }
+          ]
+        },
+        "h": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Date.h"
+            }
+          ]
+        },
+        "i": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Date.i"
+            }
+          ]
+        },
+        "incluirFacultativos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Date.incluirFacultativos"
+            }
+          ]
+        },
+        "inicio": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Date.inicio"
+            }
+          ]
+        },
+        "isBusinessDay": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "DateTime"
+                },
+                {
+                  "name": "options"
+                },
+                {
+                  "name": "BusinessDayOptions"
+                },
+                {
+                  "name": "option"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "bool"
+                }
+              ],
+              "implementationPath": "Date.IsBusinessDay"
+            }
+          ]
+        },
+        "isHoliday": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "options"
+                },
+                {
+                  "name": "IsHolidayParams"
+                },
+                {
+                  "name": "option"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "bool"
+                }
+              ],
+              "implementationPath": "Date.IsHoliday"
+            }
+          ]
+        },
+        "k": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Date.k"
+            }
+          ]
+        },
+        "l": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Date.l"
+            }
+          ]
+        },
+        "m": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Date.m"
+            }
+          ]
+        },
+        "mes": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Date.mes"
+            }
+          ]
+        },
+        "moveis": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Date.moveis"
+            }
+          ]
+        },
+        "mutable": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "atual"
+                }
+              ],
+              "implementationPath": "Date.mutable"
+            },
+            {
+              "params": [
+                {
+                  "name": "restante"
+                }
+              ],
+              "implementationPath": "Date.mutable"
+            },
+            {
+              "params": [
+                {
+                  "name": "valido"
+                }
+              ],
+              "implementationPath": "Date.mutable"
+            },
+            {
+              "params": [
+                {
+                  "name": "contagem"
+                }
+              ],
+              "implementationPath": "Date.mutable"
+            },
+            {
+              "params": [
+                {
+                  "name": "atual"
+                }
+              ],
+              "implementationPath": "Date.mutable"
+            }
+          ]
+        },
+        "pascoa": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Date.pascoa"
+            }
+          ]
+        },
+        "passo": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Date.passo"
+            }
+          ]
+        },
+        "subBusinessDays": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "date"
+                },
+                {
+                  "name": "DateTime"
+                },
+                {
+                  "name": "amount"
+                },
+                {
+                  "name": "int"
+                },
+                {
+                  "name": "options"
+                },
+                {
+                  "name": "BusinessDayOptions"
+                },
+                {
+                  "name": "option"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "DateTime"
+                },
+                {
+                  "name": "option"
+                }
+              ],
+              "implementationPath": "Date.SubBusinessDays"
+            }
+          ]
+        }
+      }
+    },
+    "email": {
+      "functions": {
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "bool"
+                }
+              ],
+              "implementationPath": "Email.IsValid"
+            }
+          ]
+        },
+        "valor": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Email.valor"
             }
           ]
         }
@@ -965,6 +3831,14 @@
     },
     "helpers": {
       "functions": {
+        "assembly": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Helpers.assembly"
+            }
+          ]
+        },
         "internal": {
           "variants": [
             {
@@ -1073,6 +3947,26 @@
                 }
               ],
               "implementationPath": "Helpers.internal"
+            },
+            {
+              "params": [
+                {
+                  "name": "lerRecursoEmbutido"
+                },
+                {
+                  "name": "nomeLogico"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Helpers.internal"
             }
           ]
         },
@@ -1098,6 +3992,522 @@
         }
       }
     },
+    "iban": {
+      "functions": {
+        "apenasAlfanumerico": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Iban.apenasAlfanumerico"
+            }
+          ]
+        },
+        "compacto": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Iban.compacto"
+            }
+          ]
+        },
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Iban.Format"
+            }
+          ]
+        },
+        "getInfo": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "IbanInfo"
+                },
+                {
+                  "name": "option"
+                }
+              ],
+              "implementationPath": "Iban.GetInfo"
+            }
+          ]
+        },
+        "gruposValidos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Iban.gruposValidos"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "bool"
+                }
+              ],
+              "implementationPath": "Iban.IsValid"
+            }
+          ]
+        },
+        "maiusculo": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Iban.maiusculo"
+            },
+            {
+              "params": [],
+              "implementationPath": "Iban.maiusculo"
+            }
+          ]
+        },
+        "mutable": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "valido"
+                }
+              ],
+              "implementationPath": "Iban.mutable"
+            },
+            {
+              "params": [
+                {
+                  "name": "resto"
+                }
+              ],
+              "implementationPath": "Iban.mutable"
+            }
+          ]
+        },
+        "numerico": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Iban.numerico"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Iban.Parse"
+            }
+          ]
+        },
+        "partes": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Iban.partes"
+            }
+          ]
+        },
+        "rearranjado": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Iban.rearranjado"
+            }
+          ]
+        },
+        "temSeparador": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Iban.temSeparador"
+            }
+          ]
+        },
+        "todasAlfanumericas": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Iban.todasAlfanumericas"
+            }
+          ]
+        },
+        "ultima": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Iban.ultima"
+            }
+          ]
+        },
+        "ultimaValida": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Iban.ultimaValida"
+            }
+          ]
+        }
+      }
+    },
+    "ie": {
+      "functions": {
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": "state"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "bool"
+                }
+              ],
+              "implementationPath": "Ie.IsValid"
+            }
+          ]
+        },
+        "uf": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Ie.uf"
+            }
+          ]
+        },
+        "valorLimpo": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Ie.valorLimpo"
+            }
+          ]
+        }
+      }
+    },
+    "legalnature": {
+      "functions": {
+        "apenasDigitos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "LegalNature.apenasDigitos"
+            },
+            {
+              "params": [],
+              "implementationPath": "LegalNature.apenasDigitos"
+            }
+          ]
+        },
+        "base": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "'"
+                }
+              ],
+              "implementationPath": "LegalNature.base"
+            },
+            {
+              "params": [
+                {
+                  "name": "'"
+                }
+              ],
+              "implementationPath": "LegalNature.base"
+            }
+          ]
+        },
+        "codigo": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "LegalNature.codigo"
+            }
+          ]
+        },
+        "codigoCategoria": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "LegalNature.codigoCategoria"
+            }
+          ]
+        },
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "LegalNature.Format"
+            }
+          ]
+        },
+        "generate": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "LegalNature.Generate"
+            }
+          ]
+        },
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "LegalNatureInfo"
+                },
+                {
+                  "name": "option"
+                }
+              ],
+              "implementationPath": "LegalNature.Get"
+            }
+          ]
+        },
+        "getDescription": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "code"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": "option"
+                }
+              ],
+              "implementationPath": "LegalNature.GetDescription"
+            }
+          ]
+        },
+        "incluir": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "LegalNature.incluir"
+            },
+            {
+              "params": [],
+              "implementationPath": "LegalNature.incluir"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "code"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "bool"
+                }
+              ],
+              "implementationPath": "LegalNature.IsValid"
+            }
+          ]
+        },
+        "list": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "incluirAposentados"
+                },
+                {
+                  "name": "bool"
+                },
+                {
+                  "name": "option"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "Map<string,"
+                },
+                {
+                  "name": "string>"
+                }
+              ],
+              "implementationPath": "LegalNature.List"
+            }
+          ]
+        },
+        "listByCategory": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "category"
+                },
+                {
+                  "name": "obj"
+                },
+                {
+                  "name": "incluirAposentados"
+                },
+                {
+                  "name": "bool"
+                },
+                {
+                  "name": "option"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "LegalNatureInfo"
+                },
+                {
+                  "name": "list"
+                }
+              ],
+              "implementationPath": "LegalNature.ListByCategory"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "LegalNature.Parse"
+            }
+          ]
+        },
+        "random": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "LegalNature.random"
+            }
+          ]
+        },
+        "sb": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "LegalNature.sb"
+            }
+          ]
+        }
+      }
+    },
     "legalprocess": {
       "functions": {
         "aaaa": {
@@ -1109,6 +4519,14 @@
             {
               "params": [],
               "implementationPath": "LegalProcess.aaaa"
+            }
+          ]
+        },
+        "apenasDigitos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "LegalProcess.apenasDigitos"
             }
           ]
         },
@@ -1197,19 +4615,10 @@
             {
               "params": [
                 {
-                  "name": "year"
+                  "name": "options"
                 },
                 {
-                  "name": "int"
-                },
-                {
-                  "name": "option"
-                },
-                {
-                  "name": "orgao"
-                },
-                {
-                  "name": "int"
+                  "name": "GenerateLegalProcessOptions"
                 },
                 {
                   "name": "option"
@@ -1282,6 +4691,35 @@
             {
               "params": [],
               "implementationPath": "LegalProcess.oooo"
+            }
+          ]
+        },
+        "orgao": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "LegalProcess.orgao"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "LegalProcess.parse"
             }
           ]
         },
@@ -1409,11 +4847,27 @@
               "implementationPath": "LegalProcess.validTribunal"
             }
           ]
+        },
+        "year": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "LegalProcess.year"
+            }
+          ]
         }
       }
     },
     "licenseplate": {
       "functions": {
+        "apenasAlfanumerico": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "LicensePlate.apenasAlfanumerico"
+            }
+          ]
+        },
         "convertToMercosul": {
           "variants": [
             {
@@ -1429,20 +4883,9 @@
                 },
                 {
                   "name": "string"
-                },
-                {
-                  "name": "option"
                 }
               ],
               "implementationPath": "LicensePlate.convertToMercosul"
-            }
-          ]
-        },
-        "digits": {
-          "variants": [
-            {
-              "params": [],
-              "implementationPath": "LicensePlate.digits"
             }
           ]
         },
@@ -1540,15 +4983,6 @@
                   "name": "string"
                 },
                 {
-                  "name": "plateType"
-                },
-                {
-                  "name": "string"
-                },
-                {
-                  "name": "option"
-                },
-                {
                   "name": ""
                 },
                 {
@@ -1559,15 +4993,64 @@
             }
           ]
         },
-        "pattern": {
+        "letrasEDigitos": {
           "variants": [
             {
               "params": [],
-              "implementationPath": "LicensePlate.pattern"
+              "implementationPath": "LicensePlate.letrasEDigitos"
+            }
+          ]
+        },
+        "maiusculo": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "LicensePlate.maiusculo"
             },
             {
               "params": [],
-              "implementationPath": "LicensePlate.pattern"
+              "implementationPath": "LicensePlate.maiusculo"
+            }
+          ]
+        },
+        "normalizado": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "LicensePlate.normalizado"
+            }
+          ]
+        },
+        "padrao": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "LicensePlate.padrao"
+            },
+            {
+              "params": [],
+              "implementationPath": "LicensePlate.padrao"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "LicensePlate.parse"
             }
           ]
         },
@@ -1608,23 +5091,19 @@
             }
           ]
         },
-        "trimmed": {
+        "semEspacos": {
           "variants": [
             {
               "params": [],
-              "implementationPath": "LicensePlate.trimmed"
-            },
-            {
-              "params": [],
-              "implementationPath": "LicensePlate.trimmed"
+              "implementationPath": "LicensePlate.semEspacos"
             }
           ]
         },
-        "upper": {
+        "semTraco": {
           "variants": [
             {
               "params": [],
-              "implementationPath": "LicensePlate.upper"
+              "implementationPath": "LicensePlate.semTraco"
             }
           ]
         },
@@ -1638,13 +5117,975 @@
         }
       }
     },
+    "municipality": {
+      "functions": {
+        "filtrados": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Municipality.filtrados"
+            }
+          ]
+        },
+        "getByCode": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "code"
+                },
+                {
+                  "name": "obj"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "MunicipalityInfo"
+                },
+                {
+                  "name": "option"
+                }
+              ],
+              "implementationPath": "Municipality.GetByCode"
+            }
+          ]
+        },
+        "json": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Municipality.json"
+            }
+          ]
+        },
+        "list": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "stateCode"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": "option"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "MunicipalityInfo"
+                },
+                {
+                  "name": "list"
+                }
+              ],
+              "implementationPath": "Municipality.List"
+            }
+          ]
+        },
+        "texto": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Municipality.texto"
+            }
+          ]
+        }
+      }
+    },
+    "ncm": {
+      "functions": {
+        "apenasDigitos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Ncm.apenasDigitos"
+            },
+            {
+              "params": [],
+              "implementationPath": "Ncm.apenasDigitos"
+            }
+          ]
+        },
+        "conjunto": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Ncm.conjunto"
+            }
+          ]
+        },
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "obj"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Ncm.Format"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "obj"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "bool"
+                }
+              ],
+              "implementationPath": "Ncm.IsValid"
+            }
+          ]
+        },
+        "json": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Ncm.json"
+            }
+          ]
+        },
+        "m": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Ncm.m"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "obj"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Ncm.Parse"
+            }
+          ]
+        },
+        "sb": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Ncm.sb"
+            }
+          ]
+        },
+        "texto": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Ncm.texto"
+            }
+          ]
+        }
+      }
+    },
+    "nfekey": {
+      "functions": {
+        "aamm": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "NfeKey.aamm"
+            }
+          ]
+        },
+        "apenasDigitos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "NfeKey.apenasDigitos"
+            }
+          ]
+        },
+        "codigo": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "NfeKey.codigo"
+            }
+          ]
+        },
+        "cUF": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "NfeKey.cUF"
+            }
+          ]
+        },
+        "digitoEsperado": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "NfeKey.digitoEsperado"
+            }
+          ]
+        },
+        "digitos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "NfeKey.digitos"
+            },
+            {
+              "params": [],
+              "implementationPath": "NfeKey.digitos"
+            }
+          ]
+        },
+        "digitoVerificador": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "NfeKey.digitoVerificador"
+            }
+          ]
+        },
+        "encontrado": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "NfeKey.encontrado"
+            }
+          ]
+        },
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "NfeKey.Format"
+            }
+          ]
+        },
+        "getInfo": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "NfeKeyInfo"
+                },
+                {
+                  "name": "option"
+                }
+              ],
+              "implementationPath": "NfeKey.GetInfo"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "bool"
+                }
+              ],
+              "implementationPath": "NfeKey.IsValid"
+            }
+          ]
+        },
+        "modelo": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "NfeKey.modelo"
+            }
+          ]
+        },
+        "mutable": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "soma"
+                }
+              ],
+              "implementationPath": "NfeKey.mutable"
+            },
+            {
+              "params": [
+                {
+                  "name": "peso"
+                }
+              ],
+              "implementationPath": "NfeKey.mutable"
+            }
+          ]
+        },
+        "numero": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "NfeKey.numero"
+            }
+          ]
+        },
+        "numeroDocumento": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "NfeKey.numeroDocumento"
+            }
+          ]
+        },
+        "numeroNaoZerado": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "NfeKey.numeroNaoZerado"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "NfeKey.Parse"
+            }
+          ]
+        },
+        "resto": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "NfeKey.resto"
+            }
+          ]
+        },
+        "semPrefixo": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "NfeKey.semPrefixo"
+            }
+          ]
+        },
+        "serie": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "NfeKey.serie"
+            }
+          ]
+        },
+        "taxId": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "NfeKey.taxId"
+            }
+          ]
+        },
+        "tipoEmissao": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "NfeKey.tipoEmissao"
+            }
+          ]
+        },
+        "tipoEmissaoValido": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "NfeKey.tipoEmissaoValido"
+            }
+          ]
+        }
+      }
+    },
+    "number": {
+      "functions": {
+        "absoluto": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Number.absoluto"
+            }
+          ]
+        },
+        "centena": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Number.centena"
+            }
+          ]
+        },
+        "conector": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Number.conector"
+            }
+          ]
+        },
+        "convertToWords": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "float"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Number.ConvertToWords"
+            }
+          ]
+        },
+        "dezena": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Number.dezena"
+            }
+          ]
+        },
+        "divisor": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Number.divisor"
+            }
+          ]
+        },
+        "mutable": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "escalaMaxima"
+                }
+              ],
+              "implementationPath": "Number.mutable"
+            },
+            {
+              "params": [
+                {
+                  "name": "temp"
+                }
+              ],
+              "implementationPath": "Number.mutable"
+            }
+          ]
+        },
+        "negativo": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Number.negativo"
+            }
+          ]
+        },
+        "nomeEscala": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Number.nomeEscala"
+            }
+          ]
+        },
+        "nomesEscala": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Number.nomesEscala"
+            }
+          ]
+        },
+        "nomesEscalaPlural": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Number.nomesEscalaPlural"
+            }
+          ]
+        },
+        "parteAtual": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Number.parteAtual"
+            }
+          ]
+        },
+        "partesSuperiores": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Number.partesSuperiores"
+            }
+          ]
+        },
+        "quociente": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Number.quociente"
+            }
+          ]
+        },
+        "rec": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "private"
+                },
+                {
+                  "name": "converterAbaixoDeMil"
+                },
+                {
+                  "name": "n"
+                },
+                {
+                  "name": "int"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Number.rec"
+            },
+            {
+              "params": [
+                {
+                  "name": "private"
+                },
+                {
+                  "name": "converter"
+                },
+                {
+                  "name": "n"
+                },
+                {
+                  "name": "int64"
+                },
+                {
+                  "name": "escala"
+                },
+                {
+                  "name": "int"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Number.rec"
+            }
+          ]
+        },
+        "resto": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Number.resto"
+            },
+            {
+              "params": [],
+              "implementationPath": "Number.resto"
+            }
+          ]
+        },
+        "texto": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Number.texto"
+            }
+          ]
+        },
+        "textoAtual": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Number.textoAtual"
+            }
+          ]
+        },
+        "textoParte": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Number.textoParte"
+            }
+          ]
+        },
+        "textoResto": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Number.textoResto"
+            }
+          ]
+        },
+        "textoSuperior": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Number.textoSuperior"
+            }
+          ]
+        },
+        "truncado": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Number.truncado"
+            }
+          ]
+        },
+        "unidade": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Number.unidade"
+            }
+          ]
+        }
+      }
+    },
+    "passport": {
+      "functions": {
+        "apenasAlfanumerico": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Passport.apenasAlfanumerico"
+            }
+          ]
+        },
+        "digito": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Passport.digito"
+            }
+          ]
+        },
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "obj"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Passport.Format"
+            }
+          ]
+        },
+        "generate": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Passport.Generate"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "obj"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "bool"
+                }
+              ],
+              "implementationPath": "Passport.IsValid"
+            }
+          ]
+        },
+        "letra": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Passport.letra"
+            }
+          ]
+        },
+        "normalizado": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Passport.normalizado"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "obj"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Passport.Parse"
+            }
+          ]
+        },
+        "random": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Passport.random"
+            }
+          ]
+        },
+        "removeSymbols": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Passport.RemoveSymbols"
+            }
+          ]
+        }
+      }
+    },
     "phone": {
       "functions": {
+        "apenasDigitos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Phone.apenasDigitos"
+            },
+            {
+              "params": [],
+              "implementationPath": "Phone.apenasDigitos"
+            },
+            {
+              "params": [],
+              "implementationPath": "Phone.apenasDigitos"
+            }
+          ]
+        },
         "clearValue": {
           "variants": [
             {
               "params": [],
               "implementationPath": "Phone.clearValue"
+            }
+          ]
+        },
+        "codigoDeArea": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Phone.codigoDeArea"
+            }
+          ]
+        },
+        "codigosPublicos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Phone.codigosPublicos"
+            }
+          ]
+        },
+        "digitos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Phone.digitos"
+            }
+          ]
+        },
+        "ehAbreviado": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Phone.ehAbreviado"
+            }
+          ]
+        },
+        "ehCodigoPublico": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Phone.ehCodigoPublico"
+            }
+          ]
+        },
+        "ehNaoGeografico": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Phone.ehNaoGeografico"
+            }
+          ]
+        },
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Phone.Format"
+            }
+          ]
+        },
+        "gerarDigitos": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "quantidade"
+                }
+              ],
+              "implementationPath": "Phone.gerarDigitos"
             }
           ]
         },
@@ -1660,6 +6101,27 @@
             }
           ]
         },
+        "isValidLandline": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "bool"
+                }
+              ],
+              "implementationPath": "Phone.IsValidLandline"
+            }
+          ]
+        },
         "isValidLandlineDigit": {
           "variants": [
             {
@@ -1669,6 +6131,27 @@
                 }
               ],
               "implementationPath": "Phone.isValidLandlineDigit"
+            }
+          ]
+        },
+        "isValidMobile": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "bool"
+                }
+              ],
+              "implementationPath": "Phone.IsValidMobile"
             }
           ]
         },
@@ -1683,11 +6166,226 @@
               "implementationPath": "Phone.isValidMobileDigit"
             }
           ]
+        },
+        "isValidService": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "bool"
+                }
+              ],
+              "implementationPath": "Phone.IsValidService"
+            }
+          ]
+        },
+        "listaDigitos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Phone.listaDigitos"
+            },
+            {
+              "params": [],
+              "implementationPath": "Phone.listaDigitos"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Phone.Parse"
+            }
+          ]
+        },
+        "pontoDeCorte": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Phone.pontoDeCorte"
+            }
+          ]
+        },
+        "prefixosNaoGeograficos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Phone.prefixosNaoGeograficos"
+            }
+          ]
+        },
+        "primeiraParte": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Phone.primeiraParte"
+            }
+          ]
+        },
+        "primeiroDigito": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Phone.primeiroDigito"
+            },
+            {
+              "params": [],
+              "implementationPath": "Phone.primeiroDigito"
+            }
+          ]
+        },
+        "rec": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "Generate"
+                },
+                {
+                  "name": "tipo"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": "option"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Phone.rec"
+            }
+          ]
+        },
+        "removeInternationalDialingCode": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Phone.RemoveInternationalDialingCode"
+            }
+          ]
+        },
+        "removeSymbols": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Phone.RemoveSymbols"
+            }
+          ]
+        },
+        "resto": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Phone.resto"
+            }
+          ]
+        },
+        "rnd": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Phone.rnd"
+            }
+          ]
+        },
+        "semCodigoPais": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Phone.semCodigoPais"
+            },
+            {
+              "params": [],
+              "implementationPath": "Phone.semCodigoPais"
+            },
+            {
+              "params": [],
+              "implementationPath": "Phone.semCodigoPais"
+            }
+          ]
+        },
+        "servicos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Phone.servicos"
+            }
+          ]
+        },
+        "truncado": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Phone.truncado"
+            }
+          ]
         }
       }
     },
     "pis": {
       "functions": {
+        "apenasDigitos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Pis.apenasDigitos"
+            }
+          ]
+        },
         "baseNumber": {
           "variants": [
             {
@@ -1788,6 +6486,27 @@
             }
           ]
         },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Pis.parse"
+            }
+          ]
+        },
         "pisDigits": {
           "variants": [
             {
@@ -1835,6 +6554,453 @@
         }
       }
     },
+    "pixkey": {
+      "functions": {
+        "apenasDigitos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "PixKey.apenasDigitos"
+            }
+          ]
+        },
+        "getInfo": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "PixKeyInfo"
+                },
+                {
+                  "name": "option"
+                }
+              ],
+              "implementationPath": "PixKey.GetInfo"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": "allowedTypes"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": "list"
+                },
+                {
+                  "name": "option"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "bool"
+                }
+              ],
+              "implementationPath": "PixKey.IsValid"
+            }
+          ]
+        },
+        "numero": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "PixKey.numero"
+            }
+          ]
+        },
+        "pareceTelefoneEscrito": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "PixKey.pareceTelefoneEscrito"
+            }
+          ]
+        },
+        "semCodigoPais": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "PixKey.semCodigoPais"
+            }
+          ]
+        },
+        "valorAparado": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "PixKey.valorAparado"
+            }
+          ]
+        }
+      }
+    },
+    "pixpayload": {
+      "functions": {
+        "camposAdicionais": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "PixPayload.camposAdicionais"
+            }
+          ]
+        },
+        "categoria": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "PixPayload.categoria"
+            }
+          ]
+        },
+        "chave": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "PixPayload.chave"
+            }
+          ]
+        },
+        "cidadeComerciante": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "PixPayload.cidadeComerciante"
+            }
+          ]
+        },
+        "crcCalculado": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "PixPayload.crcCalculado"
+            }
+          ]
+        },
+        "crcInformado": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "PixPayload.crcInformado"
+            }
+          ]
+        },
+        "facilitadorSaque": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "PixPayload.facilitadorSaque"
+            }
+          ]
+        },
+        "getInfo": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "PixPayloadInfo"
+                },
+                {
+                  "name": "option"
+                }
+              ],
+              "implementationPath": "PixPayload.GetInfo"
+            }
+          ]
+        },
+        "id": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "PixPayload.id"
+            }
+          ]
+        },
+        "idTexto": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "PixPayload.idTexto"
+            }
+          ]
+        },
+        "indicadorInicio": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "PixPayload.indicadorInicio"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "bool"
+                }
+              ],
+              "implementationPath": "PixPayload.IsValid"
+            }
+          ]
+        },
+        "moeda": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "PixPayload.moeda"
+            }
+          ]
+        },
+        "mutable": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "crc"
+                }
+              ],
+              "implementationPath": "PixPayload.mutable"
+            }
+          ]
+        },
+        "nivelSuperior": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "PixPayload.nivelSuperior"
+            }
+          ]
+        },
+        "nomeComerciante": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "PixPayload.nomeComerciante"
+            }
+          ]
+        },
+        "pais": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "PixPayload.pais"
+            }
+          ]
+        },
+        "pontoDeIniciacao": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "PixPayload.pontoDeIniciacao"
+            }
+          ]
+        },
+        "rec": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "private"
+                },
+                {
+                  "name": "analisarTlv"
+                },
+                {
+                  "name": "texto"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": "*"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": "list"
+                }
+              ],
+              "implementationPath": "PixPayload.rec"
+            }
+          ]
+        },
+        "resto": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "PixPayload.resto"
+            }
+          ]
+        },
+        "semCrc": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "PixPayload.semCrc"
+            }
+          ]
+        },
+        "subCampos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "PixPayload.subCampos"
+            }
+          ]
+        },
+        "templatePix": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "PixPayload.templatePix"
+            }
+          ]
+        },
+        "txid": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "PixPayload.txid"
+            }
+          ]
+        },
+        "url": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "PixPayload.url"
+            }
+          ]
+        },
+        "valor": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "PixPayload.valor"
+            },
+            {
+              "params": [],
+              "implementationPath": "PixPayload.valor"
+            }
+          ]
+        }
+      }
+    },
+    "registroprofissional": {
+      "functions": {
+        "conselho": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "RegistroProfissional.conselho"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "parametros"
+                },
+                {
+                  "name": "IsValidRegistroProfissionalParams"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "bool"
+                }
+              ],
+              "implementationPath": "RegistroProfissional.IsValid"
+            }
+          ]
+        },
+        "m": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "RegistroProfissional.m"
+            },
+            {
+              "params": [],
+              "implementationPath": "RegistroProfissional.m"
+            },
+            {
+              "params": [],
+              "implementationPath": "RegistroProfissional.m"
+            },
+            {
+              "params": [],
+              "implementationPath": "RegistroProfissional.m"
+            }
+          ]
+        },
+        "regional": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "RegistroProfissional.regional"
+            }
+          ]
+        },
+        "valor": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "RegistroProfissional.valor"
+            }
+          ]
+        }
+      }
+    },
     "renavam": {
       "functions": {
         "actualDv": {
@@ -1842,6 +7008,14 @@
             {
               "params": [],
               "implementationPath": "Renavam.actualDv"
+            }
+          ]
+        },
+        "baseDigitos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Renavam.baseDigitos"
             }
           ]
         },
@@ -1853,8 +7027,20 @@
             }
           ]
         },
+        "baseTexto": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Renavam.baseTexto"
+            }
+          ]
+        },
         "dv": {
           "variants": [
+            {
+              "params": [],
+              "implementationPath": "Renavam.dv"
+            },
             {
               "params": [],
               "implementationPath": "Renavam.dv"
@@ -1866,6 +7052,21 @@
             {
               "params": [],
               "implementationPath": "Renavam.expectedDv"
+            }
+          ]
+        },
+        "generate": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Renavam.Generate"
             }
           ]
         },
@@ -1890,6 +7091,26 @@
             }
           ]
         },
+        "random": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Renavam.random"
+            }
+          ]
+        },
+        "rec": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "gerarBase"
+                }
+              ],
+              "implementationPath": "Renavam.rec"
+            }
+          ]
+        },
         "weightedSum": {
           "variants": [
             {
@@ -1900,8 +7121,317 @@
         }
       }
     },
+    "state": {
+      "functions": {
+        "alvo": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "State.alvo"
+            },
+            {
+              "params": [],
+              "implementationPath": "State.alvo"
+            },
+            {
+              "params": [],
+              "implementationPath": "State.alvo"
+            }
+          ]
+        },
+        "codigo": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "State.codigo"
+            }
+          ]
+        },
+        "getByIbgeCode": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "code"
+                },
+                {
+                  "name": "obj"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "StateInfo"
+                },
+                {
+                  "name": "option"
+                }
+              ],
+              "implementationPath": "State.GetByIbgeCode"
+            }
+          ]
+        },
+        "getCodeByName": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "name"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": "option"
+                }
+              ],
+              "implementationPath": "State.GetCodeByName"
+            }
+          ]
+        },
+        "getNameByCode": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "code"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": "option"
+                }
+              ],
+              "implementationPath": "State.GetNameByCode"
+            }
+          ]
+        },
+        "getTimezone": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "stateCode"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": "option"
+                }
+              ],
+              "implementationPath": "State.GetTimezone"
+            }
+          ]
+        },
+        "list": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": ""
+                },
+                {
+                  "name": "StateInfo"
+                },
+                {
+                  "name": "list"
+                }
+              ],
+              "implementationPath": "State.List"
+            }
+          ]
+        }
+      }
+    },
+    "text": {
+      "functions": {
+        "capitalize": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Text.Capitalize"
+            }
+          ]
+        },
+        "colapsado": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Text.colapsado"
+            }
+          ]
+        },
+        "maiuscula": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Text.maiuscula"
+            }
+          ]
+        },
+        "minuscula": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Text.minuscula"
+            }
+          ]
+        },
+        "normalizado": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Text.normalizado"
+            }
+          ]
+        },
+        "palavras": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Text.palavras"
+            }
+          ]
+        },
+        "primeiroCaractere": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Text.primeiroCaractere"
+            }
+          ]
+        },
+        "removeAccents": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "Text.RemoveAccents"
+            }
+          ]
+        }
+      }
+    },
+    "vin": {
+      "functions": {
+        "digitoEsperado": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Vin.digitoEsperado"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "bool"
+                }
+              ],
+              "implementationPath": "Vin.IsValid"
+            }
+          ]
+        },
+        "maiusculo": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Vin.maiusculo"
+            }
+          ]
+        },
+        "resto": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Vin.resto"
+            }
+          ]
+        },
+        "soma": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Vin.soma"
+            }
+          ]
+        },
+        "valores": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "Vin.valores"
+            }
+          ]
+        }
+      }
+    },
     "voterid": {
       "functions": {
+        "apenasDigitos": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "VoterId.apenasDigitos"
+            }
+          ]
+        },
         "calculateVd1": {
           "variants": [
             {
@@ -2011,6 +7541,14 @@
             {
               "params": [],
               "implementationPath": "VoterId.digits"
+            }
+          ]
+        },
+        "ehSpOuMg": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "VoterId.ehSpOuMg"
             }
           ]
         },
@@ -2221,11 +7759,61 @@
             }
           ]
         },
+        "limite": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "VoterId.limite"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "obj"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "VoterId.Parse"
+            }
+          ]
+        },
         "random": {
           "variants": [
             {
               "params": [],
               "implementationPath": "VoterId.random"
+            }
+          ]
+        },
+        "removeSymbols": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "string"
+                },
+                {
+                  "name": ""
+                },
+                {
+                  "name": "string"
+                }
+              ],
+              "implementationPath": "VoterId.RemoveSymbols"
             }
           ]
         },

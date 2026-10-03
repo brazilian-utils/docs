@@ -154,7 +154,11 @@
               "params": [
                 {
                   "name": "branch",
-                  "type": "int"
+                  "type": "int | str"
+                },
+                {
+                  "name": "alphanumeric",
+                  "type": "bool"
                 }
               ],
               "returns": "str",
@@ -617,6 +621,61 @@
               ],
               "returns": "tuple[str, str] | None",
               "implementationPath": "ibge.municipality.get_municipality_by_code"
+            }
+          ]
+        }
+      }
+    },
+    "passport": {
+      "functions": {
+        "formatPassport": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "passport",
+                  "type": "str"
+                }
+              ],
+              "returns": "str | None",
+              "implementationPath": "passport.format_passport"
+            }
+          ]
+        },
+        "generate": {
+          "variants": [
+            {
+              "params": [],
+              "returns": "str",
+              "implementationPath": "passport.generate"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "passport",
+                  "type": "str"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "passport.is_valid"
+            }
+          ]
+        },
+        "removeSymbols": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "passport",
+                  "type": "str"
+                }
+              ],
+              "returns": "str",
+              "implementationPath": "passport.remove_symbols"
             }
           ]
         }

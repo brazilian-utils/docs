@@ -12,12 +12,76 @@
                   "type": "&str"
                 },
                 {
-                  "name": "raise_exceptions",
-                  "type": "bool"
+                  "name": "options",
+                  "type": "Option<GetAddressInfoByCepOptions>"
                 }
               ],
               "returns": "Result<Option<Address>,",
               "implementationPath": "get_address_from_cep"
+            }
+          ]
+        }
+      }
+    },
+    "bycode": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "code",
+                  "type": "&str"
+                }
+              ],
+              "returns": "Option<Bank>",
+              "implementationPath": "get_by_code"
+            },
+            {
+              "params": [
+                {
+                  "name": "code",
+                  "type": "&str"
+                }
+              ],
+              "returns": "Option<Municipality>",
+              "implementationPath": "get_by_code"
+            }
+          ]
+        }
+      }
+    },
+    "byibgecode": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "code",
+                  "type": "u32"
+                }
+              ],
+              "returns": "Option<State>",
+              "implementationPath": "get_by_ibge_code"
+            }
+          ]
+        }
+      }
+    },
+    "byispb": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "Option<Bank>",
+              "implementationPath": "get_by_ispb"
             }
           ]
         }
@@ -48,20 +112,8 @@
             {
               "params": [
                 {
-                  "name": "federal_unit",
-                  "type": "&str"
-                },
-                {
-                  "name": "city",
-                  "type": "&str"
-                },
-                {
-                  "name": "street",
-                  "type": "&str"
-                },
-                {
-                  "name": "raise_exceptions",
-                  "type": "bool"
+                  "name": "params",
+                  "type": "GetCepInfoByAddressParams"
                 }
               ],
               "returns": "Result<Option<Vec<Address>>,",
@@ -102,6 +154,24 @@
               ],
               "returns": "Option<String>",
               "implementationPath": "format_cnpj"
+            }
+          ]
+        }
+      }
+    },
+    "codebyname": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "name",
+                  "type": "&str"
+                }
+              ],
+              "returns": "Option<String>",
+              "implementationPath": "get_code_by_name"
             }
           ]
         }
@@ -161,6 +231,28 @@
         }
       }
     },
+    "forformat": {
+      "functions": {
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "license_plate",
+                  "type": "&str"
+                },
+                {
+                  "name": "format",
+                  "type": "Option<&str>"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "is_valid_for_format"
+            }
+          ]
+        }
+      }
+    },
     "format": {
       "functions": {
         "get": {
@@ -181,6 +273,28 @@
     },
     "global": {
       "functions": {
+        "addBusinessDays": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "date",
+                  "type": "NaiveDate"
+                },
+                {
+                  "name": "amount",
+                  "type": "i64"
+                },
+                {
+                  "name": "options",
+                  "type": "Option<BusinessDayOptions>"
+                }
+              ],
+              "returns": "Option<NaiveDate>",
+              "implementationPath": "add_business_days"
+            }
+          ]
+        },
         "calculateChecksum": {
           "variants": [
             {
@@ -228,6 +342,24 @@
               ],
               "returns": "u8",
               "implementationPath": "calculate_vd2"
+            }
+          ]
+        },
+        "capitalize": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                },
+                {
+                  "name": "options",
+                  "type": "Option<CapitalizeOptions>"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "capitalize"
             }
           ]
         },
@@ -306,8 +438,192 @@
                   "type": "&str"
                 }
               ],
-              "returns": "Option<String>",
+              "returns": "String",
               "implementationPath": "convert_to_mercosul"
+            }
+          ]
+        },
+        "convertToWords": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "convert_to_words"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "f64"
+                },
+                {
+                  "name": "options",
+                  "type": "Option<ConvertNumberToWordsOptions>"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "convert_to_words"
+            }
+          ]
+        },
+        "differenceInBusinessDays": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "later_date",
+                  "type": "NaiveDate"
+                },
+                {
+                  "name": "earlier_date",
+                  "type": "NaiveDate"
+                },
+                {
+                  "name": "options",
+                  "type": "Option<BusinessDayOptions>"
+                }
+              ],
+              "returns": "Option<i64>",
+              "implementationPath": "difference_in_business_days"
+            }
+          ]
+        },
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "format"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "format"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "format"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "format"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "format"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "format"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "format"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "format"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "format"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "format"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "format"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "format"
+            },
+            {
+              "params": [
+                {
+                  "name": "passport",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "format"
             }
           ]
         },
@@ -319,12 +635,7 @@
               "implementationPath": "generate"
             },
             {
-              "params": [
-                {
-                  "name": "branch",
-                  "type": "Option<u32>"
-                }
-              ],
+              "params": [],
               "returns": "String",
               "implementationPath": "generate"
             },
@@ -336,12 +647,32 @@
             {
               "params": [
                 {
-                  "name": "year",
-                  "type": "Option<i32>"
+                  "name": "branch",
+                  "type": "Option<u32>"
                 },
                 {
-                  "name": "orgao",
-                  "type": "Option<u32>"
+                  "name": "version",
+                  "type": "Option<u8>"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "generate"
+            },
+            {
+              "params": [],
+              "returns": "String",
+              "implementationPath": "generate"
+            },
+            {
+              "params": [],
+              "returns": "String",
+              "implementationPath": "generate"
+            },
+            {
+              "params": [
+                {
+                  "name": "options",
+                  "type": "Option<GenerateProcessoJuridicoParams>"
                 }
               ],
               "returns": "Option<String>",
@@ -355,6 +686,11 @@
                 }
               ],
               "returns": "Option<String>",
+              "implementationPath": "generate"
+            },
+            {
+              "params": [],
+              "returns": "String",
               "implementationPath": "generate"
             },
             {
@@ -373,6 +709,16 @@
               "implementationPath": "generate"
             },
             {
+              "params": [
+                {
+                  "name": "params",
+                  "type": "GeneratePixPayloadParams"
+                }
+              ],
+              "returns": "Option<String>",
+              "implementationPath": "generate"
+            },
+            {
               "params": [],
               "returns": "String",
               "implementationPath": "generate"
@@ -386,6 +732,50 @@
               ],
               "returns": "Option<String>",
               "implementationPath": "generate"
+            }
+          ]
+        },
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "Option<Cbo>",
+              "implementationPath": "get"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "Option<Cfop>",
+              "implementationPath": "get"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "Option<Cnae>",
+              "implementationPath": "get"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "Option<LegalNature>",
+              "implementationPath": "get"
             }
           ]
         },
@@ -421,17 +811,31 @@
             }
           ]
         },
+        "isBusinessDay": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "NaiveDate"
+                },
+                {
+                  "name": "options",
+                  "type": "Option<BusinessDayOptions>"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "is_business_day"
+            }
+          ]
+        },
         "isHoliday": {
           "variants": [
             {
               "params": [
                 {
-                  "name": "target_date",
-                  "type": "NaiveDate"
-                },
-                {
-                  "name": "uf",
-                  "type": "Option<&str>"
+                  "name": "options",
+                  "type": "Option<IsHolidayParams>"
                 }
               ],
               "returns": "Option<bool>",
@@ -444,7 +848,47 @@
             {
               "params": [
                 {
+                  "name": "params",
+                  "type": "&IsValidBankAccountParams"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "is_valid"
+            },
+            {
+              "params": [
+                {
                   "name": "digitable_line",
+                  "type": "&str"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "is_valid"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "is_valid"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "is_valid"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
                   "type": "&str"
                 }
               ],
@@ -464,7 +908,61 @@
             {
               "params": [
                 {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "is_valid"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "is_valid"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "is_valid"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "is_valid"
+            },
+            {
+              "params": [
+                {
                   "name": "cnpj",
+                  "type": "&str"
+                },
+                {
+                  "name": "version",
+                  "type": "Option<u8>"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "is_valid"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
                   "type": "&str"
                 }
               ],
@@ -484,7 +982,65 @@
             {
               "params": [
                 {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "is_valid"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "is_valid"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                },
+                {
+                  "name": "options",
+                  "type": "Option<IsValidCstOptions>"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "is_valid"
+            },
+            {
+              "params": [
+                {
                   "name": "email",
+                  "type": "&str"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "is_valid"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "is_valid"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                },
+                {
+                  "name": "state",
                   "type": "&str"
                 }
               ],
@@ -516,10 +1072,36 @@
                 {
                   "name": "license_plate",
                   "type": "&str"
-                },
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "is_valid"
+            },
+            {
+              "params": [
                 {
-                  "name": "format",
-                  "type": "Option<&str>"
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "is_valid"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "is_valid"
+            },
+            {
+              "params": [
+                {
+                  "name": "passport",
+                  "type": "&str"
                 }
               ],
               "returns": "bool",
@@ -532,8 +1114,8 @@
                   "type": "&str"
                 },
                 {
-                  "name": "phone_type",
-                  "type": "Option<&str>"
+                  "name": "options",
+                  "type": "Option<IsValidPhoneOptions>"
                 }
               ],
               "returns": "bool",
@@ -552,7 +1134,51 @@
             {
               "params": [
                 {
+                  "name": "value",
+                  "type": "&str"
+                },
+                {
+                  "name": "options",
+                  "type": "Option<IsValidPixKeyOptions>"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "is_valid"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "is_valid"
+            },
+            {
+              "params": [
+                {
+                  "name": "params",
+                  "type": "&IsValidRegistroProfissionalParams"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "is_valid"
+            },
+            {
+              "params": [
+                {
                   "name": "renavam",
+                  "type": "&str"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "is_valid"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
                   "type": "&str"
                 }
               ],
@@ -571,12 +1197,73 @@
             }
           ]
         },
-        "listAll": {
+        "list": {
           "variants": [
             {
               "params": [],
+              "returns": "Vec<Bank>",
+              "implementationPath": "list"
+            },
+            {
+              "params": [
+                {
+                  "name": "state_code",
+                  "type": "Option<&str>"
+                }
+              ],
+              "returns": "Vec<Municipality>",
+              "implementationPath": "list"
+            },
+            {
+              "params": [],
+              "returns": "Vec<State>",
+              "implementationPath": "list"
+            }
+          ]
+        },
+        "listAll": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "params",
+                  "type": "Option<GetLegalNaturesParams>"
+                }
+              ],
               "returns": "HashMap<String,",
               "implementationPath": "list_all"
+            }
+          ]
+        },
+        "listByCategory": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "category",
+                  "type": "&str"
+                },
+                {
+                  "name": "options",
+                  "type": "Option<GetLegalNaturesByCategoryOptions>"
+                }
+              ],
+              "returns": "Vec<LegalNature>",
+              "implementationPath": "list_by_category"
+            }
+          ]
+        },
+        "listByState": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "state_code",
+                  "type": "&str"
+                }
+              ],
+              "returns": "Vec<u32>",
+              "implementationPath": "list_by_state"
             }
           ]
         },
@@ -591,6 +1278,264 @@
               ],
               "returns": "String",
               "implementationPath": "number_to_words"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "f64",
+              "implementationPath": "parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "passport",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "parse"
+            }
+          ]
+        },
+        "removeAccents": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "remove_accents"
             }
           ]
         },
@@ -663,6 +1608,16 @@
             {
               "params": [
                 {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "remove_symbols"
+            },
+            {
+              "params": [
+                {
                   "name": "phone_number",
                   "type": "&str"
                 }
@@ -679,6 +1634,38 @@
               ],
               "returns": "String",
               "implementationPath": "remove_symbols"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "String",
+              "implementationPath": "remove_symbols"
+            }
+          ]
+        },
+        "subBusinessDays": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "date",
+                  "type": "NaiveDate"
+                },
+                {
+                  "name": "amount",
+                  "type": "i64"
+                },
+                {
+                  "name": "options",
+                  "type": "Option<BusinessDayOptions>"
+                }
+              ],
+              "returns": "Option<NaiveDate>",
+              "implementationPath": "sub_business_days"
             }
           ]
         },
@@ -713,6 +1700,110 @@
               ],
               "returns": "bool",
               "implementationPath": "validate"
+            }
+          ]
+        }
+      }
+    },
+    "holidays": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "year",
+                  "type": "i32"
+                }
+              ],
+              "returns": "Vec<Holiday>",
+              "implementationPath": "get_holidays"
+            }
+          ]
+        }
+      }
+    },
+    "info": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "area_code",
+                  "type": "u32"
+                }
+              ],
+              "returns": "Option<AreaCodeInfo>",
+              "implementationPath": "get_info"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "Option<CertidaoInfo>",
+              "implementationPath": "get_info"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "Option<IbanInfo>",
+              "implementationPath": "get_info"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "Option<NfeKeyInfo>",
+              "implementationPath": "get_info"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "Option<PixKeyInfo>",
+              "implementationPath": "get_info"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "&str"
+                }
+              ],
+              "returns": "Option<PixPayloadInfo>",
+              "implementationPath": "get_info"
+            }
+          ]
+        }
+      }
+    },
+    "landline": {
+      "functions": {
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "phone_number",
+                  "type": "&str"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "is_valid_landline"
             }
           ]
         }
@@ -754,6 +1845,46 @@
         }
       }
     },
+    "mobile": {
+      "functions": {
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "phone_number",
+                  "type": "&str"
+                },
+                {
+                  "name": "version",
+                  "type": "Option<u8>"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "is_valid_mobile"
+            }
+          ]
+        }
+      }
+    },
+    "namebycode": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "code",
+                  "type": "&str"
+                }
+              ],
+              "returns": "Option<String>",
+              "implementationPath": "get_name_by_code"
+            }
+          ]
+        }
+      }
+    },
     "phone": {
       "functions": {
         "format": {
@@ -765,7 +1896,7 @@
                   "type": "&str"
                 }
               ],
-              "returns": "Option<String>",
+              "returns": "String",
               "implementationPath": "format_phone"
             }
           ]
@@ -785,6 +1916,42 @@
               ],
               "returns": "Option<String>",
               "implementationPath": "format_pis"
+            }
+          ]
+        }
+      }
+    },
+    "service": {
+      "functions": {
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "phone_number",
+                  "type": "&str"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "is_valid_service"
+            }
+          ]
+        }
+      }
+    },
+    "timezone": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "state_code",
+                  "type": "&str"
+                }
+              ],
+              "returns": "Option<String>",
+              "implementationPath": "get_timezone"
             }
           ]
         }
