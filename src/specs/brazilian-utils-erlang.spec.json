@@ -1,4 +1,728 @@
 {
   "library": "brazilian-utils-erlang",
-  "domains": {}
+  "domains": {
+    "cep": {
+      "functions": {
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "Cep"
+                }
+              ],
+              "implementationPath": "format_cep"
+            }
+          ]
+        },
+        "generate": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "generate_cep"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "Cep"
+                }
+              ],
+              "implementationPath": "is_valid_cep"
+            }
+          ]
+        }
+      }
+    },
+    "cnh": {
+      "functions": {
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "Cnh"
+                }
+              ],
+              "implementationPath": "is_valid_cnh"
+            }
+          ]
+        }
+      }
+    },
+    "cnpj": {
+      "functions": {
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "Cnpj"
+                }
+              ],
+              "implementationPath": "format_cnpj"
+            }
+          ]
+        },
+        "generate": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "generate_cnpj"
+            },
+            {
+              "params": [
+                {
+                  "name": "Branch"
+                }
+              ],
+              "implementationPath": "generate_cnpj"
+            },
+            {
+              "params": [
+                {
+                  "name": "Branch"
+                },
+                {
+                  "name": "Alphanumeric"
+                }
+              ],
+              "implementationPath": "generate_cnpj"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "Cnpj"
+                }
+              ],
+              "implementationPath": "is_valid_cnpj"
+            }
+          ]
+        }
+      }
+    },
+    "cpf": {
+      "functions": {
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "Cpf"
+                }
+              ],
+              "implementationPath": "format_cpf"
+            }
+          ]
+        },
+        "generate": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "generate_cpf"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "Cpf"
+                }
+              ],
+              "implementationPath": "is_valid_cpf"
+            }
+          ]
+        }
+      }
+    },
+    "formatlicenseplate": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "Plate"
+                }
+              ],
+              "implementationPath": "get_format_license_plate"
+            }
+          ]
+        }
+      }
+    },
+    "global": {
+      "functions": {
+        "convertLicensePlateToMercosul": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "Plate"
+                }
+              ],
+              "implementationPath": "convert_license_plate_to_mercosul"
+            }
+          ]
+        },
+        "generate": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "generate"
+            },
+            {
+              "params": [],
+              "implementationPath": "generate"
+            },
+            {
+              "params": [
+                {
+                  "name": "Branch"
+                }
+              ],
+              "implementationPath": "generate"
+            },
+            {
+              "params": [
+                {
+                  "name": "Branch"
+                },
+                {
+                  "name": "false"
+                }
+              ],
+              "implementationPath": "generate"
+            },
+            {
+              "params": [
+                {
+                  "name": "Branch"
+                },
+                {
+                  "name": "true"
+                }
+              ],
+              "implementationPath": "generate"
+            },
+            {
+              "params": [],
+              "implementationPath": "generate"
+            },
+            {
+              "params": [],
+              "implementationPath": "generate"
+            },
+            {
+              "params": [],
+              "implementationPath": "generate"
+            },
+            {
+              "params": [],
+              "implementationPath": "generate"
+            },
+            {
+              "params": [
+                {
+                  "name": "mobile"
+                }
+              ],
+              "implementationPath": "generate"
+            },
+            {
+              "params": [
+                {
+                  "name": "landline"
+                }
+              ],
+              "implementationPath": "generate"
+            },
+            {
+              "params": [],
+              "implementationPath": "generate"
+            },
+            {
+              "params": [],
+              "implementationPath": "generate"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "_"
+                }
+              ],
+              "implementationPath": "is_valid"
+            },
+            {
+              "params": [
+                {
+                  "name": "_"
+                }
+              ],
+              "implementationPath": "is_valid"
+            },
+            {
+              "params": [
+                {
+                  "name": "_"
+                }
+              ],
+              "implementationPath": "is_valid"
+            },
+            {
+              "params": [
+                {
+                  "name": "_"
+                }
+              ],
+              "implementationPath": "is_valid"
+            },
+            {
+              "params": [
+                {
+                  "name": "Plate"
+                }
+              ],
+              "implementationPath": "is_valid"
+            },
+            {
+              "params": [
+                {
+                  "name": "_"
+                },
+                {
+                  "name": "old_format"
+                }
+              ],
+              "implementationPath": "is_valid"
+            },
+            {
+              "params": [
+                {
+                  "name": "_"
+                },
+                {
+                  "name": "mercosul"
+                }
+              ],
+              "implementationPath": "is_valid"
+            },
+            {
+              "params": [
+                {
+                  "name": "_"
+                }
+              ],
+              "implementationPath": "is_valid"
+            },
+            {
+              "params": [
+                {
+                  "name": "Phone"
+                }
+              ],
+              "implementationPath": "is_valid"
+            },
+            {
+              "params": [
+                {
+                  "name": "_"
+                },
+                {
+                  "name": "mobile"
+                }
+              ],
+              "implementationPath": "is_valid"
+            },
+            {
+              "params": [
+                {
+                  "name": "_"
+                },
+                {
+                  "name": "landline"
+                }
+              ],
+              "implementationPath": "is_valid"
+            },
+            {
+              "params": [
+                {
+                  "name": "_"
+                }
+              ],
+              "implementationPath": "is_valid"
+            },
+            {
+              "params": [
+                {
+                  "name": "_"
+                }
+              ],
+              "implementationPath": "is_valid"
+            },
+            {
+              "params": [
+                {
+                  "name": "_"
+                }
+              ],
+              "implementationPath": "is_valid"
+            }
+          ]
+        },
+        "removeInternationalDialingCode": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "Phone"
+                }
+              ],
+              "implementationPath": "remove_international_dialing_code"
+            }
+          ]
+        },
+        "removeSymbolsCep": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "Cep"
+                }
+              ],
+              "implementationPath": "remove_symbols_cep"
+            }
+          ]
+        },
+        "removeSymbolsCnpj": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "Cnpj"
+                }
+              ],
+              "implementationPath": "remove_symbols_cnpj"
+            }
+          ]
+        },
+        "removeSymbolsCpf": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "Cpf"
+                }
+              ],
+              "implementationPath": "remove_symbols_cpf"
+            }
+          ]
+        },
+        "removeSymbolsLicensePlate": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "Plate"
+                }
+              ],
+              "implementationPath": "remove_symbols_license_plate"
+            }
+          ]
+        },
+        "removeSymbolsPassport": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "Passport"
+                }
+              ],
+              "implementationPath": "remove_symbols_passport"
+            }
+          ]
+        },
+        "removeSymbolsPhone": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "Phone"
+                }
+              ],
+              "implementationPath": "remove_symbols_phone"
+            }
+          ]
+        },
+        "removeSymbolsPis": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "Pis"
+                }
+              ],
+              "implementationPath": "remove_symbols_pis"
+            }
+          ]
+        }
+      }
+    },
+    "licenseplate": {
+      "functions": {
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "Plate"
+                }
+              ],
+              "implementationPath": "format_license_plate"
+            }
+          ]
+        },
+        "generate": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "generate_license_plate"
+            },
+            {
+              "params": [
+                {
+                  "name": "Pattern"
+                }
+              ],
+              "implementationPath": "generate_license_plate"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "Plate"
+                }
+              ],
+              "implementationPath": "is_valid_license_plate"
+            },
+            {
+              "params": [
+                {
+                  "name": "Plate"
+                },
+                {
+                  "name": "Type"
+                }
+              ],
+              "implementationPath": "is_valid_license_plate"
+            }
+          ]
+        }
+      }
+    },
+    "passport": {
+      "functions": {
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "Passport"
+                }
+              ],
+              "implementationPath": "format_passport"
+            }
+          ]
+        },
+        "generate": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "generate_passport"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "Passport"
+                }
+              ],
+              "implementationPath": "is_valid_passport"
+            }
+          ]
+        }
+      }
+    },
+    "phone": {
+      "functions": {
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "Phone"
+                }
+              ],
+              "implementationPath": "format_phone"
+            }
+          ]
+        },
+        "generate": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "generate_phone"
+            },
+            {
+              "params": [
+                {
+                  "name": "Type"
+                }
+              ],
+              "implementationPath": "generate_phone"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "Phone"
+                }
+              ],
+              "implementationPath": "is_valid_phone"
+            },
+            {
+              "params": [
+                {
+                  "name": "Phone"
+                },
+                {
+                  "name": "Type"
+                }
+              ],
+              "implementationPath": "is_valid_phone"
+            }
+          ]
+        }
+      }
+    },
+    "pis": {
+      "functions": {
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "Pis"
+                }
+              ],
+              "implementationPath": "format_pis"
+            }
+          ]
+        },
+        "generate": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "generate_pis"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "Pis"
+                }
+              ],
+              "implementationPath": "is_valid_pis"
+            }
+          ]
+        }
+      }
+    },
+    "renavam": {
+      "functions": {
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "Renavam"
+                }
+              ],
+              "implementationPath": "is_valid_renavam"
+            }
+          ]
+        }
+      }
+    },
+    "voterid": {
+      "functions": {
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "VoterId"
+                }
+              ],
+              "implementationPath": "format_voter_id"
+            }
+          ]
+        },
+        "generate": {
+          "variants": [
+            {
+              "params": [],
+              "implementationPath": "generate_voter_id"
+            },
+            {
+              "params": [
+                {
+                  "name": "Uf"
+                }
+              ],
+              "implementationPath": "generate_voter_id"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "VoterId"
+                }
+              ],
+              "implementationPath": "is_valid_voter_id"
+            }
+          ]
+        }
+      }
+    }
+  }
 }

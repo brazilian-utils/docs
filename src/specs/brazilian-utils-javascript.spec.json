@@ -23,6 +23,60 @@
         }
       }
     },
+    "areacodebymunicipalitycode": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "code",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "number | null",
+              "implementationPath": "getAreaCodeByMunicipalityCode"
+            }
+          ]
+        }
+      }
+    },
+    "areacodeinfo": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "areaCode",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "AreaCodeInfo | null",
+              "implementationPath": "getAreaCodeInfo"
+            }
+          ]
+        }
+      }
+    },
+    "areacodesbystate": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "stateCode",
+                  "type": "string"
+                }
+              ],
+              "returns": "number[]",
+              "implementationPath": "getAreaCodesByState"
+            }
+          ]
+        }
+      }
+    },
     "bankaccount": {
       "functions": {
         "isValid": {
@@ -36,6 +90,55 @@
               ],
               "returns": "boolean",
               "implementationPath": "isValidBankAccount"
+            }
+          ]
+        }
+      }
+    },
+    "bankbycode": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "code",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "Bank | null",
+              "implementationPath": "getBankByCode"
+            }
+          ]
+        }
+      }
+    },
+    "bankbyispb": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "Bank | null",
+              "implementationPath": "getBankByIspb"
+            }
+          ]
+        }
+      }
+    },
+    "banks": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [],
+              "returns": "Bank[]",
+              "implementationPath": "getBanks"
             }
           ]
         }
@@ -64,7 +167,12 @@
         "generate": {
           "variants": [
             {
-              "params": [],
+              "params": [
+                {
+                  "name": "params",
+                  "type": "GenerateBoletoParams"
+                }
+              ],
               "returns": "string",
               "implementationPath": "generateBoleto"
             }
@@ -83,6 +191,20 @@
               "implementationPath": "isValidBoleto"
             }
           ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "parseBoleto"
+            }
+          ]
         }
       }
     },
@@ -95,10 +217,178 @@
                 {
                   "name": "value",
                   "type": "string"
+                },
+                {
+                  "name": "options",
+                  "type": "GetBoletoInfoOptions"
                 }
               ],
-              "returns": "BoletoInfo | undefined",
+              "returns": "BoletoInfo | null",
               "implementationPath": "getBoletoInfo"
+            }
+          ]
+        }
+      }
+    },
+    "caepf": {
+      "functions": {
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                },
+                {
+                  "name": "options",
+                  "type": "FormatCaepfOptions"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "formatCaepf"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "boolean",
+              "implementationPath": "isValidCaepf"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "parseCaepf"
+            }
+          ]
+        }
+      }
+    },
+    "cbo": {
+      "functions": {
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                },
+                {
+                  "name": "options",
+                  "type": "FormatCboOptions"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "formatCbo"
+            }
+          ]
+        },
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "Cbo | null",
+              "implementationPath": "getCbo"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "boolean",
+              "implementationPath": "isValidCbo"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "parseCbo"
+            }
+          ]
+        }
+      }
+    },
+    "cei": {
+      "functions": {
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                },
+                {
+                  "name": "options",
+                  "type": "FormatCeiOptions"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "formatCei"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "boolean",
+              "implementationPath": "isValidCei"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "parseCei"
             }
           ]
         }
@@ -124,17 +414,318 @@
             }
           ]
         },
+        "generate": {
+          "variants": [
+            {
+              "params": [],
+              "returns": "string",
+              "implementationPath": "generateCep"
+            }
+          ]
+        },
         "isValid": {
           "variants": [
             {
               "params": [
                 {
                   "name": "cep",
-                  "type": "string"
+                  "type": "string | number"
                 }
               ],
               "returns": "boolean",
               "implementationPath": "isValidCep"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "parseCep"
+            }
+          ]
+        }
+      }
+    },
+    "cepinfobyaddress": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "params",
+                  "type": "GetCepInfoByAddressParams"
+                }
+              ],
+              "returns": "Promise<CepAddressInfo[]>",
+              "implementationPath": "getCepInfoByAddress"
+            }
+          ]
+        }
+      }
+    },
+    "certidao": {
+      "functions": {
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                },
+                {
+                  "name": "options",
+                  "type": "FormatCertidaoOptions"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "formatCertidao"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                },
+                {
+                  "name": "options",
+                  "type": "IsValidCertidaoOptions"
+                }
+              ],
+              "returns": "boolean",
+              "implementationPath": "isValidCertidao"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "parseCertidao"
+            }
+          ]
+        }
+      }
+    },
+    "certidaoinfo": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "CertidaoInfo | null",
+              "implementationPath": "getCertidaoInfo"
+            }
+          ]
+        }
+      }
+    },
+    "cest": {
+      "functions": {
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                },
+                {
+                  "name": "options",
+                  "type": "FormatCestOptions"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "formatCest"
+            }
+          ]
+        },
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "Cest | null",
+              "implementationPath": "getCest"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "boolean",
+              "implementationPath": "isValidCest"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "parseCest"
+            }
+          ]
+        }
+      }
+    },
+    "cfop": {
+      "functions": {
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                },
+                {
+                  "name": "options",
+                  "type": "FormatCfopOptions"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "formatCfop"
+            }
+          ]
+        },
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "Cfop | null",
+              "implementationPath": "getCfop"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "boolean",
+              "implementationPath": "isValidCfop"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "parseCfop"
+            }
+          ]
+        }
+      }
+    },
+    "cid10": {
+      "functions": {
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "formatCid10"
+            }
+          ]
+        },
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "Cid10 | null",
+              "implementationPath": "getCid10"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "boolean",
+              "implementationPath": "isValidCid10"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "parseCid10"
             }
           ]
         }
@@ -153,6 +744,215 @@
               ],
               "returns": "string[]",
               "implementationPath": "getCities"
+            }
+          ]
+        }
+      }
+    },
+    "classtrib": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "ClassTrib | null",
+              "implementationPath": "getClassTrib"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                },
+                {
+                  "name": "options",
+                  "type": "IsValidClassTribOptions"
+                }
+              ],
+              "returns": "boolean",
+              "implementationPath": "isValidClassTrib"
+            }
+          ]
+        }
+      }
+    },
+    "cnae": {
+      "functions": {
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                },
+                {
+                  "name": "options",
+                  "type": "FormatCnaeOptions"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "formatCnae"
+            }
+          ]
+        },
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "Cnae | null",
+              "implementationPath": "getCnae"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "boolean",
+              "implementationPath": "isValidCnae"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "parseCnae"
+            }
+          ]
+        }
+      }
+    },
+    "cnh": {
+      "functions": {
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                },
+                {
+                  "name": "options",
+                  "type": "FormatCnhOptions"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "formatCnh"
+            }
+          ]
+        },
+        "generate": {
+          "variants": [
+            {
+              "params": [],
+              "returns": "string",
+              "implementationPath": "generateCnh"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "boolean",
+              "implementationPath": "isValidCnh"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "parseCnh"
+            }
+          ]
+        }
+      }
+    },
+    "cno": {
+      "functions": {
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                },
+                {
+                  "name": "options",
+                  "type": "FormatCnoOptions"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "formatCno"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "boolean",
+              "implementationPath": "isValidCno"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "parseCno"
             }
           ]
         }
@@ -183,8 +983,8 @@
             {
               "params": [
                 {
-                  "name": "version",
-                  "type": "1 | 2"
+                  "name": "versionOrParams",
+                  "type": "1 | 2 | GenerateCnpjParams"
                 }
               ],
               "returns": "string",
@@ -202,11 +1002,119 @@
                 },
                 {
                   "name": "options",
-                  "type": "{ version?: 1 | 2 }"
+                  "type": "IsValidCnpjOptions"
                 }
               ],
               "returns": "boolean",
               "implementationPath": "isValidCnpj"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                },
+                {
+                  "name": "options",
+                  "type": "ParseCnpjOptions"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "parseCnpj"
+            }
+          ]
+        }
+      }
+    },
+    "cnpjinfo": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                },
+                {
+                  "name": "options",
+                  "type": "GetCnpjInfoOptions"
+                }
+              ],
+              "returns": "CnpjInfo | null",
+              "implementationPath": "getCnpjInfo"
+            }
+          ]
+        }
+      }
+    },
+    "cns": {
+      "functions": {
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                },
+                {
+                  "name": "options",
+                  "type": "FormatCnsOptions"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "formatCns"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "boolean",
+              "implementationPath": "isValidCns"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "parseCns"
+            }
+          ]
+        }
+      }
+    },
+    "codebymunicipalityname": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "params",
+                  "type": "GetCodeByMunicipalityNameParams"
+                }
+              ],
+              "returns": "string | null",
+              "implementationPath": "getCodeByMunicipalityName"
             }
           ]
         }
@@ -259,6 +1167,128 @@
               "implementationPath": "isValidCpf"
             }
           ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "parseCpf"
+            }
+          ]
+        }
+      }
+    },
+    "cpfinfo": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "CpfInfo | null",
+              "implementationPath": "getCpfInfo"
+            }
+          ]
+        }
+      }
+    },
+    "creditcard": {
+      "functions": {
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "boolean",
+              "implementationPath": "isValidCreditCard"
+            }
+          ]
+        }
+      }
+    },
+    "csosn": {
+      "functions": {
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "boolean",
+              "implementationPath": "isValidCsosn"
+            }
+          ]
+        }
+      }
+    },
+    "cst": {
+      "functions": {
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                },
+                {
+                  "name": "options",
+                  "type": "IsValidCstOptions"
+                }
+              ],
+              "returns": "boolean",
+              "implementationPath": "isValidCst"
+            }
+          ]
+        }
+      }
+    },
+    "cstibscbs": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "CstIbsCbs | null",
+              "implementationPath": "getCstIbsCbs"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "boolean",
+              "implementationPath": "isValidCstIbsCbs"
+            }
+          ]
         }
       }
     },
@@ -289,6 +1319,10 @@
                 {
                   "name": "value",
                   "type": "string"
+                },
+                {
+                  "name": "options",
+                  "type": "ParseCurrencyOptions"
                 }
               ],
               "returns": "number",
@@ -316,8 +1350,48 @@
         }
       }
     },
+    "formatlicenseplate": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "LicensePlateFormat | null",
+              "implementationPath": "getFormatLicensePlate"
+            }
+          ]
+        }
+      }
+    },
     "global": {
       "functions": {
+        "addBusinessDays": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "date",
+                  "type": "Date"
+                },
+                {
+                  "name": "amount",
+                  "type": "number"
+                },
+                {
+                  "name": "options",
+                  "type": "BusinessDayOptions"
+                }
+              ],
+              "returns": "Date | null",
+              "implementationPath": "addBusinessDays"
+            }
+          ]
+        },
         "capitalize": {
           "variants": [
             {
@@ -327,12 +1401,224 @@
                   "type": "string"
                 },
                 {
-                  "name": "{\n\t\tlowerCaseWords = PREPOSITIONS,\n\t\tupperCaseWords = ACRONYMS,\n\t}",
+                  "name": "options",
                   "type": "CapitalizeOptions"
                 }
               ],
               "returns": "string",
               "implementationPath": "capitalize"
+            }
+          ]
+        },
+        "convertCurrencyToWords": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "number"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "convertCurrencyToWords"
+            }
+          ]
+        },
+        "convertDateToWords": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "Date | string"
+                },
+                {
+                  "name": "options",
+                  "type": "ConvertDateToWordsOptions"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "convertDateToWords"
+            }
+          ]
+        },
+        "convertLicensePlateToMercosul": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "convertLicensePlateToMercosul"
+            }
+          ]
+        },
+        "convertNumberToWords": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "number"
+                },
+                {
+                  "name": "options",
+                  "type": "ConvertNumberToWordsOptions"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "convertNumberToWords"
+            }
+          ]
+        },
+        "differenceInBusinessDays": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "laterDate",
+                  "type": "Date"
+                },
+                {
+                  "name": "earlierDate",
+                  "type": "Date"
+                },
+                {
+                  "name": "options",
+                  "type": "BusinessDayOptions"
+                }
+              ],
+              "returns": "number | null",
+              "implementationPath": "differenceInBusinessDays"
+            }
+          ]
+        },
+        "isBusinessDay": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "Date"
+                },
+                {
+                  "name": "options",
+                  "type": "BusinessDayOptions"
+                }
+              ],
+              "returns": "boolean",
+              "implementationPath": "isBusinessDay"
+            }
+          ]
+        },
+        "isHoliday": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "options",
+                  "type": "IsHolidayParams"
+                }
+              ],
+              "returns": "boolean",
+              "implementationPath": "isHoliday"
+            }
+          ]
+        },
+        "removeAccents": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "removeAccents"
+            }
+          ]
+        },
+        "subBusinessDays": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "date",
+                  "type": "Date"
+                },
+                {
+                  "name": "amount",
+                  "type": "number"
+                },
+                {
+                  "name": "options",
+                  "type": "BusinessDayOptions"
+                }
+              ],
+              "returns": "Date | null",
+              "implementationPath": "subBusinessDays"
+            }
+          ]
+        },
+        "toStandardSchema": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "validate",
+                  "type": "(value: Value, options?: Options) => boolean"
+                },
+                {
+                  "name": "options",
+                  "type": "ToStandardSchemaOptions<Options>"
+                }
+              ],
+              "returns": "StandardSchemaV1<Value>",
+              "implementationPath": "toStandardSchema"
+            }
+          ]
+        }
+      }
+    },
+    "gtin": {
+      "functions": {
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                },
+                {
+                  "name": "options",
+                  "type": "IsValidGtinOptions"
+                }
+              ],
+              "returns": "boolean",
+              "implementationPath": "isValidGtin"
+            }
+          ]
+        }
+      }
+    },
+    "gtininfo": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "GtinInfo | null",
+              "implementationPath": "getGtinInfo"
             }
           ]
         }
@@ -356,7 +1642,7 @@
               "params": [
                 {
                   "name": "options",
-                  "type": "GetHolidaysOptions"
+                  "type": "GetHolidaysParams"
                 }
               ],
               "returns": "Holiday[]",
@@ -366,11 +1652,75 @@
               "params": [
                 {
                   "name": "yearOrOptions",
-                  "type": "number | GetHolidaysOptions"
+                  "type": "number | GetHolidaysParams"
                 }
               ],
               "returns": "Holiday[]",
               "implementationPath": "getHolidays"
+            }
+          ]
+        }
+      }
+    },
+    "iban": {
+      "functions": {
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "formatIban"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "boolean",
+              "implementationPath": "isValidIban"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "parseIban"
+            }
+          ]
+        }
+      }
+    },
+    "ibaninfo": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "IbanInfo | null",
+              "implementationPath": "getIbanInfo"
             }
           ]
         }
@@ -383,8 +1733,8 @@
             {
               "params": [
                 {
-                  "name": "stateCode",
-                  "type": "StateCode"
+                  "name": "paramsOrStateCode",
+                  "type": "IsValidIeParams | StateCode"
                 },
                 {
                   "name": "ie",
@@ -393,6 +1743,70 @@
               ],
               "returns": "boolean",
               "implementationPath": "isValidIe"
+            }
+          ]
+        }
+      }
+    },
+    "isbn": {
+      "functions": {
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "formatIsbn"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "boolean",
+              "implementationPath": "isValidIsbn"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "parseIsbn"
+            }
+          ]
+        }
+      }
+    },
+    "isbninfo": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "IsbnInfo | null",
+              "implementationPath": "getIsbnInfo"
             }
           ]
         }
@@ -416,9 +1830,122 @@
         }
       }
     },
+    "legalnature": {
+      "functions": {
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                },
+                {
+                  "name": "options",
+                  "type": "FormatLegalNatureOptions"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "formatLegalNature"
+            }
+          ]
+        },
+        "generate": {
+          "variants": [
+            {
+              "params": [],
+              "returns": "string",
+              "implementationPath": "generateLegalNature"
+            }
+          ]
+        },
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "LegalNature | null",
+              "implementationPath": "getLegalNature"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "code",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "boolean",
+              "implementationPath": "isValidLegalNature"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "parseLegalNature"
+            }
+          ]
+        }
+      }
+    },
+    "legalnatures": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "params",
+                  "type": "GetLegalNaturesParams"
+                }
+              ],
+              "returns": "Record<string, string>",
+              "implementationPath": "getLegalNatures"
+            }
+          ]
+        }
+      }
+    },
+    "legalnaturesbycategory": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "category",
+                  "type": "string | number"
+                },
+                {
+                  "name": "options",
+                  "type": "GetLegalNaturesByCategoryOptions"
+                }
+              ],
+              "returns": "LegalNature[]",
+              "implementationPath": "getLegalNaturesByCategory"
+            }
+          ]
+        }
+      }
+    },
     "licenseplate": {
       "functions": {
-        "isValid": {
+        "format": {
           "variants": [
             {
               "params": [
@@ -427,8 +1954,54 @@
                   "type": "string"
                 }
               ],
+              "returns": "string",
+              "implementationPath": "formatLicensePlate"
+            }
+          ]
+        },
+        "generate": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "format",
+                  "type": "GenerateLicensePlateFormat"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "generateLicensePlate"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                },
+                {
+                  "name": "options",
+                  "type": "IsValidLicensePlateOptions"
+                }
+              ],
               "returns": "boolean",
               "implementationPath": "isValidLicensePlate"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "parseLicensePlate"
             }
           ]
         }
@@ -456,6 +2029,365 @@
         }
       }
     },
+    "municipalities": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "stateCode",
+                  "type": "StateCode"
+                }
+              ],
+              "returns": "Municipality[]",
+              "implementationPath": "getMunicipalities"
+            }
+          ]
+        }
+      }
+    },
+    "municipalitiesbyareacode": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "areaCode",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "Municipality[]",
+              "implementationPath": "getMunicipalitiesByAreaCode"
+            }
+          ]
+        }
+      }
+    },
+    "municipality": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "options",
+                  "type": "GetMunicipalityParams"
+                }
+              ],
+              "returns": "Promise<[string, string] | string | null>",
+              "implementationPath": "getMunicipality"
+            }
+          ]
+        }
+      }
+    },
+    "municipalitybycode": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "code",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "Municipality | null",
+              "implementationPath": "getMunicipalityByCode"
+            }
+          ]
+        }
+      }
+    },
+    "nbs": {
+      "functions": {
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                },
+                {
+                  "name": "options",
+                  "type": "FormatNbsOptions"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "formatNbs"
+            }
+          ]
+        },
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "Nbs | null",
+              "implementationPath": "getNbs"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "boolean",
+              "implementationPath": "isValidNbs"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "parseNbs"
+            }
+          ]
+        }
+      }
+    },
+    "ncm": {
+      "functions": {
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                },
+                {
+                  "name": "options",
+                  "type": "FormatNcmOptions"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "formatNcm"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "boolean",
+              "implementationPath": "isValidNcm"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "parseNcm"
+            }
+          ]
+        }
+      }
+    },
+    "nfekey": {
+      "functions": {
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                },
+                {
+                  "name": "options",
+                  "type": "FormatNfeKeyOptions"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "formatNfeKey"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "boolean",
+              "implementationPath": "isValidNfeKey"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "parseNfeKey"
+            }
+          ]
+        }
+      }
+    },
+    "nfekeyinfo": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "NfeKeyInfo | null",
+              "implementationPath": "getNfeKeyInfo"
+            }
+          ]
+        }
+      }
+    },
+    "nfsekey": {
+      "functions": {
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "boolean",
+              "implementationPath": "isValidNfseKey"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "parseNfseKey"
+            }
+          ]
+        }
+      }
+    },
+    "nfsekeyinfo": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "NfseKeyInfo | null",
+              "implementationPath": "getNfseKeyInfo"
+            }
+          ]
+        }
+      }
+    },
+    "passport": {
+      "functions": {
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "passport",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "formatPassport"
+            }
+          ]
+        },
+        "generate": {
+          "variants": [
+            {
+              "params": [],
+              "returns": "string",
+              "implementationPath": "generatePassport"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "passport",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "boolean",
+              "implementationPath": "isValidPassport"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "passport",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "parsePassport"
+            }
+          ]
+        }
+      }
+    },
     "phone": {
       "functions": {
         "format": {
@@ -476,6 +2408,20 @@
             }
           ]
         },
+        "generate": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "type",
+                  "type": "GeneratePhoneType"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "generatePhone"
+            }
+          ]
+        },
         "isValid": {
           "variants": [
             {
@@ -491,6 +2437,20 @@
               ],
               "returns": "boolean",
               "implementationPath": "isValidPhone"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "parsePhone"
             }
           ]
         }
@@ -516,6 +2476,15 @@
             }
           ]
         },
+        "generate": {
+          "variants": [
+            {
+              "params": [],
+              "returns": "string",
+              "implementationPath": "generatePis"
+            }
+          ]
+        },
         "isValid": {
           "variants": [
             {
@@ -527,6 +2496,110 @@
               ],
               "returns": "boolean",
               "implementationPath": "isValidPis"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "parsePis"
+            }
+          ]
+        }
+      }
+    },
+    "pixkey": {
+      "functions": {
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                },
+                {
+                  "name": "options",
+                  "type": "IsValidPixKeyOptions"
+                }
+              ],
+              "returns": "boolean",
+              "implementationPath": "isValidPixKey"
+            }
+          ]
+        }
+      }
+    },
+    "pixkeyinfo": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "PixKeyInfo | null",
+              "implementationPath": "getPixKeyInfo"
+            }
+          ]
+        }
+      }
+    },
+    "pixpayload": {
+      "functions": {
+        "generate": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "params",
+                  "type": "GeneratePixPayloadParams"
+                }
+              ],
+              "returns": "string | null",
+              "implementationPath": "generatePixPayload"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "boolean",
+              "implementationPath": "isValidPixPayload"
+            }
+          ]
+        }
+      }
+    },
+    "pixpayloadinfo": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "PixPayloadInfo | null",
+              "implementationPath": "getPixPayloadInfo"
             }
           ]
         }
@@ -552,6 +2625,20 @@
             }
           ]
         },
+        "generate": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "params",
+                  "type": "GenerateProcessoJuridicoParams"
+                }
+              ],
+              "returns": "string | null",
+              "implementationPath": "generateProcessoJuridico"
+            }
+          ]
+        },
         "isValid": {
           "variants": [
             {
@@ -565,11 +2652,83 @@
               "implementationPath": "isValidProcessoJuridico"
             }
           ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "parseProcessoJuridico"
+            }
+          ]
+        }
+      }
+    },
+    "processojuridicoinfo": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "ProcessoJuridicoInfo | null",
+              "implementationPath": "getProcessoJuridicoInfo"
+            }
+          ]
+        }
+      }
+    },
+    "regions": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [],
+              "returns": "Region[]",
+              "implementationPath": "getRegions"
+            }
+          ]
+        }
+      }
+    },
+    "registroprofissional": {
+      "functions": {
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "params",
+                  "type": "IsValidRegistroProfissionalParams"
+                }
+              ],
+              "returns": "boolean",
+              "implementationPath": "isValidRegistroProfissional"
+            }
+          ]
         }
       }
     },
     "renavam": {
       "functions": {
+        "generate": {
+          "variants": [
+            {
+              "params": [],
+              "returns": "string",
+              "implementationPath": "generateRenavam"
+            }
+          ]
+        },
         "isValid": {
           "variants": [
             {
@@ -586,6 +2745,146 @@
         }
       }
     },
+    "serviceitem": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "ServiceItem | null",
+              "implementationPath": "getServiceItem"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "boolean",
+              "implementationPath": "isValidServiceItem"
+            }
+          ]
+        }
+      }
+    },
+    "servicephone": {
+      "functions": {
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "boolean",
+              "implementationPath": "isValidServicePhone"
+            }
+          ]
+        }
+      }
+    },
+    "statebycep": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "State | null",
+              "implementationPath": "getStateByCep"
+            }
+          ]
+        }
+      }
+    },
+    "statebyibgecode": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "code",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "State | null",
+              "implementationPath": "getStateByIbgeCode"
+            }
+          ]
+        }
+      }
+    },
+    "statecapital": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "stateCode",
+                  "type": "string"
+                }
+              ],
+              "returns": "Municipality | null",
+              "implementationPath": "getStateCapital"
+            }
+          ]
+        }
+      }
+    },
+    "statecodebyname": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "name",
+                  "type": "string"
+                }
+              ],
+              "returns": "StateCode | null",
+              "implementationPath": "getStateCodeByName"
+            }
+          ]
+        }
+      }
+    },
+    "statenamebycode": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "code",
+                  "type": "string"
+                }
+              ],
+              "returns": "StateName | null",
+              "implementationPath": "getStateNameByCode"
+            }
+          ]
+        }
+      }
+    },
     "states": {
       "functions": {
         "get": {
@@ -594,6 +2893,205 @@
               "params": [],
               "returns": "State[]",
               "implementationPath": "getStates"
+            }
+          ]
+        }
+      }
+    },
+    "statesbyregion": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "regionCode",
+                  "type": "string"
+                }
+              ],
+              "returns": "State[]",
+              "implementationPath": "getStatesByRegion"
+            }
+          ]
+        }
+      }
+    },
+    "suframa": {
+      "functions": {
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                },
+                {
+                  "name": "options",
+                  "type": "FormatSuframaOptions"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "formatSuframa"
+            }
+          ]
+        },
+        "generate": {
+          "variants": [
+            {
+              "params": [],
+              "returns": "string",
+              "implementationPath": "generateSuframa"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "suframa",
+                  "type": "string"
+                }
+              ],
+              "returns": "boolean",
+              "implementationPath": "isValidSuframa"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "parseSuframa"
+            }
+          ]
+        }
+      }
+    },
+    "timezonebystate": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "stateCode",
+                  "type": "string"
+                }
+              ],
+              "returns": "string | null",
+              "implementationPath": "getTimezoneByState"
+            }
+          ]
+        }
+      }
+    },
+    "vin": {
+      "functions": {
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                },
+                {
+                  "name": "options",
+                  "type": "IsValidVinOptions"
+                }
+              ],
+              "returns": "boolean",
+              "implementationPath": "isValidVin"
+            }
+          ]
+        }
+      }
+    },
+    "voterid": {
+      "functions": {
+        "format": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                },
+                {
+                  "name": "options",
+                  "type": "FormatVoterIdOptions"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "formatVoterId"
+            }
+          ]
+        },
+        "generate": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "state",
+                  "type": "StateCode | \"ZZ\""
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "generateVoterId"
+            }
+          ]
+        },
+        "isValid": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "boolean",
+              "implementationPath": "isValidVoterId"
+            }
+          ]
+        },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string | number"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "parseVoterId"
+            }
+          ]
+        }
+      }
+    },
+    "voteridinfo": {
+      "functions": {
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "VoterIdInfo | null",
+              "implementationPath": "getVoterIdInfo"
             }
           ]
         }

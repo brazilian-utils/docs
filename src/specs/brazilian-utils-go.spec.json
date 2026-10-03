@@ -19,8 +19,66 @@
         }
       }
     },
+    "flexbool": {
+      "functions": {
+        "unmarshalJSON": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "data",
+                  "type": "[]byte"
+                }
+              ],
+              "returns": "error",
+              "implementationPath": "flexBool.UnmarshalJSON"
+            }
+          ]
+        }
+      }
+    },
     "global": {
       "functions": {
+        "addBusinessDays": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "date",
+                  "type": "time.Time"
+                },
+                {
+                  "name": "amount",
+                  "type": "int"
+                },
+                {
+                  "name": "opts",
+                  "type": "...BusinessDayOptions"
+                }
+              ],
+              "returns": "*time.Time",
+              "implementationPath": "AddBusinessDays"
+            }
+          ]
+        },
+        "capitalize": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                },
+                {
+                  "name": "opts",
+                  "type": "...CapitalizeOptions"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Capitalize"
+            }
+          ]
+        },
         "contains": {
           "variants": [
             {
@@ -99,13 +157,150 @@
             }
           ]
         },
+        "convertToWords": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "float64"
+                },
+                {
+                  "name": "opts",
+                  "type": "...ConvertToWordsOptions"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "ConvertToWords"
+            }
+          ]
+        },
+        "differenceInBusinessDays": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "laterDate"
+                },
+                {
+                  "name": "earlierDate",
+                  "type": "time.Time"
+                },
+                {
+                  "name": "opts",
+                  "type": "...BusinessDayOptions"
+                }
+              ],
+              "returns": "*int",
+              "implementationPath": "DifferenceInBusinessDays"
+            }
+          ]
+        },
         "format": {
           "variants": [
             {
               "params": [
                 {
+                  "name": "value",
+                  "type": "string"
+                },
+                {
+                  "name": "opts",
+                  "type": "...FormatOptions"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Format"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                },
+                {
+                  "name": "opts",
+                  "type": "...FormatOptions"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Format"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                },
+                {
+                  "name": "opts",
+                  "type": "...FormatOptions"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Format"
+            },
+            {
+              "params": [
+                {
                   "name": "cep",
                   "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Format"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                },
+                {
+                  "name": "opts",
+                  "type": "...FormatOptions"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Format"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "interface{}"
+                },
+                {
+                  "name": "opts",
+                  "type": "...FormatOptions"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Format"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                },
+                {
+                  "name": "opts",
+                  "type": "...FormatOptions"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Format"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                },
+                {
+                  "name": "opts",
+                  "type": "...FormatOptions"
                 }
               ],
               "returns": "string",
@@ -124,8 +319,60 @@
             {
               "params": [
                 {
+                  "name": "value",
+                  "type": "string"
+                },
+                {
+                  "name": "opts",
+                  "type": "...FormatOptions"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Format"
+            },
+            {
+              "params": [
+                {
                   "name": "cpf",
                   "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Format"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "interface{}"
+                },
+                {
+                  "name": "opts",
+                  "type": "...FormatCurrencyOptions"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Format"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Format"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                },
+                {
+                  "name": "opts",
+                  "type": "...FormatOptions"
                 }
               ],
               "returns": "string",
@@ -154,8 +401,50 @@
             {
               "params": [
                 {
-                  "name": "phoneNumber",
+                  "name": "value",
+                  "type": "interface{}"
+                },
+                {
+                  "name": "opts",
+                  "type": "...FormatOptions"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Format"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
                   "type": "string"
+                },
+                {
+                  "name": "opts",
+                  "type": "...FormatOptions"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Format"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Format"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                },
+                {
+                  "name": "opts",
+                  "type": "...FormatOptions"
                 }
               ],
               "returns": "string",
@@ -186,15 +475,10 @@
         "generate": {
           "variants": [
             {
-              "params": [],
-              "returns": "string",
-              "implementationPath": "Generate"
-            },
-            {
               "params": [
                 {
-                  "name": "branch",
-                  "type": "int"
+                  "name": "opts",
+                  "type": "...GenerateOptions"
                 }
               ],
               "returns": "string",
@@ -206,14 +490,35 @@
               "implementationPath": "Generate"
             },
             {
+              "params": [],
+              "returns": "string",
+              "implementationPath": "Generate"
+            },
+            {
               "params": [
                 {
-                  "name": "year",
-                  "type": "int"
-                },
+                  "name": "opts",
+                  "type": "...GenerateOptions"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Generate"
+            },
+            {
+              "params": [],
+              "returns": "string",
+              "implementationPath": "Generate"
+            },
+            {
+              "params": [],
+              "returns": "string",
+              "implementationPath": "Generate"
+            },
+            {
+              "params": [
                 {
-                  "name": "orgao",
-                  "type": "int"
+                  "name": "opts",
+                  "type": "...GenerateOptions"
                 }
               ],
               "returns": "string",
@@ -223,9 +528,14 @@
               "params": [
                 {
                   "name": "format",
-                  "type": "string"
+                  "type": "...string"
                 }
               ],
+              "returns": "string",
+              "implementationPath": "Generate"
+            },
+            {
+              "params": [],
               "returns": "string",
               "implementationPath": "Generate"
             },
@@ -234,6 +544,21 @@
                 {
                   "name": "phoneType",
                   "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Generate"
+            },
+            {
+              "params": [],
+              "returns": "string",
+              "implementationPath": "Generate"
+            },
+            {
+              "params": [
+                {
+                  "name": "params",
+                  "type": "GeneratePixPayloadParams"
                 }
               ],
               "returns": "string",
@@ -256,6 +581,50 @@
             }
           ]
         },
+        "get": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "interface{}"
+                }
+              ],
+              "returns": "*Cbo",
+              "implementationPath": "Get"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "interface{}"
+                }
+              ],
+              "returns": "*Cfop",
+              "implementationPath": "Get"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "interface{}"
+                }
+              ],
+              "returns": "*Cnae",
+              "implementationPath": "Get"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "*LegalNature",
+              "implementationPath": "Get"
+            }
+          ]
+        },
         "getAddressFromCEP": {
           "variants": [
             {
@@ -270,23 +639,83 @@
             }
           ]
         },
+        "getByCode": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "code",
+                  "type": "interface{}"
+                }
+              ],
+              "returns": "*Bank",
+              "implementationPath": "GetByCode"
+            },
+            {
+              "params": [
+                {
+                  "name": "code",
+                  "type": "interface{}"
+                }
+              ],
+              "returns": "*Municipality",
+              "implementationPath": "GetByCode"
+            }
+          ]
+        },
+        "getByIbgeCode": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "code",
+                  "type": "interface{}"
+                }
+              ],
+              "returns": "*State",
+              "implementationPath": "GetByIbgeCode"
+            }
+          ]
+        },
+        "getByIspb": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "interface{}"
+                }
+              ],
+              "returns": "*Bank",
+              "implementationPath": "GetByIspb"
+            }
+          ]
+        },
         "getCEPFromAddress": {
           "variants": [
             {
               "params": [
                 {
-                  "name": "federalUnit"
-                },
-                {
-                  "name": "city"
-                },
-                {
-                  "name": "street",
-                  "type": "string"
+                  "name": "params",
+                  "type": "GetCEPFromAddressParams"
                 }
               ],
               "returns": "([]Address, error)",
               "implementationPath": "GetCEPFromAddress"
+            }
+          ]
+        },
+        "getCodeByName": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "name",
+                  "type": "string"
+                }
+              ],
+              "returns": "*string",
+              "implementationPath": "GetCodeByName"
             }
           ]
         },
@@ -318,20 +747,154 @@
             }
           ]
         },
+        "getHolidays": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "year",
+                  "type": "int"
+                }
+              ],
+              "returns": "[]Holiday",
+              "implementationPath": "GetHolidays"
+            }
+          ]
+        },
+        "getInfo": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "areaCode",
+                  "type": "interface{}"
+                }
+              ],
+              "returns": "*Info",
+              "implementationPath": "GetInfo"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                },
+                {
+                  "name": "opts",
+                  "type": "...GetInfoOptions"
+                }
+              ],
+              "returns": "*Info",
+              "implementationPath": "GetInfo"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "*Info",
+              "implementationPath": "GetInfo"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "*Info",
+              "implementationPath": "GetInfo"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "*Info",
+              "implementationPath": "GetInfo"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "*Info",
+              "implementationPath": "GetInfo"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "*Info",
+              "implementationPath": "GetInfo"
+            }
+          ]
+        },
+        "getNameByCode": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "code",
+                  "type": "string"
+                }
+              ],
+              "returns": "*string",
+              "implementationPath": "GetNameByCode"
+            }
+          ]
+        },
+        "getTimezone": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "stateCode",
+                  "type": "string"
+                }
+              ],
+              "returns": "*string",
+              "implementationPath": "GetTimezone"
+            }
+          ]
+        },
+        "isBusinessDay": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "time.Time"
+                },
+                {
+                  "name": "opts",
+                  "type": "...BusinessDayOptions"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "IsBusinessDay"
+            }
+          ]
+        },
         "isHoliday": {
           "variants": [
             {
               "params": [
                 {
-                  "name": "date",
-                  "type": "time.Time"
-                },
-                {
-                  "name": "uf",
-                  "type": "string"
+                  "name": "opts",
+                  "type": "...IsHolidayOptions"
                 }
               ],
-              "returns": "(bool, bool)",
+              "returns": "bool",
               "implementationPath": "IsHoliday"
             }
           ]
@@ -341,7 +904,47 @@
             {
               "params": [
                 {
+                  "name": "params",
+                  "type": "IsValidParams"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "IsValid"
+            },
+            {
+              "params": [
+                {
                   "name": "digitableLine",
+                  "type": "string"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "IsValid"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "IsValid"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "interface{}"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "IsValid"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
                   "type": "string"
                 }
               ],
@@ -361,6 +964,40 @@
             {
               "params": [
                 {
+                  "name": "value",
+                  "type": "string"
+                },
+                {
+                  "name": "opts",
+                  "type": "...IsValidOptions"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "IsValid"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "interface{}"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "IsValid"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "interface{}"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "IsValid"
+            },
+            {
+              "params": [
+                {
                   "name": "cnh",
                   "type": "string"
                 }
@@ -371,7 +1008,31 @@
             {
               "params": [
                 {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "IsValid"
+            },
+            {
+              "params": [
+                {
                   "name": "cnpj",
+                  "type": "string"
+                },
+                {
+                  "name": "options",
+                  "type": "...IsValidOptions"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "IsValid"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
                   "type": "string"
                 }
               ],
@@ -391,8 +1052,62 @@
             {
               "params": [
                 {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "IsValid"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "interface{}"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "IsValid"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "interface{}"
+                },
+                {
+                  "name": "opts",
+                  "type": "...IsValidOptions"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "IsValid"
+            },
+            {
+              "params": [
+                {
                   "name": "email",
                   "type": "string"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "IsValid"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "IsValid"
+            },
+            {
+              "params": [
+                {
+                  "name": "params",
+                  "type": "IsValidParams"
                 }
               ],
               "returns": "bool",
@@ -423,9 +1138,25 @@
                 {
                   "name": "plate",
                   "type": "string"
-                },
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "IsValid"
+            },
+            {
+              "params": [
                 {
-                  "name": "plateType",
+                  "name": "value",
+                  "type": "interface{}"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "IsValid"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
                   "type": "string"
                 }
               ],
@@ -435,12 +1166,22 @@
             {
               "params": [
                 {
-                  "name": "phoneNumber",
+                  "name": "value",
+                  "type": "interface{}"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "IsValid"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
                   "type": "string"
                 },
                 {
-                  "name": "phoneType",
-                  "type": "string"
+                  "name": "opts",
+                  "type": "...IsValidOptions"
                 }
               ],
               "returns": "bool",
@@ -459,7 +1200,51 @@
             {
               "params": [
                 {
+                  "name": "value",
+                  "type": "string"
+                },
+                {
+                  "name": "opts",
+                  "type": "...IsValidOptions"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "IsValid"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "IsValid"
+            },
+            {
+              "params": [
+                {
+                  "name": "params",
+                  "type": "IsValidParams"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "IsValid"
+            },
+            {
+              "params": [
+                {
                   "name": "renavam",
+                  "type": "string"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "IsValid"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
                   "type": "string"
                 }
               ],
@@ -478,12 +1263,156 @@
             }
           ]
         },
+        "isValidCode": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "code",
+                  "type": "string"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "IsValidCode"
+            }
+          ]
+        },
+        "isValidLandline": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "IsValidLandline"
+            }
+          ]
+        },
+        "isValidMobile": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                },
+                {
+                  "name": "opts",
+                  "type": "...IsValidMobileOptions"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "IsValidMobile"
+            }
+          ]
+        },
+        "isValidService": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "bool",
+              "implementationPath": "IsValidService"
+            }
+          ]
+        },
+        "list": {
+          "variants": [
+            {
+              "params": [],
+              "returns": "[]Bank",
+              "implementationPath": "List"
+            },
+            {
+              "params": [
+                {
+                  "name": "opts",
+                  "type": "...ListOptions"
+                }
+              ],
+              "returns": "map[string]string",
+              "implementationPath": "List"
+            },
+            {
+              "params": [
+                {
+                  "name": "stateCode",
+                  "type": "...string"
+                }
+              ],
+              "returns": "[]Municipality",
+              "implementationPath": "List"
+            },
+            {
+              "params": [],
+              "returns": "[]State",
+              "implementationPath": "List"
+            }
+          ]
+        },
         "listAll": {
           "variants": [
             {
               "params": [],
               "returns": "map[string]string",
               "implementationPath": "ListAll"
+            }
+          ]
+        },
+        "listByCategory": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "category",
+                  "type": "string"
+                },
+                {
+                  "name": "opts",
+                  "type": "...ListByCategoryOptions"
+                }
+              ],
+              "returns": "[]LegalNature",
+              "implementationPath": "ListByCategory"
+            }
+          ]
+        },
+        "listByCategoryNumber": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "category",
+                  "type": "int"
+                },
+                {
+                  "name": "opts",
+                  "type": "...ListByCategoryOptions"
+                }
+              ],
+              "returns": "[]LegalNature",
+              "implementationPath": "ListByCategoryNumber"
+            }
+          ]
+        },
+        "listByState": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "stateCode",
+                  "type": "string"
+                }
+              ],
+              "returns": "[]int",
+              "implementationPath": "ListByState"
             }
           ]
         },
@@ -515,6 +1444,268 @@
             }
           ]
         },
+        "parse": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "interface{}"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "interface{}"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "interface{}"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                },
+                {
+                  "name": "opts",
+                  "type": "...ParseCurrencyOptions"
+                }
+              ],
+              "returns": "float64",
+              "implementationPath": "Parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "interface{}"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Parse"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "Parse"
+            }
+          ]
+        },
+        "removeAccents": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "RemoveAccents"
+            }
+          ]
+        },
         "removeInternationalDialingCode": {
           "variants": [
             {
@@ -534,7 +1725,87 @@
             {
               "params": [
                 {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "RemoveSymbols"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "RemoveSymbols"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "RemoveSymbols"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "RemoveSymbols"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "RemoveSymbols"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "RemoveSymbols"
+            },
+            {
+              "params": [
+                {
                   "name": "phoneNumber",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "RemoveSymbols"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
+                  "type": "string"
+                }
+              ],
+              "returns": "string",
+              "implementationPath": "RemoveSymbols"
+            },
+            {
+              "params": [
+                {
+                  "name": "value",
                   "type": "string"
                 }
               ],
@@ -554,6 +1825,28 @@
               ],
               "returns": "string",
               "implementationPath": "Reverse"
+            }
+          ]
+        },
+        "subBusinessDays": {
+          "variants": [
+            {
+              "params": [
+                {
+                  "name": "date",
+                  "type": "time.Time"
+                },
+                {
+                  "name": "amount",
+                  "type": "int"
+                },
+                {
+                  "name": "opts",
+                  "type": "...BusinessDayOptions"
+                }
+              ],
+              "returns": "*time.Time",
+              "implementationPath": "SubBusinessDays"
             }
           ]
         }
