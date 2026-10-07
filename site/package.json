@@ -19,7 +19,7 @@
     "design": "node scripts/design-check.mjs"
   },
   "dependencies": {
-    "@brazilian-utils/brazilian-utils": "2.4.0",
+    "@brazilian-utils/brazilian-utils": "2.5.0",
     "@radix-ui/react-popover": "1.1.23",
     "fumadocs-core": "16.15.13",
     "fumadocs-mdx": "15.4.3",
