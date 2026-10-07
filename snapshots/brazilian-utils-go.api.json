@@ -1,0 +1,2354 @@
+{
+  "library": "brazilian-utils-go",
+  "language": "go",
+  "revision": "8a7bbce6f4cf30a874757f1b060c2c82c1df631f",
+  "symbols": [
+    {
+      "name": "areacode.GetInfo",
+      "params": [
+        {
+          "name": "areaCode",
+          "type": "interface{}"
+        }
+      ],
+      "returns": "*Info",
+      "location": {
+        "file": "areacode/areacode.go",
+        "line": 59
+      }
+    },
+    {
+      "name": "areacode.ListByState",
+      "params": [
+        {
+          "name": "stateCode",
+          "type": "string"
+        }
+      ],
+      "returns": "[]int",
+      "location": {
+        "file": "areacode/areacode.go",
+        "line": 75
+      }
+    },
+    {
+      "name": "bank.GetByCode",
+      "params": [
+        {
+          "name": "code",
+          "type": "interface{}"
+        }
+      ],
+      "returns": "*Bank",
+      "location": {
+        "file": "bank/bank.go",
+        "line": 59
+      }
+    },
+    {
+      "name": "bank.GetByIspb",
+      "params": [
+        {
+          "name": "value",
+          "type": "interface{}"
+        }
+      ],
+      "returns": "*Bank",
+      "location": {
+        "file": "bank/bank.go",
+        "line": 75
+      }
+    },
+    {
+      "name": "bank.IsValidCode",
+      "params": [
+        {
+          "name": "code",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "bank/bank.go",
+        "line": 90
+      }
+    },
+    {
+      "name": "bank.List",
+      "params": [],
+      "returns": "[]Bank",
+      "location": {
+        "file": "bank/bank.go",
+        "line": 50
+      }
+    },
+    {
+      "name": "bankaccount.IsValid",
+      "params": [
+        {
+          "name": "params",
+          "type": "IsValidParams"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "bankaccount/bankaccount.go",
+        "line": 41
+      }
+    },
+    {
+      "name": "boleto.Format",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        },
+        {
+          "name": "opts",
+          "type": "FormatOptions",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "boleto/formatter.go",
+        "line": 31
+      }
+    },
+    {
+      "name": "boleto.Generate",
+      "params": [
+        {
+          "name": "opts",
+          "type": "GenerateOptions",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "boleto/generator.go",
+        "line": 20
+      }
+    },
+    {
+      "name": "boleto.GetInfo",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        },
+        {
+          "name": "opts",
+          "type": "GetInfoOptions",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "*Info",
+      "location": {
+        "file": "boleto/info.go",
+        "line": 41
+      }
+    },
+    {
+      "name": "boleto.IsValid",
+      "params": [
+        {
+          "name": "digitableLine",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "boleto/validator.go",
+        "line": 49
+      }
+    },
+    {
+      "name": "boleto.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "boleto/formatter.go",
+        "line": 84
+      }
+    },
+    {
+      "name": "caepf.Format",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        },
+        {
+          "name": "opts",
+          "type": "FormatOptions",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "caepf/caepf.go",
+        "line": 48
+      }
+    },
+    {
+      "name": "caepf.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "caepf/caepf.go",
+        "line": 20
+      }
+    },
+    {
+      "name": "caepf.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "caepf/caepf.go",
+        "line": 81
+      }
+    },
+    {
+      "name": "cbo.Get",
+      "params": [
+        {
+          "name": "value",
+          "type": "interface{}"
+        }
+      ],
+      "returns": "*Cbo",
+      "location": {
+        "file": "cbo/cbo.go",
+        "line": 79
+      }
+    },
+    {
+      "name": "cbo.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "interface{}"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "cbo/cbo.go",
+        "line": 68
+      }
+    },
+    {
+      "name": "cbo.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "interface{}"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "cbo/cbo.go",
+        "line": 94
+      }
+    },
+    {
+      "name": "cei.Format",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        },
+        {
+          "name": "opts",
+          "type": "FormatOptions",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "cei/cei.go",
+        "line": 73
+      }
+    },
+    {
+      "name": "cei.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "cei/cei.go",
+        "line": 17
+      }
+    },
+    {
+      "name": "cei.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "cei/cei.go",
+        "line": 98
+      }
+    },
+    {
+      "name": "cep.Format",
+      "params": [
+        {
+          "name": "cep",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "cep/cep.go",
+        "line": 27
+      }
+    },
+    {
+      "name": "cep.Generate",
+      "params": [],
+      "returns": "string",
+      "location": {
+        "file": "cep/cep.go",
+        "line": 45
+      }
+    },
+    {
+      "name": "cep.GetAddressFromCEP",
+      "params": [
+        {
+          "name": "cep",
+          "type": "string"
+        }
+      ],
+      "returns": "(*Address, error)",
+      "location": {
+        "file": "cep/address.go",
+        "line": 66
+      }
+    },
+    {
+      "name": "cep.GetCEPFromAddress",
+      "params": [
+        {
+          "name": "params",
+          "type": "GetCEPFromAddressParams"
+        }
+      ],
+      "returns": "([]Address, error)",
+      "location": {
+        "file": "cep/address.go",
+        "line": 113
+      }
+    },
+    {
+      "name": "cep.IsValid",
+      "params": [
+        {
+          "name": "cep",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "cep/cep.go",
+        "line": 20
+      }
+    },
+    {
+      "name": "cep.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "cep/cep.go",
+        "line": 60
+      }
+    },
+    {
+      "name": "cep.RemoveSymbols",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "cep/cep.go",
+        "line": 55
+      }
+    },
+    {
+      "name": "certidao.Format",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        },
+        {
+          "name": "opts",
+          "type": "FormatOptions",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "certidao/certidao.go",
+        "line": 112
+      }
+    },
+    {
+      "name": "certidao.GetInfo",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "*Info",
+      "location": {
+        "file": "certidao/certidao.go",
+        "line": 169
+      }
+    },
+    {
+      "name": "certidao.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        },
+        {
+          "name": "opts",
+          "type": "IsValidOptions",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "certidao/certidao.go",
+        "line": 75
+      }
+    },
+    {
+      "name": "certidao.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "certidao/certidao.go",
+        "line": 145
+      }
+    },
+    {
+      "name": "cfop.Get",
+      "params": [
+        {
+          "name": "value",
+          "type": "interface{}"
+        }
+      ],
+      "returns": "*Cfop",
+      "location": {
+        "file": "cfop/cfop.go",
+        "line": 80
+      }
+    },
+    {
+      "name": "cfop.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "interface{}"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "cfop/cfop.go",
+        "line": 69
+      }
+    },
+    {
+      "name": "cfop.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "interface{}"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "cfop/cfop.go",
+        "line": 95
+      }
+    },
+    {
+      "name": "cnae.Format",
+      "params": [
+        {
+          "name": "value",
+          "type": "interface{}"
+        },
+        {
+          "name": "opts",
+          "type": "FormatOptions",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "cnae/cnae.go",
+        "line": 107
+      }
+    },
+    {
+      "name": "cnae.Get",
+      "params": [
+        {
+          "name": "value",
+          "type": "interface{}"
+        }
+      ],
+      "returns": "*Cnae",
+      "location": {
+        "file": "cnae/cnae.go",
+        "line": 85
+      }
+    },
+    {
+      "name": "cnae.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "interface{}"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "cnae/cnae.go",
+        "line": 73
+      }
+    },
+    {
+      "name": "cnae.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "interface{}"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "cnae/cnae.go",
+        "line": 144
+      }
+    },
+    {
+      "name": "cnh.Format",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        },
+        {
+          "name": "opts",
+          "type": "FormatOptions",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "cnh/cnh.go",
+        "line": 18
+      }
+    },
+    {
+      "name": "cnh.Generate",
+      "params": [],
+      "returns": "string",
+      "location": {
+        "file": "cnh/cnh.go",
+        "line": 45
+      }
+    },
+    {
+      "name": "cnh.IsValid",
+      "params": [
+        {
+          "name": "cnh",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "cnh/validator.go",
+        "line": 29
+      }
+    },
+    {
+      "name": "cnh.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "cnh/cnh.go",
+        "line": 36
+      }
+    },
+    {
+      "name": "cno.Format",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        },
+        {
+          "name": "opts",
+          "type": "FormatOptions",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "cno/cno.go",
+        "line": 71
+      }
+    },
+    {
+      "name": "cno.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "cno/cno.go",
+        "line": 18
+      }
+    },
+    {
+      "name": "cno.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "cno/cno.go",
+        "line": 96
+      }
+    },
+    {
+      "name": "cnpj.Format",
+      "params": [
+        {
+          "name": "cnpj",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "cnpj/formatter.go",
+        "line": 18
+      }
+    },
+    {
+      "name": "cnpj.Generate",
+      "params": [
+        {
+          "name": "opts",
+          "type": "GenerateOptions",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "cnpj/generator.go",
+        "line": 21
+      }
+    },
+    {
+      "name": "cnpj.IsValid",
+      "params": [
+        {
+          "name": "cnpj",
+          "type": "string"
+        },
+        {
+          "name": "options",
+          "type": "IsValidOptions",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "cnpj/validator.go",
+        "line": 37
+      }
+    },
+    {
+      "name": "cnpj.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "cnpj/formatter.go",
+        "line": 55
+      }
+    },
+    {
+      "name": "cnpj.RemoveSymbols",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "cnpj/formatter.go",
+        "line": 48
+      }
+    },
+    {
+      "name": "cns.Format",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        },
+        {
+          "name": "opts",
+          "type": "FormatOptions",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "cns/cns.go",
+        "line": 91
+      }
+    },
+    {
+      "name": "cns.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "cns/cns.go",
+        "line": 34
+      }
+    },
+    {
+      "name": "cns.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "cns/cns.go",
+        "line": 125
+      }
+    },
+    {
+      "name": "cpf.Format",
+      "params": [
+        {
+          "name": "cpf",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "cpf/formatter.go",
+        "line": 15
+      }
+    },
+    {
+      "name": "cpf.Generate",
+      "params": [],
+      "returns": "string",
+      "location": {
+        "file": "cpf/generator.go",
+        "line": 10
+      }
+    },
+    {
+      "name": "cpf.IsValid",
+      "params": [
+        {
+          "name": "cpf",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "cpf/validator.go",
+        "line": 31
+      }
+    },
+    {
+      "name": "cpf.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "cpf/formatter.go",
+        "line": 49
+      }
+    },
+    {
+      "name": "cpf.RemoveSymbols",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "cpf/formatter.go",
+        "line": 43
+      }
+    },
+    {
+      "name": "creditcard.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "creditcard/creditcard.go",
+        "line": 15
+      }
+    },
+    {
+      "name": "csosn.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "interface{}"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "csosn/csosn.go",
+        "line": 17
+      }
+    },
+    {
+      "name": "cst.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "interface{}"
+        },
+        {
+          "name": "opts",
+          "type": "IsValidOptions",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "cst/cst.go",
+        "line": 51
+      }
+    },
+    {
+      "name": "currency.ConvertRealToText",
+      "params": [
+        {
+          "name": "value",
+          "type": "float64"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "currency/currency.go",
+        "line": 214
+      }
+    },
+    {
+      "name": "currency.Format",
+      "params": [
+        {
+          "name": "value",
+          "type": "interface{}"
+        },
+        {
+          "name": "opts",
+          "type": "FormatCurrencyOptions",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "currency/currency.go",
+        "line": 31
+      }
+    },
+    {
+      "name": "currency.FormatCurrency",
+      "params": [
+        {
+          "name": "value",
+          "type": "float64"
+        }
+      ],
+      "returns": "string",
+      "deprecated": true,
+      "location": {
+        "file": "currency/currency.go",
+        "line": 24
+      }
+    },
+    {
+      "name": "currency.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        },
+        {
+          "name": "opts",
+          "type": "ParseCurrencyOptions",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "float64",
+      "location": {
+        "file": "currency/currency.go",
+        "line": 125
+      }
+    },
+    {
+      "name": "date.AddBusinessDays",
+      "params": [
+        {
+          "name": "date",
+          "type": "time.Time"
+        },
+        {
+          "name": "amount",
+          "type": "int"
+        },
+        {
+          "name": "opts",
+          "type": "BusinessDayOptions",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "*time.Time",
+      "location": {
+        "file": "date/holidays.go",
+        "line": 420
+      }
+    },
+    {
+      "name": "date.ConvertDateToText",
+      "params": [
+        {
+          "name": "date",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "date/date.go",
+        "line": 26
+      }
+    },
+    {
+      "name": "date.DifferenceInBusinessDays",
+      "params": [
+        {
+          "name": "laterDate",
+          "type": "time.Time"
+        },
+        {
+          "name": "earlierDate",
+          "type": "time.Time"
+        },
+        {
+          "name": "opts",
+          "type": "BusinessDayOptions",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "*int",
+      "location": {
+        "file": "date/holidays.go",
+        "line": 470
+      }
+    },
+    {
+      "name": "date.GetHolidays",
+      "params": [
+        {
+          "name": "year",
+          "type": "int"
+        }
+      ],
+      "returns": "[]Holiday",
+      "location": {
+        "file": "date/holidays.go",
+        "line": 325
+      }
+    },
+    {
+      "name": "date.IsBusinessDay",
+      "params": [
+        {
+          "name": "value",
+          "type": "time.Time"
+        },
+        {
+          "name": "opts",
+          "type": "BusinessDayOptions",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "date/holidays.go",
+        "line": 401
+      }
+    },
+    {
+      "name": "date.IsHoliday",
+      "params": [
+        {
+          "name": "opts",
+          "type": "IsHolidayOptions",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "date/holidays.go",
+        "line": 23
+      }
+    },
+    {
+      "name": "date.SubBusinessDays",
+      "params": [
+        {
+          "name": "date",
+          "type": "time.Time"
+        },
+        {
+          "name": "amount",
+          "type": "int"
+        },
+        {
+          "name": "opts",
+          "type": "BusinessDayOptions",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "*time.Time",
+      "location": {
+        "file": "date/holidays.go",
+        "line": 462
+      }
+    },
+    {
+      "name": "email.IsValid",
+      "params": [
+        {
+          "name": "email",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "email/validator.go",
+        "line": 12
+      }
+    },
+    {
+      "name": "helpers.Contains",
+      "params": [
+        {
+          "name": "h",
+          "type": "[]string"
+        },
+        {
+          "name": "n",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "helpers/contains.go",
+        "line": 4
+      }
+    },
+    {
+      "name": "helpers.ContainsInt",
+      "params": [
+        {
+          "name": "sl",
+          "type": "[]int"
+        },
+        {
+          "name": "v",
+          "type": "int"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "helpers/contains.go",
+        "line": 15
+      }
+    },
+    {
+      "name": "helpers.NumberToPortuguese",
+      "params": [
+        {
+          "name": "n",
+          "type": "int64"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "helpers/numwords.go",
+        "line": 66
+      }
+    },
+    {
+      "name": "helpers.OnlyNumbers",
+      "params": [
+        {
+          "name": "numbers",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "helpers/numbers.go",
+        "line": 10
+      }
+    },
+    {
+      "name": "helpers.Reverse",
+      "params": [
+        {
+          "name": "s",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "helpers/reverse.go",
+        "line": 4
+      }
+    },
+    {
+      "name": "iban.Format",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "iban/iban.go",
+        "line": 54
+      }
+    },
+    {
+      "name": "iban.GetInfo",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "*Info",
+      "location": {
+        "file": "iban/iban.go",
+        "line": 131
+      }
+    },
+    {
+      "name": "iban.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "iban/iban.go",
+        "line": 77
+      }
+    },
+    {
+      "name": "iban.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "iban/iban.go",
+        "line": 30
+      }
+    },
+    {
+      "name": "ie.IsValid",
+      "params": [
+        {
+          "name": "params",
+          "type": "IsValidParams"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "ie/ie.go",
+        "line": 45
+      }
+    },
+    {
+      "name": "legalnature.Format",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        },
+        {
+          "name": "opts",
+          "type": "FormatOptions",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "legalnature/legalnature.go",
+        "line": 141
+      }
+    },
+    {
+      "name": "legalnature.Generate",
+      "params": [],
+      "returns": "string",
+      "location": {
+        "file": "legalnature/legalnature.go",
+        "line": 177
+      }
+    },
+    {
+      "name": "legalnature.Get",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "*LegalNature",
+      "location": {
+        "file": "legalnature/legalnature.go",
+        "line": 80
+      }
+    },
+    {
+      "name": "legalnature.GetDescription",
+      "params": [
+        {
+          "name": "code",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "legalnature/legalnature.go",
+        "line": 38
+      }
+    },
+    {
+      "name": "legalnature.IsValid",
+      "params": [
+        {
+          "name": "code",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "legalnature/legalnature.go",
+        "line": 27
+      }
+    },
+    {
+      "name": "legalnature.List",
+      "params": [
+        {
+          "name": "opts",
+          "type": "ListOptions",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "map[string]string",
+      "location": {
+        "file": "legalnature/legalnature.go",
+        "line": 64
+      }
+    },
+    {
+      "name": "legalnature.ListAll",
+      "params": [],
+      "returns": "map[string]string",
+      "deprecated": true,
+      "location": {
+        "file": "legalnature/legalnature.go",
+        "line": 50
+      }
+    },
+    {
+      "name": "legalnature.ListByCategory",
+      "params": [
+        {
+          "name": "category",
+          "type": "string"
+        },
+        {
+          "name": "opts",
+          "type": "ListByCategoryOptions",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "[]LegalNature",
+      "location": {
+        "file": "legalnature/legalnature.go",
+        "line": 103
+      }
+    },
+    {
+      "name": "legalnature.ListByCategoryNumber",
+      "params": [
+        {
+          "name": "category",
+          "type": "int"
+        },
+        {
+          "name": "opts",
+          "type": "ListByCategoryOptions",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "[]LegalNature",
+      "location": {
+        "file": "legalnature/legalnature.go",
+        "line": 129
+      }
+    },
+    {
+      "name": "legalnature.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "legalnature/legalnature.go",
+        "line": 167
+      }
+    },
+    {
+      "name": "legalprocess.Format",
+      "params": [
+        {
+          "name": "legalProcessID",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "legalprocess/legalprocess.go",
+        "line": 48
+      }
+    },
+    {
+      "name": "legalprocess.Generate",
+      "params": [
+        {
+          "name": "opts",
+          "type": "GenerateOptions",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "legalprocess/legalprocess.go",
+        "line": 74
+      }
+    },
+    {
+      "name": "legalprocess.IsValid",
+      "params": [
+        {
+          "name": "legalProcessID",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "legalprocess/legalprocess.go",
+        "line": 20
+      }
+    },
+    {
+      "name": "legalprocess.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "legalprocess/legalprocess.go",
+        "line": 117
+      }
+    },
+    {
+      "name": "legalprocess.RemoveSymbols",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "legalprocess/legalprocess.go",
+        "line": 111
+      }
+    },
+    {
+      "name": "licenseplate.ConvertToMercosul",
+      "params": [
+        {
+          "name": "plate",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "licenseplate/licenseplate.go",
+        "line": 62
+      }
+    },
+    {
+      "name": "licenseplate.Format",
+      "params": [
+        {
+          "name": "plate",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "licenseplate/licenseplate.go",
+        "line": 46
+      }
+    },
+    {
+      "name": "licenseplate.Generate",
+      "params": [
+        {
+          "name": "format",
+          "type": "string",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "licenseplate/licenseplate.go",
+        "line": 95
+      }
+    },
+    {
+      "name": "licenseplate.GetFormat",
+      "params": [
+        {
+          "name": "plate",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "licenseplate/licenseplate.go",
+        "line": 32
+      }
+    },
+    {
+      "name": "licenseplate.IsValid",
+      "params": [
+        {
+          "name": "plate",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "licenseplate/licenseplate.go",
+        "line": 25
+      }
+    },
+    {
+      "name": "licenseplate.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "licenseplate/licenseplate.go",
+        "line": 83
+      }
+    },
+    {
+      "name": "licenseplate.RemoveSymbols",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "licenseplate/licenseplate.go",
+        "line": 77
+      }
+    },
+    {
+      "name": "municipality.GetByCode",
+      "params": [
+        {
+          "name": "code",
+          "type": "interface{}"
+        }
+      ],
+      "returns": "*Municipality",
+      "location": {
+        "file": "municipality/municipality.go",
+        "line": 50
+      }
+    },
+    {
+      "name": "municipality.List",
+      "params": [
+        {
+          "name": "stateCode",
+          "type": "string",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "[]Municipality",
+      "location": {
+        "file": "municipality/municipality.go",
+        "line": 77
+      }
+    },
+    {
+      "name": "ncm.Format",
+      "params": [
+        {
+          "name": "value",
+          "type": "interface{}"
+        },
+        {
+          "name": "opts",
+          "type": "FormatOptions",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "ncm/ncm.go",
+        "line": 83
+      }
+    },
+    {
+      "name": "ncm.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "interface{}"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "ncm/ncm.go",
+        "line": 66
+      }
+    },
+    {
+      "name": "ncm.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "interface{}"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "ncm/ncm.go",
+        "line": 120
+      }
+    },
+    {
+      "name": "nfekey.Format",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        },
+        {
+          "name": "opts",
+          "type": "FormatOptions",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "nfekey/nfekey.go",
+        "line": 56
+      }
+    },
+    {
+      "name": "nfekey.GetInfo",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "*Info",
+      "location": {
+        "file": "nfekey/nfekey.go",
+        "line": 209
+      }
+    },
+    {
+      "name": "nfekey.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "nfekey/nfekey.go",
+        "line": 108
+      }
+    },
+    {
+      "name": "nfekey.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "nfekey/nfekey.go",
+        "line": 38
+      }
+    },
+    {
+      "name": "number.ConvertToWords",
+      "params": [
+        {
+          "name": "value",
+          "type": "float64"
+        },
+        {
+          "name": "opts",
+          "type": "ConvertToWordsOptions",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "number/number.go",
+        "line": 66
+      }
+    },
+    {
+      "name": "passport.Format",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "passport/passport.go",
+        "line": 29
+      }
+    },
+    {
+      "name": "passport.Generate",
+      "params": [],
+      "returns": "string",
+      "location": {
+        "file": "passport/passport.go",
+        "line": 65
+      }
+    },
+    {
+      "name": "passport.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "interface{}"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "passport/passport.go",
+        "line": 54
+      }
+    },
+    {
+      "name": "passport.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "passport/passport.go",
+        "line": 35
+      }
+    },
+    {
+      "name": "passport.RemoveSymbols",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "passport/passport.go",
+        "line": 45
+      }
+    },
+    {
+      "name": "phone.Format",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        },
+        {
+          "name": "opts",
+          "type": "FormatOptions",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "phone/phone.go",
+        "line": 165
+      }
+    },
+    {
+      "name": "phone.Generate",
+      "params": [
+        {
+          "name": "phoneType",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "phone/phone.go",
+        "line": 270
+      }
+    },
+    {
+      "name": "phone.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        },
+        {
+          "name": "opts",
+          "type": "IsValidOptions",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "phone/phone.go",
+        "line": 49
+      }
+    },
+    {
+      "name": "phone.IsValidLandline",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "phone/phone.go",
+        "line": 131
+      }
+    },
+    {
+      "name": "phone.IsValidMobile",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        },
+        {
+          "name": "opts",
+          "type": "IsValidMobileOptions",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "phone/phone.go",
+        "line": 102
+      }
+    },
+    {
+      "name": "phone.IsValidService",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "phone/phone.go",
+        "line": 140
+      }
+    },
+    {
+      "name": "phone.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "phone/phone.go",
+        "line": 259
+      }
+    },
+    {
+      "name": "phone.RemoveInternationalDialingCode",
+      "params": [
+        {
+          "name": "phoneNumber",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "phone/phone.go",
+        "line": 242
+      }
+    },
+    {
+      "name": "phone.RemoveSymbols",
+      "params": [
+        {
+          "name": "phoneNumber",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "phone/phone.go",
+        "line": 233
+      }
+    },
+    {
+      "name": "pis.Format",
+      "params": [
+        {
+          "name": "pis",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "pis/pis.go",
+        "line": 43
+      }
+    },
+    {
+      "name": "pis.Generate",
+      "params": [],
+      "returns": "string",
+      "location": {
+        "file": "pis/pis.go",
+        "line": 51
+      }
+    },
+    {
+      "name": "pis.IsValid",
+      "params": [
+        {
+          "name": "pis",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "pis/pis.go",
+        "line": 18
+      }
+    },
+    {
+      "name": "pis.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "pis/pis.go",
+        "line": 64
+      }
+    },
+    {
+      "name": "pis.RemoveSymbols",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "pis/pis.go",
+        "line": 58
+      }
+    },
+    {
+      "name": "pixkey.GetInfo",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "*Info",
+      "location": {
+        "file": "pixkey/pixkey.go",
+        "line": 51
+      }
+    },
+    {
+      "name": "pixkey.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        },
+        {
+          "name": "opts",
+          "type": "IsValidOptions",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "pixkey/pixkey.go",
+        "line": 103
+      }
+    },
+    {
+      "name": "pixpayload.Generate",
+      "params": [
+        {
+          "name": "params",
+          "type": "GeneratePixPayloadParams"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "pixpayload/pixpayload.go",
+        "line": 167
+      }
+    },
+    {
+      "name": "pixpayload.GetInfo",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "*Info",
+      "location": {
+        "file": "pixpayload/pixpayload.go",
+        "line": 56
+      }
+    },
+    {
+      "name": "pixpayload.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "pixpayload/pixpayload.go",
+        "line": 50
+      }
+    },
+    {
+      "name": "registroprofissional.IsValid",
+      "params": [
+        {
+          "name": "params",
+          "type": "IsValidParams"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "registroprofissional/registroprofissional.go",
+        "line": 47
+      }
+    },
+    {
+      "name": "renavam.Generate",
+      "params": [],
+      "returns": "string",
+      "location": {
+        "file": "renavam/generator.go",
+        "line": 10
+      }
+    },
+    {
+      "name": "renavam.IsValid",
+      "params": [
+        {
+          "name": "renavam",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "renavam/validator.go",
+        "line": 10
+      }
+    },
+    {
+      "name": "state.GetByIbgeCode",
+      "params": [
+        {
+          "name": "code",
+          "type": "interface{}"
+        }
+      ],
+      "returns": "*State",
+      "location": {
+        "file": "state/state.go",
+        "line": 77
+      }
+    },
+    {
+      "name": "state.GetCodeByName",
+      "params": [
+        {
+          "name": "name",
+          "type": "string"
+        }
+      ],
+      "returns": "*string",
+      "location": {
+        "file": "state/state.go",
+        "line": 93
+      }
+    },
+    {
+      "name": "state.GetNameByCode",
+      "params": [
+        {
+          "name": "code",
+          "type": "string"
+        }
+      ],
+      "returns": "*string",
+      "location": {
+        "file": "state/state.go",
+        "line": 105
+      }
+    },
+    {
+      "name": "state.GetTimezone",
+      "params": [
+        {
+          "name": "stateCode",
+          "type": "string"
+        }
+      ],
+      "returns": "*string",
+      "location": {
+        "file": "state/state.go",
+        "line": 118
+      }
+    },
+    {
+      "name": "state.List",
+      "params": [],
+      "returns": "[]State",
+      "location": {
+        "file": "state/state.go",
+        "line": 69
+      }
+    },
+    {
+      "name": "text.Capitalize",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        },
+        {
+          "name": "opts",
+          "type": "CapitalizeOptions",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "text/text.go",
+        "line": 85
+      }
+    },
+    {
+      "name": "text.RemoveAccents",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "text/text.go",
+        "line": 16
+      }
+    },
+    {
+      "name": "vin.IsValid",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "vin/vin.go",
+        "line": 20
+      }
+    },
+    {
+      "name": "voterid.Format",
+      "params": [
+        {
+          "name": "voterID",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "voterid/formatter.go",
+        "line": 12
+      }
+    },
+    {
+      "name": "voterid.Generate",
+      "params": [
+        {
+          "name": "federativeUnion",
+          "type": "string",
+          "optional": true,
+          "rest": true
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "voterid/generator.go",
+        "line": 45
+      }
+    },
+    {
+      "name": "voterid.IsValid",
+      "params": [
+        {
+          "name": "voterID",
+          "type": "string"
+        }
+      ],
+      "returns": "bool",
+      "location": {
+        "file": "voterid/validator.go",
+        "line": 21
+      }
+    },
+    {
+      "name": "voterid.Parse",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "voterid/formatter.go",
+        "line": 43
+      }
+    },
+    {
+      "name": "voterid.RemoveSymbols",
+      "params": [
+        {
+          "name": "value",
+          "type": "string"
+        }
+      ],
+      "returns": "string",
+      "location": {
+        "file": "voterid/formatter.go",
+        "line": 35
+      }
+    }
+  ],
+  "warnings": []
+}

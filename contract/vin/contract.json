@@ -1,0 +1,100 @@
+{
+  "$schema": "../../schema/contract.schema.json",
+  "domain": "vin",
+  "title": { "en": "VIN (chassis)", "pt-BR": "Chassi (VIN)" },
+  "summary": {
+    "en": "Vehicle identification numbers, structural and check-digit validation.",
+    "pt-BR": "Números de identificação veicular (chassi): validação estrutural e do dígito verificador."
+  },
+  "category": "vehicles",
+  "order": 3,
+  "related": ["renavam"],
+  "functions": {
+    "isValid": {
+      "summary": {
+        "en": "Checks whether a VIN (Vehicle Identification Number / chassi) is valid.",
+        "pt-BR": "Verifica se um chassi (VIN, Vehicle Identification Number) é válido."
+      },
+      "description": {
+        "en": [
+          "Validates a VIN (chassi): 17 characters in the three sections of Resolução CONTRAN nº 968/2022, art. 3º (WMI, VDS and VIS), each a digit or a letter other than `I`, `O` and `Q`. The check ignores case and surrounding whitespace.",
+          "",
+          "- The Brazilian rule does not require a check digit, and many Brazilian-built VINs do not carry one, so by default the function does not check it: `9BWZZZ377VT004251` is valid. 2.4.0 always required the North American check digit.",
+          "- `options.checkDigit: true` adds the North American rules of 49 CFR 565.15: the 9th character must be the weighted modulus 11 check digit (`0` to `9` or `X`), and the 10th (model year) cannot be `U`, `Z` or `0`. Use it for a vehicle built for the United States or Canada, or to keep the 2.4.0 result.",
+          "- The `I`, `O` and `Q` exclusion comes from ISO 3779:2009, not from the resolution: the resolution lists no forbidden character and leaves the engraving to ABNT NBR 6066:2022 (art. 5º). The regularization VINs of its Anexo II (WMI `XXX`) are written without those letters, so they pass.",
+          "- A VIN has no printed grouping, so a space, `.`, `-` or `/` inside it makes the value invalid.",
+          "- A VIN whose characters are all the same is rejected.",
+          "- Only the ASCII letters and digits count. A non-ASCII letter that upper-cases into an ASCII one (`ß`, `ſ`) is rejected. Until 2.4.0 these characters were folded into ASCII letters.",
+          "- `options.checkDigit` defaults to `false`."
+        ],
+        "pt-BR": [
+          "Valida um chassi (VIN): 17 caracteres nas três seções da Resolução CONTRAN nº 968/2022, art. 3º (WMI, VDS e VIS), cada um um dígito ou uma letra que não seja `I`, `O` ou `Q`. A validação ignora maiúsculas e minúsculas e os espaços nas pontas.",
+          "",
+          "- A regra brasileira não exige dígito verificador, e muitos chassis fabricados no Brasil não o têm, então por padrão a função não o verifica: `9BWZZZ377VT004251` é válido. A 2.4.0 sempre exigia o dígito verificador norte-americano.",
+          "- `options.checkDigit: true` acrescenta as regras norte-americanas do 49 CFR 565.15: o 9º caractere precisa ser o dígito verificador por módulo 11 ponderado (`0` a `9` ou `X`), e o 10º (ano-modelo) não pode ser `U`, `Z` nem `0`. Use para um veículo fabricado para os Estados Unidos ou o Canadá, ou para manter o resultado da 2.4.0.",
+          "- A exclusão de `I`, `O` e `Q` vem da ISO 3779:2009, não da resolução: a resolução não lista caractere proibido e remete a gravação à ABNT NBR 6066:2022 (art. 5º). Os chassis de regularização do Anexo II dela (WMI `XXX`) são escritos sem essas letras, então passam.",
+          "- Um VIN não tem agrupamento impresso, então um espaço, `.`, `-` ou `/` no meio dele torna o valor inválido.",
+          "- Um VIN com todos os caracteres iguais é rejeitado.",
+          "- Só contam as letras ASCII e os dígitos. Uma letra não ASCII que vira letra ASCII ao ser passada para maiúscula (`ß`, `ſ`) é rejeitada. Até a 2.4.0 esses caracteres eram convertidos em letras ASCII.",
+          "- `options.checkDigit` é `false` por padrão."
+        ]
+      },
+      "references": [
+        "https://www.iso.org/standard/52200.html",
+        "https://www.ecfr.gov/current/title-49/section-565.15",
+        "https://www.gov.br/transportes/pt-br/assuntos/transito/conteudo-contran/resolucoes/resolucao9682022.pdf",
+        "https://vpic.nhtsa.dot.gov/api/"
+      ],
+      "params": [
+        { "name": "value", "type": "string" },
+        { "name": "options", "type": "IsValidVinOptions", "optional": true, "fields": [{ "name": "checkDigit", "type": "boolean", "optional": true }] }
+      ],
+      "returns": "boolean",
+      "tests": [
+        { "args": ["1HGCM82633A004352"], "returns": true },
+        { "name": "check-digit-x", "args": ["1M8GDM9AXKP042788"], "returns": true },
+        { "name": "lowercase", "args": ["1m8gdm9axkp042788"], "returns": true },
+        { "name": "wrong-check-digit", "args": ["1HGCM82633A004353"], "returns": true, "note": "changed in 2.5.0 (#593): the North American check digit is enforced only with { checkDigit: true }, since the Brazilian rule (Resolução CONTRAN nº 968/2022) does not require it. 2.4.0 returned false" },
+        { "name": "letter-i", "args": ["1HGCM8263IA004352"], "returns": false },
+        { "name": "too-short", "args": ["1HGCM82633A00435"], "returns": false },
+        { "name": "zeros", "args": ["00000000000000000"], "returns": false },
+        { "name": "empty", "args": [""], "returns": false },
+        { "args": ["JH4TB2H26CC000000"], "returns": true, "note": "JavaScript's own test: should return true for a second known valid VIN" },
+        { "args": [" 1HGCM82633A004352 "], "returns": true, "note": "JavaScript's own test: should return true for a value with leading/trailing whitespace" },
+        { "args": ["55555555555555555"], "returns": false, "note": "JavaScript's own test: should return false when every character is the same" },
+        { "args": ["99999999999999999"], "returns": false, "note": "JavaScript's own test: should return false when every character is the same" },
+        { "args": [" 00000000000000000 "], "returns": false, "note": "JavaScript's own test: should return false when every character is the same" },
+        { "args": ["1HICM82633A004352"], "returns": false, "note": "JavaScript's own test: should return false when the excluded letter I replaces a non-check-digit position" },
+        { "args": ["1HGCM8263OA004352"], "returns": false, "note": "JavaScript's own test: should return false when it contains the excluded letter O" },
+        { "args": ["1HGCM8263QA004352"], "returns": false, "note": "JavaScript's own test: should return false when it contains the excluded letter Q" },
+        { "args": ["Z92D746W7W5N6SFH"], "returns": false, "note": "JavaScript's own test: should return false when it has 16 characters" },
+        { "args": ["1HGCM82633A0043522"], "returns": false, "note": "JavaScript's own test: should return false when it has more than 17 characters" },
+        { "args": ["1HGCM826C3A004352"], "returns": true, "note": "changed in 2.5.0 (#593): C is an allowed character and the check digit is not enforced by default. 2.4.0 returned false. JavaScript's own test: when the check digit character is a letter other than X and checkDigit is true" },
+        { "args": ["1HGCM82633A00435-"], "returns": false, "note": "JavaScript's own test: should return false when it contains a symbol" },
+        { "args": ["1HGCM8 2633A004352"], "returns": false, "note": "JavaScript's own test: should return false when a mask character splits it, since a VIN has no printed grouping" },
+        { "args": ["1HGCM8-2633A004352"], "returns": false, "note": "JavaScript's own test: should return false when a mask character splits it, since a VIN has no printed grouping" },
+        { "args": ["1HGCM8.2633A004352"], "returns": false, "note": "JavaScript's own test: should return false when a mask character splits it, since a VIN has no printed grouping" },
+        { "args": ["1HGCM8/2633A004352"], "returns": false, "note": "JavaScript's own test: should return false when a mask character splits it, since a VIN has no printed grouping" },
+        { "args": ["                 "], "returns": false, "note": "JavaScript's own test: should return false when it is only whitespace" },
+        { "name": "wrong-check-digit-enforced", "args": ["1HGCM82633A004353", { "checkDigit": true }], "returns": false, "note": "JavaScript's own test: when the check digit does not match and checkDigit is true" },
+        { "args": ["1HGCM826C3A004352", { "checkDigit": true }], "returns": false, "note": "JavaScript's own test: when the check digit character is a letter other than X and checkDigit is true" },
+        { "args": ["9BWZZZ377VT004251"], "returns": true, "note": "JavaScript's own test: for a Brazilian VIN that carries no 49 CFR 565.15 check digit (changed in 2.5.0, #593; 2.4.0 returned false)" },
+        { "args": ["9BWZZZ377VT004251", { "checkDigit": false }], "returns": true, "note": "JavaScript's own test: for a Brazilian VIN that carries no 49 CFR 565.15 check digit" },
+        { "args": ["9BWZZZ377VT004251", { "checkDigit": true }], "returns": false, "note": "JavaScript's own test: when the check digit does not match and checkDigit is true" },
+        { "args": ["1HGCM82633A004352", { "checkDigit": true }], "returns": true, "note": "JavaScript's own test: for a known valid VIN with a numeric check digit" },
+        { "args": ["1M8GDM9AXKP042788", { "checkDigit": true }], "returns": true, "note": "JavaScript's own test: for a known valid VIN with an X check digit" },
+        { "args": ["1m8gdm9axkp042788", { "checkDigit": true }], "returns": true, "note": "JavaScript's own test: for a lowercase value" },
+        { "args": ["JH4TB2H26CC000000", { "checkDigit": true }], "returns": true, "note": "JavaScript's own test: for a second known valid VIN" },
+        { "args": ["1HGCM8261UA004352", { "checkDigit": true }], "returns": false, "note": "JavaScript's own test: when the model year code is U, Z or 0 and checkDigit is true, even with a matching check digit" },
+        { "args": ["1HGCM8262ZA004352", { "checkDigit": true }], "returns": false, "note": "JavaScript's own test: when the model year code is U, Z or 0 and checkDigit is true, even with a matching check digit" },
+        { "args": ["1HGCM82690A004352", { "checkDigit": true }], "returns": false, "note": "JavaScript's own test: when the model year code is U, Z or 0 and checkDigit is true, even with a matching check digit" },
+        { "args": ["1HGCM8261UA004352"], "returns": true, "note": "JavaScript's own test: the model year code is checked only with checkDigit" },
+        { "args": ["00000000000000000", { "checkDigit": true }], "returns": false, "note": "every character the same is rejected under both rules" },
+        { "args": ["1HGCM8263ſA004352"], "returns": false, "note": "changed in 2.5.0 (#615): `ſ` (long s) is no longer folded into `S`" },
+        { "args": ["1HGCM8263ßA004352"], "returns": false, "note": "changed in 2.5.0 (#615): `ß` is no longer folded into ASCII letters" },
+        { "args": ["ſ9BWZZZ377VT00425"], "returns": false, "note": "changed in 2.5.0 (#615): `ſ` is no longer folded into `S`" },
+        { "args": ["1HGCM82633A004352 ", { "checkDigit": true }], "returns": true, "note": "surrounding whitespace is trimmed" }
+      ]
+    }
+  }
+}

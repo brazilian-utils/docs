@@ -1,0 +1,75 @@
+{
+  "$schema": "../../schema/contract.schema.json",
+  "domain": "number",
+  "title": { "en": "Numbers in words", "pt-BR": "Números por extenso" },
+  "summary": {
+    "en": "Integers written out in Brazilian Portuguese (por extenso).",
+    "pt-BR": "Números inteiros escritos por extenso em português."
+  },
+  "category": "text-and-dates",
+  "order": 2,
+  "related": ["currency"],
+  "functions": {
+    "convertToWords": {
+      "summary": {
+        "en": "Formats an integer as its Brazilian Portuguese cardinal number words (\"por extenso\").",
+        "pt-BR": "Formata um inteiro como número cardinal por extenso em português."
+      },
+      "description": {
+        "en": [
+          "Writes an integer in Brazilian Portuguese cardinal words (\"por extenso\"): for example, 1235 is \"mil duzentos e trinta e cinco\".",
+          "",
+          "- Accepts integers from -999 999 999 999 999 to 999 999 999 999 999. The function truncates a non-integer toward zero and puts \"menos\" before a negative number.",
+          "- `options.gender` (`\"masculine\"` by default, or `\"feminine\"`) agrees \"um/uma\", \"dois/duas\" and the hundreds (\"duzentos/duzentas\") with the noun the number qualifies.",
+          "- The last group takes an \"e\" before it only when it is below 100 or a round hundred: 1200 is \"mil e duzentos\" and 1100 is \"mil e cem\", while 1235 is \"mil duzentos e trinta e cinco\" and 1101 is \"mil cento e um\".",
+          "- Returns an empty string for a value outside that range, not finite, or not a number.",
+          "- Zero is \"zero\", and so is any value that truncates to 0 (`-0.5`, never \"menos zero\"). The result is always lower case.",
+          "- With `\"feminine\"`, only the thousands group and the last group change (2000 is \"duas mil\", 21 is \"vinte e uma\"). The multiplier of \"milhão\", \"bilhão\" and \"trilhão\" stays masculine (2 000 000 is \"dois milhões\")."
+        ],
+        "pt-BR": [
+          "Escreve um inteiro por extenso em português, como número cardinal. Por exemplo, 1235 é \"mil duzentos e trinta e cinco\".",
+          "",
+          "- Aceita inteiros de -999 999 999 999 999 a 999 999 999 999 999. A função trunca um não inteiro em direção a zero e coloca \"menos\" antes de um número negativo.",
+          "- `options.gender` (`\"masculine\"` por padrão, ou `\"feminine\"`) faz \"um/uma\", \"dois/duas\" e as centenas (\"duzentos/duzentas\") concordarem com o substantivo que o número qualifica.",
+          "- O último grupo leva um \"e\" antes dele só quando é menor que 100 ou uma centena redonda: 1200 é \"mil e duzentos\" e 1100 é \"mil e cem\", enquanto 1235 é \"mil duzentos e trinta e cinco\" e 1101 é \"mil cento e um\".",
+          "- Retorna uma string vazia para um valor fora desse intervalo, não finito ou que não é número.",
+          "- Zero é \"zero\", e também qualquer valor que trunca para 0 (`-0.5`, nunca \"menos zero\"). O resultado é sempre em minúsculas.",
+          "- Com `\"feminine\"`, só o grupo dos milhares e o último grupo mudam (2000 é \"duas mil\", 21 é \"vinte e uma\"). O multiplicador de \"milhão\", \"bilhão\" e \"trilhão\" continua no masculino (2 000 000 é \"dois milhões\")."
+        ]
+      },
+      "flatName": "convertNumberToWords",
+      "params": [
+        { "name": "value", "type": "number" },
+        { "name": "options", "type": "ConvertNumberToWordsOptions", "optional": true, "fields": [{ "name": "gender", "type": "\"masculine\" | \"feminine\"", "optional": true }] }
+      ],
+      "returns": "string",
+      "tests": [
+        { "args": [0], "returns": "zero" },
+        { "args": [1], "returns": "um" },
+        { "args": [3], "returns": "três" },
+        { "args": [100], "returns": "cem" },
+        { "args": [101], "returns": "cento e um" },
+        { "args": [123], "returns": "cento e vinte e três" },
+        { "args": [1000], "returns": "mil" },
+        { "args": [1000000], "returns": "um milhão" },
+        { "name": "negative", "args": [-3], "returns": "menos três" },
+        { "name": "truncates-fraction", "args": [12.9], "returns": "doze", "note": "the fractional part is dropped; asserted by the reference (JS) unit tests" },
+        { "args": [-12.9], "returns": "menos doze", "note": "JavaScript's own test: non-integer values should truncate toward zero before converting" },
+        { "args": [1001], "returns": "mil e um", "note": "JavaScript docs example" },
+        { "args": [2000000], "returns": "dois milhões", "note": "JavaScript docs example" },
+        { "args": [-42], "returns": "menos quarenta e dois", "note": "JavaScript docs example" },
+        { "name": "feminine-two", "args": [2, { "gender": "feminine" }], "returns": "duas", "note": "JavaScript docs example" },
+        { "args": [1200], "returns": "mil e duzentos", "note": "JavaScript docs: the last group takes an e only when below 100 or a round hundred" },
+        { "args": [1100], "returns": "mil e cem", "note": "JavaScript docs: the last group takes an e only when below 100 or a round hundred" },
+        { "args": [1235], "returns": "mil duzentos e trinta e cinco", "note": "JavaScript docs example" },
+        { "args": [1101], "returns": "mil cento e um", "note": "JavaScript docs: the last group takes an e only when below 100 or a round hundred" },
+        { "name": "feminine-hundreds", "args": [200, { "gender": "feminine" }], "returns": "duzentas", "note": "hundreds agree with the gender" },
+        { "name": "feminine-one", "args": [1, { "gender": "feminine" }], "returns": "uma", "note": "feminine one" },
+        { "name": "maximum", "args": [999999999999999], "returns": "novecentos e noventa e nove trilhões novecentos e noventa e nove bilhões novecentos e noventa e nove milhões novecentos e noventa e nove mil novecentos e noventa e nove", "note": "JavaScript's own test: should convert the maximum supported value (999999999999999, 999 trillion)" },
+        { "name": "above-maximum", "args": [1000000000000000], "returns": "", "note": "JavaScript's own test: should return '' above the maximum supported value" },
+        { "name": "below-minimum", "args": [-1000000000000000], "returns": "", "note": "JavaScript's own test: should return '' below the negative of the maximum supported value" },
+        { "name": "null", "args": [null], "returns": "", "note": "not a finite number" }
+      ]
+    }
+  }
+}

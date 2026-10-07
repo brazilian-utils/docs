@@ -1,0 +1,180 @@
+{
+  "$schema": "../../schema/contract.schema.json",
+  "domain": "classTrib",
+  "title": { "en": "cClassTrib", "pt-BR": "cClassTrib" },
+  "summary": {
+    "en": "Código de Classificação Tributária of the IBS and the CBS: the 6-digit classification a document carries next to the CST-IBS/CBS.",
+    "pt-BR": "Código de Classificação Tributária do IBS e da CBS: a classificação de 6 dígitos que o documento traz junto do CST-IBS/CBS."
+  },
+  "category": "tax",
+  "order": 9,
+  "related": ["cstIbsCbs"],
+  "functions": {
+    "get": {
+      "summary": {
+        "en": "Looks up a cClassTrib code in the official table.",
+        "pt-BR": "Consulta um cClassTrib na tabela oficial."
+      },
+      "description": {
+        "en": [
+          "Looks up a cClassTrib code in the official table and returns its code, its CST-IBS/CBS, its name and its description.",
+          "",
+          "- Same input rules as `classTrib.isValid` without `options.cst`. Returns `null` exactly when `classTrib.isValid` called without `options.cst` returns `false`.",
+          "- `cst` is the first 3 digits of the code: every classification belongs to one CST.",
+          "- `name` is the short name the official table gives for display (the column \"Nome cClassTrib\") and `description` the situation the classification refers to (the column \"Descrição cClassTrib\"), both copied word for word from the official spreadsheet, on one line. The legal wording of the spreadsheet (article of Lei Complementar 214/2025 and of the regulations) is not returned.",
+          "- The SVRS online table (Portal dos Documentos Fiscais Eletrônicos) differs from the official workbook in 5 names and 7 descriptions; the differences for 550017 and 200041 change the meaning. The function follows the workbook."
+        ],
+        "pt-BR": [
+          "Consulta um cClassTrib na tabela oficial e retorna o código, o CST-IBS/CBS, o nome e a descrição.",
+          "",
+          "- Mesmas regras de entrada de `classTrib.isValid` sem `options.cst`. Retorna `null` exatamente quando `classTrib.isValid` chamada sem `options.cst` retorna `false`.",
+          "- `cst` são os 3 primeiros dígitos do código: cada classificação pertence a um CST.",
+          "- `name` é o nome curto que a tabela oficial dá para exibição (a coluna \"Nome cClassTrib\") e `description` a situação a que a classificação se refere (a coluna \"Descrição cClassTrib\"), ambos copiados literalmente da planilha oficial, em uma só linha. A redação legal da planilha (artigo da Lei Complementar 214/2025 e dos regulamentos) não é retornada.",
+          "- A tabela online da SVRS (Portal dos Documentos Fiscais Eletrônicos) diverge da planilha oficial em 5 nomes e 7 descrições; as divergências de 550017 e 200041 mudam o sentido. A função segue a planilha."
+        ]
+      },
+      "references": [
+        "https://www.nfe.fazenda.gov.br/portal/exibirArquivo.aspx?conteudo=D5b4Ov84WDg=",
+        "https://www.nfe.fazenda.gov.br/portal/exibirArquivo.aspx?conteudo=jxTMMQeEVM8=",
+        "https://www.nfe.fazenda.gov.br/portal/exibirArquivo.aspx?conteudo=AKD/muSmiIY=",
+        "https://dfe-portal.svrs.rs.gov.br/DFE/TabelaClassificacaoTributaria",
+        "https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp214.htm"
+      ],
+      "flatName": "getClassTrib",
+      "params": [{ "name": "value", "type": "string | number" }],
+      "returns": "ClassTrib?",
+      "tests": [
+        { "args": ["000002"], "returns": { "code": "000002", "cst": "000", "name": "Exploração de via", "description": "Exploração de via, observado o art. 11 da Lei Complementar nº 214, de 2025." }, "note": "from the maintainer briefing, #566" },
+        {
+          "args": ["410999"],
+          "returns": {
+            "code": "410999",
+            "cst": "410",
+            "name": "Operações não onerosas sem previsão de tributação, não especificadas anteriormente",
+            "description": "Operações não onerosas sem previsão de tributação, não especificadas anteriormente, observado o art. 4º da Lei Complementar nº 214, de 2025."
+          },
+          "note": "JavaScript's own test: should return the entry of a known code, with its CST, its name and its description"
+        },
+        { "args": [811001], "returns": { "code": "811001", "cst": "811", "name": "Anulação de Crédito por Saídas Imunes/Isentas", "description": "Anulação de crédito proporcional ao valor das operações imunes e isentas, observado o art. 51 da Lei Complementar nº 214, de 2025." }, "note": "JavaScript's own test: should return the entry of a code given as a number" },
+        { "args": [1], "returns": { "code": "000001", "cst": "000", "name": "Situações tributadas integralmente pelo IBS e CBS.", "description": "Situações tributadas integralmente pelo IBS e CBS." }, "note": "JavaScript's own test: should pad a value with leading zeros, as a number or as a string" },
+        { "args": ["1"], "returns": { "code": "000001", "cst": "000", "name": "Situações tributadas integralmente pelo IBS e CBS.", "description": "Situações tributadas integralmente pelo IBS e CBS." }, "note": "JavaScript's own test: should pad a value with leading zeros, as a number or as a string" },
+        { "args": [" 000001 "], "returns": { "code": "000001", "cst": "000", "name": "Situações tributadas integralmente pelo IBS e CBS.", "description": "Situações tributadas integralmente pelo IBS e CBS." }, "note": "JavaScript's own test: should pad a value with leading zeros, as a number or as a string" },
+        { "args": [10002], "returns": { "code": "010002", "cst": "010", "name": "Operações do serviço financeiro", "description": "Operações do serviço financeiro" }, "note": "JavaScript's own test: should pad a value with leading zeros, as a number or as a string" },
+        {
+          "args": ["620007"],
+          "returns": {
+            "code": "620007",
+            "cst": "620",
+            "name": "Perecimento, deteriorização, roubo, furto ou extravio no regime monofásico",
+            "description": "Perecimento, deteriorização, roubo, furto ou extravio no regime monofásico sem estorno de crédito, observado o art. 47 da Lei Complementar nº 214, de 2025."
+          },
+          "note": "JavaScript's own test: should carry a code Informe Técnico 2025.002 v.1.60 created (620007)"
+        },
+        {
+          "args": ["830001"],
+          "returns": {
+            "code": "830001",
+            "cst": "830",
+            "name": "Documento com exclusão da BC da CBS e do IBS de energia elétrica fornecida pela distribuidora à UC",
+            "description": "Documento com exclusão da base de cálculo da CBS e do IBS refrente à energia elétrica fornecida pela distribuidora à unidade consumidora, conforme Art 28, parágrafos 3° e 4°."
+          },
+          "note": "JavaScript's own test: should keep the workbook text on one line, without the line breaks of its cells"
+        },
+        { "args": ["220001"], "returns": null, "note": "JavaScript's own test: should return null for the classifications of CST 220 Informe Técnico 2025.002 v.1.60 excluded" },
+        { "args": ["220002"], "returns": null, "note": "JavaScript's own test: should return null for the classifications of CST 220 Informe Técnico 2025.002 v.1.60 excluded" },
+        { "args": ["220003"], "returns": null, "note": "JavaScript's own test: should return null for the classifications of CST 220 Informe Técnico 2025.002 v.1.60 excluded" },
+        { "args": ["999999"], "returns": null, "note": "JavaScript's own test: should return null for a code the table does not carry" },
+        { "args": ["000000"], "returns": null, "note": "JavaScript's own test: should return null for a code the table does not carry" },
+        { "args": ["2000010"], "returns": null, "note": "JavaScript's own test: should return null for a code the table does not carry" },
+        { "args": ["200"], "returns": null, "note": "JavaScript's own test: should return null for a code the table does not carry" },
+        { "args": ["c200001"], "returns": null, "note": "JavaScript's own test: should return null for a string that is not bare digits" },
+        { "args": ["200.001"], "returns": null, "note": "JavaScript's own test: should return null for a string that is not bare digits" },
+        { "name": "empty", "args": [""], "returns": null, "note": "JavaScript's own test: should return null for a string that is not bare digits" },
+        { "args": ["__proto__"], "returns": null, "note": "JavaScript's own test: should return null for a string that is not bare digits" },
+        { "args": [-200001], "returns": null, "note": "JavaScript's own test: should return null for a number that is not a non-negative safe integer" },
+        { "args": [200001.5], "returns": null, "note": "JavaScript's own test: should return null for a number that is not a non-negative safe integer" }
+      ]
+    },
+    "isValid": {
+      "summary": {
+        "en": "Checks whether a cClassTrib code exists in the official table, optionally together with its CST-IBS/CBS.",
+        "pt-BR": "Verifica se um cClassTrib existe na tabela oficial, opcionalmente junto com o seu CST-IBS/CBS."
+      },
+      "description": {
+        "en": [
+          "Checks whether a cClassTrib code (Código de Classificação Tributária of the IBS and the CBS) exists in the official table. This is the check behind NF-e rejection 1023.",
+          "",
+          "- Accepts a string of bare digits, with optional surrounding whitespace, or a safe non-negative integer. A value shorter than 6 digits is left-padded with zeros: `1` and `\"1\"` are the code `000001`.",
+          "- Any other string is rejected (`\"c200001\"`, `\"200.001\"`). A negative, fractional or unsafe number is invalid.",
+          "- The first 3 digits of a cClassTrib are its CST-IBS/CBS. `options.cst` checks the pair, as NF-e rejection 1024 does. It is read like `cstIbsCbs.isValid` reads a code. A `cst` that is given and does not match makes the result false, whatever its value.",
+          "- `options.cst` is optional. An `undefined` or omitted `cst` checks the cClassTrib alone. A `cst` that is `null`, empty or not written as a code (`\"\"`, `\"200001\"`, `-200`) makes the result false. It is padded to 3 digits (`0` and `\"000\"` are the same CST).",
+          "- A `null` or non-object `options` is read as no options, so the cClassTrib is checked alone.",
+          "- Only the classifications in force in the table count: one the Informe Técnico excluded by closing its validity (`dFimVig`) is not in it. 220001, 220002 and 220003 (excluded by v.1.60) are invalid. CST 220 itself stays valid in `cstIbsCbs.isValid`.",
+          "- The table is the version published on 2026-06-23 and has 161 classifications in force. The function does not read the date: the validity was applied when the table was built."
+        ],
+        "pt-BR": [
+          "Verifica se um cClassTrib (Código de Classificação Tributária do IBS e da CBS) existe na tabela oficial. É a verificação da rejeição 1023 da NF-e.",
+          "",
+          "- Aceita uma string só de dígitos, com espaços opcionais nas pontas, ou um inteiro seguro não negativo. Um valor com menos de 6 dígitos é completado com zeros à esquerda: `1` e `\"1\"` são o código `000001`.",
+          "- Qualquer outra string é rejeitada (`\"c200001\"`, `\"200.001\"`). Um número negativo, fracionário ou inseguro é inválido.",
+          "- Os 3 primeiros dígitos do cClassTrib são o seu CST-IBS/CBS. `options.cst` verifica o par, como a rejeição 1024 da NF-e. Ele é lido como `cstIbsCbs.isValid` lê um código. Um `cst` informado que não corresponde torna o resultado false, qualquer que seja o valor.",
+          "- `options.cst` é opcional. Um `cst` `undefined` ou omitido verifica só o cClassTrib. Um `cst` `null`, vazio ou que não esteja escrito como código (`\"\"`, `\"200001\"`, `-200`) torna o resultado false. Ele é completado com zeros até 3 dígitos (`0` e `\"000\"` são o mesmo CST).",
+          "- Um `options` nulo ou que não seja objeto é lido como sem opções, então só o cClassTrib é verificado.",
+          "- Só contam as classificações vigentes na tabela: uma que o Informe Técnico excluiu ao encerrar sua vigência (`dFimVig`) não está nela. 220001, 220002 e 220003 (excluídas pela v.1.60) são inválidas. O CST 220 continua válido em `cstIbsCbs.isValid`.",
+          "- A tabela é a versão publicada em 23/06/2026 e tem 161 classificações vigentes. A função não lê a data: a vigência foi aplicada quando a tabela foi gerada."
+        ]
+      },
+      "references": [
+        "https://www.nfe.fazenda.gov.br/portal/exibirArquivo.aspx?conteudo=D5b4Ov84WDg=",
+        "https://www.nfe.fazenda.gov.br/portal/exibirArquivo.aspx?conteudo=jxTMMQeEVM8=",
+        "https://www.nfe.fazenda.gov.br/portal/exibirArquivo.aspx?conteudo=AKD/muSmiIY=",
+        "https://dfe-portal.svrs.rs.gov.br/DFE/TabelaClassificacaoTributaria",
+        "https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp214.htm"
+      ],
+      "params": [
+        { "name": "value", "type": "string | number" },
+        { "name": "options", "type": "IsValidClassTribOptions", "optional": true, "fields": [{ "name": "cst", "type": "string | number", "optional": true }] }
+      ],
+      "returns": "boolean",
+      "tests": [
+        { "args": ["200001", { "cst": "000" }], "returns": false, "note": "from the maintainer briefing, #566" },
+        { "args": ["220001"], "returns": false, "note": "from the maintainer briefing, #566" },
+        { "args": ["000001"], "returns": true, "note": "JavaScript's own test: should validate a known code, the first and the last of the table included" },
+        { "args": ["200001"], "returns": true, "note": "JavaScript's own test: should validate a known code, the first and the last of the table included" },
+        { "args": ["410999"], "returns": true, "note": "JavaScript's own test: should validate a known code, the first and the last of the table included" },
+        { "args": ["830001"], "returns": true, "note": "JavaScript's own test: should validate a known code, the first and the last of the table included" },
+        { "args": [200001], "returns": true, "note": "JavaScript's own test: should validate a code given as a number" },
+        { "args": [1], "returns": true, "note": "JavaScript's own test: should pad a value with leading zeros, as a number or as a string" },
+        { "args": ["11001"], "returns": true, "note": "JavaScript's own test: should pad a value with leading zeros, as a number or as a string" },
+        { "args": [" 200001 "], "returns": true, "note": "JavaScript's own test: should validate a code with surrounding whitespace" },
+        { "args": ["221004"], "returns": true, "note": "JavaScript's own test: should validate the codes Informe Técnico 2025.002 v.1.50 and v.1.60 created" },
+        { "args": ["220003"], "returns": false, "note": "JavaScript's own test: should reject the classifications of CST 220 Informe Técnico 2025.002 v.1.60 excluded" },
+        { "args": ["999999"], "returns": false, "note": "JavaScript's own test: should return false for a 6 digit code the table does not carry" },
+        { "args": [0], "returns": false, "note": "JavaScript's own test: should return false for a 6 digit code the table does not carry" },
+        { "args": ["0200001"], "returns": false, "note": "JavaScript's own test: should return false for a value wider than 6 digits and for a CST alone" },
+        { "args": ["200"], "returns": false, "note": "JavaScript's own test: should return false for a value wider than 6 digits and for a CST alone" },
+        { "args": ["c200001"], "returns": false, "note": "JavaScript's own test: should return false for a string that is not bare digits" },
+        { "args": ["200 001"], "returns": false, "note": "JavaScript's own test: should return false for a string that is not bare digits" },
+        { "name": "empty", "args": [""], "returns": false, "note": "JavaScript's own test: should return false for a string that is not bare digits" },
+        { "args": [-200001], "returns": false, "note": "JavaScript's own test: should return false for a number that is not a non-negative safe integer" },
+        { "args": [200001.5], "returns": false, "note": "JavaScript's own test: should return false for a number that is not a non-negative safe integer" },
+        { "args": ["200001", { "cst": "200" }], "returns": true, "note": "JavaScript's own test: should accept a classification together with the CST it belongs to" },
+        { "args": ["410999", { "cst": 410 }], "returns": true, "note": "JavaScript's own test: should accept a classification together with the CST it belongs to" },
+        { "args": ["620007", { "cst": " 620 " }], "returns": true, "note": "JavaScript's own test: should accept a classification together with the CST it belongs to" },
+        { "args": [1, { "cst": 0 }], "returns": true, "note": "JavaScript's own test: should pad the CST the way the code is padded" },
+        { "args": ["011001", { "cst": "11" }], "returns": true, "note": "JavaScript's own test: should pad the CST the way the code is padded" },
+        { "args": ["010001", { "cst": "011" }], "returns": false, "note": "JavaScript's own test: should reject a classification together with another CST (rejection 1024)" },
+        { "args": ["220001", { "cst": "220" }], "returns": false, "note": "JavaScript's own test: should reject an unknown classification even when its first digits are the CST" },
+        { "args": ["200001", { "cst": "" }], "returns": false, "note": "JavaScript's own test: should reject a CST that is not written as a code" },
+        { "args": ["200001", { "cst": "200001" }], "returns": false, "note": "JavaScript's own test: should reject a CST that is not written as a code" },
+        { "args": ["200001", { "cst": -200 }], "returns": false, "note": "JavaScript's own test: should reject a CST that is not written as a code" },
+        { "args": ["200001", {}], "returns": true, "note": "JavaScript's own test: should check the cClassTrib alone when the CST is omitted" },
+        { "args": ["999999", {}], "returns": false, "note": "JavaScript's own test: should check the cClassTrib alone when the CST is omitted" },
+        { "args": ["200001", null], "returns": true, "note": "a null options is read as none. JavaScript's own test: should read null or a non-object options value as none, checking the cClassTrib alone" },
+        { "args": ["999999", null], "returns": false, "note": "JavaScript's own test: should read null or a non-object options value as none, checking the cClassTrib alone" },
+        { "args": ["200001", "foo"], "returns": true, "note": "JavaScript's own test: should read null or a non-object options value as none, checking the cClassTrib alone" },
+        { "args": ["200001", { "cst": null }], "returns": false, "note": "JavaScript's own test: should reject a CST that is not a string or a number" }
+      ]
+    }
+  }
+}

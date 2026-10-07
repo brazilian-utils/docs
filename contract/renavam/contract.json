@@ -1,0 +1,110 @@
+{
+  "$schema": "../../schema/contract.schema.json",
+  "domain": "renavam",
+  "title": { "en": "RENAVAM", "pt-BR": "RENAVAM" },
+  "summary": {
+    "en": "Registro Nacional de Veículos Automotores, the Brazilian vehicle registry number.",
+    "pt-BR": "O número do Registro Nacional de Veículos Automotores."
+  },
+  "category": "vehicles",
+  "order": 2,
+  "related": ["licensePlate", "vin"],
+  "functions": {
+    "generate": {
+      "summary": {
+        "en": "Generates a valid random RENAVAM number.",
+        "pt-BR": "Gera um número RENAVAM aleatório e válido."
+      },
+      "description": {
+        "en": ["Generates a valid random RENAVAM in the 11-digit form: 10 base digits plus the check digit."],
+        "pt-BR": [
+          "Gera um RENAVAM aleatório e válido no formato de 11 dígitos: 10 dígitos base mais o dígito verificador."
+        ]
+      },
+      "references": [
+        "https://www.planalto.gov.br/ccivil_03/leis/l9503compilado.htm",
+        "https://www.gov.br/transportes/pt-br/assuntos/transito/arquivos-senatran/portarias/2013/portaria0272013.pdf"
+      ],
+      "params": [],
+      "returns": "string",
+      "tests": [
+        { "name": "generated-is-valid", "args": [], "satisfies": "renavam.isValid", "repeat": 5, "note": "every generated value must pass the lib's own validator" }
+      ]
+    },
+    "isValid": {
+      "summary": { "en": "Checks whether a RENAVAM is valid.", "pt-BR": "Verifica se um RENAVAM é válido." },
+      "description": {
+        "en": [
+          "Validates a RENAVAM: the old format (9 digits, left-padded to 11) or the new format (11 digits), with a modulus 11 check digit.",
+          "",
+          "- The function ignores spaces, dots, hyphens and slashes, alone or in a run, so every punctuated form is accepted (`0063988.4962`, `0063988/4962`, `00639884-962`). Any other character, in particular a letter or an underscore, makes the value invalid. Until 2.4.0 a slash was rejected.",
+          "- Check digit: the ten base digits, read from right to left, are multiplied by 2, 3, 4, 5, 6, 7, 8, 9, 2 and 3. The digit is the remainder by 11 of ten times the sum, with a remainder of 10 read as 0.",
+          "- A value whose digits are all the same is rejected.",
+          "- A number is read only when it is a safe non-negative integer. A negative or fractional number is invalid: 2.4.0 accepted `-639884962` and `63988496.2`. Strings and non-negative integers give the same result as before.",
+          "- Portaria DENATRAN nº 27/2013 gives 10 digits and a check digit \"calculado através do módulo 11, peso 9\". It does not write out the weights, the handling of a remainder of 0, 1 or 10, or how a 9-digit code is read as 11 digits. Those parts follow community references and market practice.",
+          "- A number loses its leading zeros, so an 11-digit RENAVAM that starts with `0` is only accepted as a string: `\"08794266580\"` is valid and `8794266580` is not.",
+          "- A value that is not a string or a number returns `false`."
+        ],
+        "pt-BR": [
+          "Valida um RENAVAM: o formato antigo (9 dígitos, completado com zeros à esquerda até 11) ou o novo (11 dígitos), com dígito verificador por módulo 11.",
+          "",
+          "- A função ignora espaços, pontos, hífens e barras, sozinhos ou em sequência, então toda forma com pontuação é aceita (`0063988.4962`, `0063988/4962`, `00639884-962`). Qualquer outro caractere, em particular uma letra ou um sublinhado, torna o valor inválido. Até a 2.4.0 a barra era rejeitada.",
+          "- Dígito verificador: os dez dígitos da base, lidos da direita para a esquerda, são multiplicados por 2, 3, 4, 5, 6, 7, 8, 9, 2 e 3. O dígito é o resto da divisão por 11 de dez vezes a soma, com resto 10 lido como 0.",
+          "- Um valor com todos os dígitos iguais é rejeitado.",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo ou fracionário é inválido: a 2.4.0 aceitava `-639884962` e `63988496.2`. Strings e inteiros não negativos dão o mesmo resultado de antes.",
+          "- A Portaria DENATRAN nº 27/2013 dá 10 dígitos e um dígito verificador \"calculado através do módulo 11, peso 9\". Ela não escreve os pesos, o tratamento de resto 0, 1 ou 10, nem como um código de 9 dígitos é lido em 11. Essas partes seguem referências da comunidade e a prática de mercado.",
+          "- Um número perde os zeros à esquerda, então um RENAVAM de 11 dígitos que começa com `0` só é aceito como string: `\"08794266580\"` é válido e `8794266580` não é.",
+          "- Um valor que não é string nem número retorna `false`."
+        ]
+      },
+      "references": [
+        "https://www.planalto.gov.br/ccivil_03/leis/l9503compilado.htm",
+        "https://www.gov.br/transportes/pt-br/assuntos/transito/arquivos-senatran/portarias/2013/portaria0272013.pdf"
+      ],
+      "level": "core",
+      "params": [{ "name": "renavam", "type": "string | number" }],
+      "returns": "boolean",
+      "tests": [
+        { "args": ["72028649661"], "returns": true, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["72028649662"], "returns": false, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["00000000000"], "returns": false, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["88380465616"], "returns": true, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["88380465617"], "returns": false, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["03894104700"], "returns": true, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["03894104701"], "returns": false, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": [""], "returns": false, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["   "], "returns": false, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["abc"], "returns": false, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["00639884962"], "returns": true, "note": "JavaScript's own test: should return false when a valid registration carries an extra digit" },
+        { "args": ["006398849620"], "returns": false, "note": "JavaScript's own test: should return false when a valid registration carries an extra digit" },
+        { "args": ["0639884962"], "returns": false, "note": "JavaScript's own test: should return false when a valid registration carries an extra digit" },
+        { "args": ["12345678"], "returns": false, "note": "JavaScript's own test: should return false when it has less than 9 digits" },
+        { "args": ["123456789012"], "returns": false, "note": "JavaScript's own test: should return false when it has more than 11 digits" },
+        { "args": ["abcdefghij"], "returns": false, "note": "JavaScript's own test: should return false when it contains only letters or special characters" },
+        { "args": ["639884963"], "returns": false, "note": "JavaScript's own test: should return false when it is a RENAVAM with invalid checksum (639884963 has its last digit changed from the valid 639884962)" },
+        { "args": ["12345678901"], "returns": false, "note": "JavaScript's own test: should return false when it is a RENAVAM with invalid checksum (639884963 has its last digit changed from the valid 639884962)" },
+        { "args": ["12345678901abc"], "returns": false, "note": "JavaScript's own test: should return false when it has mixed characters that sanitize to an invalid RENAVAM (invalid checksum)" },
+        { "args": ["639884963xyz"], "returns": false, "note": "JavaScript's own test: should return false when it has mixed characters that sanitize to an invalid RENAVAM (invalid checksum)" },
+        { "args": ["639884962abc"], "returns": false, "note": "JavaScript's own test: should return false when letters are attached to an otherwise valid RENAVAM" },
+        { "args": ["ab00639884962"], "returns": false, "note": "JavaScript's own test: should return false when letters are attached to an otherwise valid RENAVAM" },
+        { "args": ["0063988/4962"], "returns": true, "note": "changed in 2.5.0 (#615): the slash is a mask character, like in cpf.isValid. 2.4.0 returned false. JavaScript's own test: should return true when is a RENAVAM valid with the usual mask characters" },
+        { "args": ["000000000"], "returns": false, "note": "JavaScript's own test: should return false when every digit is the same" },
+        { "args": ["1234567890"], "returns": false, "note": "JavaScript's own test: should return false when is a RENAVAM with invalid length: 8 digits (too short), 10 digits (invalid), or 12 digits (too long)" },
+        { "args": ["639884962"], "returns": true, "note": "JavaScript's own test: should return true when is a RENAVAM valid with 9 digits (old format)" },
+        { "args": [639884962], "returns": true, "note": "JavaScript's own test: should return true when is a RENAVAM valid as number" },
+        { "args": ["0063988.4962"], "returns": true, "note": "JavaScript's own test: should return true when is a RENAVAM valid with the usual mask characters" },
+        { "args": ["00639884-962"], "returns": true, "note": "JavaScript's own test: should return true when is a RENAVAM valid with the usual mask characters" },
+        { "args": [" 00639884962 "], "returns": true, "note": "JavaScript's own test: should return true when is a RENAVAM valid with the usual mask characters" },
+        { "args": ["12345678900"], "returns": true, "note": "JavaScript's own test: should return true when the multiplier cycle wraps from 9 back to 2 on non-zero digits" },
+        { "args": ["00000000060"], "returns": true, "note": "JavaScript's own test: should return true when the checksum remainder is exactly 1 (expected digit 0, not 10)" },
+        { "args": [-639884962], "returns": false, "note": "changed in 2.5.0 (#592): a negative number is not a safe non-negative integer. 2.4.0 returned true. From the maintainer briefing, #592" },
+        { "args": [63988496.2], "returns": false, "note": "changed in 2.5.0 (#592): a fractional number is not a safe non-negative integer. 2.4.0 returned true. From the maintainer briefing, #592" },
+        { "args": [9007199254740992], "returns": false, "note": "#593 number rule: 2^53 is past Number.MAX_SAFE_INTEGER" },
+        { "args": [12345678900], "returns": true, "note": "a safe non-negative integer is read as before" },
+        { "args": ["0063988_4962"], "returns": false, "note": "JavaScript's own test: should return false when the mask uses a character other than whitespace, a dot, a hyphen or a slash" },
+        { "args": ["08794266580"], "returns": true, "note": "JavaScript docs example: an 11-digit RENAVAM that starts with 0 is valid as a string" },
+        { "args": [8794266580], "returns": false, "note": "JavaScript docs example: as a number it lost its leading zero" }
+      ]
+    }
+  }
+}

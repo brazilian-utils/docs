@@ -1,0 +1,338 @@
+{
+  "$schema": "../../schema/contract.schema.json",
+  "domain": "cpf",
+  "title": { "en": "CPF", "pt-BR": "CPF" },
+  "summary": {
+    "en": "Cadastro de Pessoas Físicas, the 11-digit Brazilian individual taxpayer number, ending in two mod-11 check digits.",
+    "pt-BR": "Cadastro de Pessoas Físicas, o número de 11 dígitos do contribuinte pessoa física, terminado em dois dígitos verificadores por módulo 11."
+  },
+  "category": "documents",
+  "order": 1,
+  "related": ["cnpj"],
+  "functions": {
+    "format": {
+      "summary": { "en": "Formats a CPF as `000.000.000-00`.", "pt-BR": "Formata um CPF como `000.000.000-00`." },
+      "description": {
+        "en": [
+          "Formats a CPF as `000.000.000-00`.",
+          "",
+          "- `options.pad` left-pads the value with zeros to 11 digits first.",
+          "- `options.obfuscate` hides the first 3 digits and the 2 check digits with `*`, after padding. This is the rule the Leis de Diretrizes Orçamentárias set for publishing a CPF (Lei nº 14.194/2021, art. 149, and Lei nº 15.321/2025, art. 163).",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number returns an empty string. 2.4.0 read the digits of any number (`-12345678909` gave `123.456.789-09`).",
+          "- A value with no digits (empty, or only letters and symbols) returns an empty string even with `options.pad`. Until 2.4.0 `pad` returned the full zero mask (`000.000.000-00`).",
+          "- Digits beyond the 11th are dropped. A value that is not a string or a number (`null`, `undefined`, an object) returns an empty string.",
+          "- A number loses its leading zeros, so pass a string, or use `options.pad`, for a CPF that starts with `0`.",
+          "- Pending decision (findings §2 #2, #3): the reference (JS) formats only the characters an incomplete value has and returns an empty string for empty or invalid input. Other libraries return `null`."
+        ],
+        "pt-BR": [
+          "Formata um CPF como `000.000.000-00`.",
+          "",
+          "- `options.pad` primeiro completa o valor com zeros à esquerda até 11 dígitos.",
+          "- `options.obfuscate` oculta os 3 primeiros dígitos e os 2 dígitos verificadores com `*`, depois do preenchimento. É a regra que as Leis de Diretrizes Orçamentárias fixam para publicar um CPF (Lei nº 14.194/2021, art. 149, e Lei nº 15.321/2025, art. 163).",
+          "- Um número só é lido se for um inteiro seguro não negativo. Um número negativo, fracionário, não finito ou inseguro retorna uma string vazia. A 2.4.0 lia os dígitos de qualquer número (`-12345678909` dava `123.456.789-09`).",
+          "- Um valor sem dígitos (vazio, ou só letras e símbolos) retorna uma string vazia mesmo com `options.pad`. Até a 2.4.0, `pad` retornava a máscara inteira de zeros (`000.000.000-00`).",
+          "- Os dígitos além do 11º são descartados. Um valor que não é string nem número (`null`, `undefined`, um objeto) retorna uma string vazia.",
+          "- Um número perde os zeros à esquerda; passe uma string, ou use `options.pad`, para um CPF que começa com `0`.",
+          "- Decisão pendente (findings §2 #2, #3): a referência (JS) formata só os caracteres que um valor incompleto tem e retorna uma string vazia para entrada vazia ou inválida. Outras bibliotecas retornam `null`."
+        ]
+      },
+      "references": [
+        "https://www.gov.br/receitafederal/pt-br/assuntos/meu-cpf",
+        "https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2021/lei/L14194.htm",
+        "https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2025/lei/L15321.htm#art163"
+      ],
+      "level": "core",
+      "params": [
+        { "name": "value", "type": "string | number" },
+        { "name": "options", "type": "FormatCpfOptions", "optional": true, "fields": [{ "name": "pad", "type": "boolean", "optional": true }, { "name": "obfuscate", "type": "boolean", "optional": true }] }
+      ],
+      "returns": "string",
+      "tests": [
+        { "args": ["83159562131"], "returns": "831.595.621-31", "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["02746891972"], "returns": "027.468.919-72", "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["52708175602"], "returns": "527.081.756-02", "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["12345678909"], "returns": "123.456.789-09", "note": "from the CPF spec test cases (formerly brazilian-utils/docs specs/cpf/test-cases.json)" },
+        { "args": ["11144477735"], "returns": "111.444.777-35", "note": "from the CPF spec test cases (formerly brazilian-utils/docs specs/cpf/test-cases.json)" },
+        { "args": [""], "returns": "", "note": "JavaScript's own test: should format CPF with mask" },
+        { "args": ["9"], "returns": "9", "note": "JavaScript's own test: should format CPF with mask" },
+        { "args": ["94"], "returns": "94", "note": "JavaScript's own test: should format CPF with mask" },
+        { "args": ["943"], "returns": "943", "note": "JavaScript's own test: should format CPF with mask" },
+        { "args": ["9438"], "returns": "943.8", "note": "JavaScript's own test: should format CPF with mask" },
+        { "args": ["94389"], "returns": "943.89", "note": "JavaScript's own test: should format CPF with mask" },
+        { "args": ["943895"], "returns": "943.895", "note": "JavaScript's own test: should format CPF with mask" },
+        { "args": ["9438957"], "returns": "943.895.7", "note": "JavaScript's own test: should format CPF with mask" },
+        { "args": ["94389575"], "returns": "943.895.75", "note": "JavaScript's own test: should format CPF with mask" },
+        { "args": ["943895751"], "returns": "943.895.751", "note": "JavaScript's own test: should format CPF with mask" },
+        { "args": ["9438957510"], "returns": "943.895.751-0", "note": "JavaScript's own test: should format CPF with mask" },
+        { "args": ["94389575104"], "returns": "943.895.751-04", "note": "JavaScript's own test: should format CPF with mask" },
+        { "args": [9], "returns": "9", "note": "JavaScript's own test: should format number CPF with mask" },
+        { "args": [94], "returns": "94", "note": "JavaScript's own test: should format number CPF with mask" },
+        { "args": [943], "returns": "943", "note": "JavaScript's own test: should format number CPF with mask" },
+        { "args": [9438], "returns": "943.8", "note": "JavaScript's own test: should format number CPF with mask" },
+        { "args": [94389], "returns": "943.89", "note": "JavaScript's own test: should format number CPF with mask" },
+        { "args": [943895], "returns": "943.895", "note": "JavaScript's own test: should format number CPF with mask" },
+        { "args": [9438957], "returns": "943.895.7", "note": "JavaScript's own test: should format number CPF with mask" },
+        { "args": [94389575], "returns": "943.895.75", "note": "JavaScript's own test: should format number CPF with mask" },
+        { "args": [943895751], "returns": "943.895.751", "note": "JavaScript's own test: should format number CPF with mask" },
+        { "args": [9438957510], "returns": "943.895.751-0", "note": "JavaScript's own test: should format number CPF with mask" },
+        { "args": [94389575104], "returns": "943.895.751-04", "note": "JavaScript's own test: should format number CPF with mask" },
+        { "args": ["", { "pad": true }], "returns": "", "note": "changed in 2.5.0 (#615): a value with no digits gives an empty string even with pad (2.4.0 gave 000.000.000-00)" },
+        { "args": ["9", { "pad": true }], "returns": "000.000.000-09", "note": "JavaScript's own test: should format CPF with mask filling zeroes" },
+        { "args": ["94", { "pad": true }], "returns": "000.000.000-94", "note": "JavaScript's own test: should format CPF with mask filling zeroes" },
+        { "args": ["943", { "pad": true }], "returns": "000.000.009-43", "note": "JavaScript's own test: should format CPF with mask filling zeroes" },
+        { "args": ["9438", { "pad": true }], "returns": "000.000.094-38", "note": "JavaScript's own test: should format CPF with mask filling zeroes" },
+        { "args": ["94389", { "pad": true }], "returns": "000.000.943-89", "note": "JavaScript's own test: should format CPF with mask filling zeroes" },
+        { "args": ["943895", { "pad": true }], "returns": "000.009.438-95", "note": "JavaScript's own test: should format CPF with mask filling zeroes" },
+        { "args": ["9438957", { "pad": true }], "returns": "000.094.389-57", "note": "JavaScript's own test: should format CPF with mask filling zeroes" },
+        { "args": ["94389575", { "pad": true }], "returns": "000.943.895-75", "note": "JavaScript's own test: should format CPF with mask filling zeroes" },
+        { "args": ["943895751", { "pad": true }], "returns": "009.438.957-51", "note": "JavaScript's own test: should format CPF with mask filling zeroes" },
+        { "args": ["9438957510", { "pad": true }], "returns": "094.389.575-10", "note": "JavaScript's own test: should format CPF with mask filling zeroes" },
+        { "args": ["94389575104", { "pad": true }], "returns": "943.895.751-04", "note": "JavaScript's own test: should format CPF with mask filling zeroes" },
+        { "args": [9, { "pad": true }], "returns": "000.000.000-09", "note": "JavaScript's own test: should format number CPF with mask filling zeroes" },
+        { "args": [94, { "pad": true }], "returns": "000.000.000-94", "note": "JavaScript's own test: should format number CPF with mask filling zeroes" },
+        { "args": [943, { "pad": true }], "returns": "000.000.009-43", "note": "JavaScript's own test: should format number CPF with mask filling zeroes" },
+        { "args": [9438, { "pad": true }], "returns": "000.000.094-38", "note": "JavaScript's own test: should format number CPF with mask filling zeroes" },
+        { "args": [94389, { "pad": true }], "returns": "000.000.943-89", "note": "JavaScript's own test: should format number CPF with mask filling zeroes" },
+        { "args": [943895, { "pad": true }], "returns": "000.009.438-95", "note": "JavaScript's own test: should format number CPF with mask filling zeroes" },
+        { "args": [9438957, { "pad": true }], "returns": "000.094.389-57", "note": "JavaScript's own test: should format number CPF with mask filling zeroes" },
+        { "args": [94389575, { "pad": true }], "returns": "000.943.895-75", "note": "JavaScript's own test: should format number CPF with mask filling zeroes" },
+        { "args": [943895751, { "pad": true }], "returns": "009.438.957-51", "note": "JavaScript's own test: should format number CPF with mask filling zeroes" },
+        { "args": [9438957510, { "pad": true }], "returns": "094.389.575-10", "note": "JavaScript's own test: should format number CPF with mask filling zeroes" },
+        { "args": [94389575104, { "pad": true }], "returns": "943.895.751-04", "note": "JavaScript's own test: should format number CPF with mask filling zeroes" },
+        { "args": ["94389575104000000"], "returns": "943.895.751-04", "note": "JavaScript's own test" },
+        { "args": ["943.?ABC895.751-04abc"], "returns": "943.895.751-04", "note": "JavaScript's own test: should remove all non numeric characters" },
+        { "args": ["94389575104", { "obfuscate": true }], "returns": "***.895.751-**", "note": "JavaScript's own test: should hide the first 3 digits and the 2 check digits when obfuscate is true" },
+        { "args": [94389575104, { "obfuscate": true }], "returns": "***.895.751-**", "note": "JavaScript's own test: should hide the first 3 digits and the 2 check digits when obfuscate is true" },
+        { "args": ["9", { "pad": true, "obfuscate": true }], "returns": "***.000.000-**", "note": "JavaScript's own test: should pad before obfuscating" },
+        { "args": ["943", { "pad": true, "obfuscate": true }], "returns": "***.000.009-**", "note": "JavaScript's own test: should pad before obfuscating" },
+        { "args": ["9438", { "obfuscate": true }], "returns": "***.8", "note": "JavaScript's own test: should obfuscate a short, unpadded value as far as it goes" },
+        { "args": ["94389575104", { "obfuscate": false }], "returns": "943.895.751-04", "note": "JavaScript's own test: should behave exactly as without the option when obfuscate is false or absent" },
+        { "args": ["943", { "pad": true, "obfuscate": false }], "returns": "000.000.009-43", "note": "JavaScript's own test: should behave exactly as without the option when obfuscate is false or absent" },
+        { "args": [123456789.09], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number; changed in 2.5.0 (#593): a number is read only when it is a non-negative safe integer" },
+        { "args": [-1], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number; changed in 2.5.0 (#593): a number is read only when it is a non-negative safe integer" },
+        { "args": [1.5], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number; changed in 2.5.0 (#593): a number is read only when it is a non-negative safe integer" },
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number; changed in 2.5.0 (#593): a number is read only when it is a non-negative safe integer" },
+        { "args": [123456789.09, { "pad": true }], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number; changed in 2.5.0 (#593): a number is read only when it is a non-negative safe integer" },
+        { "args": ["abc", { "pad": true }], "returns": "", "note": "JavaScript's own test: should return an empty string for a value without digits even when padding" },
+        { "args": ["746506880", { "pad": true }], "returns": "007.465.068-80", "note": "JavaScript docs example" },
+        { "args": ["74650688000"], "returns": "746.506.880-00", "note": "JavaScript docs example" },
+        { "args": ["12345678909", { "obfuscate": true }], "returns": "***.456.789-**", "note": "JavaScript docs example" }
+      ]
+    },
+    "generate": {
+      "summary": { "en": "Generates a valid random CPF.", "pt-BR": "Gera um CPF aleatório e válido." },
+      "description": {
+        "en": [
+          "Generates a valid random CPF: 11 digits, unformatted.",
+          "",
+          "- `state` (a state code such as `SP`) sets the 9th digit, the fiscal region, to the region of that state (see `cpf.getInfo`). The code is read ignoring letter case and surrounding whitespace, so `\"sp\"` and `\" SP \"` are `SP`. 2.4.0 read only the uppercase code and gave a random digit for `\"sp\"`.",
+          "- Without `state`, or with an unknown code, the digit is random.",
+          "- A CPF whose 11 digits are all the same is never returned."
+        ],
+        "pt-BR": [
+          "Gera um CPF aleatório e válido: 11 dígitos, sem máscara.",
+          "",
+          "- `state` (um código de estado como `SP`) define o 9º dígito, a região fiscal, com a região desse estado (veja `cpf.getInfo`). O código é lido sem distinção de caixa e sem espaços nas pontas, então `\"sp\"` e `\" SP \"` são `SP`. A 2.4.0 só lia o código em maiúsculas e sorteava o dígito para `\"sp\"`.",
+          "- Sem `state`, ou com um código desconhecido, o dígito é aleatório.",
+          "- Nunca retorna um número com os 11 dígitos iguais."
+        ]
+      },
+      "references": [
+        "https://www.gov.br/receitafederal/pt-br/assuntos/meu-cpf",
+        "https://www.gov.br/receitafederal/pt-br/assuntos/educacao-fiscal/educacao_fiscal/folhetos-orientativos/cadastros-dig.pdf",
+        "https://normas.receita.fazenda.gov.br/sijut2consulta/link.action?idAto=151372"
+      ],
+      "level": "core",
+      "params": [{ "name": "state", "type": "string", "optional": true }],
+      "returns": "string",
+      "tests": [
+        { "name": "generated-is-valid", "args": [], "satisfies": "cpf.isValid", "repeat": 5, "note": "every generated value must pass the lib's own validator" },
+        { "name": "state-sp", "args": ["SP"], "matches": "^[0-9]{8}8[0-9]{2}$", "repeat": 5, "note": "the 9th digit is the fiscal region of the state (8 for SP)" },
+        { "name": "state-lower-case", "args": ["sp"], "matches": "^[0-9]{8}8[0-9]{2}$", "repeat": 5, "note": "changed in 2.5.0 (#604): the state code is read ignoring case" },
+        { "name": "state-whitespace", "args": [" rs "], "matches": "^[0-9]{8}0[0-9]{2}$", "repeat": 5, "note": "changed in 2.5.0 (#604): the state code is read ignoring case and surrounding whitespace" }
+      ]
+    },
+    "getInfo": {
+      "summary": {
+        "en": "Reads the fields of a CPF, including its fiscal region.",
+        "pt-BR": "Lê os campos de um CPF, incluindo a região fiscal."
+      },
+      "description": {
+        "en": [
+          "Reads the fields of a CPF: the 8-digit base, the fiscal region digit with its states, and the 2 check digits. Accepts the same input as `cpf.isValid` and returns `null` exactly when `cpf.isValid` is `false`.",
+          "",
+          "- `base` is the first 8 digits. `checkDigits` is the last 2.",
+          "- `fiscalRegion` is the 9th digit, as a string: `1` to `9` for the 1st to 9th Região Fiscal of the Receita Federal, and `0` for the 10th.",
+          "- `states` lists the states of that region, sorted by state name: 1 DF, GO, MT, MS, TO; 2 AC, AP, AM, PA, RO, RR; 3 CE, MA, PI; 4 AL, PB, PE, RN; 5 BA, SE; 6 MG; 7 ES, RJ; 8 SP; 9 PR, SC; 0 RS.",
+          "- The digit is the fiscal region of the address given at the first registration. It is not the place of birth or of residence.",
+          "- In a region with more than one state, the number does not say which one.",
+          "- Returns `null` for a reserved number such as `00000000000` and for any value that is not a string.",
+          "- Returns a new object, with a new `states` list, on every call."
+        ],
+        "pt-BR": [
+          "Lê os campos de um CPF: a base de 8 dígitos, o dígito da região fiscal com os seus estados, e os 2 dígitos verificadores. Aceita a mesma entrada que `cpf.isValid` e retorna `null` exatamente quando `cpf.isValid` é `false`.",
+          "",
+          "- `base` são os 8 primeiros dígitos. `checkDigits` são os 2 últimos.",
+          "- `fiscalRegion` é o 9º dígito, como string: `1` a `9` para a 1ª a 9ª Região Fiscal da Receita Federal, e `0` para a 10ª.",
+          "- `states` lista os estados dessa região, ordenados pelo nome do estado: 1 DF, GO, MT, MS, TO; 2 AC, AP, AM, PA, RO, RR; 3 CE, MA, PI; 4 AL, PB, PE, RN; 5 BA, SE; 6 MG; 7 ES, RJ; 8 SP; 9 PR, SC; 0 RS.",
+          "- O dígito indica a região fiscal do endereço informado no primeiro cadastro. Não é o local de nascimento nem de residência.",
+          "- Numa região com vários estados, o número não diz qual deles.",
+          "- Retorna `null` para um número reservado como `00000000000` e para qualquer valor que não é string.",
+          "- Retorna um objeto novo, com uma lista `states` nova, a cada chamada."
+        ]
+      },
+      "references": [
+        "https://www.gov.br/receitafederal/pt-br/assuntos/educacao-fiscal/educacao_fiscal/folhetos-orientativos/cadastros-dig.pdf",
+        "https://www.gov.br/receitafederal/pt-br/composicao/srrf",
+        "https://www.gov.br/receitafederal/pt-br/assuntos/meu-cpf"
+      ],
+      "flatName": "getCpfInfo",
+      "params": [{ "name": "value", "type": "string" }],
+      "returns": "CpfInfo?",
+      "tests": [
+        { "args": ["123.456.789-09"], "returns": { "base": "12345678", "fiscalRegion": "9", "states": ["PR", "SC"], "checkDigits": "09" }, "note": "from the maintainer briefing, #558" },
+        { "args": ["12345678900"], "returns": null, "note": "from the maintainer briefing, #558 (wrong check digit)" },
+        { "args": ["12345678909"], "returns": { "base": "12345678", "fiscalRegion": "9", "states": ["PR", "SC"], "checkDigits": "09" }, "note": "same result without the mask" },
+        { "args": ["40152673113"], "returns": { "base": "40152673", "fiscalRegion": "1", "states": ["DF", "GO", "MT", "MS", "TO"], "checkDigits": "13" }, "note": "JavaScript's own test: should return the fields of the CPF, for 40152673113, of the região fiscal 1" },
+        { "args": ["73091462200"], "returns": { "base": "73091462", "fiscalRegion": "2", "states": ["AC", "AP", "AM", "PA", "RO", "RR"], "checkDigits": "00" }, "note": "JavaScript's own test: should return the fields of the CPF, for 73091462200, of the região fiscal 2" },
+        { "args": ["20581746317"], "returns": { "base": "20581746", "fiscalRegion": "3", "states": ["CE", "MA", "PI"], "checkDigits": "17" }, "note": "JavaScript's own test: should return the fields of the CPF, for 20581746317, of the região fiscal 3" },
+        { "args": ["91827364483"], "returns": { "base": "91827364", "fiscalRegion": "4", "states": ["AL", "PB", "PE", "RN"], "checkDigits": "83" }, "note": "JavaScript's own test: should return the fields of the CPF, for 91827364483, of the região fiscal 4" },
+        { "args": ["56473829598"], "returns": { "base": "56473829", "fiscalRegion": "5", "states": ["BA", "SE"], "checkDigits": "98" }, "note": "JavaScript's own test: should return the fields of the CPF, for 56473829598, of the região fiscal 5" },
+        { "args": ["37192048631"], "returns": { "base": "37192048", "fiscalRegion": "6", "states": ["MG"], "checkDigits": "31" }, "note": "JavaScript's own test: should return the fields of the CPF, for 37192048631, of the região fiscal 6" },
+        { "args": ["84620513717"], "returns": { "base": "84620513", "fiscalRegion": "7", "states": ["ES", "RJ"], "checkDigits": "17" }, "note": "JavaScript's own test: should return the fields of the CPF, for 84620513717, of the região fiscal 7" },
+        { "args": ["15937264819"], "returns": { "base": "15937264", "fiscalRegion": "8", "states": ["SP"], "checkDigits": "19" }, "note": "JavaScript's own test: should return the fields of the CPF, for 15937264819, of the região fiscal 8" },
+        { "args": ["60248175920"], "returns": { "base": "60248175", "fiscalRegion": "9", "states": ["PR", "SC"], "checkDigits": "20" }, "note": "JavaScript's own test: should return the fields of the CPF, for 60248175920, of the região fiscal 9" },
+        { "args": ["48301692065"], "returns": { "base": "48301692", "fiscalRegion": "0", "states": ["RS"], "checkDigits": "65" }, "note": "JavaScript's own test: should return the fields of the CPF, for 48301692065, of the região fiscal 0" },
+        { "args": ["280012389-38"], "returns": { "base": "28001238", "fiscalRegion": "9", "states": ["PR", "SC"], "checkDigits": "38" }, "note": "JavaScript's own test: should return the fields of the CPF, for the worked example of the e-Financeira manual (280012389-38)" },
+        { "args": [" 111 444 777 35\n"], "returns": { "base": "11144477", "fiscalRegion": "7", "states": ["ES", "RJ"], "checkDigits": "35" }, "note": "JavaScript's own test: should return the fields of the CPF, for a value with whitespace around and between the groups" },
+        { "args": ["00000000000"], "returns": null, "note": "JavaScript's own test: should return null when every digit is the same" },
+        { "args": ["111.111.111-11"], "returns": null, "note": "JavaScript's own test: should return null when every digit is the same" },
+        { "args": ["1234567890"], "returns": null, "note": "JavaScript's own test: should return null when it is shorter than 11 digits" },
+        { "args": ["123456789090"], "returns": null, "note": "JavaScript's own test: should return null when it is longer than 11 digits" },
+        { "args": ["123.456.789-09a"], "returns": null, "note": "JavaScript's own test: should return null when it carries a character outside the mask" },
+        { "args": ["123_456_789_09"], "returns": null, "note": "JavaScript's own test: should return null when it carries a character outside the mask" },
+        { "args": [""], "returns": null, "note": "JavaScript's own test: should return null when it is an empty string" },
+        { "args": ["__proto__"], "returns": null, "note": "JavaScript's own test: should return null when it is a key of the prototype chain" }
+      ]
+    },
+    "isValid": {
+      "summary": { "en": "Checks whether a CPF is valid.", "pt-BR": "Verifica se um CPF é válido." },
+      "description": {
+        "en": [
+          "Validates a CPF: 9 base digits and 2 modulus 11 check digits (REGRA_VALIDA_CPF of the Receita Federal).",
+          "",
+          "- Rejects a reserved number (all 11 digits the same, for example `00000000000`).",
+          "- A value that does not have exactly 11 digits, or the wrong check digits, is invalid.",
+          "- Empty, blank or non-numeric input is invalid.",
+          "- Sources: the norm of the CPF, IN RFB nº 2.172/2024, does not define the check digits. The rule and the worked example `280.012.389-38` come from the Receita Federal Manual de Preenchimento da e-Financeira (REGRA_VALIDA_CPF). The reserved numbers come from the Receita Federal DJE layout, which lists the 10 numbers with all digits the same (`000.000.000-00` to `999.999.999-99`) as not valid.",
+          "- Pending decision (findings §2 #1): the reference (JS) ignores the formatting characters (`.`, `-`) and whitespace around and between groups. Other libraries accept digits only."
+        ],
+        "pt-BR": [
+          "Valida um CPF: 9 dígitos de base e 2 dígitos verificadores por módulo 11 (REGRA_VALIDA_CPF da Receita Federal).",
+          "",
+          "- Rejeita um número reservado (os 11 dígitos iguais, por exemplo `00000000000`).",
+          "- Um valor que não tem exatamente 11 dígitos, ou com dígitos verificadores errados, é inválido.",
+          "- Entrada vazia, em branco ou não numérica é inválida.",
+          "- Fontes: a norma do CPF, IN RFB nº 2.172/2024, não define os dígitos verificadores. A regra e o exemplo `280.012.389-38` vêm do Manual de Preenchimento da e-Financeira da Receita Federal (REGRA_VALIDA_CPF). Os números reservados vêm do leiaute DJE da Receita Federal, que lista como inválidos os 10 números com todos os dígitos iguais (`000.000.000-00` a `999.999.999-99`).",
+          "- Decisão pendente (findings §2 #1): a referência (JS) ignora os caracteres de formatação (`.`, `-`) e os espaços em branco antes, depois e entre os grupos. Outras bibliotecas aceitam apenas dígitos."
+        ]
+      },
+      "references": [
+        "https://www.gov.br/receitafederal/pt-br/assuntos/meu-cpf",
+        "https://normas.receita.fazenda.gov.br/sijut2consulta/link.action?idAto=151372",
+        "https://normas.receita.fazenda.gov.br/sijut2consulta/link.action?idAto=135611",
+        "http://normas.receita.fazenda.gov.br/sijut2consulta/anexoOutros.action?idArquivoBinario=36307"
+      ],
+      "level": "core",
+      "params": [{ "name": "cpf", "type": "string" }],
+      "returns": "boolean",
+      "tests": [
+        { "args": ["83159562131"], "returns": true, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["83159562132"], "returns": false, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["00000000000"], "returns": false, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["02746891972"], "returns": true, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["02746891973"], "returns": false, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["52708175602"], "returns": true, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["52708175603"], "returns": false, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": [""], "returns": false, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["   "], "returns": false, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["abc"], "returns": false, "note": "consensus of 5 libs (go, javascript, python, ruby, rust)" },
+        { "args": ["12345678909"], "returns": true, "note": "from the CPF spec test cases (formerly brazilian-utils/docs specs/cpf/test-cases.json)" },
+        { "args": ["11144477735"], "returns": true, "note": "from the CPF spec test cases (formerly brazilian-utils/docs specs/cpf/test-cases.json)" },
+        { "args": ["12345678900"], "returns": false, "note": "from the CPF spec test cases (formerly brazilian-utils/docs specs/cpf/test-cases.json)" },
+        { "args": ["11144477700"], "returns": false, "note": "from the CPF spec test cases (formerly brazilian-utils/docs specs/cpf/test-cases.json)" },
+        { "args": ["11111111111"], "returns": false, "note": "JavaScript's own test: should return false when every digit is the same" },
+        { "args": ["22222222222"], "returns": false, "note": "JavaScript's own test: should return false when every digit is the same" },
+        { "args": ["33333333333"], "returns": false, "note": "JavaScript's own test: should return false when every digit is the same" },
+        { "args": ["44444444444"], "returns": false, "note": "JavaScript's own test: should return false when every digit is the same" },
+        { "args": ["55555555555"], "returns": false, "note": "JavaScript's own test: should return false when every digit is the same" },
+        { "args": ["66666666666"], "returns": false, "note": "JavaScript's own test: should return false when every digit is the same" },
+        { "args": ["77777777777"], "returns": false, "note": "JavaScript's own test: should return false when every digit is the same" },
+        { "args": ["88888888888"], "returns": false, "note": "JavaScript's own test: should return false when every digit is the same" },
+        { "args": ["99999999999"], "returns": false, "note": "JavaScript's own test: should return false when every digit is the same" },
+        { "args": ["123456"], "returns": false, "note": "JavaScript's own test: should return false" },
+        { "args": ["abcabcabcde"], "returns": false, "note": "JavaScript's own test: should return false when contains only letters or special characters" },
+        { "args": ["11257245286"], "returns": false, "note": "JavaScript's own test: should return false when is a CPF invalid" },
+        { "args": ["foo391.838.38test0-66"], "returns": false, "note": "JavaScript's own test: should return false when is a CPF invalid test numbers with letters" },
+        { "args": ["!40364478829"], "returns": false, "note": "JavaScript's own test: should return false when there is garbage before the digits, since the format is anchored at the start" },
+        { "args": ["40364478829!"], "returns": false, "note": "JavaScript's own test: should return false when there is garbage after the digits, since the format is anchored at the end" },
+        { "args": ["40364478837"], "returns": false, "note": "JavaScript's own test: should return false when only the first check digit is wrong, even though the second would then match" },
+        { "args": ["40364478829"], "returns": true, "note": "JavaScript's own test: should return true when is a CPF valid without mask" },
+        { "args": ["962.718.458-60"], "returns": true, "note": "JavaScript's own test: should return true when is a CPF valid with mask" },
+        { "args": ["123 456 789 09"], "returns": true, "note": "JavaScript's own test: should return true when is a CPF valid with a whitespace mask" },
+        { "args": [" 12345678909"], "returns": true, "note": "JavaScript's own test: should return true when is a CPF valid with leading/trailing whitespace" },
+        { "args": ["12345678909 "], "returns": true, "note": "JavaScript's own test: should return true when is a CPF valid with leading/trailing whitespace" },
+        { "args": ["28001238938"], "returns": true, "note": "JavaScript's own test: should return true when it is the worked example the RFB Manual da e-Financeira prints" },
+        { "args": ["280.012.389-38"], "returns": true, "note": "JavaScript's own test: should return true when it is the worked example the RFB Manual da e-Financeira prints" }
+      ]
+    },
+    "parse": {
+      "summary": {
+        "en": "Removes the formatting characters of a CPF and returns only the digits.",
+        "pt-BR": "Remove os caracteres de formatação de um CPF e retorna só os dígitos."
+      },
+      "description": {
+        "en": [
+          "Removes CPF formatting and keeps only digits, capped at 11 digits.",
+          "",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number returns an empty string. 2.4.0 read the digits of any number.",
+          "- A value that is not a string or a number (`null`, `undefined`, an object) returns an empty string."
+        ],
+        "pt-BR": [
+          "Remove a formatação do CPF e mantém apenas os dígitos, com no máximo 11 dígitos.",
+          "",
+          "- Um número só é lido se for um inteiro seguro não negativo. Um número negativo, fracionário, não finito ou inseguro retorna uma string vazia. A 2.4.0 lia os dígitos de qualquer número.",
+          "- Um valor que não é string nem número (`null`, `undefined`, um objeto) retorna uma string vazia."
+        ]
+      },
+      "references": ["https://www.gov.br/receitafederal/pt-br/assuntos/meu-cpf"],
+      "params": [{ "name": "value", "type": "string | number" }],
+      "returns": "string",
+      "tests": [
+        { "name": "masked", "args": ["943.895.751-04"], "returns": "94389575104" },
+        { "name": "unmasked", "args": ["94389575104"], "returns": "94389575104" },
+        { "name": "strips-non-digits", "args": ["943.?ABC895.751-04abc"], "returns": "94389575104" },
+        { "name": "empty", "args": [""], "returns": "" },
+        { "name": "caps-length", "args": ["94389575104123"], "returns": "94389575104", "note": "reference truncates to the 11 characters of the document; asserted by the reference (JS) unit tests" },
+        { "args": ["83159562131"], "returns": "83159562131", "note": "consensus of 3 libs (python, ruby, rust)" },
+        { "args": ["83159562132"], "returns": "83159562132", "note": "consensus of 3 libs (python, ruby, rust)" },
+        { "args": ["00000000000"], "returns": "00000000000", "note": "consensus of 3 libs (python, ruby, rust)" },
+        { "args": ["02746891972"], "returns": "02746891972", "note": "consensus of 3 libs (python, ruby, rust)" },
+        { "args": ["02746891973"], "returns": "02746891973", "note": "consensus of 3 libs (python, ruby, rust)" },
+        { "args": ["52708175602"], "returns": "52708175602", "note": "consensus of 3 libs (python, ruby, rust)" },
+        { "args": ["52708175603"], "returns": "52708175603", "note": "consensus of 3 libs (python, ruby, rust)" },
+        { "args": ["831.595.621-31"], "returns": "83159562131", "note": "consensus of 3 libs (python, ruby, rust)" },
+        { "args": ["027.468.919-72"], "returns": "02746891972", "note": "consensus of 3 libs (python, ruby, rust)" },
+        { "args": ["527.081.756-02"], "returns": "52708175602", "note": "consensus of 3 libs (python, ruby, rust)" },
+        { "args": ["123.456.789-09"], "returns": "12345678909", "note": "from the CPF spec test cases (formerly brazilian-utils/docs specs/cpf/test-cases.json)" },
+        { "args": ["111.444.777-35"], "returns": "11144477735", "note": "from the CPF spec test cases (formerly brazilian-utils/docs specs/cpf/test-cases.json)" },
+        { "args": ["12345678909"], "returns": "12345678909", "note": "from the CPF spec test cases (formerly brazilian-utils/docs specs/cpf/test-cases.json)" },
+        { "args": ["11144477735"], "returns": "11144477735", "note": "from the CPF spec test cases (formerly brazilian-utils/docs specs/cpf/test-cases.json)" },
+        { "args": [12345678909], "returns": "12345678909", "note": "a non-negative safe integer is read as the string of its digits" },
+        { "args": [-12345678909], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number; changed in 2.5.0 (#593): a number is read only when it is a non-negative safe integer" },
+        { "args": [1.5], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number; changed in 2.5.0 (#593): a number is read only when it is a non-negative safe integer" },
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: when it is a negative, fractional or unsafe number; changed in 2.5.0 (#593): a number is read only when it is a non-negative safe integer" }
+      ]
+    }
+  }
+}

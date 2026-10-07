@@ -1,0 +1,164 @@
+{
+  "$schema": "../../schema/contract.schema.json",
+  "domain": "caepf",
+  "title": { "en": "CAEPF", "pt-BR": "CAEPF" },
+  "summary": {
+    "en": "Cadastro de Atividade Econômica da Pessoa Física, the registration of individuals who employ workers (replaced the CEI for them).",
+    "pt-BR": "Cadastro de Atividade Econômica da Pessoa Física, para pessoas físicas que empregam trabalhadores (substituiu o CEI para elas)."
+  },
+  "category": "companies",
+  "order": 6,
+  "related": ["cei", "cno"],
+  "functions": {
+    "format": {
+      "summary": {
+        "en": "Formats a CAEPF number with the official mask.",
+        "pt-BR": "Formata um número CAEPF com a máscara oficial."
+      },
+      "description": {
+        "en": [
+          "Formats a CAEPF with the mask `000.000.000/000-00`.",
+          "",
+          "- The mask is applied as far as the digits go, so a value being typed is masked progressively, and digits beyond the 14th are dropped. `options.pad` first left-pads with zeros to 14 digits.",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number returns an empty string (2.4.0 read the digits of any number, sign and decimal point dropped).",
+          "- An empty value, or one without digits, returns an empty string even with `pad`. Until 2.4.0 `pad` returned the whole zero mask (`000.000.000/000-00`)."
+        ],
+        "pt-BR": [
+          "Formata um CAEPF com a máscara `000.000.000/000-00`.",
+          "",
+          "- A máscara é aplicada até onde os dígitos vão, então um valor sendo digitado é mascarado progressivamente, e os dígitos além do 14º são descartados. `options.pad` primeiro completa com zeros à esquerda até 14 dígitos.",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal).",
+          "- Um valor vazio, ou sem dígitos, retorna uma string vazia mesmo com `pad`. Até a 2.4.0 o `pad` retornava a máscara toda de zeros (`000.000.000/000-00`)."
+        ]
+      },
+      "references": [
+        "https://www.gov.br/receitafederal/pt-br/assuntos/orientacao-tributaria/cadastros/caepf",
+        "https://bcadastros.serpro.gov.br/documentacao/cadastro_caepf/"
+      ],
+      "params": [
+        { "name": "value", "type": "string | number" },
+        { "name": "options", "type": "FormatCaepfOptions", "optional": true, "fields": [{ "name": "pad", "type": "boolean", "optional": true }] }
+      ],
+      "returns": "string",
+      "tests": [
+        { "args": ["29311861000184"], "returns": "293.118.610/001-84" },
+        { "name": "already-formatted", "args": ["293.118.610/001-84"], "returns": "293.118.610/001-84" },
+        { "name": "partial", "args": ["2931"], "returns": "293.1" },
+        { "name": "empty", "args": [""], "returns": "" },
+        { "args": [41142260000101], "returns": "411.422.600/001-01", "note": "JavaScript's own test: should format a number input" },
+        { "args": ["2"], "returns": "2", "note": "JavaScript's own test: should format progressively as digits are typed" },
+        { "args": ["29"], "returns": "29", "note": "JavaScript's own test: should format progressively as digits are typed" },
+        { "args": ["293"], "returns": "293", "note": "JavaScript's own test: should format progressively as digits are typed" },
+        { "args": ["29311"], "returns": "293.11", "note": "JavaScript's own test: should format progressively as digits are typed" },
+        { "args": ["293118"], "returns": "293.118", "note": "JavaScript's own test: should format progressively as digits are typed" },
+        { "args": ["293118610001840000"], "returns": "293.118.610/001-84", "note": "JavaScript's own test: should truncate values longer than 14 digits" },
+        { "args": ["184", { "pad": true }], "returns": "000.000.000/001-84", "note": "JavaScript's own test: should pad the value with leading zeros when options.pad is true" },
+        { "args": ["184"], "returns": "184", "note": "JavaScript's own test: should not pad the value when options.pad is not given" },
+        { "args": [-1], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [1.5], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": ["", { "pad": true }], "returns": "", "note": "changed in 2.5.0 (#615): should return an empty string for a value without digits even when padding; 2.4.0 returned the zero mask" },
+        { "args": ["---", { "pad": true }], "returns": "", "note": "changed in 2.5.0 (#615): a value with no digits gives an empty string even with pad" },
+        { "args": [null, { "pad": true }], "returns": "", "note": "a null value gives an empty string even with pad (2.4.0 did the same)" },
+        { "args": [-249859674386], "returns": "", "note": "JavaScript docs example: not a non-negative safe integer" }
+      ]
+    },
+    "isValid": {
+      "summary": { "en": "Checks whether a CAEPF number is valid.", "pt-BR": "Verifica se um número CAEPF é válido." },
+      "description": {
+        "en": [
+          "Validates a CAEPF: 14 digits, the 9-digit CPF base of the holder, a 3-digit sequence and 2 check digits. The CAEPF replaced the CEI for individuals who hire employees, such as rural producers.",
+          "",
+          "- Both check digits follow the CNPJ modulus 11. Then the resulting pair is shifted by 12, wrapping around 100.",
+          "- A value whose 12-digit base (the CPF base and the sequence) has all digits the same is rejected.",
+          "- The value may be a number or a string of 14 digits. Between the printed groups (3, 3, 3, 3 and 2 digits) there may be any run of whitespace, `.`, `-` or `/`, and any of those runs may be left out, so `293118.610/00184` is valid. Whitespace around the value is ignored. Anything else, such as another separator, a letter or a separator inside a group, is rejected.",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number is invalid.",
+          "- No official source publishes the check digit rule. Only the 14 positions and the 9-digit CPF base are official (SERPRO's documentation of the Receita Federal cadastro). The IN RFB 1.828/2018 has no check digit, and the eSocial only checks that the number exists in the Receita Federal base. The 3 + 2 split of the last 5 digits and the rule come from third-party reference implementations. They accept SERPRO's example `00000002500171`.",
+          "- A number loses its leading zeros, so a value that starts with `0` is only accepted as a string."
+        ],
+        "pt-BR": [
+          "Valida um CAEPF: 14 dígitos, com a base de 9 dígitos do CPF do titular, uma sequência de 3 dígitos e 2 dígitos verificadores. O CAEPF substituiu o CEI para pessoas físicas que contratam empregados, como os produtores rurais.",
+          "",
+          "- Os dois dígitos verificadores seguem o módulo 11 do CNPJ. Depois, o par resultante é deslocado em 12, com volta ao chegar a 100.",
+          "- Um valor cuja base de 12 dígitos (a base do CPF e a sequência) tem todos os dígitos iguais é rejeitado.",
+          "- O valor pode ser um número ou uma string de 14 dígitos. Entre os grupos impressos (3, 3, 3, 3 e 2 dígitos) pode haver qualquer sequência de espaços, `.`, `-` ou `/`, e qualquer uma dessas sequências pode faltar, então `293118.610/00184` é válido. Os espaços em volta do valor são ignorados. Qualquer outra forma, como outro separador, uma letra ou um separador dentro de um grupo, é rejeitada.",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro é inválido.",
+          "- Nenhuma fonte oficial publica a regra do dígito verificador. Só as 14 posições e a base de 9 dígitos do CPF são oficiais (documentação do SERPRO do cadastro da Receita Federal). A IN RFB 1.828/2018 não traz dígito verificador, e o eSocial só verifica se o número existe na base da Receita. A divisão 3 + 2 dos últimos 5 dígitos e a regra vêm de implementações de referência de terceiros. Elas aceitam o exemplo do SERPRO, `00000002500171`.",
+          "- Um número perde os zeros à esquerda, então um valor que começa com `0` só é aceito como string."
+        ]
+      },
+      "references": [
+        "https://www.gov.br/receitafederal/pt-br/assuntos/orientacao-tributaria/cadastros/caepf",
+        "https://bcadastros.serpro.gov.br/documentacao/cadastro_caepf/"
+      ],
+      "params": [{ "name": "value", "type": "string | number" }],
+      "returns": "boolean",
+      "tests": [
+        { "args": ["293.118.610/001-84"], "returns": true },
+        { "args": ["29311861000184"], "returns": true },
+        { "args": ["41142260000101"], "returns": true },
+        { "name": "wrong-check-digit", "args": ["29311861000185"], "returns": false },
+        { "name": "zeros", "args": ["00000000000000"], "returns": false },
+        { "name": "too-short", "args": ["1234567890"], "returns": false },
+        { "name": "letters", "args": ["abc.118.610/001-84"], "returns": false },
+        { "name": "empty", "args": [""], "returns": false },
+        { "args": ["293118610001840"], "returns": false, "note": "JavaScript's own test: should return false when it does not have 14 digits" },
+        { "args": ["293.118.610/001-84a"], "returns": false, "note": "JavaScript's own test: should return false when a valid registration is followed or preceded by a letter" },
+        { "args": ["a293.118.610/001-84"], "returns": false, "note": "JavaScript's own test: should return false when a valid registration is followed or preceded by a letter" },
+        { "args": ["293#118#610#001#84"], "returns": false, "note": "JavaScript's own test: should return false when it has 14 digits but an unsupported separator" },
+        { "args": ["11111111111111"], "returns": false, "note": "JavaScript's own test: should return false when every digit is the same" },
+        { "args": ["00000000000012"], "returns": false, "note": "JavaScript's own test: should return false when the 12 digit base is a repeated digit, as isValidCei and isValidCno reject it" },
+        { "args": ["000.000.000/000-12"], "returns": false, "note": "JavaScript's own test: should return false when the 12 digit base is a repeated digit, as isValidCei and isValidCno reject it" },
+        { "args": ["11111111111192"], "returns": false, "note": "JavaScript's own test: should return false when the 12 digit base is a repeated digit, as isValidCei and isValidCno reject it" },
+        { "args": ["29311861000100"], "returns": false, "note": "JavaScript's own test: should return false when the check digits are zeroed (293.118.610/001-00, Casilhero/brazilian-validators CaepfTest)" },
+        { "args": ["293.118.610/001-00"], "returns": false, "note": "JavaScript's own test: should return false when the check digits are zeroed (293.118.610/001-00, Casilhero/brazilian-validators CaepfTest)" },
+        { "args": ["29311861000172"], "returns": false, "note": "JavaScript's own test: should return false when the shift of 12 is not applied (29311861000172 instead of 29311861000184)" },
+        { "args": ["411.422.600/001-01"], "returns": true, "note": "JavaScript's own test: should return true for 411.422.600/001-01 (VitorLuizC/brazilian-values isCAEPF doc example)" },
+        { "args": ["82620035200115"], "returns": true, "note": "JavaScript's own test: should return true for 826.200.352/001-15, whose first modulus 11 remainder is 10" },
+        { "args": ["70180196300102"], "returns": true, "note": "JavaScript's own test: should return true for 701.801.963/001-02, whose second modulus 11 remainder is 10" },
+        { "args": [29311861000184], "returns": true, "note": "JavaScript's own test: should return true for a number input" },
+        { "args": [" 293 118 610 001 84 "], "returns": true, "note": "JavaScript's own test: should return true for a whitespace mask and surrounding whitespace" },
+        { "args": [-29311861000184], "returns": false, "note": "JavaScript's own test: should return false when it is a negative or fractional number (#593 number rule)" },
+        { "args": [293118610001.84], "returns": false, "note": "JavaScript's own test: should return false when it is a negative or fractional number (#593 number rule)" },
+        { "args": ["00000002500171"], "returns": true, "note": "JavaScript's own test: should return true for 00000002500171, the example of SERPRO's documentation of the Receita Federal's CAEPF cadastro" },
+        { "args": [2500171], "returns": false, "note": "a number loses its leading zeros, so the 14 digits are not there" },
+        { "args": ["293118.610/00184"], "returns": true, "note": "a separator may be left out between two groups; run against the JavaScript library" }
+      ]
+    },
+    "parse": {
+      "summary": {
+        "en": "Removes the formatting characters of a CAEPF and returns only the digits.",
+        "pt-BR": "Remove os caracteres de formatação de um CAEPF e retorna só os dígitos."
+      },
+      "description": {
+        "en": [
+          "Removes CAEPF formatting and keeps only digits, capped at 14 digits.",
+          "",
+          "- A number is read only when it is a safe non-negative integer. A negative, fractional, non-finite or unsafe number returns an empty string (2.4.0 read the digits of any number, sign and decimal point dropped)."
+        ],
+        "pt-BR": [
+          "Remove a formatação do CAEPF e mantém somente os dígitos, limitados a 14 dígitos.",
+          "",
+          "- Um número só é lido se for um inteiro seguro não negativo. Número negativo, fracionário, não finito ou inseguro retorna uma string vazia (a 2.4.0 lia os dígitos de qualquer número, descartando sinal e ponto decimal)."
+        ]
+      },
+      "references": [
+        "https://www.gov.br/receitafederal/pt-br/assuntos/orientacao-tributaria/cadastros/caepf",
+        "https://bcadastros.serpro.gov.br/documentacao/cadastro_caepf/"
+      ],
+      "params": [{ "name": "value", "type": "string | number" }],
+      "returns": "string",
+      "tests": [
+        { "name": "masked", "args": ["293.118.610/001-84"], "returns": "29311861000184" },
+        { "name": "unmasked", "args": ["29311861000184"], "returns": "29311861000184" },
+        { "name": "strips-non-digits", "args": ["293.?ABC118.610/001-84abc"], "returns": "29311861000184" },
+        { "name": "empty", "args": [""], "returns": "" },
+        { "name": "caps-length", "args": ["29311861000184999"], "returns": "29311861000184", "note": "reference truncates to the 14 characters of the document; asserted by the reference (JS) unit tests" },
+        { "args": [29311861000184], "returns": "29311861000184", "note": "JavaScript's own test: should read a number as the string of its digits" },
+        { "args": [-1], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [1.5], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" },
+        { "args": [9007199254740992], "returns": "", "note": "JavaScript's own test: should return an empty string when it is a negative, fractional or unsafe number (#593 number rule)" }
+      ]
+    }
+  }
+}
