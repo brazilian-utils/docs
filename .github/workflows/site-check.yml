@@ -1,4 +1,4 @@
-# Pull request checks for the docs site: dependencies audited, both languages present, lint and
+# Pull request checks for the docs site: production dependencies audited, both languages present, lint and
 # types, the site builds (usage and guides cloned from the libraries, the status of the last
 # published run), then accessibility and design checks. The full pipeline (conformance.yml)
 # builds and publishes it with the results of its own run.
@@ -38,8 +38,11 @@ jobs:
           cache: npm
           cache-dependency-path: site/package-lock.json
       - run: npm ci
-      - name: No known vulnerabilities, at any severity
-        run: npm audit --audit-level=low
+      # Only what the site ships: dev tools (ESLint, Tailwind, TypeScript) run in CI, never in the
+      # published pages. Decided by the maintainer on 2026-10-07 (braces, GHSA-vfj7-8cjw-p6xm, has no
+      # fixed release and reaches the site only through eslint-config-next).
+      - name: No known vulnerabilities in the site's dependencies, at any severity
+        run: npm audit --omit=dev --audit-level=low
       - name: Every domain, page and interface string has both languages
         run: npm run check:i18n -- --strict
       - name: Lint (Next.js, React hooks, jsx-a11y) with no warnings

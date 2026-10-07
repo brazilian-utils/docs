@@ -12,7 +12,7 @@
     "preview": "node scripts/serve.mjs",
     "fetch:libs": "node --env-file-if-exists=.env scripts/fetch-libs.mjs",
     "check:i18n": "node scripts/check-i18n.mjs",
-    "audit": "npm audit --audit-level=low",
+    "audit": "npm audit --omit=dev --audit-level=low",
     "a11y": "node scripts/a11y.mjs",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",

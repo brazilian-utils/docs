@@ -19,7 +19,7 @@ O **CI** roda em todo pull request. Ele roda o actionlint nos workflows e nos te
 
 O **site / check** roda quando o pull request muda `contract/`, `libs/` ou `site/`. Ele faz estas verificações:
 
-- o `npm audit` não acha nenhuma vulnerabilidade conhecida
+- o `npm audit` não acha nenhuma vulnerabilidade conhecida nas dependências que o site publica
 - toda página e toda string tem os dois idiomas (`check:i18n --strict`)
 - o lint passa sem avisos
 - o site compila

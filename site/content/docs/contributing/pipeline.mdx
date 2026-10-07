@@ -19,7 +19,7 @@ Vercel also builds a preview copy of the site. It is described below.
 
 **site / check** runs when the pull request changes `contract/`, `libs/` or `site/`. It runs these checks:
 
-- `npm audit` finds no known vulnerability
+- `npm audit` finds no known vulnerability in the dependencies the site ships
 - every page and every string has both languages (`check:i18n --strict`)
 - lint passes with no warnings
 - the site builds

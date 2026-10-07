@@ -21,7 +21,7 @@ npm run preview   # serve out/ como o GitHub Pages serve (base path incluído)
 npm run lint      # ESLint (Next.js, React hooks, jsx-a11y)
 npm run typecheck # TypeScript
 npm run check:i18n
-npm audit         # precisa sair limpo; o CI falha em qualquer severidade
+npm run audit     # dependências de produção; precisa sair limpo, o CI falha em qualquer severidade
 npm run a11y      # depois do build: axe-core em cada tipo de página
 npm run design    # depois do build: detector do Impeccable (padrões de interface gerada por IA)
 ```
@@ -62,7 +62,9 @@ Todas as dependências estão em versão exata (sem `^`). As principais:
 | `geist`, `simple-icons`, `lucide-react` | fontes e ícones, sem CDN |
 | `@brazilian-utils/brazilian-utils` | a biblioteca de referência que roda no navegador (campo da home, caixa "Teste com JavaScript") |
 
-`npm audit --audit-level=low` roda no CI e precisa sair limpo.
+`npm audit --omit=dev --audit-level=low` roda no CI e precisa sair limpo. Só as dependências de
+produção entram: as de desenvolvimento (ESLint, Tailwind, TypeScript) não vão para as páginas
+publicadas.
 
 O `site-check.yml` usa actions fixadas por SHA de commit, com a tag no comentário. Para atualizar:
 
@@ -170,7 +172,7 @@ issues), o `site-data` e o build do site. Ele publica `out/` no GitHub Pages qua
 por dia, e quando uma biblioteca manda `repository_dispatch` com `event_type=lib-released` na
 release. `SITE_URL` é a URL pública com o caminho (padrão
 `https://<org>.github.io/docs`); o caminho vira o `basePath` do Next. `site-check.yml`
-roda em todo PR que toca `contract/`, `libs/` ou `site/`: `npm audit`, `check:i18n --strict`,
+roda em todo PR que toca `contract/`, `libs/` ou `site/`: `npm audit` (produção), `check:i18n --strict`,
 `lint` sem avisos, `typecheck`, o build (com os arquivos de uso e os guias das bibliotecas), a
 verificação de acessibilidade (`npm run a11y`) e a de design (`npm run design`).
 
