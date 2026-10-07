@@ -62,7 +62,7 @@ most common differences:
 - `format` returns `string?` in Python/Ruby/Rust and `string` in the contract (a consequence
   of decision 2).
 
-## 3. Coverage snapshot (after the 506 new cases)
+## 3. Coverage snapshot (2026-09-22, after the 506 new cases)
 
 | Lib | Contract coverage | Core coverage | Shared tests (pass/fail/skip) | Library's own harness (pass / skipped) |
 |---|---|---|---|---|
@@ -84,12 +84,29 @@ typed libraries, they also fail a few more cases that the runner could only skip
 `currency.format` with a string argument where the library takes a number, or
 `legalNature.list` in Rust).
 
-`diff` now compares 1138 calls. 390 divergent inputs fall into 59 known splits, recorded in
-`baselines/_divergences.json`. The nightly fails only on a split that is not in that file. The inputs `diff` compares are fixed too (`baselines/_corpus.json`): the random values mined from the reference library enter it only through `diff --baseline`, so a run never fails on a value another run never saw.
+`diff` compares the 1,168 inputs of `baselines/_corpus.json`. The splits it knows, 365 in 115
+functions, are recorded in `baselines/_divergences.json`. The nightly fails only on a split that is not in that file. The inputs `diff` compares are fixed too (`baselines/_corpus.json`): the random values mined from the reference library enter it only through `diff --baseline`, so a run never fails on a value another run never saw.
 
 "Core" means implemented by at least 4 of the 7 libraries when the contract was bootstrapped
-(46 functions). The contract has 138 functions in 42 domains and 791 cases. 38 domains still
-have no long spec (`spec.en.md`, `spec.pt-br.md`, `references.md`; `lint` lists them). 12 functions still
-have no cases (object or date parameters, date-valued results, no reference implementation).
+(46 functions). The contract has 182 functions in 52 domains and 5,049 cases. 48 domains still
+have no long spec (`spec.en.md`, `spec.pt-br.md`, `references.md`; `lint` lists them). 5 functions still
+have no cases (`bank.list` and the four business-day calculations: date parameters and date-valued
+results; `lint --strict` lists them).
 Skipped tests are calls that a runner cannot express (for example, Go/Rust functions that
 require an argument that the contract makes optional).
+
+## 4. Where the libraries stand (baselines of 2026-09-29)
+
+Recorded from every library's default branch, after the new releases of Rust (0.2.0), .NET
+(2.4.0), Ruby (0.2.0) and Go, and from JavaScript 2.5.0. "Functions ok" pass every shared case
+of the function; the CI fails only when one of these numbers goes down (`baselines/`).
+
+| Lib | Functions ok (of 182) | Shared cases passing | Public symbols outside the contract |
+|---|---|---|---|
+| javascript | 180 (the other 2 waived) | 5,033 | 0 |
+| rust | 83 | 1,732 | 3 |
+| go | 60 | 2,081 | 2 |
+| dotnet | 48 | 2,193 | 1 |
+| ruby | 30 | 2,589 | 8 |
+| python | 9 | 500 | 0 |
+| erlang | 6 | 340 | 0 |
