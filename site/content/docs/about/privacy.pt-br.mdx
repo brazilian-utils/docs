@@ -3,11 +3,15 @@ title: Privacidade
 description: O que este site guarda e envia, e o que as bibliotecas fazem com os seus dados.
 ---
 
-Este site não tem contas, cookies, analytics nem anúncios. Ele é um conjunto de páginas estáticas.
+Este site não tem contas, cookies nem anúncios. Ele é um conjunto de páginas estáticas, e conta as visitas sem saber quem você é.
 
 ## Onde o site fica hospedado
 
 O site é servido pelo [Cloudflare Pages](https://pages.cloudflare.com/). Como qualquer servidor web, a Cloudflare recebe o seu endereço IP e os dados do seu navegador quando você abre uma página. A [Política de Privacidade da Cloudflare](https://www.cloudflare.com/privacypolicy/) diz o que a Cloudflare faz com eles. As cópias de prévia do site, feitas para os pull requests, são servidas do mesmo jeito e ficam fora dos buscadores.
+
+## Como as visitas são contadas
+
+O site usa o [Cloudflare Web Analytics](https://www.cloudflare.com/pt-br/web-analytics/) para contar as visualizações de página e medir o tempo de carregamento. Cada página carrega um script pequeno da Cloudflare (`static.cloudflareinsights.com`). Ele não grava cookies, não usa o armazenamento do seu navegador e não acompanha você entre sites. A Cloudflare mostra só totais, como visualizações por página, países e tempos de carregamento, nunca dados de um visitante específico.
 
 ## O que fica no seu navegador
 
@@ -21,7 +25,7 @@ Limpar os dados do site no navegador apaga tudo isso.
 
 ## Quando o site fala com outros serviços
 
-A maioria das páginas não carrega nada de fora deste site. A busca roda no seu navegador, num índice que vem com o site. As caixas "Teste com JavaScript" rodam a biblioteca JavaScript deste site.
+Fora a contagem de visitas acima, a maioria das páginas não carrega nada de fora deste site. A busca roda no seu navegador, num índice que vem com o site. As caixas "Teste com JavaScript" rodam a biblioteca JavaScript deste site.
 
 Algumas coisas carregam de outros serviços, e só quando você as abre:
 
