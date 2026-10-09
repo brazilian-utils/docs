@@ -68,6 +68,8 @@ jobs:
           SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           set -o pipefail
+          # The first deploy creates the project; "already exists" afterwards is expected.
+          npx --yes wrangler@4.149.0 pages project create brazilian-utils-docs --production-branch main > /dev/null 2>&1 || true
           npx --yes wrangler@4.149.0 pages deploy "$GITHUB_WORKSPACE/site/out" --project-name brazilian-utils-docs --branch "pr-$PR" --commit-hash "$SHA" --commit-dirty=true | tee deploy.log
           # The last pages.dev address wrangler prints is the branch alias, which stays the same for the PR.
           url=$(grep -o 'https://[^ ]*\.pages\.dev' deploy.log | tail -1)
