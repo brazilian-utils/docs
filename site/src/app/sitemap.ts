@@ -16,6 +16,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...folderPages('en', 'about').map((p) => `/about/${p.slug}/`),
     ...loadSpecs().map((s: any) => `/utils/${s.id}/`),
     ...loadLibs().map((l: any) => `/libs/${l.id}/`),
+    ...(loadGuides().length ? ['/guides/'] : []),
     ...loadGuides().map((g: any) => `/guides/${g.lib}/${g.slug}/`),
   ];
   return paths.flatMap((path) => {
