@@ -93,6 +93,7 @@ export function parseGuide(ctx) {
   return {
     title: data.title ?? path.basename(file, '.md'),
     description: data.description ?? '',
+    order: typeof data.order === 'number' ? data.order : 0,
     blocks,
     fns: functionsUsed(ctx, [...code, ...blocks.filter((b) => b.type === 'markdown').map((b) => b.text)].join('\n')),
     source: src.url + relFile,
