@@ -3,6 +3,13 @@
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+
+# Next.js puts a content hash in every file name under _next/static/: a new build gets new names, so
+# browsers keep these for a year and never ask again. Pages stay at the host's default (revalidated
+# on every visit), so a deploy reaches everyone at once.
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
 
 # The same site at the project's pages.dev address stays out of search engines: only SITE_URL is
 # indexed.
