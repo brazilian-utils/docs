@@ -11,7 +11,7 @@ is a number, not an opinion.
 | Step | Who | How |
 |---|---|---|
 | Merge the PR of this repository | maintainers | CI runs typecheck, the tests with the language toolchains, contract lint |
-| Publish the docs site | org admin | Create the Cloudflare Pages project `brazilian-utils-docs` (production branch `main`) with the custom domain `brazilian-utils.com.br`. Save the secrets `CLOUDFLARE_API_TOKEN` (Cloudflare Pages: Edit) and `CLOUDFLARE_ACCOUNT_ID`. Set the repository variable `PUBLISH_SITE=true` (and `SITE_URL` if the site moves) |
+| Publish the docs site | org admin | Set up Cloudflare Pages and the repository variable `PUBLISH_SITE=true`, as in [pipeline.mdx](../site/content/docs/contributing/pipeline.mdx#secrets-and-variables) |
 | Turn on issue and test sync | org admin | Save a fine-grained token (or GitHub App) with `issues`, `contents` and `pull_requests: write` on every library repo as the secret `LIBS_TOKEN`. Do not give it the `workflows` permission |
 | Optional: release notification | org admin | Save a token that can send `repository_dispatch` to the docs repository (`contents: write`) as the secret `DOCS_DISPATCH_TOKEN` in each library, and add the step in [usage-files.mdx](../site/content/docs/contributing/usage-files.mdx#update-the-site-on-each-release) to its release workflow. A release then refreshes the site at once, not at the next nightly |
 | Add the Action to every library | one PR per library | Copy `templates/lib-ci/<lang>.yml` to `.github/workflows/api-contract.yml`. Add the badge to the README |
