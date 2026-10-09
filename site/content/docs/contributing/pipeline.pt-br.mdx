@@ -11,7 +11,7 @@ As bibliotecas do [Brazilian Utils](https://github.com/brazilian-utils) seguem u
 | site / check | `.github/workflows/site-check.yml` | verifica este site nos pull requests |
 | Conformance | `.github/workflows/conformance.yml` | verifica cada biblioteca contra o contrato, cuida das issues e dos PRs da suíte nos repositórios das bibliotecas, e monta e publica este site |
 
-A Vercel também monta uma cópia de revisão do site. Ela está descrita mais abaixo.
+Cada pull request que muda o site também ganha uma cópia de revisão dele. Ela está descrita mais abaixo.
 
 ## O que roda num pull request
 
@@ -42,7 +42,7 @@ Um merge em main inicia o workflow Conformance quando muda os mesmos caminhos ac
 
 2. O **lib-repos** só roda quando o `LIBS_TOKEN` existe. Ele começa de um checkout limpo e não roda código de biblioteca. Ele abre uma issue `Implement <função>` em cada biblioteca que não tem uma função que o merge adicionou. Ele abre uma issue `Fix <função>` em cada biblioteca que falha num caso que o merge adicionou ou mudou. Ele atualiza cada issue `api-contract` aberta e fecha as que estão resolvidas. Por último, envia cada patch da suíte para um branch `api-contract/cases` na biblioteca e abre um PR, se nenhum estiver aberto.
 
-3. O **publish** publica o site no GitHub Pages. Ele só roda quando o site está completo e `PUBLISH_SITE` é `true`.
+3. O **publish** publica o site no Cloudflare Pages. Ele só roda quando o site está completo e `PUBLISH_SITE` é `true`.
 
 </Steps>
 
@@ -93,33 +93,37 @@ O harness da biblioteca roda os casos de `api-contract/` no próprio comando de 
 
 ## Deploys de revisão
 
-A Vercel monta uma cópia do site para cada push que muda `site/`, `contract/`, `libs/`, `schema/` ou `vercel.json`. O link aparece no pull request. Uma cópia de revisão fica na raiz do próprio domínio. A Vercel não roda o validador, então a cópia pega a situação de cada biblioteca do site publicado.
+O workflow site / check publica uma cópia do site para cada push num pull request que muda `site/`, `contract/` ou `libs/`. A cópia vai para o Cloudflare Pages, no branch `pr-<número>`, e um comentário no pull request aponta para ela. Cada push atualiza a cópia e o comentário. Uma cópia de revisão fica na raiz do próprio domínio. O check não roda o validador, então a cópia pega a situação de cada biblioteca do site publicado. Pull requests de forks não ganham cópia, porque as execuções deles não têm segredos.
 
 Nenhum buscador indexa uma cópia de revisão:
 
-- toda resposta tem o header `X-Robots-Tag: noindex, nofollow, noarchive`
+- a Cloudflare põe o header `X-Robots-Tag: noindex` em toda resposta de uma cópia de revisão
 - toda página tem uma meta tag `robots` com `noindex`
 - o `robots.txt` não lista sitemap
 - os links canônicos apontam para `SITE_URL`
 
-O site oficial é o do GitHub Pages. É o único que os buscadores indexam.
+O site oficial é o de `SITE_URL`. É o único que os buscadores indexam.
 
 ## Publicação
 
-O job publish publica no GitHub Pages. Ele tem o próprio grupo de concorrência, `github-pages`. Roda um deploy de cada vez. Uma execução que termina tarde não coloca um site mais antigo por cima de um mais novo.
+O job publish publica no branch de produção, `main`, do projeto `brazilian-utils-docs` do Cloudflare Pages. Ele tem o próprio grupo de concorrência, `cloudflare-pages`. Roda um deploy de cada vez. Uma execução que termina tarde não coloca um site mais antigo por cima de um mais novo.
 
-`SITE_URL` é o endereço público do site, com o caminho. O caminho vira o base path do site. As issues apontam para ele, e os badges nos READMEs das bibliotecas também. Sem a variável, o workflow usa `https://<owner>.github.io/<repo>`, a partir do nome do repositório.
+`SITE_URL` é o endereço público do site, com o caminho. O caminho vira o base path do site. As issues apontam para ele, e os badges nos READMEs das bibliotecas também. Sem a variável, o workflow usa `https://brazilian-utils.com.br`.
+
+O `site/public/_headers` define os headers das respostas, e o `site/public/_redirects` leva as páginas do antigo site da biblioteca JavaScript para onde elas estão agora.
 
 ## Segredos e variáveis
 
 | Nome | Tipo | Onde | O que faz |
 | --- | --- | --- | --- |
 | `LIBS_TOKEN` | segredo | docs | Um token fine-grained ou um GitHub App, com escrita em Issues, Contents e Pull requests nos repositórios das bibliotecas. Nunca dê a ele a permissão Workflows. Ele liga as issues e os PRs da suíte. |
-| `PUBLISH_SITE` | variável | docs | `true` liga os deploys no GitHub Pages a partir de main. A fonte do Pages precisa ser GitHub Actions. |
-| `SITE_URL` | variável | docs | O endereço público do site, com o caminho. Defina para um domínio próprio. |
+| `PUBLISH_SITE` | variável | docs | `true` liga os deploys no Cloudflare Pages a partir de main. |
+| `CLOUDFLARE_API_TOKEN` | segredo | docs | Um token da API da Cloudflare com a permissão Cloudflare Pages: Edit. O job publish e as cópias de revisão publicam com ele. |
+| `CLOUDFLARE_ACCOUNT_ID` | segredo | docs | O ID da conta da Cloudflare dona do projeto do Pages. |
+| `SITE_URL` | variável | docs | O endereço público do site, com o caminho. Defina quando o site mudar de endereço. |
 | `DOCS_DISPATCH_TOKEN` | segredo | cada biblioteca | Um token que pode enviar `repository_dispatch` para o repositório docs (Contents: write). Sem ele, uma release chega ao site na próxima execução noturna. |
 
-A Vercel não precisa de variável. Estas são opcionais lá:
+Um build fora do pipeline não precisa de variável. Estas são opcionais:
 
 | Nome | O que faz |
 | --- | --- |
@@ -127,7 +131,7 @@ A Vercel não precisa de variável. Estas são opcionais lá:
 | `SITE_DATA_URL` | de onde o build lê a situação (padrão: `SITE_URL`) |
 | `GITHUB_TOKEN` | aumenta o limite da API do GitHub quando o build lê as bibliotecas |
 | `SITE_DATA=skip` | monta sem a situação |
-| `SITE_INDEXABLE=true` | tira a meta tag `noindex`, para o dia em que a Vercel servir o site oficial. O header no `vercel.json` também precisa sair. |
+| `SITE_PREVIEW=true` | monta uma cópia de revisão: na raiz do próprio domínio, com a meta tag `noindex` |
 
 ## O que pode dar errado
 

@@ -4,19 +4,19 @@ import type { Metadata } from 'next';
 import { loadSpec, loadSpecs } from './data';
 import { type Locale, pick, prefixOf } from './i18n';
 
-export const SITE = new URL(process.env.SITE_URL || 'https://brazilian-utils.github.io/docs');
+export const SITE = new URL(process.env.SITE_URL || 'https://brazilian-utils.com.br');
 const base = SITE.pathname.replace(/\/$/, '');
 export const SITE_ROOT = `${SITE.origin}${base}`;
 const OG_IMAGE = `${SITE_ROOT}/og.png`;
-/** Where this build is served from (Vercel serves at the domain root, GitHub Pages under a path). */
+/** Where this build is served from (a preview at the domain root, the site under SITE_URL's path). */
 const servedBase = process.env.NEXT_PUBLIC_BASE ?? '';
 
 /**
- * A build that is not the canonical site: every Vercel deployment (review links). Its pages, files
- * and headers all say noindex (vercel.json adds X-Robots-Tag), and canonical links point at
- * SITE_URL. SITE_INDEXABLE=true lifts it, for the day Vercel serves the canonical site.
+ * A build that is not the canonical site: a pull request preview (SITE_PREVIEW=true). Its pages
+ * and files say noindex (Cloudflare Pages also adds X-Robots-Tag to every preview), and canonical
+ * links point at SITE_URL.
  */
-export const NOINDEX = Boolean(process.env.VERCEL) && process.env.SITE_INDEXABLE !== 'true';
+export const NOINDEX = process.env.SITE_PREVIEW === 'true';
 
 /** Metadata for a page at `path` (without language prefix, starting and ending with /). */
 export function pageMetadata(locale: Locale, path: string, title: string, description: string): Metadata {

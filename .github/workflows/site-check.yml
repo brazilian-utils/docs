@@ -1,7 +1,8 @@
 # Pull request checks for the docs site: production dependencies audited, both languages present, lint and
 # types, the site builds (usage and guides cloned from the libraries, the status of the last
-# published run), then accessibility and design checks. The full pipeline (conformance.yml)
-# builds and publishes it with the results of its own run.
+# published run) and goes to a Cloudflare Pages preview linked on the PR, then accessibility and
+# design checks. The full pipeline (conformance.yml) builds and publishes it with the results of
+# its own run.
 name: site / check
 
 on:
@@ -14,6 +15,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: write # the preview link comment
 
 concurrency:
   group: site-check-${{ github.ref }}
@@ -51,6 +53,34 @@ jobs:
         run: npm run build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SITE_PREVIEW: 'true' # served at the root of the preview's own domain, noindex
+      # The preview: a Cloudflare Pages deployment on the branch pr-<number>, at
+      # https://pr-<number>.<project>.pages.dev, linked in one PR comment that each push updates. Pull requests from forks have no secrets and get no preview. wrangler runs outside
+      # site/, so the PR's own node_modules cannot stand in for it.
+      - name: Preview on Cloudflare Pages
+        if: github.event.pull_request.head.repo.full_name == github.repository
+        working-directory: ${{ runner.temp }}
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+          SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -o pipefail
+          npx --yes wrangler@4.149.0 pages deploy "$GITHUB_WORKSPACE/site/out" --project-name brazilian-utils-docs --branch "pr-$PR" --commit-hash "$SHA" --commit-dirty=true | tee deploy.log
+          # The last pages.dev address wrangler prints is the branch alias, which stays the same for the PR.
+          url=$(grep -o 'https://[^ ]*\.pages\.dev' deploy.log | tail -1)
+          [ -n "$url" ] || { echo "::error::the deploy printed no pages.dev address"; exit 1; }
+          marker='<!-- site-preview -->'
+          body="$marker
+          **Preview:** $url (\`${SHA:0:7}\`)"
+          id=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" --paginate --jq ".[] | select(.body | startswith(\"$marker\")) | .id" | head -1)
+          if [ -n "$id" ]; then
+            gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$id" -f body="$body" > /dev/null
+          else
+            gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" -f body="$body" > /dev/null
+          fi
       # After the build: it writes next-env.d.ts and the route types the check reads.
       - name: Types
         run: npm run typecheck

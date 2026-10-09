@@ -1,11 +1,11 @@
 /**
  * Runs before fetch-libs.mjs, which needs the status (reference pages, guide functions). Builds
- * that did not run the validator (Vercel review deployments, a fresh clone) take the
+ * that did not run the validator (pull request previews, a fresh clone) take the
  * status of the last run from the published site: /status.json and the badges. The GitHub
  * Actions pipeline runs the validator and writes these files itself (`docs site-data`),
  * so this step does nothing there.
  *
- *   SITE_DATA_URL   where to read from (default: SITE_URL, else the GitHub Pages site)
+ *   SITE_DATA_URL   where to read from (default: SITE_URL, else the published site)
  *   SITE_DATA=skip  never download (the pages show no status)
  *
  * Nothing here fails the build: without the data, the site builds without the status.
@@ -16,7 +16,7 @@ import { loadLibs } from '../src/lib/registry.mjs';
 
 const STATUS = path.join('.generated', 'status.json');
 const BADGES = path.join('public', 'badges');
-const from = (process.env.SITE_DATA_URL || process.env.SITE_URL || 'https://brazilian-utils.github.io/docs').replace(/\/$/, '');
+const from = (process.env.SITE_DATA_URL || process.env.SITE_URL || 'https://brazilian-utils.com.br').replace(/\/$/, '');
 
 if (process.env.SITE_DATA === 'skip' || process.env.USAGE_SOURCE === 'fixtures') process.exit(0);
 // A validator run wrote the file (no `fetchedFrom`): keep it. A copy fetched earlier is refreshed.

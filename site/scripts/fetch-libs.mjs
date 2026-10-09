@@ -106,7 +106,7 @@ async function sourceOf(lib) {
   };
   if (MODE === 'local') return localSource();
   try {
-    // Without the API (rate limit, no token: Vercel builds) the newest version tag stands in for
+    // Without the API (rate limit, no token: a local build) the newest version tag stands in for
     // the latest release, and without tags the clone takes the default branch.
     const ref = await resolveRef(lib).catch((error) => {
       const tag = lib.ref === 'latest-release' ? newestTag(lib) : null;

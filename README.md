@@ -140,7 +140,7 @@ The pipeline publishes the docs site (`vars.PUBLISH_SITE`), with a status page p
 Add this badge to the README of each library:
 
 ```markdown
-[![API contract](https://brazilian-utils.github.io/docs/badges/python.svg)](https://brazilian-utils.github.io/docs/libs/python/)
+[![API contract](https://brazilian-utils.com.br/badges/python.svg)](https://brazilian-utils.com.br/libs/python/)
 ```
 
 Each library keeps the usage examples for the site (`docs/usage/<util>.md`, one
@@ -206,7 +206,6 @@ test/            unit + integration tests, fixtures per language
 action.yml       GitHub Action for the libs' CI
 templates/       workflows and test harnesses to copy into each lib repo
 site/            the docs site (Next.js + Fumadocs), built from all of the above
-vercel.json      review deployments of the site on Vercel
 ```
 
 ## Development
