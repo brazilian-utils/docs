@@ -18,8 +18,11 @@ const PAGES = [
   '/', '/pt-br/', '/getting-started/', '/utils/cpf/', '/utils/license-plate/', '/pt-br/utils/cnpj/',
   '/libs/javascript/', '/libs/go/', '/reference/parity/', '/contributing/specs/', '/contributing/usage-files/', '/about/faq/', '/about/team/', '/does-not-exist/',
 ];
-for (const guide of fs.existsSync('out/guides') ? fs.readdirSync('out/guides') : []) {
-  for (const slug of fs.readdirSync(`out/guides/${guide}`).filter((f) => !f.includes('.'))) PAGES.push(`/guides/${guide}/${slug}/`);
+// The guides page, then every guide (out/guides/<lib>/<slug>/; the rest are files).
+const dirs = (dir) => fs.readdirSync(dir, { withFileTypes: true }).filter((e) => e.isDirectory()).map((e) => e.name);
+if (fs.existsSync('out/guides')) PAGES.push('/guides/');
+for (const guide of fs.existsSync('out/guides') ? dirs('out/guides') : []) {
+  for (const slug of dirs(`out/guides/${guide}`)) PAGES.push(`/guides/${guide}/${slug}/`);
 }
 const VIEWPORTS = ['1280x800', '390x844'];
 
