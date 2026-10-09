@@ -14,7 +14,9 @@ const config = {
   images: { unoptimized: true },
   env: { NEXT_PUBLIC_BASE: base },
   turbopack: { root: path.resolve('.') },
-  experimental: { globalNotFound: true },
+  // The stylesheet goes into each page instead of a separate request that blocks the first paint
+  // (one round trip less on a cold visit, which is most visits to a docs site).
+  experimental: { globalNotFound: true, inlineCss: true },
 };
 
 export default createMDX()(config);
