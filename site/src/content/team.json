@@ -4,30 +4,30 @@
     {
       "name": "Hyan Mandian",
       "login": "hyanmandian",
-      "role": { "en": "Creator", "pt-BR": "Criador" }
+      "role": { "en": "Project Founder", "pt-BR": "Fundador do projeto" }
     },
     {
       "name": "Camila Maia",
       "login": "camilamaia",
-      "role": { "en": "Contributor", "pt-BR": "Contribuidora" },
+      "role": { "en": "Python contributor", "pt-BR": "Contribuidora de Python" },
       "cumbucadev": true
     },
     {
       "name": "Maria Antônia Maia",
       "login": "antoniamaia",
-      "role": { "en": "Contributor", "pt-BR": "Contribuidora" },
+      "role": { "en": "Python contributor", "pt-BR": "Contribuidora de Python" },
       "cumbucadev": true
     },
     {
       "name": "Nilton Pimentel",
       "login": "niltonpimentel02",
-      "role": { "en": "Contributor", "pt-BR": "Contribuidor" },
+      "role": { "en": "Python contributor", "pt-BR": "Contribuidor de Python" },
       "cumbucadev": true
     },
     {
       "name": "Leonel Sanches da Silva",
       "login": "leonelsanchesdasilva",
-      "role": { "en": "Contributor", "pt-BR": "Contribuidor" },
+      "role": { "en": "Rust, Ruby, Go and .NET contributor", "pt-BR": "Contribuidor de Rust, Ruby, Go e .NET" },
       "cumbucadev": true
     }
   ]
