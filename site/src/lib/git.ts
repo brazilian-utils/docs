@@ -2,7 +2,7 @@ import { execFileSync } from 'node:child_process';
 
 const git = (...args: string[]) => execFileSync('git', args, { cwd: '..', stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim();
 
-// A shallow clone (Vercel's) has lost the commits that last touched most files: `git log` would
+// A shallow clone (a CI checkout's default) has lost the commits that last touched most files: `git log` would
 // name the oldest commit it has, a wrong date. There, no date at all.
 let shallow: boolean | undefined;
 const isShallow = () => {

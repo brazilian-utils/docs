@@ -7,7 +7,7 @@ mora no repositório docs. As páginas saem do contrato (`../contract`), das bib
 `DESIGN.md` explica o visual.
 
 O site é um app [Next.js](https://nextjs.org) com [Fumadocs](https://fumadocs.dev), exportado
-como HTML estático (`output: 'export'`). Não há servidor: o GitHub Pages serve a pasta `out/`.
+como HTML estático (`output: 'export'`). Não há servidor: o Cloudflare Pages serve a pasta `out/`.
 
 ## Rodar localmente
 
@@ -17,7 +17,7 @@ Requer **Node 22.12 ou mais novo** e npm 10.9+.
 npm ci            # instalação reproduzível
 npm run dev       # busca os arquivos de uso e sobe o Next em modo dev
 npm run build     # mesmo fluxo, saída estática em out/
-npm run preview   # serve out/ como o GitHub Pages serve (base path incluído)
+npm run preview   # serve out/ como o Cloudflare Pages serve (base path incluído)
 npm run lint      # ESLint (Next.js, React hooks, jsx-a11y)
 npm run typecheck # TypeScript
 npm run check:i18n
@@ -167,11 +167,11 @@ Com `--strict`, o script falha no CI quando falta a versão de um idioma.
 ## Deploy
 
 Um pipeline só faz tudo: `.github/workflows/conformance.yml`. Ele roda o validador (check, diff,
-issues), o `site-data` e o build do site. Ele publica `out/` no GitHub Pages quando
-`vars.PUBLISH_SITE == 'true'`. Ele roda a cada merge em `main` (contrato, libs, site), uma vez
+issues), o `site-data` e o build do site. Ele publica `out/` no Cloudflare Pages (projeto
+`brazilian-utils-docs`, branch de produção `main`) quando `vars.PUBLISH_SITE == 'true'`. Ele roda a cada merge em `main` (contrato, libs, site), uma vez
 por dia, e quando uma biblioteca manda `repository_dispatch` com `event_type=lib-released` na
 release. `SITE_URL` é a URL pública com o caminho (padrão
-`https://<org>.github.io/docs`); o caminho vira o `basePath` do Next. `site-check.yml`
+`https://brazilian-utils.com.br`); o caminho vira o `basePath` do Next. `site-check.yml`
 roda em todo PR que toca `contract/`, `libs/` ou `site/`: `npm audit` (produção), `check:i18n --strict`,
 `lint` sem avisos, `typecheck`, o build (com os arquivos de uso e os guias das bibliotecas), a
 verificação de acessibilidade (`npm run a11y`) e a de design (`npm run design`).
@@ -185,23 +185,26 @@ ferramenta ou uma convenção fixa: `README.md`, `DESIGN.md`, `LICENSE`, `CONTRI
 `Cargo.toml`, os arquivos que começam com `_` (ignorados pelo validador) e as fixtures escritas
 na convenção de cada linguagem.
 
-## Deploy de revisão (Vercel)
+## Deploy de revisão (Cloudflare Pages)
 
-Cada push e cada PR que mexe no site, no contrato, nas libs ou no schema ganha um deploy de
-revisão na Vercel, com o link no PR. A configuração é o `vercel.json` na raiz do repositório (o
-projeto da Vercel usa a raiz como Root Directory): instala e monta `site/` e publica `site/out/`.
+Cada push num PR que mexe no site, no contrato ou nas libs ganha um deploy de revisão no
+Cloudflare Pages, no branch `pr-<número>`, com o link num comentário do PR. Quem publica é o
+`site-check.yml`, depois do build, com os segredos `CLOUDFLARE_API_TOKEN` e
+`CLOUDFLARE_ACCOUNT_ID`. PRs de fork não têm segredos e não ganham deploy de revisão.
 
-Na Vercel o site fica na raiz do domínio (sem `basePath`). Nenhum deploy da Vercel entra em
-buscador, em três camadas: o header `X-Robots-Tag: noindex, nofollow, noarchive` em toda resposta
-(`vercel.json`), a meta `robots` `noindex, nofollow` em toda página e um `robots.txt` sem sitemap
-(ele deixa o robô entrar, porque só assim ele lê o `noindex`). As URLs canônicas apontam para
-`SITE_URL`. Para o dia em que a Vercel servir o site oficial: `SITE_INDEXABLE=true` tira a meta, e
-o header sai do `vercel.json`. A Vercel não roda
-o validador (precisaria de todas as linguagens), então o build baixa a situação da última execução
-publicada. O `ignoreCommand` pula o build quando nada que o site usa mudou desde o último deploy. Não
-precisa de variável de ambiente. As opcionais são `SITE_URL`, `SITE_DATA_URL` e `GITHUB_TOKEN`
-(sem token, a versão de cada lib sai da tag mais nova, lida com `git ls-remote`). `SITE_DATA=skip`
-monta sem a situação. O check de PR (`site-check.yml`) também baixa a situação publicada.
+O build de revisão roda com `SITE_PREVIEW=true`: o site fica na raiz do domínio (sem `basePath`)
+e nenhum deploy de revisão entra em buscador, em três camadas: a Cloudflare põe
+`X-Robots-Tag: noindex` em toda resposta de um deploy de revisão, toda página leva a meta
+`robots` `noindex, nofollow` e o `robots.txt` sai sem sitemap (ele deixa o robô entrar, porque só
+assim ele lê o `noindex`). As URLs canônicas apontam para `SITE_URL`. O check não roda o validador
+(precisaria de todas as linguagens), então o build baixa a situação da última execução
+publicada. As variáveis opcionais são `SITE_URL`, `SITE_DATA_URL` e `GITHUB_TOKEN` (sem token, a
+versão de cada lib sai da tag mais nova, lida com `git ls-remote`). `SITE_DATA=skip` monta sem a
+situação.
+
+`public/_headers` define os headers de toda resposta, e `public/_redirects` leva as páginas do
+antigo site da biblioteca JavaScript, que ficava em `brazilian-utils.com.br`, para onde elas estão
+agora.
 
 ## Pendências conhecidas
 

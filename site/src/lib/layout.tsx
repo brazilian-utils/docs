@@ -48,12 +48,11 @@ const githubIcon = (
 /** The sections of the documentation, in the header of every page (the sidebar's root folders). */
 export function siteSections(locale: Locale): Section[] {
   const p = prefixOf(locale);
-  const guide = loadGuides()[0];
   const first = (folder: string) => folderPages(locale, folder)[0]?.slug;
   return [
     { title: L(locale, 'Utilities', 'Utilitários'), url: `${p}/getting-started/`, match: ['/getting-started', '/utils/'] },
     { title: L(locale, 'Libraries', 'Bibliotecas'), url: `${p}/reference/parity/`, match: ['/reference/', '/libs/'] },
-    ...(guide ? [{ title: L(locale, 'Guides', 'Guias'), url: `${p}/guides/${guide.lib}/${guide.slug}/`, match: ['/guides/'] }] : []),
+    ...(loadGuides().length ? [{ title: L(locale, 'Guides', 'Guias'), url: `${p}/guides/`, match: ['/guides/'] }] : []),
     { title: L(locale, 'Contributing', 'Como contribuir'), url: `${p}/contributing/${first('contributing')}/`, match: ['/contributing/'] },
     ...(first('about') ? [{ title: L(locale, 'About', 'Sobre'), url: `${p}/about/${first('about')}/`, match: ['/about/'] }] : []),
   ];

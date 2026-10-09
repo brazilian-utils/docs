@@ -11,7 +11,7 @@ The [Brazilian Utils](https://github.com/brazilian-utils) libraries follow one c
 | site / check | `.github/workflows/site-check.yml` | checks this site on pull requests |
 | Conformance | `.github/workflows/conformance.yml` | checks every library against the contract, keeps the issues and the suite PRs in the library repositories, and builds and publishes this site |
 
-Vercel also builds a preview copy of the site. It is described below.
+Each pull request that changes the site also gets a preview copy of it. It is described below.
 
 ## What runs on a pull request
 
@@ -42,7 +42,7 @@ A merge to main starts the Conformance workflow when it changes the same paths a
 
 2. **lib-repos** runs only when `LIBS_TOKEN` is set. It starts from a clean checkout and runs no library code. It opens an `Implement <function>` issue in every library that lacks a function the merge added. It opens a `Fix <function>` issue in every library that fails a case the merge added or changed. It refreshes every open `api-contract` issue and closes the ones that are done. Last, it pushes each suite patch to an `api-contract/cases` branch in the library and opens a PR, if none is open.
 
-3. **publish** deploys the site to GitHub Pages. It runs only when the site is complete and `PUBLISH_SITE` is `true`.
+3. **publish** deploys the site to Cloudflare Pages. It runs only when the site is complete and `PUBLISH_SITE` is `true`.
 
 </Steps>
 
@@ -93,33 +93,37 @@ The harness of the library runs the cases in `api-contract/` in the library's ow
 
 ## Preview deployments
 
-Vercel builds a copy of the site for each push that changes `site/`, `contract/`, `libs/`, `schema/` or `vercel.json`. The link shows up on the pull request. A preview is served at the root of its own domain. Vercel does not run the validator, so the preview takes the status of each library from the published site.
+The site / check workflow deploys a copy of the site for each push to a pull request that changes `site/`, `contract/` or `libs/`. The copy goes to Cloudflare Pages, on the branch `pr-<number>`, and one comment on the pull request links to it. Each push updates the copy and the comment. A preview is served at the root of its own domain. The check does not run the validator, so the preview takes the status of each library from the published site. Pull requests from forks get no preview, because their runs have no secrets.
 
 Search engines do not index any preview:
 
-- every response has the header `X-Robots-Tag: noindex, nofollow, noarchive`
+- Cloudflare adds the header `X-Robots-Tag: noindex` to every preview response
 - every page has a `robots` meta tag with `noindex`
 - `robots.txt` lists no sitemap
 - canonical links point at `SITE_URL`
 
-The official site is the one on GitHub Pages. It is the only one that search engines index.
+The official site is the one at `SITE_URL`. It is the only one that search engines index.
 
 ## Publishing
 
-The publish job deploys to GitHub Pages. It has its own concurrency group, `github-pages`. One deploy runs at a time. A run that finishes late does not put an older site over a newer one.
+The publish job deploys to the production branch, `main`, of the Cloudflare Pages project `brazilian-utils-docs`. It has its own concurrency group, `cloudflare-pages`. One deploy runs at a time. A run that finishes late does not put an older site over a newer one.
 
-`SITE_URL` is the public address of the site, with its path. Its path becomes the base path of the site. The issues link to it, and so do the badges in the library READMEs. Without the variable, the workflow uses `https://<owner>.github.io/<repo>`, from the name of the repository.
+`SITE_URL` is the public address of the site, with its path. Its path becomes the base path of the site. The issues link to it, and so do the badges in the library READMEs. Without the variable, the workflow uses `https://brazilian-utils.com.br`.
+
+`site/public/_headers` sets the response headers, and `site/public/_redirects` sends the pages of the old JavaScript library site to where they are now.
 
 ## Secrets and variables
 
 | Name | Kind | Where | What it does |
 | --- | --- | --- | --- |
 | `LIBS_TOKEN` | secret | docs | A fine-grained token or a GitHub App, with write access to Issues, Contents and Pull requests on the library repositories. Never give it the Workflows permission. It turns on the issues and the suite PRs. |
-| `PUBLISH_SITE` | variable | docs | `true` turns on the deploys to GitHub Pages from main. The Pages source must be GitHub Actions. |
-| `SITE_URL` | variable | docs | The public address of the site, with its path. Set it for a custom domain. |
+| `PUBLISH_SITE` | variable | docs | `true` turns on the deploys to Cloudflare Pages from main. |
+| `CLOUDFLARE_API_TOKEN` | secret | docs | A Cloudflare API token with the Cloudflare Pages: Edit permission. The publish job and the previews deploy with it. |
+| `CLOUDFLARE_ACCOUNT_ID` | secret | docs | The ID of the Cloudflare account that owns the Pages project. |
+| `SITE_URL` | variable | docs | The public address of the site, with its path. Set it when the site moves. |
 | `DOCS_DISPATCH_TOKEN` | secret | each library | A token that can send `repository_dispatch` to the docs repository (Contents: write). Without it, a release reaches the site at the next nightly run. |
 
-Vercel needs no variable. These are optional there:
+A build outside the pipeline needs no variable. These are optional:
 
 | Name | What it does |
 | --- | --- |
@@ -127,7 +131,7 @@ Vercel needs no variable. These are optional there:
 | `SITE_DATA_URL` | where the build reads the status from (default: `SITE_URL`) |
 | `GITHUB_TOKEN` | raises the GitHub API limit when the build reads the libraries |
 | `SITE_DATA=skip` | builds without the status |
-| `SITE_INDEXABLE=true` | removes the `noindex` meta tag, for the day Vercel serves the official site. The header in `vercel.json` must go too. |
+| `SITE_PREVIEW=true` | builds a preview: served at the root of its own domain, with the `noindex` meta tag |
 
 ## What can go wrong
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Serves the built site (out/) the way GitHub Pages does: under the base path, index.html for
+ * Serves the built site (out/) the way Cloudflare Pages does: under the base path, index.html for
  * folders, 404.html for anything else. `npm run preview`, after `npm run build`.
  * Env: SITE_URL (as for the build), PORT (default 4321).
  */
@@ -10,7 +10,7 @@ import path from 'node:path';
 import zlib from 'node:zlib';
 
 const OUT = path.resolve('out');
-const BASE = new URL(process.env.SITE_URL || 'https://brazilian-utils.github.io/docs').pathname.replace(/\/$/, '');
+const BASE = new URL(process.env.SITE_URL || 'https://brazilian-utils.com.br').pathname.replace(/\/$/, '');
 const PORT = Number(process.env.PORT) || 4321;
 const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.png': 'image/png', '.ico': 'image/x-icon', '.json': 'application/json', '.txt': 'text/plain', '.xml': 'application/xml', '.woff2': 'font/woff2', '.ttf': 'font/ttf' };
 

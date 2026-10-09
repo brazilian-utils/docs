@@ -24,14 +24,17 @@ const axeSource = fs.readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8'
 const PORT = 4399;
 const OUT = 'out';
 // The base path the site was built with (SITE_URL's path, as next.config.mjs reads it).
-const BASE = (process.env.BASE_PATH ?? new URL(process.env.SITE_URL || 'https://brazilian-utils.github.io/docs').pathname).replace(/\/$/, '');
+const BASE = (process.env.BASE_PATH ?? new URL(process.env.SITE_URL || 'https://brazilian-utils.com.br').pathname).replace(/\/$/, '');
 // One page of each type, in both languages; generated pages exist in every build.
 const PAGES = [
   '/', '/getting-started/', '/utils/cpf/', '/utils/license-plate/', '/libs/javascript/', '/libs/go/',
   '/reference/parity/', '/contributing/usage-files/', '/about/team/', '/pt-br/about/faq/', '/pt-br/', '/pt-br/utils/cnpj/', '/pt-br/libs/python/', '/does-not-exist/',
 ];
-for (const guide of fs.existsSync(`${OUT}/guides`) ? fs.readdirSync(`${OUT}/guides`) : []) {
-  const first = fs.readdirSync(`${OUT}/guides/${guide}`).find((f) => !f.endsWith('.txt'));
+// The guides page, then the first guide of each library (out/guides/<lib>/<slug>/; the rest are files).
+const dirs = (dir) => fs.readdirSync(dir, { withFileTypes: true }).filter((e) => e.isDirectory()).map((e) => e.name);
+if (fs.existsSync(`${OUT}/guides`)) PAGES.push('/guides/', '/pt-br/guides/');
+for (const guide of fs.existsSync(`${OUT}/guides`) ? dirs(`${OUT}/guides`) : []) {
+  const first = dirs(`${OUT}/guides/${guide}`)[0];
   if (first) PAGES.push(`/guides/${guide}/${first}/`, `/pt-br/guides/${guide}/${first}/`);
 }
 

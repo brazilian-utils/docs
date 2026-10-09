@@ -1,0 +1,33 @@
+# Cloudflare Pages redirects: the pages of the JavaScript library site that brazilian-utils.com.br
+# served before this one, to where they are now.
+/utilities /libs/javascript/ 301
+/utilities/ /libs/javascript/ 301
+/guides/document-field /guides/javascript/document-field/ 301
+/guides/document-field/ /guides/javascript/document-field/ 301
+/guides/address-form /guides/javascript/address-form/ 301
+/guides/address-form/ /guides/javascript/address-form/ 301
+/guides/state-city /guides/javascript/state-city/ 301
+/guides/state-city/ /guides/javascript/state-city/ 301
+/guides/schema /guides/javascript/schema/ 301
+/guides/schema/ /guides/javascript/schema/ 301
+/migration-v1-to-v2 /guides/javascript/migration-v1-to-v2/ 301
+/migration-v1-to-v2/ /guides/javascript/migration-v1-to-v2/ 301
+/getting-started.md https://github.com/brazilian-utils/javascript/blob/main/docs/getting-started.md 301
+/utilities.md https://github.com/brazilian-utils/javascript/blob/main/docs/utilities.md 301
+/migration-v1-to-v2.md https://github.com/brazilian-utils/javascript/blob/main/docs/guides/migration-v1-to-v2.md 301
+/pt-br/utilities /pt-br/libs/javascript/ 301
+/pt-br/utilities/ /pt-br/libs/javascript/ 301
+/pt-br/guides/document-field /pt-br/guides/javascript/document-field/ 301
+/pt-br/guides/document-field/ /pt-br/guides/javascript/document-field/ 301
+/pt-br/guides/address-form /pt-br/guides/javascript/address-form/ 301
+/pt-br/guides/address-form/ /pt-br/guides/javascript/address-form/ 301
+/pt-br/guides/state-city /pt-br/guides/javascript/state-city/ 301
+/pt-br/guides/state-city/ /pt-br/guides/javascript/state-city/ 301
+/pt-br/guides/schema /pt-br/guides/javascript/schema/ 301
+/pt-br/guides/schema/ /pt-br/guides/javascript/schema/ 301
+/pt-br/migration-v1-to-v2 /pt-br/guides/javascript/migration-v1-to-v2/ 301
+/pt-br/migration-v1-to-v2/ /pt-br/guides/javascript/migration-v1-to-v2/ 301
+/pt-br/getting-started.md https://github.com/brazilian-utils/javascript/blob/main/docs/pt-br/getting-started.md 301
+/pt-br/utilities.md https://github.com/brazilian-utils/javascript/blob/main/docs/pt-br/utilities.md 301
+/pt-br/migration-v1-to-v2.md https://github.com/brazilian-utils/javascript/blob/main/docs/pt-br/guides/migration-v1-to-v2.md 301
+/llms-full.txt /llms.txt 301

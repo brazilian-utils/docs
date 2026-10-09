@@ -2,6 +2,7 @@
 import type * as PageTree from 'fumadocs-core/page-tree';
 import { BookOpen, Boxes, Compass, GitPullRequest, Info } from 'lucide-react';
 import { CATEGORIES, loadGuides, loadLibs, loadSpecs } from './data';
+import { guidesByLib } from '@/components/pages/guides';
 import { type Locale, pick, prefixOf } from './i18n';
 import { LangIcon } from '@/components/lang-icon';
 import { folderPages } from './source';
@@ -70,7 +71,18 @@ export function pageTree(locale: Locale): PageTree.Root {
     name: L(locale, 'Guides', 'Guias'),
     description: L(locale, 'Forms and components, with live demos', 'Formulários e componentes, com exemplos interativos'),
     icon: <Compass />,
-    children: guides.map((g: any) => page(pick(g.title, locale), `/guides/${g.lib}/${g.slug}/`)),
+    // The overview, then a folder per library that has guides (JavaScript first, more as they come).
+    children: [
+      page(L(locale, 'Overview', 'Visão geral'), '/guides/'),
+      ...guidesByLib().map(({ lib, guides }: any) => ({
+        $id: `${locale}:guides:${lib.id}`,
+        type: 'folder' as const,
+        name: lib.label,
+        icon: <LangIcon lib={lib.id} />,
+        defaultOpen: true,
+        children: guides.map((g: any) => page(pick(g.title, locale), `/guides/${g.lib}/${g.slug}/`)),
+      })),
+    ],
   };
 
   const contributing: PageTree.Folder = {

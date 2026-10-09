@@ -1,0 +1,10 @@
+# Cloudflare Pages response headers, for every file of the site. Previews also get
+# X-Robots-Tag: noindex from Cloudflare itself.
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+# The same site at the project's pages.dev address stays out of search engines: only SITE_URL is
+# indexed.
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex

@@ -1,4 +1,4 @@
-// 404 for every path (GitHub Pages serves 404.html): both languages, links back into the site.
+// 404 for every path (Cloudflare Pages serves 404.html): both languages, links back into the site.
 import Link from '@/components/link';
 import { Html } from '@/components/html';
 import { SiteMark } from '@/lib/layout';
