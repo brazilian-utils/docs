@@ -5,6 +5,7 @@ import { LOCALES, type Locale, pick, prefixOf } from './i18n';
 import { slug } from './prose';
 import { fileLocale, source } from './source';
 import { libDescription, libTitle } from '@/components/pages/lib';
+import { guidesText } from '@/components/pages/guides';
 import { parityText } from '@/components/pages/parity';
 
 const trim = (url: string) => url.replace(/\/$/, '') || '/';
@@ -33,6 +34,10 @@ export function searchIndexes() {
     }
     for (const lib of libs as any[]) out.push({ locale, title: libTitle(locale, lib.label), description: libDescription(locale, lib.label), content: `${lib.package} ${lib.install}`, url: `${p}/libs/${lib.id}` });
     for (const g of loadGuides() as any[]) out.push({ locale, title: pick(g.title, locale), description: pick(g.description, locale), content: pick(g.description, locale), url: `${p}/guides/${g.lib}/${g.slug}` });
+    if (loadGuides().length) {
+      const guides = guidesText(locale);
+      out.push({ locale, title: guides.title, description: guides.description, content: guides.description, url: `${p}/guides` });
+    }
     const parity = parityText(locale);
     out.push({ locale, title: parity.title, description: parity.description, content: parity.description, url: `${p}/reference/parity` });
     for (const page of source.getPages(fileLocale(locale))) out.push({ locale, title: page.data.title, description: page.data.description, content: page.data.description ?? '', url: trim(`${p}${page.url.replace(/^\/pt-br/, '')}`) });
