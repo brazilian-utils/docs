@@ -2,7 +2,7 @@
 export interface GuideFile { kind: 'file'; name: string; lang: string; code: string }
 export interface GuideNode { kind: 'example' | 'variant'; name?: string; demo?: string; intro?: string; children: Array<GuideNode | GuideFile> }
 export type GuideBlock = { type: 'markdown'; text: string } | { type: 'examples'; examples: GuideNode[] };
-export interface Guide { title: string; description: string; blocks: GuideBlock[]; fns: string[]; source: string }
+export interface Guide { title: string; description: string; order: number; blocks: GuideBlock[]; fns: string[]; source: string }
 export interface GuideContext {
   lib: { id: string; repo: string; root: string; guides: Record<string, string>; reference?: Record<string, string> };
   src: { dir: string; url: string };

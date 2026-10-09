@@ -304,12 +304,14 @@ function readGuides(lib, src) {
       const guide = parseGuide({ lib, src, file: path.join(dir, name), locale, siblings: names.map((n) => n.replace(/\.md$/, '')), status, specs, warn: (w) => warnings.push(w) });
       fs.mkdirSync(path.join(GUIDES_DIR, lib.id), { recursive: true });
       fs.writeFileSync(path.join(GUIDES_DIR, lib.id, `${slug}.${locale}.json`), JSON.stringify(guide));
-      const entry = found.get(slug) ?? { lib: lib.id, slug, order: found.size, title: {}, description: {}, fns: [], source: guide.source };
+      const entry = found.get(slug) ?? { lib: lib.id, slug, order: guide.order, title: {}, description: {}, fns: [], source: guide.source };
       entry.title[locale] = guide.title;
       entry.description[locale] = guide.description;
       entry.fns = [...new Set([...entry.fns, ...guide.fns])].sort();
       found.set(slug, entry);
     }
   }
-  guides.push(...found.values());
+  // By the front matter's `order` (default 0), then by file name.
+  const sorted = [...found.values()].sort((a, b) => a.order - b.order || a.slug.localeCompare(b.slug));
+  guides.push(...sorted.map((g, i) => ({ ...g, order: i })));
 }
