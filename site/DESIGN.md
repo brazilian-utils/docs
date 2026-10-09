@@ -110,6 +110,9 @@ CI fails on any finding. Exceptions, each on purpose:
 
 - `cream-palette`: the warm paper is Flexoki's, the palette the maintainers chose for the site.
   Impeccable's own rule is that a pinned palette wins over a saturated-pattern warning.
+- `layout-transition`: the only height transitions are Fumadocs' own (the sidebar's folders
+  opening and closing), not the site's. The detector reads the stylesheet only when it is inlined
+  in the page, which it is since the site inlines it to spare the first paint a request.
 - Lucide icons stay (Taste Skill prefers Phosphor or Tabler): Fumadocs draws its own interface
   with Lucide, and one stroke family across the page matters more than the family.
 

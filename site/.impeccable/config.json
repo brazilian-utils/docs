@@ -1,5 +1,8 @@
 {
   "detector": {
-    "ignoreRules": ["cream-palette"]
+    "ignoreRules": [
+      "cream-palette",
+      "layout-transition"
+    ]
   }
 }
