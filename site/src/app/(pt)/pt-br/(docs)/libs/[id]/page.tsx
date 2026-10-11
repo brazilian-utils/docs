@@ -1,6 +1,6 @@
-import { LibPage, libDescription, libTitle } from '@/components/pages/lib';
+import { LibPage } from '@/components/pages/lib';
 import { loadLibs } from '@/lib/data';
-import { pageMetadata } from '@/lib/meta';
+import { libMetadata } from '@/lib/meta';
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -9,7 +9,7 @@ export const generateStaticParams = () => loadLibs().map((l: any) => ({ id: l.id
 export async function generateMetadata({ params }: Props) {
   const { id } = await params;
   const lib = loadLibs().find((l: any) => l.id === id);
-  return pageMetadata('pt-BR', `/libs/${id}/`, libTitle('pt-BR', lib.label), libDescription('pt-BR', lib.label));
+  return libMetadata('pt-BR', lib);
 }
 
 export default async function Page({ params }: Props) {

@@ -8,6 +8,7 @@ import { getMDXComponents } from '@/components/mdx';
 import { pageMetadata } from '@/lib/meta';
 import type { Locale } from '@/lib/i18n';
 import { DocsPager } from '@/components/docs-pager.client';
+import { PageJsonLd } from '@/components/json-ld';
 
 const pageOf = (locale: Locale, slugs: string[]) => source.getPage(slugs, fileLocale(locale)) ?? notFound();
 
@@ -16,6 +17,7 @@ export function MdxPage({ locale, slugs }: { locale: Locale; slugs: string[] }) 
   const MDX = page.data.body;
   return (
     <DocsPage slots={{ footer: DocsPager }} toc={page.data.toc} tableOfContent={{ style: 'clerk' }}>
+      <PageJsonLd locale={locale} path={`/${slugs.join('/')}/`} title={page.data.title} description={page.data.description} modified={lastCommit(`site/content/docs/${page.path}`)} />
       <DocsTitle>{page.data.title}</DocsTitle>
       <DocsDescription>{page.data.description}</DocsDescription>
       <DocsBody>
