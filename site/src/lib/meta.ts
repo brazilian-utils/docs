@@ -107,6 +107,9 @@ export function rootMetadata(locale: Locale): Metadata {
     metadataBase: new URL(`${SITE_ROOT}/`),
     title: { template: '%s · Brazilian Utils', default: 'Brazilian Utils' },
     applicationName: 'Brazilian Utils',
+    // Ownership proof for Google Search Console (the property was verified with this tag on the old
+    // docsify site): removing it drops the verification.
+    verification: { google: '8xH7xzJdpi19V6yr-QGvrZtAG84ihpVn_-yWd6DhpXg' },
     icons: { icon: `${servedBase}/favicon.ico`, apple: `${servedBase}/apple-touch-icon.png` },
     ...(NOINDEX && { robots: { index: false, follow: false, nocache: true, googleBot: { index: false, follow: false } } }),
     openGraph: { siteName: 'Brazilian Utils', locale: locale === 'en' ? 'en_US' : 'pt_BR' },

@@ -14,12 +14,9 @@ import { GuideFiles } from '@/components/guide-files.client';
 import { LiveDemo } from '@/components/live-demo.client';
 import { DocsPager } from '@/components/docs-pager.client';
 import { PageJsonLd } from '@/components/json-ld';
+import { guideEntry } from '@/lib/guides';
 
 const base = process.env.NEXT_PUBLIC_BASE ?? '';
-
-export function guideEntry(lib: string, slug: string) {
-  return loadGuides().find((g: any) => g.lib === lib && g.slug === slug);
-}
 
 type DemoText = { demo: string; demoOf: string; loading: string };
 const demoTextOf = (locale: Locale): DemoText => {
@@ -84,12 +81,6 @@ function firstExample(examples: any[]): string {
   const ex = examples[0];
   const variant = ex?.children.find((c: any) => c.kind === 'variant');
   return ex ? exampleId(ex.name, variant?.name) : '';
-}
-
-/** The first group of examples of a guide (one per framework), or null without the guide. */
-export function guideExamples(locale: Locale, lib: string, slug: string): any[] | null {
-  const guide = guideEntry(lib, slug) && loadGuide(lib, slug, locale);
-  return guide?.blocks.find((b: any) => b.type !== 'markdown')?.examples ?? null;
 }
 
 export function GuidePage({ locale, lib, slug }: { locale: Locale; lib: string; slug: string }) {

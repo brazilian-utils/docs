@@ -3,13 +3,14 @@
 // sections of the documentation, search, theme, language and GitHub, in one row that never
 // changes height or place between pages. On a phone, the sections move into a menu: the
 // sidebar drawer in the documentation (it has a section switcher), a short list on the home page.
+// The documentation's own header is in docs-header.client.tsx, so the home page does not load the
+// documentation layout.
 import Link from '@/components/link';
 import { useHomeLayout } from 'fumadocs-ui/layouts/home';
-import { useNotebookLayout } from 'fumadocs-ui/layouts/notebook';
 import { Popover, PopoverContent, PopoverTrigger } from 'fumadocs-ui/components/ui/popover';
 import { buttonVariants } from 'fumadocs-ui/components/ui/button';
 import { usePathname } from 'next/navigation';
-import { Languages, Menu, Sidebar } from 'lucide-react';
+import { Languages, Menu } from 'lucide-react';
 import type { ReactNode } from 'react';
 
 export interface Section {
@@ -19,7 +20,7 @@ export interface Section {
   match: string[];
 }
 
-interface HeaderProps {
+export interface HeaderProps {
   sections: Section[];
   /** The logo, linking home. */
   title: ReactNode;
@@ -36,7 +37,7 @@ interface HeaderProps {
 
 type Slots = ReturnType<typeof useHomeLayout>['slots'];
 
-function HeaderRow({ sections, sectionsLabel, skipLabel, title, homeUrl, prefix, github, slots, menu, className, main }: HeaderProps & { slots: Slots; menu: ReactNode; className: string; main: string }) {
+export function HeaderRow({ sections, sectionsLabel, skipLabel, title, homeUrl, prefix, github, slots, menu, className, main }: HeaderProps & { slots: Slots; menu: ReactNode; className: string; main: string }) {
   const base = (process.env.NEXT_PUBLIC_BASE ?? '') + prefix;
   const pathname = usePathname().replace(/\/$/, '');
   const path = pathname.startsWith(base) ? pathname.slice(base.length) || '/' : pathname;
@@ -94,28 +95,6 @@ function HeaderRow({ sections, sectionsLabel, skipLabel, title, homeUrl, prefix,
         </div>
       </div>
     </header>
-  );
-}
-
-/** In the documentation: the grid's header row, full width (its content does not size the grid's
- * columns); the menu opens the sidebar drawer. */
-export function DocsHeader(props: HeaderProps) {
-  const { slots } = useNotebookLayout();
-  const Trigger = slots.sidebar?.trigger;
-  return (
-    <HeaderRow
-      {...props}
-      slots={slots}
-      main="nd-page"
-      className="sticky top-(--fd-docs-row-1) [grid-area:header] [grid-column:1/-1]! [contain:inline-size] layout:[--fd-header-height:--spacing(14)]"
-      menu={
-        Trigger && (
-          <Trigger aria-label={props.menuLabel} className={buttonVariants({ variant: 'ghost', size: 'icon-sm', className: '-me-1.5 p-2 text-fd-muted-foreground lg:hidden' })}>
-            <Sidebar />
-          </Trigger>
-        )
-      }
-    />
   );
 }
 
