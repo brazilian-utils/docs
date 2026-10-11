@@ -16,7 +16,8 @@
     "a11y": "node scripts/a11y.mjs",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "design": "node scripts/design-check.mjs"
+    "design": "node scripts/design-check.mjs",
+    "og": "node scripts/og.mjs"
   },
   "dependencies": {
     "@brazilian-utils/brazilian-utils": "2.5.0",
