@@ -13,6 +13,7 @@ import { type CodeHtml, codeHtml, codeUrl, exampleId } from '@/lib/code-html';
 import { GuideFiles } from '@/components/guide-files.client';
 import { LiveDemo } from '@/components/live-demo.client';
 import { DocsPager } from '@/components/docs-pager.client';
+import { PageJsonLd } from '@/components/json-ld';
 
 const base = process.env.NEXT_PUBLIC_BASE ?? '';
 
@@ -105,6 +106,7 @@ export function GuidePage({ locale, lib, slug }: { locale: Locale; lib: string; 
 
   return (
     <DocsPage slots={{ footer: DocsPager }} tableOfContent={{ enabled: false }}>
+      <PageJsonLd locale={locale} path={`/guides/${lib}/${slug}/`} title={guide.title} description={guide.description} trail={[{ name: locale === 'en' ? 'Guides' : 'Guias', path: '/guides/' }]} />
       <DocsTitle>{guide.title}</DocsTitle>
       <DocsDescription className="mb-0">{guide.description}</DocsDescription>
       <div className="not-prose flex flex-col gap-1.5 text-sm text-fd-muted-foreground">

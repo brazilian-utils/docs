@@ -25,6 +25,7 @@ import { FlatTabs } from '@/components/flat-tabs';
 import { Disclosure } from '@/components/disclosure';
 import { LazyCases } from '@/components/lazy-cases.client';
 import { DocsPager } from '@/components/docs-pager.client';
+import { PageJsonLd } from '@/components/json-ld';
 
 const base = process.env.NEXT_PUBLIC_BASE ?? '';
 
@@ -73,6 +74,7 @@ export async function UtilPage({ locale, id }: { locale: Locale; id: string }) {
 
   return (
     <DocsPage slots={{ footer: DocsPager }} toc={toc} tableOfContent={{ style: 'clerk' }} breadcrumb={{ enabled: false }}>
+      <PageJsonLd locale={locale} path={`/utils/${spec.id}/`} title={pick(spec.title, locale)} description={pick(spec.summary, locale)} modified={lastCommit(contractPath(spec))} />
       <DocsTitle>{pick(spec.title, locale)}</DocsTitle>
       <DocsDescription className="mb-0">{pick(spec.summary, locale)}</DocsDescription>
 

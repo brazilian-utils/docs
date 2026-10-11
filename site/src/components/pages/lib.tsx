@@ -17,6 +17,7 @@ import { demoteHeadings } from '@/lib/prose';
 import { LangIcon } from '@/components/lang-icon';
 import { StatusIcon, type Status } from '@/components/status';
 import { DocsPager } from '@/components/docs-pager.client';
+import { PageJsonLd } from '@/components/json-ld';
 import { InstallOptions, Runtimes } from '@/components/install-options';
 
 const L = (locale: Locale, en: string, pt: string) => (locale === 'en' ? en : pt);
@@ -93,6 +94,7 @@ export async function LibPage({ locale, id }: { locale: Locale; id: string }) {
 
   return (
     <DocsPage slots={{ footer: DocsPager }} toc={toc} tableOfContent={{ style: 'clerk' }}>
+      <PageJsonLd locale={locale} path={`/libs/${lib.id}/`} title={libTitle(locale, lib.label)} description={libDescription(locale, lib.label)} />
       <DocsTitle className="flex items-center gap-3">
         <LangIcon lib={lib.id} className="size-7" />
         {libTitle(locale, lib.label)}
