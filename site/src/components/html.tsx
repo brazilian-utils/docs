@@ -17,13 +17,13 @@ const base = process.env.NEXT_PUBLIC_BASE ?? '';
 const GeistSans = localFont({
   src: '../assets/fonts/geist-sans.woff2',
   variable: '--font-geist-sans',
-  weight: '100 900',
+  weight: '400 700',
   display: 'swap',
 });
 const GeistMono = localFont({
   src: '../assets/fonts/geist-mono.woff2',
   variable: '--font-geist-mono',
-  weight: '100 900',
+  weight: '400 700',
   display: 'swap',
   preload: false,
   adjustFontFallback: false,

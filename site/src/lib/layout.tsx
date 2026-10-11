@@ -10,7 +10,7 @@ import type { Section } from '@/components/site-header.client';
 /** The brand logo, the dog and the wordmark (header, 404 page), from brazilian-utils/brand. In the
  *  3.5rem header it leaves 10px above and below, so it sits level with the search and menu icons. */
 export function SiteMark({ className = 'h-9' }: { className?: string }) {
-  return <Image src={logo} alt="Brazilian Utils" height={96} className={`site-logo w-auto ${className}`} priority />;
+  return <Image src={logo} alt="Brazilian Utils" height={96} className={`site-logo w-auto ${className}`} loading="eager" />;
 }
 
 export function baseOptions(locale: Locale): BaseLayoutProps {
