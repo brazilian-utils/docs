@@ -151,9 +151,12 @@ Com `--strict`, o script falha no CI quando falta a versão de um idioma.
 ## SEO, desempenho e acessibilidade
 
 - Cada página tem título, descrição, URL canônica, `hreflang` para o outro idioma, Open Graph e
-  Twitter card (`public/og.png`). A home tem dados estruturados (JSON-LD: site, organização,
-  uma `SoftwareSourceCode` por biblioteca). O build gera `sitemap.xml` (com os pares de idioma)
-  e `robots.txt`.
+  Twitter card (`public/og.png`, gerada por `npm run og`). O título de uma util diz o que ela faz
+  e em que linguagens ("Validar, formatar e gerar CPF em JavaScript, Python e mais"), montado das
+  funções do contrato (`src/lib/meta.ts`). A home tem dados estruturados (JSON-LD: site,
+  organização, uma `SoftwareSourceCode` por biblioteca); as outras páginas, breadcrumb e
+  `TechArticle`. O build gera `sitemap.xml` (com os pares de idioma e `lastmod` do último commit
+  da página) e `robots.txt`.
 - A busca roda no navegador sobre um índice gerado no build (`/api/search`). O motor e o índice
   só carregam quando alguém abre a busca.
 - Os links não fazem prefetch: num host estático, cada prefetch é uma requisição, e há páginas
