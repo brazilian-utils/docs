@@ -14,7 +14,7 @@ import { GuideFiles } from '@/components/guide-files.client';
 import { LiveDemo } from '@/components/live-demo.client';
 import { DocsPager } from '@/components/docs-pager.client';
 import { PageJsonLd } from '@/components/json-ld';
-import { guideEntry } from '@/lib/guides';
+import { guideEntry } from '@/lib/guide-data';
 
 const base = process.env.NEXT_PUBLIC_BASE ?? '';
 

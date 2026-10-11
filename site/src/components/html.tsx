@@ -1,8 +1,7 @@
 import localFont from 'next/font/local';
-import Script from 'next/script';
 import type { ReactNode } from 'react';
 import { Provider } from './provider';
-import { LangIconDefs } from './lang-icon';
+import { LangIconDefs } from './lang-icon-defs';
 import { StatusIconDefs } from './status';
 import type { Locale } from '@/lib/i18n';
 import '@/app/global.css';
@@ -39,14 +38,9 @@ export function Html({ locale, children }: { locale: Locale; children: ReactNode
   return (
     <html lang={locale} className={`${GeistSans.variable} ${GeistMono.variable}`} suppressHydrationWarning>
       <body className="flex flex-col min-h-screen font-sans antialiased">
-        {locale === 'en' && (
-          // The rule dates from pages/: in the App Router a beforeInteractive script belongs in the
-          // root layout, which this is.
-          // eslint-disable-next-line @next/next/no-before-interactive-script-outside-document
-          <Script id="detect-language" strategy="beforeInteractive">
-            {detectLanguage}
-          </Script>
-        )}
+        {/* A plain inline script, first in the body: it runs before anything paints, and next/script
+            would add its loader to every page's JavaScript for this one line. */}
+        {locale === 'en' && <script dangerouslySetInnerHTML={{ __html: detectLanguage }} />}
         <LangIconDefs />
         <StatusIconDefs />
         <Provider locale={locale}>{children}</Provider>

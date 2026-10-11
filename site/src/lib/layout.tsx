@@ -1,5 +1,4 @@
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
-import Image from 'next/image';
 import logo from '@/assets/logo.webp';
 import { siGithub } from 'simple-icons';
 import { type Locale, prefixOf } from './i18n';
@@ -10,7 +9,12 @@ import type { Section } from '@/components/site-header.client';
 /** The brand logo, the dog and the wordmark (header, 404 page), from brazilian-utils/brand. In the
  *  3.5rem header it leaves 10px above and below, so it sits level with the search and menu icons. */
 export function SiteMark({ className = 'h-9' }: { className?: string }) {
-  return <Image src={logo} alt="Brazilian Utils" height={96} className={`site-logo w-auto ${className}`} loading="eager" />;
+  // A plain <img>: the site's images are not optimized at build (images.unoptimized), so next/image
+  // would only add its client code to every page. Under a base path the import's URL may lack it.
+  const base = process.env.NEXT_PUBLIC_BASE ?? '';
+  const src = base && !logo.src.startsWith(`${base}/`) ? `${base}${logo.src}` : logo.src;
+  // eslint-disable-next-line @next/next/no-img-element
+  return <img src={src} width={logo.width} height={logo.height} alt="Brazilian Utils" decoding="async" className={`site-logo w-auto ${className}`} />;
 }
 
 export function baseOptions(locale: Locale): BaseLayoutProps {

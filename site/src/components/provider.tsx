@@ -1,11 +1,18 @@
 'use client';
-import { RootProvider } from 'fumadocs-ui/provider/next';
-import { usePathname, useRouter } from 'next/navigation';
-import type { ReactNode } from 'react';
+import { RootProvider } from 'fumadocs-ui/provider/base';
+import { FrameworkProvider } from 'fumadocs-core/framework';
+import NextLink from 'next/link';
+import { useParams, usePathname, useRouter } from 'next/navigation';
+import type { ComponentProps, ReactNode } from 'react';
 import { LOCALE_NAMES, type Locale } from '@/lib/i18n';
 import { A11yFixes } from './a11y.client';
 import { BreakdownHost } from './breakdown.client';
 import dynamic from 'next/dynamic';
+
+// fumadocs-ui/provider/next, without its next/image: the site's images are not optimized
+// (images.unoptimized) and Fumadocs falls back to a plain <img>, so every page sheds that code.
+// Fumadocs types its Link with an optional href; next/link is what its own Next adapter passes.
+const Link = NextLink as ComponentProps<typeof FrameworkProvider>['Link'];
 
 // The search engine and its index load when the reader opens the search, not with the page.
 const SearchDialog = dynamic(() => import('./search'), { ssr: false });
@@ -56,26 +63,28 @@ export function Provider({ locale, children }: { locale: Locale; children: React
   const router = useRouter();
   const pathname = usePathname();
   return (
-    <RootProvider
-      search={{ SearchDialog, preload: false }}
-      i18n={{
-        locale,
-        locales: (Object.keys(LOCALE_NAMES) as Locale[]).map((l) => ({ locale: l, name: LOCALE_NAMES[l] })),
-        translations: locale === 'pt-BR' ? PT : undefined,
-        onLocaleChange: (v) => {
-          try {
-            localStorage.setItem('bu:lang', v === 'pt-BR' ? 'pt-br' : 'en'); // an explicit choice wins over the browser
-          } catch {}
-          router.push(switchPath(pathname, v as Locale));
-        },
-      }}
-    >
-      <A11yFixes
-        code={locale === 'en' ? 'Code' : 'Código'}
-        toc={locale === 'en' ? 'On this page' : 'Nesta página'}
-        scroll={locale === 'en' ? 'Scrollable content' : 'Conteúdo com rolagem'}
-      />
-      <BreakdownHost>{children}</BreakdownHost>
-    </RootProvider>
+    <FrameworkProvider usePathname={usePathname} useRouter={useRouter} useParams={useParams} Link={Link}>
+      <RootProvider
+        search={{ SearchDialog, preload: false }}
+        i18n={{
+          locale,
+          locales: (Object.keys(LOCALE_NAMES) as Locale[]).map((l) => ({ locale: l, name: LOCALE_NAMES[l] })),
+          translations: locale === 'pt-BR' ? PT : undefined,
+          onLocaleChange: (v) => {
+            try {
+              localStorage.setItem('bu:lang', v === 'pt-BR' ? 'pt-br' : 'en'); // an explicit choice wins over the browser
+            } catch {}
+            router.push(switchPath(pathname, v as Locale));
+          },
+        }}
+      >
+        <A11yFixes
+          code={locale === 'en' ? 'Code' : 'Código'}
+          toc={locale === 'en' ? 'On this page' : 'Nesta página'}
+          scroll={locale === 'en' ? 'Scrollable content' : 'Conteúdo com rolagem'}
+        />
+        <BreakdownHost>{children}</BreakdownHost>
+      </RootProvider>
+    </FrameworkProvider>
   );
 }
