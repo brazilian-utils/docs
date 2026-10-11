@@ -3,7 +3,7 @@
 import { DocsLayout } from 'fumadocs-ui/layouts/notebook';
 import type { ReactNode } from 'react';
 import { baseOptions, headerProps } from '@/lib/layout';
-import { DocsHeader } from '@/components/site-header.client';
+import { DocsHeader } from '@/components/docs-header.client';
 import { SiteFooter } from '@/components/site-footer';
 import { pageTree } from '@/lib/tree';
 import type { Locale } from '@/lib/i18n';

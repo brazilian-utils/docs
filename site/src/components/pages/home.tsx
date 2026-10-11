@@ -17,7 +17,7 @@ import { SiteFooter } from '@/components/site-footer';
 import { Markdown } from '@/lib/markdown';
 import { loadUsage } from '@/lib/usage';
 import { LangIcon } from '@/components/lang-icon';
-import { guideExamples } from '@/components/pages/guide';
+import { guideExamples } from '@/lib/guide-data';
 import { Specimen, type Kind } from '@/components/specimen.client';
 import { HomeJsonLd } from '@/components/json-ld';
 
