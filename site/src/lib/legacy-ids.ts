@@ -1,6 +1,6 @@
 // Where the old JavaScript docs' anchors are now. That site (docsify) put a section in the query
 // string: /utilities?id=isvalidcpf for a function, /utilities?id=cep-e-endereço for a heading. Those
-// URLs land on the library's page (see public/_redirects), which sends each to its utility's page.
+// URLs reach public/_worker.js, which answers with a 301 to the utility's page from this map.
 import { loadSpecs, loadStatus } from './data';
 import { type Locale, pick } from './i18n';
 import { slug } from './prose';

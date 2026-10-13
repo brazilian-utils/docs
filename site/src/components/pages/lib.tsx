@@ -31,13 +31,6 @@ const show = (v: unknown) => (v === undefined || v === null ? 'null' : JSON.stri
 const LONG = 15;
 const GROUPS = ['failing', 'signature', 'missing'] as const;
 
-/**
- * The old JavaScript docs' links (/utilities?id=isvalidcpf) arrive here through public/_redirects
- * with their ?id= kept: this sends each to its utility's page. A redirect rule cannot read the query.
- */
-const legacyRedirect = (locale: Locale) =>
-  `(function(){var id=new URLSearchParams(location.search).get('id');if(!id)return;fetch('${base}/legacy-ids.json').then(function(r){return r.json()}).then(function(m){var h=m[${JSON.stringify(locale)}][id.toLowerCase()];if(h)location.replace('${base}${prefixOf(locale)}'+h)}).catch(function(){})})()`;
-
 export async function LibPage({ locale, id }: { locale: Locale; id: string }) {
   const libs = loadLibs();
   const lib = libs.find((l: any) => l.id === id);
@@ -102,7 +95,6 @@ export async function LibPage({ locale, id }: { locale: Locale; id: string }) {
   return (
     <DocsPage slots={{ footer: DocsPager }} toc={toc} tableOfContent={{ style: 'clerk' }}>
       <PageJsonLd locale={locale} path={`/libs/${lib.id}/`} title={libTitle(locale, lib.label)} description={libDescription(locale, lib.label)} />
-      {lib.id === 'javascript' && <script dangerouslySetInnerHTML={{ __html: legacyRedirect(locale) }} />}
       <DocsTitle className="flex items-center gap-3">
         <LangIcon lib={lib.id} className="size-7" />
         {libTitle(locale, lib.label)}
